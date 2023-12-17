@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.Navigation
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.FragmentAuthSelectionBinding
 import com.androiddevelopers.freelanceapp.viewmodel.AuthSelectionViewModel
@@ -33,9 +34,25 @@ class AuthSelectionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.buttonLogin.setOnClickListener {
+            gotoLogin(it)
+        }
+
+        binding.buttonRegister.setOnClickListener{
+            gotoRegister(it)
+        }
+
     }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun gotoLogin(v: View){
+        Navigation.findNavController(v).navigate(R.id.action_authSelectionFragment_to_loginFragment)
+    }
+
+    private fun gotoRegister(v: View){
+        Navigation.findNavController(v).navigate(R.id.action_authSelectionFragment_to_registerFragment)
     }
 }
