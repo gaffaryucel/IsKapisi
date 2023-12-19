@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.Navigation
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.FragmentRegisterBinding
 import com.androiddevelopers.freelanceapp.databinding.FragmentWelcomeBinding
@@ -35,6 +36,10 @@ class WelcomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.continueButton.setOnClickListener {
+            val action = WelcomeFragmentDirections.actionWelcomeFragmentToAuthSelectionFragment()
+            Navigation.findNavController(view).navigate(action)
+        }
     }
     override fun onDestroyView() {
         super.onDestroyView()
