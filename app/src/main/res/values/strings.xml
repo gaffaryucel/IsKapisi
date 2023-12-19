@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Freelance App</string>
+    <string name="expalanation">Frelence, serbest çalışanların yeteneklerini ve becerilerini kolayca pazarlayabileceği, işverenlerin ise en uygun yetenekleri keşfedebileceği yenilikçi bir platformdur. Frelence ile işlerinizi hızla tamamlayın ve serbest çalışma dünyasında yeni kapılar açın.</string>
+    <string name="welcome">Welcome</string>
     <string name="hint_edittext_email">Email adresinizi girin</string>
     <string name="hint_edittext_password">Şifrenizi girin</string>
     <string name="forgot_password">Şifrenizi mi unuttunuz?</string>
