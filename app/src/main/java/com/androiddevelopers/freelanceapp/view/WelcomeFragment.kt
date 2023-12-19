@@ -37,7 +37,7 @@ class WelcomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.continueButton.setOnClickListener {
-            val action = WelcomeFragmentDirections.actionWelcomeFragmentToAuthSelectionFragment()
+            val action = WelcomeFragmentDirections.actionWelcomeFragmentToLoginFragment()
             Navigation.findNavController(view).navigate(action)
         }
     }
