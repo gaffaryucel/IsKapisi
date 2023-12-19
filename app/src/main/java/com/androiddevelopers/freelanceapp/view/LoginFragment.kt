@@ -34,13 +34,21 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonLogin.setOnClickListener {
-            gotoLogin(it)
+        with(binding){
+            textForgotPassword.setOnClickListener{
+                //TODO: firebase şifre hatırlatma metodu eklenecek
+            }
+
+            buttonLogin.setOnClickListener {
+                gotoLogin(it)
+            }
+
+            textRegister.setOnClickListener{
+                gotoRegister(it)
+            }
+
         }
 
-        binding.textRegister.setOnClickListener{
-            gotoRegister(it)
-        }
 
     }
     override fun onDestroyView() {
