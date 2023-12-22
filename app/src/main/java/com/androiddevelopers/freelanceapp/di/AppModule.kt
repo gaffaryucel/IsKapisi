@@ -9,8 +9,11 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,21 +41,19 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideFirebaseAuth(): FirebaseAuth {
-        return FirebaseAuth.getInstance()
-    }
+    fun provideFirebaseAuth() = Firebase.auth
 
     @Provides
     @Singleton
-    fun provideStorage() = FirebaseStorage.getInstance()
+    fun provideStorage() = Firebase.storage
 
     @Provides
     @Singleton
-    fun provideFirebaseFireStore() = FirebaseFirestore.getInstance()
+    fun provideFirebaseFireStore() = Firebase.firestore
 
     @Singleton
     @Provides
-    fun provideFirebaseRepo(auth: FirebaseAuth,firestore: FirebaseFirestore): FirebaseRepoInterFace {
+    fun provideFirebaseRepo(auth: FirebaseAuth, firestore: FirebaseFirestore): FirebaseRepoInterFace {
         return FirebaseRepoImpl(auth,firestore)
     }
 }
