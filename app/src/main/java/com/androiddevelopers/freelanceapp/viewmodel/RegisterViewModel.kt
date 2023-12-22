@@ -31,16 +31,19 @@ class RegisterViewModel @Inject constructor(
         password: String,
         confirmPassword : String
     ) = viewModelScope.launch{
-        if (isPasswordConfirmed(password,confirmPassword))
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener{task->
-                if (task.isSuccessful){
-                    val userId = firebaseAuth.currentUser?.uid ?: ""
-                    createUser(userId,email)
-                }else{
-                    _authState.value = Resource.error(task.exception?.localizedMessage ?: "error : try again",null)
+        if (isPasswordConfirmed(password,confirmPassword)){
+            firebaseAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener{task->
+                    if (task.isSuccessful){
+                        val userId = firebaseAuth.currentUser?.uid ?: ""
+                        createUser(userId,email)
+                    }else{
+                        _authState.value = Resource.error(task.exception?.localizedMessage ?: "error : try again",null)
+                    }
                 }
-            }
+        }else{
+            _authState.value = Resource.error("password mismatch",null)
+        }
     }
 
     private fun createUser(

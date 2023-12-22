@@ -58,16 +58,19 @@
             app:layout_constraintStart_toStartOf="@id/guidelineRegisterLeft"
             app:layout_constraintTop_toBottomOf="@id/password_edit_text" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/buttonRegisterRegister"
+
+
+        <androidx.constraintlayout.utils.widget.MotionButton
+            android:id="@+id/buttonRegister"
             style="@style/blueButtonStyle"
+            android:text="Register"
             android:layout_width="0dp"
             android:layout_height="@dimen/mediumButtonHeight"
             android:layout_marginTop="15dp"
-            android:text="Register"
             app:layout_constraintEnd_toEndOf="@id/guidelineRegisterRight"
             app:layout_constraintStart_toStartOf="@id/guidelineRegisterLeft"
-            app:layout_constraintTop_toBottomOf="@id/confirm_password_edit_text" />
+            app:layout_constraintTop_toBottomOf="@id/confirm_password_edit_text"/>
+
 
         <ImageView
             android:id="@+id/facebookRegister"
@@ -76,7 +79,8 @@
             android:layout_marginTop="13dp"
             android:src="@drawable/facebook_login"
             app:layout_constraintStart_toStartOf="@id/guidelineRegisterLeft"
-            app:layout_constraintTop_toBottomOf="@id/buttonRegisterRegister" />
+            app:layout_constraintTop_toBottomOf="@id/buttonRegister" />
+
 
         <TextView
             android:textColor="@color/white"
@@ -96,7 +100,7 @@
             android:layout_marginTop="13dp"
             android:src="@drawable/google_login"
             app:layout_constraintEnd_toEndOf="@id/guidelineRegisterRight"
-            app:layout_constraintTop_toBottomOf="@id/buttonRegisterRegister" />
+            app:layout_constraintTop_toBottomOf="@id/buttonRegister" />
 
         <TextView
             android:layout_width="wrap_content"
