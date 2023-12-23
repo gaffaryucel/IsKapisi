@@ -9,4 +9,8 @@
     <string name="button_register">Mevcut hesabınız yok mu? Kayıt olun.</string>
     <string name="login_with_facebook">Facebook ile giriş yap</string>
     <string name="login_with_google">Google ile giriş yap</string>
+    <string name="title_activity_bottom_navigation">BottomNavigationActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>
