@@ -7,6 +7,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 
 interface FirebaseRepoInterFace {
     fun login(email: String, password: String): Task<AuthResult>
+    fun forgotPassword(email: String): Task<Void>
     fun register(email: String, password: String): Task<AuthResult>
     fun addUserToFirestore(data: UserModel) : Task<Void>
     fun deleteUserFromFirestore(documentId: String): Task<Void>

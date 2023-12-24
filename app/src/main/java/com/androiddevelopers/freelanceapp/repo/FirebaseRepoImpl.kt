@@ -10,21 +10,31 @@ import javax.inject.Inject
 
 class FirebaseRepoImpl @Inject constructor(
     private val auth: FirebaseAuth,
-    private val firestore: FirebaseFirestore
+    firestore: FirebaseFirestore
 ) : FirebaseRepoInterFace {
+    private val userCollection = firestore.collection("users")
+
     override fun login(email: String, password: String): Task<AuthResult> {
-        return auth.signInWithEmailAndPassword(email,password)
+        return auth.signInWithEmailAndPassword(email, password)
     }
+
+    override fun forgotPassword(email: String): Task<Void> {
+        return auth.sendPasswordResetEmail(email)
+    }
+
     override fun register(email: String, password: String): Task<AuthResult> {
-        return auth.createUserWithEmailAndPassword(email,password)
+        return auth.createUserWithEmailAndPassword(email, password)
     }
-    override fun addUserToFirestore(data: UserModel) : Task<Void> {
-        return firestore.collection("users").document(data.userId.toString()).set(data)
+
+    override fun addUserToFirestore(data: UserModel): Task<Void> {
+        return userCollection.document(data.userId.toString()).set(data)
     }
-    override fun deleteUserFromFirestore(documentId: String) : Task<Void> {
-        return firestore.collection("users").document(documentId).delete()
+
+    override fun deleteUserFromFirestore(documentId: String): Task<Void> {
+        return userCollection.document(documentId).delete()
     }
+
     override fun getUserDataByDocumentId(documentId: String): Task<DocumentSnapshot> {
-        return firestore.collection("users").document(documentId).get()
+        return userCollection.document(documentId).get()
     }
 }
