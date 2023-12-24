@@ -12,16 +12,22 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.androiddevelopers.freelanceapp.view.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_discover"
+        android:name="com.androiddevelopers.freelanceapp.view.DiscoverFragment"
+        android:label="Keşfet"
+        tools:layout="@layout/fragment_discover" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.androiddevelopers.freelanceapp.view.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_create_post"
+        android:name="com.androiddevelopers.freelanceapp.view.CreatePostFragment"
+        android:label="İlan Oluştur"
+        tools:layout="@layout/fragment_create_post" />
+
+    <fragment
+        android:id="@+id/navigation_job_postings"
+        android:name="com.androiddevelopers.freelanceapp.view.JobPostingsFragment"
+        android:label="İş ilanları"
+        tools:layout="@layout/fragment_job_postings" />
 
     <fragment
         android:id="@+id/navigation_profile"

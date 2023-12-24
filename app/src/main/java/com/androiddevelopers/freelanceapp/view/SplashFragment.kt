@@ -1,5 +1,6 @@
 package com.androiddevelopers.freelanceapp.view
 
+import android.content.Intent
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -12,6 +13,7 @@ import com.androiddevelopers.freelanceapp.databinding.FragmentSplashBinding
 import com.androiddevelopers.freelanceapp.databinding.FragmentWelcomeBinding
 import com.androiddevelopers.freelanceapp.viewmodel.SplashViewModel
 import com.androiddevelopers.freelanceapp.viewmodel.WelcomeViewModel
+import com.google.firebase.auth.FirebaseAuth
 
 class SplashFragment : Fragment() {
 
@@ -35,6 +37,11 @@ class SplashFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (FirebaseAuth.getInstance().currentUser != null){
+            val intent = Intent(requireContext(),BottomNavigationActivity::class.java)
+            requireActivity().finish()
+            requireActivity().startActivity(intent)
+        }
 
         val action = SplashFragmentDirections.actionSplashFragmentToWelcomeFragment()
         Navigation.findNavController(view).navigate(action)

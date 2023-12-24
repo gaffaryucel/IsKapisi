@@ -7,26 +7,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.androiddevelopers.freelanceapp.R
-import com.androiddevelopers.freelanceapp.viewmodel.ProfileViewModel
+import com.androiddevelopers.freelanceapp.viewmodel.DiscoverViewModel
 
-class ProfileFragment : Fragment() {
+class DiscoverFragment : Fragment() {
 
     companion object {
-        fun newInstance() = ProfileFragment()
+        fun newInstance() = DiscoverFragment()
     }
 
-    private lateinit var viewModel: ProfileViewModel
+    private lateinit var viewModel: DiscoverViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_profile, container, false)
+        return inflater.inflate(R.layout.fragment_discover, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(DiscoverViewModel::class.java)
         // TODO: Use the ViewModel
     }
+
 }

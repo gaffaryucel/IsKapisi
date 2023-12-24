@@ -7,26 +7,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.androiddevelopers.freelanceapp.R
-import com.androiddevelopers.freelanceapp.viewmodel.ProfileViewModel
+import com.androiddevelopers.freelanceapp.viewmodel.JobPostingsViewModel
 
-class ProfileFragment : Fragment() {
+class JobPostingsFragment : Fragment() {
 
     companion object {
-        fun newInstance() = ProfileFragment()
+        fun newInstance() = JobPostingsFragment()
     }
 
-    private lateinit var viewModel: ProfileViewModel
+    private lateinit var viewModel: JobPostingsViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_profile, container, false)
+        return inflater.inflate(R.layout.fragment_job_postings, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(JobPostingsViewModel::class.java)
         // TODO: Use the ViewModel
     }
+
 }

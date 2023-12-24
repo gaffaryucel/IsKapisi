@@ -1,6 +1,7 @@
 package com.androiddevelopers.freelanceapp.view
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -128,7 +129,9 @@ class LoginFragment : Fragment() {
     }
 
     private fun gotoHome(v: View) {
-        //Navigation.findNavController(v).navigate(??)
+        val intent = Intent(requireContext(),BottomNavigationActivity::class.java)
+        requireActivity().finish()
+        requireActivity().startActivity(intent)
     }
 
     private fun setUserModelToRoom(userModel: UserModel) {
@@ -226,6 +229,7 @@ class LoginFragment : Fragment() {
                     count: Int,
                     after: Int
                 ) {
+
                 }
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {

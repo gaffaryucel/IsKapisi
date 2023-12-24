@@ -22,6 +22,10 @@ class RegisterViewModel @Inject constructor(
     val authState : LiveData<Resource<Boolean>>
         get() = _authState
 
+    private var _registrationError = MutableLiveData<Resource<Boolean>>()
+    val registrationError : LiveData<Resource<Boolean>>
+        get() = _registrationError
+
     private var _isVerificationEmailSent = MutableLiveData<Resource<Boolean>>()
     val isVerificationEmailSent : LiveData<Resource<Boolean>>
         get() = _isVerificationEmailSent
@@ -31,7 +35,7 @@ class RegisterViewModel @Inject constructor(
         password: String,
         confirmPassword : String
     ) = viewModelScope.launch{
-        if (isPasswordConfirmed(password,confirmPassword)){
+        if (isInputValid(email,password,confirmPassword)){
             firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener{task->
                     if (task.isSuccessful){
@@ -52,21 +56,20 @@ class RegisterViewModel @Inject constructor(
     ) = viewModelScope.launch{
         val tempUsername = email.substringBefore("@")
         val user = makeUser(userId,tempUsername,email)
-
         firebaseRepo.addUserToFirestore(user)
             .addOnSuccessListener {
                 verify()
-            }
-            .addOnFailureListener { e ->
+            }.addOnFailureListener { e ->
                 _authState.value = Resource.error(e.localizedMessage ?: "error : try again later",null)
             }
     }
 
-    private fun verify()= viewModelScope.launch{
+    private fun verify() = viewModelScope.launch{
         val current = firebaseAuth.currentUser
         current?.sendEmailVerification()?.addOnCompleteListener {
             if (it.isSuccessful) {
                 _isVerificationEmailSent.value = Resource.success(it.isSuccessful)
+                firebaseAuth.signOut()
             } else {
                 _isVerificationEmailSent.value = Resource.error(it.exception?.localizedMessage ?: "error",null)
             }
@@ -80,7 +83,21 @@ class RegisterViewModel @Inject constructor(
     }
 
     private fun isPasswordConfirmed(password: String,confirmPassword : String): Boolean {
-        return password == confirmPassword
+        return if (password == confirmPassword){
+            true
+        }else{
+            _registrationError.value = Resource.error("şifreler uyuşmuyor", false)
+            false
+        }
     }
 
+    private fun isInputValid(email : String, password: String,confirmPassword : String) : Boolean {
+        return if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            val errorMessage = "Lütfen tüm alanları doldurun."
+            _registrationError.value = Resource.error(errorMessage, true)
+            false
+        } else {
+            isPasswordConfirmed(password,confirmPassword)
+        }
+    }
 }

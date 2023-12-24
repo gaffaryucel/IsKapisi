@@ -40,7 +40,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/edittextHeight"
             android:layout_marginTop="10dp"
-            android:hint="Password"
+            android:hint="Şifre"
             android:inputType="textPassword"
             app:layout_constraintEnd_toEndOf="@id/guidelineRegisterRight"
             app:layout_constraintStart_toStartOf="@id/guidelineRegisterLeft"
@@ -52,7 +52,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/edittextHeight"
             android:layout_marginTop="10dp"
-            android:hint="Confirm Password"
+            android:hint="Şifre Onayla"
             android:inputType="textPassword"
             app:layout_constraintEnd_toEndOf="@id/guidelineRegisterRight"
             app:layout_constraintStart_toStartOf="@id/guidelineRegisterLeft"
@@ -63,7 +63,7 @@
         <androidx.constraintlayout.utils.widget.MotionButton
             android:id="@+id/buttonRegister"
             style="@style/blueButtonStyle"
-            android:text="Register"
+            android:text="kayıt ol"
             android:layout_width="0dp"
             android:layout_height="@dimen/mediumButtonHeight"
             android:layout_marginTop="15dp"
@@ -112,6 +112,17 @@
             app:layout_constraintStart_toStartOf="@id/googleRegister"
             app:layout_constraintTop_toTopOf="@id/googleRegister" />
 
+        <TextView
+            android:layout_marginTop="15dp"
+            android:textColor="#FFFFFF"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hesabın var mı? Giriş Yap"
+            app:layout_constraintTop_toBottomOf="@id/googleRegister"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guidelineRegisterLeft"
             android:layout_width="wrap_content"
@@ -128,15 +139,6 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
-        android:textColor="#FFFFFF"
-        android:textAlignment="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Don't have an account? Register"
-        app:layout_constraintBottom_toBottomOf="@id/register_fragment_constraint_layout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         app:layout_constraintTop_toTopOf="parent"
