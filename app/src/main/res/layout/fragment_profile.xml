@@ -1,13 +1,210 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".view.ProfileFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
+    <data>
+        <variable
+            name="user"
+            type="com.androiddevelopers.freelanceapp.model.UserModel" />
+    </data>
+
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Hello" />
+        tools:context=".view.ProfileFragment">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <ImageView
+                android:id="@+id/idIvBackButton"
+                android:src="@drawable/baseline_keyboard_arrow_left_24"
+                android:layout_width="30dp"
+                android:layout_height="30dp"/>
+            <TextView
+                android:id="@+id/tvUserName"
+                android:layout_weight="1"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:text="gaffaryucel2323"
+                android:textAlignment="center"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                tools:ignore="HardcodedText" />
+            <ImageView
+                android:id="@+id/ivMore"
+                android:src="@drawable/baseline_more_horiz_24"
+                android:layout_width="30dp"
+                android:layout_height="30dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="80sp"
+            android:orientation="horizontal"
+            >
+            <ImageView
+                android:id="@+id/ivUserImageView"
+                android:layout_marginStart="20dp"
+                android:src="@drawable/user"
+                android:layout_width="80dp"
+                android:layout_height="80dp"/>
 
-</FrameLayout>
+            <LinearLayout
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:layout_marginStart="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:textStyle="bold"
+                        android:layout_gravity="center"
+                        android:textAlignment="center"
+                        android:id="@+id/tvCompletedTasksCount"
+                        android:text="250"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="23sp"/>
+                    <TextView
+                        android:text="Completed Tasks"
+                        android:textAlignment="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:textStyle="bold"
+                        android:layout_gravity="center"
+                        android:textAlignment="center"
+                        android:id="@+id/tvFollowersCount"
+                        android:text="8.000"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="23sp"/>
+                    <TextView
+                        android:text="Followers"
+                        android:layout_gravity="center"
+                        android:textAlignment="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:textStyle="bold"
+                        android:layout_gravity="center"
+                        android:textAlignment="center"
+                        android:id="@+id/tvPostCount"
+                        android:text="250"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="23sp"/>
+                    <TextView
+                        android:text="Posts"
+                        android:layout_gravity="center"
+                        android:textAlignment="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"/>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:maxLines="1"
+                android:layout_marginStart="6dp"
+                android:text="Gaffar Yücel"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:id="@+id/tvUserFullName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:maxLines="1"
+                android:layout_marginStart="6dp"
+                android:textSize="18sp"
+                android:textStyle="normal"
+                android:id="@+id/tvUserJobTitle"
+                android:text="Jınior Andorid deaveloper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="5dp"
+                android:maxLines="5"
+                android:layout_marginStart="6dp"
+                android:textSize="16sp"
+                android:textStyle="italic"
+                android:id="@+id/tvUserBio"
+                android:text="Bilgisayar bilimi eğitimimle birlikte edindiğim deneyimlerle, kullanıcı ihtiyaçlarını anlamak ve onları karşılamak adına yaratıcı çözümler üretmeye odaklanıyorum. Hem Java hem de Kotlin dillerinde güçlü bir bilgi birikimine sahibim ve Android uygulama geliştirmek için en son teknolojileri takip ediyorum."
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:layout_margin="6dp"
+                    android:layout_weight="1"
+                    android:id="@+id/btnJobOffer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/btn_job_offer_bg"
+                    android:text="İş Teklifi Yap"
+                     />
+
+                <Button
+                    android:layout_margin="6dp"
+                    android:layout_weight="1"
+                    android:id="@+id/btnSendMessage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/btn_send_message_bg"
+                    android:text="Mesaj Gönder"
+                   />
+
+                <Button
+                    android:layout_gravity="center"
+                    android:layout_margin="6dp"
+                    android:layout_weight="1"
+                    android:id="@+id/btnFollow"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/btnSendMessage"
+                    android:background="@drawable/btn_send_message_bg"
+                    android:text="Takip Et"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</layout>
