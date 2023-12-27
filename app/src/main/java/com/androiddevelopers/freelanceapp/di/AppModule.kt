@@ -1,10 +1,15 @@
 package com.androiddevelopers.freelanceapp.di
 
 import android.content.Context
+import androidx.room.Room
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.androiddevelopers.freelanceapp.R
+import com.androiddevelopers.freelanceapp.dao.UserDao
+import com.androiddevelopers.freelanceapp.database.UserDatabase
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoImpl
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
+import com.androiddevelopers.freelanceapp.repo.RoomUserDatabaseRepoImpl
+import com.androiddevelopers.freelanceapp.repo.RoomUserDatabaseRepoInterface
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
@@ -24,6 +29,22 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    @Singleton
+    @Provides
+    fun provideAppDatabase(@ApplicationContext context: Context): UserDatabase {
+        return Room.databaseBuilder(
+            context,
+            UserDatabase::class.java,
+            "user_database_version_1" // Veritabanı adını buraya ekleyin
+        ).build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideUserDao(appDatabase: UserDatabase): UserDao {
+        return appDatabase.userDao()
+    }
     @Provides
     @Singleton
     fun provideGlide(@ApplicationContext context: Context) : RequestManager  {
@@ -55,5 +76,10 @@ object AppModule {
     @Provides
     fun provideFirebaseRepo(auth: FirebaseAuth, firestore: FirebaseFirestore): FirebaseRepoInterFace {
         return FirebaseRepoImpl(auth,firestore)
+    }
+    @Singleton
+    @Provides
+    fun provideRoomUserDatabaseRepo(dao: UserDao): RoomUserDatabaseRepoInterface {
+        return RoomUserDatabaseRepoImpl(dao)
     }
 }
