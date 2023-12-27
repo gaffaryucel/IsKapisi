@@ -15,6 +15,7 @@ import androidx.navigation.Navigation
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.FragmentLoginBinding
 import com.androiddevelopers.freelanceapp.model.UserModel
+import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.viewmodel.LoginViewModel
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.AndroidEntryPoint
@@ -64,26 +65,12 @@ class LoginFragment : Fragment() {
                 val email = edittextEmail.text.toString()
                 val password = edittextPassword.text.toString()
 
-                if (email.isNotEmpty() && password.isNotEmpty()) {
+                if (email.isNotEmpty() && password.length > 6) {
                     viewModel.login(email, password)
-                        .addOnSuccessListener { auth ->
-                            auth.user?.let {
-                                if (it.isEmailVerified) { //kullanıcının email adresini onayladığını kontrol ediyoruz
-                                    verifiedEmail(it)
-                                } else {
-                                    //kullanıcı email adresi doğrulanmadıysa uyarı mesajı görüntüler
-                                    notVerifiedEmail(it)
-                                }
-                            }
-                        }.addOnFailureListener { e ->
-                            e.localizedMessage?.let { message ->
-                                Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-                            }
-                        }
                 } else if (email.isEmpty()) {
-                    edittextLayoutEmail.error = "Email adresi boş olamaz"
-                } else if (password.isEmpty()) {
-                    edittextLayoutPassword.error = "Şifre boş olamaz"
+                    edittextLayoutEmail.error = it.context.getString(R.string.text_empty_error)
+                } else {
+                    edittextLayoutPassword.error = it.context.getString(R.string.password_error)
                 }
             }
 
@@ -93,7 +80,6 @@ class LoginFragment : Fragment() {
 
             textForgotPassword.setOnClickListener {
                 val email = edittextEmail.text.toString()
-
 
                 if (email.isNotEmpty()) {
                     viewModel.forgotPassword(email)
@@ -109,14 +95,12 @@ class LoginFragment : Fragment() {
                             }
                         }
                 } else {
-                    edittextLayoutEmail.error = "Email adresi boş olamaz"
+                    edittextLayoutEmail.error = it.context.getString(R.string.text_empty_error)
                 }
 
             }
         }
-
-        //TODO: databinding uygulandıktan sonra bu metod silinecek
-        textListener()
+        observeLiveData(binding.root)
     }
 
     override fun onDestroyView() {
@@ -129,7 +113,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun gotoHome(v: View) {
-        val intent = Intent(requireContext(),BottomNavigationActivity::class.java)
+        val intent = Intent(requireContext(), BottomNavigationActivity::class.java)
         requireActivity().finish()
         requireActivity().startActivity(intent)
     }
@@ -160,6 +144,15 @@ class LoginFragment : Fragment() {
             }
     }
 
+    private fun observeLiveData(view: View) {
+        viewModel.verifiedEmail.observe(viewLifecycleOwner) {
+            when (it.status) {
+                Status.SUCCESS -> gotoHome(view)
+                //Status.ERROR -> notVerifiedEmail()
+            }
+        }
+    }
+
     private fun notVerifiedEmail(currentUser: FirebaseUser) {
         currentUser.email?.let { email ->
             val builder = AlertDialog.Builder(context)
@@ -171,7 +164,7 @@ class LoginFragment : Fragment() {
                     .addOnCompleteListener {
                         Toast.makeText(
                             context,
-                            "Eposta doğrulama maili gönderildi.",
+                            "Eposta doğrulama mesajı gönderildi.",
                             Toast.LENGTH_LONG
                         ).show()
                     }.addOnFailureListener { e ->
@@ -192,58 +185,4 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun textListener() {
-        with(binding) {
-            edittextEmail.addTextChangedListener(object : TextWatcher {
-                override fun afterTextChanged(s: Editable?) {
-                }
-
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-                }
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    if (s != null) {
-                        if (s.isNotEmpty()) {
-                            if (edittextLayoutEmail.error != null) {
-                                edittextLayoutEmail.error = null
-                            }
-                        } else {
-                            edittextLayoutEmail.error = "Email adresi boş olamaz"
-                        }
-                    }
-                }
-            })
-
-            edittextPassword.addTextChangedListener(object : TextWatcher {
-                override fun afterTextChanged(s: Editable?) {
-                }
-
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-
-                }
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    if (s != null) {
-                        if (s.isNotEmpty()) {
-                            if (edittextLayoutPassword.error != null) {
-                                edittextLayoutPassword.error = null
-                            }
-                        } else {
-                            edittextLayoutPassword.error = "Şifre boş olamaz"
-                        }
-                    }
-                }
-            })
-        }
-    }
 }
