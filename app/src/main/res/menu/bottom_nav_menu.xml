@@ -21,7 +21,7 @@
 
     <item
         android:id="@+id/navigation_job_postings"
-        android:icon="@drawable/user"
+        android:icon="@drawable/briefcase"
         tools:ignore="HardcodedText"
         android:title="İş ilanları"/>
 
