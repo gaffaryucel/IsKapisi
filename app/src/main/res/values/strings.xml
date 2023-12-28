@@ -13,4 +13,7 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="text_empty_error">Boş değer girilemez</string>
+    <string name="password_error">Şifre en az 6 karakter olmalıdır</string>
+
 </resources>
