@@ -1,5 +1,6 @@
 package com.androiddevelopers.freelanceapp.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,26 +18,60 @@ constructor(
     private val firebaseRepo: FirebaseRepoInterFace,
     private val firebaseAuth: FirebaseAuth,
 ) : ViewModel() {
-    val authState = MutableLiveData<Resource<Boolean>>()
-    val verifiedEmail = MutableLiveData<Resource<Boolean>>()
+    private val _authState = MutableLiveData<Resource<Boolean>>()
+    val authState: LiveData<Resource<Boolean>> get() = _authState
+    private val _forgotPassword = MutableLiveData<Resource<Boolean>>()
+    val forgotPassword: LiveData<Resource<Boolean>> get() = _forgotPassword
+    private val _verificationEmailSent = MutableLiveData<Resource<Boolean>>()
+    val verificationEmailSent: LiveData<Resource<Boolean>> get() = _verificationEmailSent
 
     fun getUser() = firebaseAuth.currentUser
     fun signOut() = firebaseAuth.signOut()
 
-    //fun login(email: String, password: String) = firebaseRepo.login(email, password)
     fun login(email: String, password: String) = viewModelScope.launch {
-        firebaseRepo.login(email, password).addOnSuccessListener {
-            verifiedEmail.value = Resource.success(it.user?.isEmailVerified)
-        }.addOnFailureListener {
-            verifiedEmail.value =
-                it.localizedMessage?.let { message ->
-                    Resource.error(message, false)
+        _authState.value = Resource.loading(true)
+        firebaseRepo.login(email, password)
+            .addOnCompleteListener {
+                //_progressBar.value = false
+                if (it.isSuccessful) {
+                    _authState.value = Resource.success(true)
+                } else {
+                    _authState.value =
+                        it.exception?.localizedMessage?.let { message ->
+                            Resource.error(message, false)
+                        }
                 }
-        }
+            }
     }
 
-    fun forgotPassword(email: String) = firebaseRepo.forgotPassword(email)
+    fun forgotPassword(email: String) = viewModelScope.launch {
+        _forgotPassword.value = Resource.loading(true)
+        firebaseRepo.forgotPassword(email)
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    _forgotPassword.value = Resource.success(true)
+                } else {
+                    _forgotPassword.value =
+                        it.exception?.localizedMessage?.let { message ->
+                            Resource.error(message, false)
+                        }
+                }
+            }
+    }
 
-    fun getUserDataByDocumentId(documentId: String) =
-        firebaseRepo.getUserDataByDocumentId(documentId)
+    fun sendVerificationEmail() = viewModelScope.launch {
+        _verificationEmailSent.value = Resource.loading(true)
+        getUser()?.let { currentUser ->
+            currentUser.sendEmailVerification().addOnCompleteListener {
+                if (it.isSuccessful) {
+                    _verificationEmailSent.value = Resource.success(true)
+                } else {
+                    _verificationEmailSent.value =
+                        it.exception?.localizedMessage?.let { message ->
+                            Resource.error(message, false)
+                        }
+                }
+            }
+        }
+    }
 }

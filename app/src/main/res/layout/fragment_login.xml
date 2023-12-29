@@ -5,6 +5,9 @@
 
     <data>
 
+        <import type="androidx.navigation.Navigation" />
+
+        <import type="com.androiddevelopers.freelanceapp.R" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,7 +19,7 @@
             android:id="@+id/textViewAppName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="60dp"
             android:text="@string/app_name"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -170,6 +173,7 @@
             android:layout_marginStart="@dimen/marginStartEndButton"
             android:layout_marginEnd="@dimen/marginStartEndButton"
             android:layout_marginBottom="24dp"
+            android:onClick="@{() -> Navigation.findNavController(textRegister).navigate(R.id.action_loginFragment_to_registerFragment)}"
             android:text="@string/button_register"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -177,5 +181,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.505"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/loginProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
