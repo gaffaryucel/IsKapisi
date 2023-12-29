@@ -10,16 +10,18 @@ import androidx.navigation.ui.setupWithNavController
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.ActivityBottomNavigationBinding
 import com.androiddevelopers.freelanceapp.util.Resource
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class BottomNavigationActivity : AppCompatActivity() {
 
-private lateinit var binding: ActivityBottomNavigationBinding
+    private lateinit var binding: ActivityBottomNavigationBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
-     binding = ActivityBottomNavigationBinding.inflate(layoutInflater)
-     setContentView(binding.root)
+        binding = ActivityBottomNavigationBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val navView: BottomNavigationView = binding.navView
 
