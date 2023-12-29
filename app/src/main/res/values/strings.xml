@@ -13,4 +13,18 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="text_empty_error">Boş değer girilemez</string>
+    <string name="password_error">Şifre en az 6 karakter olmalıdır</string>
+    <string name="email_verification_title">E-Posta Doğrulama</string>
+    <string name="email_verification_message">E-Posta adresiniz doğrulanmamış.\nTekrar doğrulama e-postası gönderilmesini ister misiniz?</string>
+    <string name="email_verification_error_message">Doğrulama E-postası gönderilemedi.\nTekrar doğrulama e-postası gönderilmesini ister misiniz?</string>
+    <string name="email_verification_success_message">Doğrulama E-postası gönderildi.\nAdresinize gelen bağlantıya tıklayarak doğrulama işlemini tamamlayabilirsiniz.</string>
+    <string name="email_forgot_password_title">Şifre Sıfırlama</string>
+    <string name="email_forgot_password_message">Yeni şifrenizi oluşturmak için e-posta gönderilmesini ister misiniz.?</string>
+    <string name="email_forgot_password_message_success">Şifre sıfırlama e-postası gönderildi. Adresinize gelen bağlantı üzerinden yeni şifre oluşturabilirsiniz.</string>
+    <string name="yes">Evet</string>
+    <string name="no">Hayır</string>
+    <string name="ok">Tamam</string>
+    <string name="login_dialog_error">İşlem Başarısız!</string>
+    <string name="login_dialog_error_message">Hata mesajı:</string>
 </resources>
