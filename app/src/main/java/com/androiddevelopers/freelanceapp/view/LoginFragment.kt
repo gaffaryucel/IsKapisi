@@ -54,13 +54,14 @@ class LoginFragment : Fragment() {
 
         setProgressBar(false)
         setupDialogs()
-        observeLiveData(binding.root, viewLifecycleOwner)
+        observeLiveData(viewLifecycleOwner)
 
         with(binding) {
             buttonLogin.setOnClickListener {
                 val email = edittextEmail.text.toString()
                 val password = edittextPassword.text.toString()
 
+                //email alanı boş mu?, password alanı 6 karakter ve fazlasımı kontrolünü ypıyoruz
                 if (email.isNotEmpty() && password.length > 5) {
                     viewModel.login(email, password)
                 } else if (email.isEmpty()) {
@@ -70,6 +71,7 @@ class LoginFragment : Fragment() {
                 }
             }
 
+            // kullanıcı şifresini unuttuysa yeni şifre oluşturmak için
             textForgotPassword.setOnClickListener {
                 forgotPasswordDialog.setButton(
                     AlertDialog.BUTTON_POSITIVE, context?.getString(R.string.yes)
@@ -89,8 +91,8 @@ class LoginFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-
-        verifyEmail() //kullanıcı daha önce giriş yaptıysa direkt ana sayfaya yönlendirmek için eklendi
+        //kullanıcı daha önce giriş yaptıysa direkt ana sayfaya yönlendirmek için eklendi
+        verifyEmail()
     }
 
     override fun onDestroyView() {
@@ -100,8 +102,9 @@ class LoginFragment : Fragment() {
 
     private fun verifyEmail() {
         viewModel.getUser()?.let {
-            if (it.isEmailVerified) { //kullanıcının email adresini onayladığını kontrol ediyoruz
-                view?.let { v -> gotoHome(v) }
+            //kullanıcının email adresini onayladığını kontrol ediyoruz
+            if (it.isEmailVerified) {
+                gotoHome()
             } else {
                 //kullanıcı email adresi doğrulanmadıysa uyarı mesajı görüntüler
                 verifiedEmailDialog.show()
@@ -109,13 +112,13 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun gotoHome(v: View) {
-//        val intent = Intent(requireContext(), BottomNavigationActivity::class.java)
-//        requireActivity().finish()
-//        requireActivity().startActivity(intent)
+    private fun gotoHome() {
+        val intent = Intent(requireContext(), BottomNavigationActivity::class.java)
+        requireActivity().finish()
+        requireActivity().startActivity(intent)
     }
 
-    private fun observeLiveData(view: View, owner: LifecycleOwner) {
+    private fun observeLiveData(owner: LifecycleOwner) {
         with(viewModel) {
             authState.observe(owner) {
                 when (it.status) {
@@ -124,6 +127,7 @@ class LoginFragment : Fragment() {
                         setProgressBar(false)
                         verifyEmail()
                     }
+
                     Status.ERROR -> {
                         setProgressBar(false)
                         errorDialog.setMessage("${context?.getString(R.string.login_dialog_error_message)}\n${it.message}")
@@ -139,6 +143,7 @@ class LoginFragment : Fragment() {
                         setProgressBar(false)
                         forgotPasswordSuccessDialog.show()
                     }
+
                     Status.ERROR -> {
                         setProgressBar(false)
                         forgotPasswordDialog.setMessage("${context?.getString(R.string.login_dialog_error_message)}\n${it.message}")
@@ -153,6 +158,7 @@ class LoginFragment : Fragment() {
                         setProgressBar(false)
                         verificationEmailSentDialog.show()
                     }
+
                     Status.ERROR -> {
                         setProgressBar(false)
                         verificationEmailSentErrorDialog.show()
@@ -176,23 +182,25 @@ class LoginFragment : Fragment() {
 
         with(verifiedEmailDialog) {
             setTitle(context.getString(R.string.email_verification_title))
-            setMessage("${viewModel.getUser()?.email} \n ${context.getString(R.string.email_verification_message)}")
+            setMessage(context.getString(R.string.email_verification_message))
             setCancelable(false)
             setButton(
                 AlertDialog.BUTTON_POSITIVE, context.getString(R.string.yes)
             ) { _, _ ->
                 viewModel.sendVerificationEmail()
+                viewModel.signOut()
             }
             setButton(
                 AlertDialog.BUTTON_NEGATIVE, context.getString(R.string.no)
             ) { dialog, _ ->
                 dialog.cancel()
+                viewModel.signOut()
             }
         }
 
         with(verificationEmailSentDialog) {
             setTitle(context.getString(R.string.email_verification_title))
-            setMessage("${viewModel.getUser()?.email} \n ${context.getString(R.string.email_verification_success_message)}")
+            setMessage(context.getString(R.string.email_verification_success_message))
             setCancelable(false)
             setButton(
                 AlertDialog.BUTTON_POSITIVE, context.getString(R.string.ok)
@@ -202,17 +210,19 @@ class LoginFragment : Fragment() {
         }
         with(verificationEmailSentErrorDialog) {
             setTitle(context.getString(R.string.email_verification_title))
-            setMessage("${viewModel.getUser()?.email} \n ${context.getString(R.string.email_verification_error_message)}")
+            setMessage(context.getString(R.string.email_verification_error_message))
             setCancelable(false)
             setButton(
                 AlertDialog.BUTTON_POSITIVE, context.getString(R.string.yes)
             ) { _, _ ->
                 viewModel.sendVerificationEmail()
+                viewModel.signOut()
             }
             setButton(
                 AlertDialog.BUTTON_NEGATIVE, context.getString(R.string.no)
             ) { dialog, _ ->
                 dialog.cancel()
+                viewModel.signOut()
             }
         }
 
@@ -239,10 +249,10 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun setProgressBar(visible: Boolean){
-        if (visible){
+    private fun setProgressBar(visible: Boolean) {
+        if (visible) {
             binding.loginProgressBar.visibility = View.VISIBLE
-        }else{
+        } else {
             binding.loginProgressBar.visibility = View.GONE
         }
     }
