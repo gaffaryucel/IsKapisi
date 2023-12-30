@@ -62,6 +62,16 @@ class RegisterFragment : Fragment() {
             when(it.status){
                 Status.ERROR->{
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                    binding.pbRegister.visibility = View.INVISIBLE
+                    binding.buttonRegister.isEnabled = true
+                }
+                Status.LOADING->{
+                    binding.pbRegister.visibility = View.VISIBLE
+                    binding.buttonRegister.isEnabled = false
+                }
+                Status.SUCCESS->{
+                    binding.pbRegister.visibility = View.INVISIBLE
+                    binding.buttonRegister.isEnabled = true
                 }
             }
         })

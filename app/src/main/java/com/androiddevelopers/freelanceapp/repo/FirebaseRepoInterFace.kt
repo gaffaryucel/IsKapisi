@@ -1,5 +1,6 @@
 package com.androiddevelopers.freelanceapp.repo
 
+import com.androiddevelopers.freelanceapp.model.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
@@ -12,4 +13,5 @@ interface FirebaseRepoInterFace {
     fun addUserToFirestore(data: UserModel) : Task<Void>
     fun deleteUserFromFirestore(documentId: String): Task<Void>
     fun getUserDataByDocumentId(documentId: String): Task<DocumentSnapshot>
+    fun addFreelancerJobPostToFirestore(post: FreelancerJobPost): Task<Void>
 }

@@ -1,5 +1,6 @@
 package com.androiddevelopers.freelanceapp.repo
 
+import com.androiddevelopers.freelanceapp.model.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
@@ -13,6 +14,7 @@ class FirebaseRepoImpl @Inject constructor(
     firestore: FirebaseFirestore
 ) : FirebaseRepoInterFace {
     private val userCollection = firestore.collection("users")
+    private val postCollection = firestore.collection("posts")
 
     override fun login(email: String, password: String): Task<AuthResult> {
         return auth.signInWithEmailAndPassword(email, password)
@@ -36,5 +38,9 @@ class FirebaseRepoImpl @Inject constructor(
 
     override fun getUserDataByDocumentId(documentId: String): Task<DocumentSnapshot> {
         return userCollection.document(documentId).get()
+    }
+
+    override fun addFreelancerJobPostToFirestore(post: FreelancerJobPost):Task<Void> {
+        return postCollection.document(post.postId.toString()).set(post)
     }
 }

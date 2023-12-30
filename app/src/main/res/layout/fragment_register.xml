@@ -68,6 +68,16 @@
             app:layout_constraintTop_toBottomOf="@id/confirm_password_edit_text"
             tools:ignore="HardcodedText" />
 
+        <ProgressBar
+            android:id="@+id/pbRegister"
+            android:visibility="invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/mediumButtonHeight"
+            app:layout_constraintEnd_toEndOf="@id/buttonRegister"
+            app:layout_constraintStart_toStartOf="@id/buttonRegister"
+            app:layout_constraintBottom_toBottomOf="@id/buttonRegister"
+            app:layout_constraintTop_toTopOf="@id/buttonRegister" />
+
 
         <ImageView
             android:id="@+id/asd"

@@ -9,10 +9,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.androiddevelopers.freelanceapp.databinding.FragmentHomeBinding
 import com.androiddevelopers.freelanceapp.viewmodel.HomeViewModel
+import com.androiddevelopers.freelanceapp.viewmodel.RegisterViewModel
 
 class HomeFragment : Fragment() {
 
+    private lateinit var viewModel: HomeViewModel
+
     private var _binding: FragmentHomeBinding? = null
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -22,7 +26,7 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+        viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
         return root
