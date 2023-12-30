@@ -44,11 +44,15 @@ class RegisterFragment : Fragment() {
 
 
         binding.buttonRegister.setOnClickListener {
-            val email = binding.emailEditText.text.toString()
-            val password = binding.passwordEditText.text.toString()
+            val email = binding.etEmail.text.toString()
+            val password = binding.etPassword.text.toString()
             val confirmPassword = binding.confirmPasswordEditText.text.toString()
 
             viewModel.signUp(email,password,confirmPassword)
+        }
+
+        binding.tvGoToLogin.setOnClickListener {
+            goBackLogin()
         }
         setupDialogs()
         observeLiveData()
@@ -109,6 +113,9 @@ class RegisterFragment : Fragment() {
         }
     }
 
+    private fun goBackLogin(){
+        findNavController().popBackStack()
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

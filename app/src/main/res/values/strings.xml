@@ -13,4 +13,7 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="welcome_description_text">
+        HIREME, freelance dünyasına adım atmanın kolaylığını ve rahatlığını sizlere sunuyor. Profesyonelliği ve özgürlüğü bir araya getiren bu platformda, işlerinizi yönetmek ve keyifli bir çalışma ortamında bulunmak artık çok daha basit. HIREME ile freelance dünyasının tadını çıkarın!
+    </string>
 </resources>

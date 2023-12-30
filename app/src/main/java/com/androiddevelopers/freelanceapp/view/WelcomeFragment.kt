@@ -36,7 +36,7 @@ class WelcomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.continueButton.setOnClickListener {
+        binding.buttonNext.setOnClickListener {
             val action = WelcomeFragmentDirections.actionWelcomeFragmentToLoginFragment()
             Navigation.findNavController(view).navigate(action)
         }

@@ -50,7 +50,6 @@ class ProfileFragment : Fragment() {
         viewModel.savedUserData.observe(viewLifecycleOwner, Observer {userData ->
             if (userData == null){
                 viewModel.getUserDataFromFirebase()
-                println("null")
             }else{
                 binding.apply {
                     user = userData
