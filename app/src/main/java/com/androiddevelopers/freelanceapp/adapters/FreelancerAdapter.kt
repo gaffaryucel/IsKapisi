@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.databinding.CardFreelancerBinding
-import com.androiddevelopers.freelanceapp.model.FreelancerJobPost
+import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 
 class FreelancerAdapter(
     private val context: Context,

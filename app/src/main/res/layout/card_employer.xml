@@ -7,7 +7,7 @@
 
         <variable
             name="employer"
-            type="com.androiddevelopers.freelanceapp.model.EmployerJobPost" />
+            type="com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost" />
 
     </data>
 
