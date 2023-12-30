@@ -8,7 +8,6 @@
     android:layout_height="match_parent"
     tools:context=".view.HomeFragment" >
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -40,7 +39,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/search_view"
             app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/baseline_keyboard_arrow_right_24"
+            android:src="@drawable/chat"
             android:id="@+id/image_view_2"
             android:layout_width="0dp"
             android:layout_height="0dp"/>
