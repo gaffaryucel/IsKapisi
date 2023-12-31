@@ -41,6 +41,4 @@ class EmployerJobPost : BaseJobPost {
     ) {
         this.employerId = employerId
     }
-
-
 }

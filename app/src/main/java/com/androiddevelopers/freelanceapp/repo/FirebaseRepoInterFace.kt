@@ -1,7 +1,7 @@
 package com.androiddevelopers.freelanceapp.repo
 
-import com.androiddevelopers.freelanceapp.model.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.model.UserModel
+import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.firestore.DocumentSnapshot
