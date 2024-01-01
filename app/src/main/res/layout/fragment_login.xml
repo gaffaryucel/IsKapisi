@@ -15,180 +15,272 @@
         android:layout_height="match_parent"
         tools:context=".view.LoginFragment">
 
-        <TextView
-            android:id="@+id/textViewAppName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
-            android:text="@string/app_name"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edittextLayoutEmail"
-            isEmptyCheck="@{edittextEmail}"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/loginTopLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/marginStartEnd"
-            android:layout_marginTop="100dp"
-            android:layout_marginEnd="@dimen/marginStartEnd"
-            app:boxCornerRadiusBottomEnd="@dimen/edittextCornerRadius"
-            app:boxCornerRadiusBottomStart="@dimen/edittextCornerRadius"
-            app:boxCornerRadiusTopEnd="@dimen/edittextCornerRadius"
-            app:boxCornerRadiusTopStart="@dimen/edittextCornerRadius"
-            app:endIconMode="clear_text"
-            app:errorEnabled="true"
+            app:layout_constraintBottom_toTopOf="@+id/loginMidLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewAppName">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edittextEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/hint_edittext_email"
-                android:inputType="textEmailAddress"
-                tools:ignore="TextContrastCheck,TouchTargetSizeCheck" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edittextLayoutPassword"
-            passwordCheck="@{edittextPassword}"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/marginStartEnd"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="@dimen/marginStartEnd"
-            app:boxCornerRadiusBottomEnd="@dimen/edittextCornerRadius"
-            app:boxCornerRadiusBottomStart="@dimen/edittextCornerRadius"
-            app:boxCornerRadiusTopEnd="@dimen/edittextCornerRadius"
-            app:boxCornerRadiusTopStart="@dimen/edittextCornerRadius"
-            app:endIconMode="password_toggle"
-            app:errorEnabled="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edittextLayoutEmail">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edittextPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/hint_edittext_password"
-                android:inputType="textPassword"
-                tools:ignore="TextContrastCheck" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <TextView
-            android:id="@+id/textForgotPassword"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="@dimen/marginStartEnd"
-            android:text="@string/forgot_password"
-            android:textAllCaps="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edittextLayoutPassword" />
-
-        <Button
-            android:id="@+id/buttonLogin"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginStart="@dimen/marginStartEndButton"
-            android:layout_marginTop="70dp"
-            android:layout_marginEnd="@dimen/marginStartEndButton"
-            android:text="@string/button_login"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edittextLayoutPassword" />
-
-
-        <LinearLayout
-            android:id="@+id/buttonFacebook"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginStart="@dimen/marginStartEndButton"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="@dimen/marginStartEndButton"
-            android:background="@drawable/layout_stroke_facebook"
-            android:gravity="center"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonLogin">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:contentDescription="facebook icon"
-                android:src="@drawable/icon_facebook_48"
-                tools:ignore="HardcodedText,ImageContrastCheck" />
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
+                android:id="@+id/textViewAppName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/login_with_facebook"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-        </LinearLayout>
+                android:layout_marginTop="8dp"
+                android:text="@string/login_title_message"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/loginImageAppLogo" />
 
-        <LinearLayout
-            android:id="@+id/buttonGoogle"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginStart="@dimen/marginStartEndButton"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="@dimen/marginStartEndButton"
-            android:background="@drawable/layout_stroke_google"
-            android:gravity="center"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonFacebook">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:contentDescription="facebook icon"
-                android:src="@drawable/icon_google_48"
+                android:id="@+id/loginImageAppLogo"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:contentDescription="AppLogo"
+                android:src="@drawable/new_logo_2"
+                app:layout_constraintBottom_toTopOf="@+id/textViewAppName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_percent="0.8"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.4"
                 tools:ignore="HardcodedText" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/login_with_google"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-        </LinearLayout>
 
-        <TextView
-            android:id="@+id/textRegister"
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/loginMidLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/marginStartEndButton"
-            android:layout_marginEnd="@dimen/marginStartEndButton"
-            android:layout_marginBottom="24dp"
-            android:onClick="@{() -> Navigation.findNavController(textRegister).navigate(R.id.action_loginFragment_to_registerFragment)}"
-            android:text="@string/button_register"
-            android:textSize="18sp"
-            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/loginBotLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/loginTopLayout">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edittextLayoutEmail"
+                isEmptyCheck="@{edittextEmail}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:boxCornerRadiusBottomEnd="@dimen/edittextCornerRadius"
+                app:boxCornerRadiusBottomStart="@dimen/edittextCornerRadius"
+                app:boxCornerRadiusTopEnd="@dimen/edittextCornerRadius"
+                app:boxCornerRadiusTopStart="@dimen/edittextCornerRadius"
+                app:endIconMode="clear_text"
+                app:errorEnabled="true"
+                app:layout_constraintBottom_toTopOf="@+id/edittextLayoutPassword"
+                app:layout_constraintEnd_toStartOf="@+id/guidelineMidLayoutEnd"
+                app:layout_constraintStart_toEndOf="@+id/guidelineMidLayoutStart"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_max="@dimen/edittextMaxWidth">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edittextEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/edittextHeight"
+                    android:hint="@string/hint_edittext_email"
+                    android:inputType="textEmailAddress"
+                    tools:ignore="TextContrastCheck" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edittextLayoutPassword"
+                passwordCheck="@{edittextPassword}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                app:boxCornerRadiusBottomEnd="@dimen/edittextCornerRadius"
+                app:boxCornerRadiusBottomStart="@dimen/edittextCornerRadius"
+                app:boxCornerRadiusTopEnd="@dimen/edittextCornerRadius"
+                app:boxCornerRadiusTopStart="@dimen/edittextCornerRadius"
+                app:endIconMode="password_toggle"
+                app:errorEnabled="true"
+                app:layout_constraintBottom_toTopOf="@+id/textForgotPassword"
+                app:layout_constraintEnd_toStartOf="@+id/guidelineMidLayoutEnd"
+                app:layout_constraintStart_toEndOf="@+id/guidelineMidLayoutStart"
+                app:layout_constraintTop_toBottomOf="@+id/edittextLayoutEmail"
+                app:layout_constraintWidth_max="@dimen/edittextMaxWidth">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edittextPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/edittextHeight"
+                    android:hint="@string/hint_edittext_password"
+                    android:inputType="textPassword"
+                    tools:ignore="TextContrastCheck" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/textForgotPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/forgot_password"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/edittextLayoutPassword"
+                app:layout_constraintTop_toBottomOf="@+id/edittextLayoutPassword" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineMidLayoutStart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.05" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineMidLayoutEnd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.95" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/loginBotLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.505"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/loginMidLayout">
 
-        <ProgressBar
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/buttonLogin"
+                style="@style/RegisterButtonStyle"
+                android:text="@string/button_login"
+                app:layout_constraintBottom_toTopOf="@+id/facebookAndGoogleButton"
+                app:layout_constraintEnd_toStartOf="@+id/guidelineBotLayoutEnd"
+                app:layout_constraintStart_toEndOf="@+id/guidelineBotLayoutStart"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_max="@dimen/buttonMaxWidth" />
+
+            <LinearLayout
+                android:id="@+id/facebookAndGoogleButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="6dp"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@+id/textRegister"
+                app:layout_constraintEnd_toStartOf="@+id/guidelineBotLayoutEnd"
+                app:layout_constraintStart_toEndOf="@+id/guidelineBotLayoutStart"
+                app:layout_constraintTop_toBottomOf="@+id/buttonLogin">
+
+                <LinearLayout
+                    android:id="@+id/buttonFacebook"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/layout_stroke_facebook"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toTopOf="@+id/buttonGoogle"
+                    app:layout_constraintEnd_toStartOf="@+id/guidelineBotLayoutEnd"
+                    app:layout_constraintStart_toEndOf="@+id/guidelineBotLayoutStart"
+                    app:layout_constraintTop_toBottomOf="@+id/buttonLogin"
+                    app:layout_constraintWidth_max="@dimen/buttonMaxWidth">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginEnd="10dp"
+                        android:contentDescription="facebook icon"
+                        android:src="@drawable/icon_facebook_48"
+                        tools:ignore="HardcodedText,ImageContrastCheck" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/login_with_facebook"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginStart="8dp"
+                    android:id="@+id/buttonGoogle"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/layout_stroke_google"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toTopOf="@+id/textRegister"
+                    app:layout_constraintEnd_toStartOf="@+id/guidelineBotLayoutEnd"
+                    app:layout_constraintStart_toEndOf="@+id/guidelineBotLayoutStart"
+                    app:layout_constraintTop_toBottomOf="@+id/buttonFacebook"
+                    app:layout_constraintWidth_max="@dimen/buttonMaxWidth">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:contentDescription="facebook icon"
+                        android:src="@drawable/icon_google_48"
+                        tools:ignore="HardcodedText,ImageContrastCheck" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/login_with_google"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/textRegister"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:onClick="@{() -> Navigation.findNavController(textRegister).navigate(R.id.action_loginFragment_to_registerFragment)}"
+                android:text="@string/button_register"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/facebookAndGoogleButton" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineBotLayoutStart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.1" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineBotLayoutEnd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.9" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/loginProgressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:indeterminate="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
