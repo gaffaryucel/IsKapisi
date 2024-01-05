@@ -122,14 +122,12 @@ class LoginFragment : Fragment() {
         with(viewModel) {
             authState.observe(owner) {
                 when (it.status) {
-                    Status.LOADING -> setProgressBar(true)
+                    Status.LOADING -> it.data?.let { state -> setProgressBar(state) }
                     Status.SUCCESS -> {
-                        setProgressBar(false)
                         verifyEmail()
                     }
 
                     Status.ERROR -> {
-                        setProgressBar(false)
                         errorDialog.setMessage("${context?.getString(R.string.login_dialog_error_message)}\n${it.message}")
                         errorDialog.show()
                     }
@@ -138,14 +136,12 @@ class LoginFragment : Fragment() {
 
             forgotPassword.observe(owner) {
                 when (it.status) {
-                    Status.LOADING -> setProgressBar(true)
+                    Status.LOADING -> it.data?.let { state -> setProgressBar(state) }
                     Status.SUCCESS -> {
-                        setProgressBar(false)
                         forgotPasswordSuccessDialog.show()
                     }
 
                     Status.ERROR -> {
-                        setProgressBar(false)
                         forgotPasswordDialog.setMessage("${context?.getString(R.string.login_dialog_error_message)}\n${it.message}")
                     }
                 }
@@ -153,14 +149,12 @@ class LoginFragment : Fragment() {
 
             verificationEmailSent.observe(owner) {
                 when (it.status) {
-                    Status.LOADING -> setProgressBar(true)
+                    Status.LOADING -> it.data?.let { state -> setProgressBar(state) }
                     Status.SUCCESS -> {
-                        setProgressBar(false)
                         verificationEmailSentDialog.show()
                     }
 
                     Status.ERROR -> {
-                        setProgressBar(false)
                         verificationEmailSentErrorDialog.show()
                     }
                 }
@@ -249,8 +243,8 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun setProgressBar(visible: Boolean) {
-        if (visible) {
+    private fun setProgressBar(isVisible: Boolean) {
+        if (isVisible) {
             binding.loginProgressBar.visibility = View.VISIBLE
         } else {
             binding.loginProgressBar.visibility = View.GONE
