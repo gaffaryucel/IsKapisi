@@ -1,6 +1,7 @@
 package com.androiddevelopers.freelanceapp.repo
 
 import com.androiddevelopers.freelanceapp.model.UserModel
+import com.androiddevelopers.freelanceapp.model.VideoModel
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
@@ -12,10 +13,11 @@ import javax.inject.Inject
 
 class FirebaseRepoImpl @Inject constructor(
     private val auth: FirebaseAuth,
-    firestore: FirebaseFirestore
+    firestore: FirebaseFirestore,
 ) : FirebaseRepoInterFace {
     private val userCollection = firestore.collection("users")
     private val postCollection = firestore.collection("posts")
+    private val videoCollection = firestore.collection("videos")
 
     override fun login(email: String, password: String): Task<AuthResult> {
         return auth.signInWithEmailAndPassword(email, password)
@@ -47,5 +49,12 @@ class FirebaseRepoImpl @Inject constructor(
 
     override fun getAllFreelancerJobPostFromFirestore(): Task<QuerySnapshot> {
         return postCollection.get()
+    }
+    override fun saveVideoToFirestore(video: VideoModel):Task<Void> {
+        return videoCollection.document(video.videoId.toString()).set(video)
+    }
+
+    override fun getVideoFromFirestore(): Task<QuerySnapshot> {
+        return videoCollection.get()
     }
 }

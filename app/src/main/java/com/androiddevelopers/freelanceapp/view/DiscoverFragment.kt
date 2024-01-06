@@ -1,33 +1,51 @@
 package com.androiddevelopers.freelanceapp.view
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.androiddevelopers.freelanceapp.R
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
+import com.androiddevelopers.freelanceapp.adapters.DiscoverAdapter
+import com.androiddevelopers.freelanceapp.databinding.FragmentDiscoverBinding
 import com.androiddevelopers.freelanceapp.viewmodel.DiscoverViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class DiscoverFragment : Fragment() {
-
-    companion object {
-        fun newInstance() = DiscoverFragment()
-    }
 
     private lateinit var viewModel: DiscoverViewModel
 
+    private var _binding: FragmentDiscoverBinding? = null
+    private val binding get() = _binding!!
+    private var adapter = DiscoverAdapter()
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_discover, container, false)
+    ): View {
+        viewModel = ViewModelProvider(this)[DiscoverViewModel::class.java]
+        _binding = FragmentDiscoverBinding.inflate(inflater, container, false)
+        val root: View = binding.root
+        return root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(DiscoverViewModel::class.java)
-        // TODO: Use the ViewModel
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.rvDiscover.layoutManager = GridLayoutManager(requireContext(),3)
+        binding.rvDiscover.adapter = adapter
+        observeLiveData()
+    }
+    @SuppressLint("NotifyDataSetChanged")
+    private fun observeLiveData() {
+        viewModel.videoData.observe(viewLifecycleOwner, Observer {
+            adapter.imageList = it
+            adapter.notifyDataSetChanged()
+        })
     }
 
 }

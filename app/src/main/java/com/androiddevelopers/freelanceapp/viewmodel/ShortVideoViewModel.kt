@@ -13,7 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class DiscoverViewModel  @Inject constructor(
+class ShortVideoViewModel  @Inject constructor(
     private val firebaseRepo: FirebaseRepoInterFace,
     private val firebaseAuth: FirebaseAuth,
     private val roomRepo: RoomUserDatabaseRepoInterface,
@@ -24,8 +24,8 @@ class DiscoverViewModel  @Inject constructor(
     val message: LiveData<Resource<UserModel>>
         get() = _message
 
-    private val _videoData = MutableLiveData<List<String>>()
-    val videoData: LiveData<List<String>>
+    private val _videoData = MutableLiveData<List<VideoModel>>()
+    val videoData: LiveData<List<VideoModel>>
         get() = _videoData
 
     init {
@@ -36,16 +36,17 @@ class DiscoverViewModel  @Inject constructor(
         _message.value = Resource.loading(null)
         firebaseRepo.getVideoFromFirestore()
             .addOnSuccessListener {
-                val videoImages = mutableListOf<String>()
-                for (document in it.documents) {
+                val videos = mutableListOf<VideoModel>()
+                for (document in it .documents) {
                     // Belgeden her bir videoyu çek
                     val video = document.toObject(VideoModel::class.java)
-                    video?.let { videoImages.add(video.videoUrl.toString()) }
-                    _message.value = Resource.success(null)
+                    video?.let { videos.add(it) }
                 }
-                _videoData.value = videoImages
-            }.addOnFailureListener { exception ->
+                _videoData.value = videos
+            }
+            .addOnFailureListener { exception ->
                 // Hata durzumunda işlemleri buraya ekleyebilirsiniz
+                println("Belge alınamadı. Hata: $exception")
                 _message.value = Resource.error("Belge alınamadı. Hata: $exception", null)
             }
     }

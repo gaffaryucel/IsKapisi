@@ -9,13 +9,21 @@
         android:id="@+id/navigation_home"
         android:name="com.androiddevelopers.freelanceapp.view.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_createShortVideoFragment"
+            app:destination="@id/createShortVideoFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_discover"
         android:name="com.androiddevelopers.freelanceapp.view.DiscoverFragment"
         android:label="Keşfet"
-        tools:layout="@layout/fragment_discover" />
+        tools:layout="@layout/fragment_discover" >
+        <action
+            android:id="@+id/action_navigation_discover_to_shortVideoFragment"
+            app:destination="@id/shortVideoFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_create_post"
@@ -34,5 +42,20 @@
         android:name="com.androiddevelopers.freelanceapp.view.ProfileFragment"
         android:label="profile"
         tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/createShortVideoFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.CreateShortVideoFragment"
+        android:label="fragment_create_short_video"
+        tools:layout="@layout/fragment_create_short_video" />
+    <fragment
+        android:id="@+id/shortVideoFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.ShortVideoFragment"
+        android:label="fragment_short_video"
+        tools:layout="@layout/fragment_short_video" >
+        <argument
+            android:name="position"
+            app:argType="integer" />
+    </fragment>
+
 
 </navigation>

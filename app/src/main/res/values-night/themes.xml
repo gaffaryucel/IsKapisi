@@ -2,15 +2,6 @@
     <!-- Base application theme. -->
 
     <!-- Button Styles -->
-    <style name="DefaultButtonStyle">
-        <item name="android:textColor">#f8cd65</item> <!-- Beyaz renk -->
-        <item name="android:textSize">16sp</item>
-        <item name="android:text">Sonraki</item>
-        <item name="android:background">@drawable/welcome_screen_next_button_bg</item> <!-- Koyu kahverengi arka plan -->
-        <item name="android:layout_width">150dp</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
-
     <style name="RegisterButtonStyle">
         <item name="android:background">@drawable/edit_text_bg</item>
         <item name="android:textColor">@color/black</item>
@@ -19,6 +10,14 @@
         <item name="android:layout_marginTop">15dp</item>
     </style>
 
+    <style name="DefaultButtonStyle">
+        <item name="android:textColor">#f8cd65</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:text">Sonraki</item>
+        <item name="android:background">@drawable/welcome_screen_next_button_bg</item> <!-- Koyu kahverengi arka plan -->
+        <item name="android:layout_width">150dp</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
 
     <!-- Text Styles -->
     <style name="WelcomeTextStyle">
@@ -41,7 +40,6 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-
     <!-- EditText Styles -->
     <style name="RegisterEditTextStyle">
         <item name="android:layout_width">0dp</item>
@@ -50,6 +48,25 @@
         <item name="android:background">@drawable/edit_text_bg</item>
         <item name="android:textColorHint">#444444</item>
         <item name="android:textColor">@color/black</item>
+    </style>
+
+
+
+    <!-- Search View Styles -->
+    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <item name="android:background">@drawable/search_view_background_dark</item>
+    </style>
+
+    <!-- Bottom Nav Style -->
+    <style name="MyBottomNavigationViewTheme" parent="Widget.Design.BottomNavigationView">
+        <item name="itemBackground">@color/night_bottom_nav_bg</item>
+        <item name="itemIconTint">@color/night_selected_item_color</item>
+        <item name="itemTextColor">@color/night_unselected_item_color</item>
+    </style>
+
+    <!-- Filter ImageView Style -->
+    <style name="FilterImageviewStyle" >
+        <item name="android:src">@drawable/filter_white</item>
     </style>
 
 

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:src="@drawable/image_placeholder"
+        android:id="@+id/ivJobPost"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/ivPostOwner"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:src="@drawable/image_placeholder"
+            android:layout_margin="8dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
+
+        <TextView
+            android:id="@+id/tvJobPostTitle"
+            app:layout_constraintStart_toEndOf="@+id/ivPostOwner"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:padding="5dp"
+            android:text="bu bir freelancer iş ilanıdır ve herkes için değildir"
+            android:layout_marginStart="5dp"/>
+
+        <TextView
+            app:layout_constraintStart_toEndOf="@+id/ivPostOwner"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvJobPostTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:textSize="16sp"
+            android:padding="5dp"
+            android:text="bu bir freelancer iş ilanıdır ve herkes için değildir"
+            android:layout_marginStart="5dp"/>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/ivPostOwner"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/tvJobPostTitle"
+                android:layout_marginTop="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/ivUserStartCount"
+                    android:text="4.0"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <ImageView
+                    android:id="@+id/ivStar"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/baseline_star_24"/>
+            </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
