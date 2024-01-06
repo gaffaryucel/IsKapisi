@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'androidx.navigation.safeargs'
     id 'com.google.gms.google-services'
+    id 'com.google.devtools.ksp'
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
 }
@@ -43,12 +44,9 @@ android {
 }
 
 dependencies {
-    def room_version = "2.4.0"
-
-
-    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.10.0'
+    implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
@@ -57,7 +55,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-    //Hiltt
+    //Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
 
@@ -76,11 +74,12 @@ dependencies {
     implementation 'com.google.firebase:firebase-inappmessaging-display-ktx'
     implementation 'com.google.android.gms:play-services-auth:20.7.0'
 
-
-    //ROom
+    //Room
     implementation "androidx.room:room-runtime:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
+    ksp "androidx.room:room-compiler:$room_version"
 
+    //Facebook SDK
+    implementation 'com.facebook.android:facebook-android-sdk:16.3.0'
 }
 kapt {
     correctErrorTypes true

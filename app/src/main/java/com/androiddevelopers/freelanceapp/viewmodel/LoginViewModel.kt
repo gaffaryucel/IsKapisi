@@ -32,7 +32,7 @@ constructor(
         _authState.value = Resource.loading(true)
         firebaseRepo.login(email, password)
             .addOnCompleteListener {
-                //_progressBar.value = false
+                _authState.value = Resource.loading(false)
                 if (it.isSuccessful) {
                     _authState.value = Resource.success(true)
                 } else {
@@ -48,6 +48,7 @@ constructor(
         _forgotPassword.value = Resource.loading(true)
         firebaseRepo.forgotPassword(email)
             .addOnCompleteListener {
+                _forgotPassword.value = Resource.loading(false)
                 if (it.isSuccessful) {
                     _forgotPassword.value = Resource.success(true)
                 } else {
@@ -63,6 +64,7 @@ constructor(
         _verificationEmailSent.value = Resource.loading(true)
         getUser()?.let { currentUser ->
             currentUser.sendEmailVerification().addOnCompleteListener {
+                _verificationEmailSent.value = Resource.loading(false)
                 if (it.isSuccessful) {
                     _verificationEmailSent.value = Resource.success(true)
                 } else {

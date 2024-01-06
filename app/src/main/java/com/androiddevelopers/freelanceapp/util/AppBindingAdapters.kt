@@ -3,6 +3,7 @@ package com.androiddevelopers.freelanceapp.util
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.R
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -40,7 +41,7 @@ fun isEmptyCheck(viewLayout: TextInputLayout, viewText: TextInputEditText) {
 
     })
 
-    viewText.setOnFocusChangeListener { v, hasFocus ->
+    viewText.setOnFocusChangeListener { _, hasFocus ->
         run {
             if (hasFocus && viewText.text.toString().isEmpty()) {
                 viewLayout.error = viewLayout.context.getString(R.string.text_empty_error)
@@ -48,7 +49,6 @@ fun isEmptyCheck(viewLayout: TextInputLayout, viewText: TextInputEditText) {
         }
     }
 }
-
 
 
 /*
@@ -91,4 +91,10 @@ fun passwordCheck(viewLayout: TextInputLayout, viewText: TextInputEditText) {
             }
         }
     }
+
+}
+
+@BindingAdapter("setHasFixedSize")
+fun setHasFixedSize(view: RecyclerView, value: Boolean) {
+    view.setHasFixedSize(value)
 }

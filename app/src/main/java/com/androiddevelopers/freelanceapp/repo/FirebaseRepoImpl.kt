@@ -7,6 +7,7 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import javax.inject.Inject
 
 class FirebaseRepoImpl @Inject constructor(
@@ -40,7 +41,11 @@ class FirebaseRepoImpl @Inject constructor(
         return userCollection.document(documentId).get()
     }
 
-    override fun addFreelancerJobPostToFirestore(post: FreelancerJobPost):Task<Void> {
-        return userCollection.document(post.postId.toString()).set(post)
+    override fun addFreelancerJobPostToFirestore(post: FreelancerJobPost): Task<Void> {
+        return postCollection.document(post.postId.toString()).set(post)
+    }
+
+    override fun getAllFreelancerJobPostFromFirestore(): Task<QuerySnapshot> {
+        return postCollection.get()
     }
 }

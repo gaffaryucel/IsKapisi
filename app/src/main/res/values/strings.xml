@@ -4,11 +4,11 @@
     <string name="welcome">Welcome</string>
     <string name="hint_edittext_email">Email adresinizi girin</string>
     <string name="hint_edittext_password">Şifrenizi girin</string>
-    <string name="forgot_password">Şifrenizi mi unuttunuz?</string>
+    <string name="forgot_password"><u>Şifrenizi mi unuttunuz?</u></string>
     <string name="button_login">Giriş yap</string>
-    <string name="button_register">Mevcut hesabınız yok mu? Kayıt olun.</string>
-    <string name="login_with_facebook">Facebook ile giriş yap</string>
-    <string name="login_with_google">Google ile giriş yap</string>
+    <string name="button_register">Mevcut hesabınız yok mu? <u>Kayıt olun.</u></string>
+    <string name="login_with_facebook">Facebook</string>
+    <string name="login_with_google">Google</string>
     <string name="title_activity_bottom_navigation">BottomNavigationActivity</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
@@ -30,4 +30,6 @@
     <string name="ok">Tamam</string>
     <string name="login_dialog_error">İşlem Başarısız!</string>
     <string name="login_dialog_error_message">Hata mesajı:</string>
+    <string name="app_web_client_id">926001727029-eam99mu4utbnqhv090rt4mav59sk5tef.apps.googleusercontent.com</string>
+    <string name="login_title_message">Hesabınız ile giriş yapın.</string>
 </resources>
