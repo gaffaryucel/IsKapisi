@@ -69,5 +69,18 @@
         <item name="android:src">@drawable/filter_white</item>
     </style>
 
+    <style name="AppBackGroundStyle" >
+        <item name="android:background">@color/dark_bg_color</item>
+    </style>
+
+
+    <!-- Icons Style -->
+    <style name="CameraIconStyle" >
+        <item name="android:src">@drawable/baseline_camera_icon</item>
+    </style>
+
+    <style name="MessageIconStyle" >
+        <item name="android:src">@drawable/message_icon_light</item>
+    </style>
 
 </resources>

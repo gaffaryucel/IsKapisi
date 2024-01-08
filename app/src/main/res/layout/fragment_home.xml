@@ -15,6 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        style="@style/AppBackGroundStyle"
         tools:context=".view.HomeFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,37 +24,39 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/image_view"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:src="@drawable/baseline_person_24"
+                android:padding="6dp"
+                style="@style/CameraIconStyle"
+                android:id="@+id/camera_icon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/search_view"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="ContentDescription" />
 
+
             <androidx.appcompat.widget.SearchView
+                app:searchIcon="@drawable/baseline_search_24"
+                style="@style/SearchViewStyle"
                 android:id="@+id/search_view"
                 android:layout_width="0dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="35dp"
-                android:layout_marginEnd="35dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@id/image_view_2"
-                app:layout_constraintStart_toStartOf="@+id/image_view"
+                app:layout_constraintEnd_toStartOf="@id/image_view_2"
+                app:layout_constraintStart_toEndOf="@+id/image_view"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
+                android:padding="6dp"
                 android:id="@+id/image_view_2"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:src="@drawable/chat"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                style="@style/MessageIconStyle"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/search_view"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="ContentDescription,ImageContrastCheck" />
+                app:layout_constraintTop_toTopOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

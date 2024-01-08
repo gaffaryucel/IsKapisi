@@ -20,8 +20,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal">
                 <ImageView
                     android:id="@+id/idIvBackButton"
                     android:src="@drawable/baseline_keyboard_arrow_left_24"

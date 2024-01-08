@@ -20,11 +20,19 @@
     <color name="night_bottom_nav_bg">#051923</color>
     <color name="light_bottom_nav_bg">#00a6fb</color>
 
+    <color name="light_bg_color">#006494</color>
+    <color name="dark_bg_color">#003554</color>
+
     <color name="light_unselected_item_color">#051923</color>
     <color name="light_selected_item_color">#051923</color>
     <!-- Seçili olmayan eleman rengi -->
     <color name="night_selected_item_color">#00a6fb</color>
     <color name="night_unselected_item_color">#00a6fb</color>
+
+
+    <!-- Discover Card Bg Color-->
+    <color name="discover_card_bg_light_color">#00a6fb</color>
+    <color name="discover_card_bg_dark_color">#003554</color>
 
 
 

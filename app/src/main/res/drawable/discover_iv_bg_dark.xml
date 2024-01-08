@@ -4,6 +4,6 @@
     <solid android:color="@android:color/transparent" />
     <corners android:radius="12dp" />
     <stroke
-        android:color="@color/discover_card_bg_light_color"
+        android:color="@color/discover_card_bg_dark_color"
         android:width="4dp" />
 </shape>

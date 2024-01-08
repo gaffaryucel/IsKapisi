@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.databinding.VideoItemRowBinding
 import com.androiddevelopers.freelanceapp.model.VideoModel
-import com.google.android.exoplayer2.ExoPlayer
 
 
 class VideoAdapter : RecyclerView.Adapter<VideoAdapter.VideoViewHolder>() {
@@ -34,9 +33,7 @@ class VideoAdapter : RecyclerView.Adapter<VideoAdapter.VideoViewHolder>() {
     get() = recyclerListDiffer.currentList
     set(value) = recyclerListDiffer.submitList(value)
 
-    inner class VideoViewHolder( val binding : VideoItemRowBinding) : RecyclerView.ViewHolder(binding.root){
-        var player: ExoPlayer? = null
-    }
+    inner class VideoViewHolder( val binding : VideoItemRowBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoViewHolder {
         val binding = VideoItemRowBinding.inflate(LayoutInflater.from(parent.context),parent,false)

@@ -10,6 +10,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.FreelancerAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentHomeBinding
@@ -59,6 +60,11 @@ class HomeFragment : Fragment() {
         setProgressBar(false)
         setupDialogs()
         observeLiveData(viewLifecycleOwner)
+
+        binding.cameraIcon.setOnClickListener {
+            val action = HomeFragmentDirections.actionNavigationHomeToCreateShortVideoFragment()
+            Navigation.findNavController(it).navigate(action)
+        }
     }
 
     override fun onDestroyView() {
