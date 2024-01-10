@@ -28,7 +28,7 @@ class HomeFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    private lateinit var adapter: FreelancerAdapter
+    private lateinit var freelancerAdapter: FreelancerAdapter
     private lateinit var listFreelancerJobPost: ArrayList<FreelancerJobPost>
     private lateinit var errorDialog: AlertDialog
 
@@ -37,12 +37,12 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+        viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val view: View = binding.root
+        val view = binding.root
 
-        adapter = FreelancerAdapter(view.context, ArrayList())
-        listFreelancerJobPost = ArrayList()
+        freelancerAdapter = FreelancerAdapter(view.context, arrayListOf())
+        listFreelancerJobPost = arrayListOf()
 
         return view
     }
@@ -54,16 +54,20 @@ class HomeFragment : Fragment() {
 
         errorDialog = AlertDialog.Builder(context).create()
 
-        binding.adapter = adapter
 
-        search(binding.searchView)
         setProgressBar(false)
         setupDialogs()
         observeLiveData(viewLifecycleOwner)
 
-        binding.cameraIcon.setOnClickListener {
-            val action = HomeFragmentDirections.actionNavigationHomeToCreateShortVideoFragment()
-            Navigation.findNavController(it).navigate(action)
+        with(binding) {
+            search(homeSearchView)
+
+            adapter = freelancerAdapter
+
+            cameraIcon.setOnClickListener {
+                val action = HomeFragmentDirections.actionNavigationHomeToCreateShortVideoFragment()
+                Navigation.findNavController(it).navigate(action)
+            }
         }
     }
 
@@ -89,7 +93,7 @@ class HomeFragment : Fragment() {
             }
 
             firebaseLiveData.observe(owner) { list ->
-                adapter.freelancerRefresh(list) // firebase 'den gelen veriler ile adapter'i yeniliyoruz
+                freelancerAdapter.freelancerRefresh(list) // firebase 'den gelen veriler ile adapter'i yeniliyoruz
 
                 listFreelancerJobPost.clear()
                 // firebase 'den gelen son verilerin kopyasını saklıyoruz
@@ -140,7 +144,7 @@ class HomeFragment : Fragment() {
                             list.add(it)
                         }
                     }
-                    adapter.freelancerRefresh(list)
+                    freelancerAdapter.freelancerRefresh(list)
                 }
 
                 return true
