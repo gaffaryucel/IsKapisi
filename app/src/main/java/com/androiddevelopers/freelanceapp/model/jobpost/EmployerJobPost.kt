@@ -20,6 +20,9 @@ class EmployerJobPost : BaseJobPost {
         applicants: List<String>?,
         status: JobStatus?,
         additionalDetails: String?,
+        completedJobs: Int?,
+        canceledJobs: Int?,
+        unfinishedJobs: Int?,
         viewCount: Int?,
         isUrgent: Boolean?,
         employerId: String?
@@ -36,6 +39,9 @@ class EmployerJobPost : BaseJobPost {
         applicants,
         status,
         additionalDetails,
+        completedJobs,
+        canceledJobs,
+        unfinishedJobs,
         viewCount,
         isUrgent
     ) {

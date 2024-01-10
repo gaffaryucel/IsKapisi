@@ -21,6 +21,9 @@ class FreelancerJobPost: BaseJobPost {
         applicants: List<String>?,
         status: JobStatus?,
         additionalDetails: String?,
+        completedJobs: Int?,
+        canceledJobs: Int?,
+        unfinishedJobs: Int?,
         viewCount: Int?,
         isUrgent: Boolean?,
         freelancerId: String?,
@@ -38,6 +41,9 @@ class FreelancerJobPost: BaseJobPost {
         applicants,
         status,
         additionalDetails,
+        completedJobs,
+        canceledJobs,
+        unfinishedJobs,
         viewCount,
         isUrgent
     ) {
