@@ -2,6 +2,7 @@ package com.androiddevelopers.freelanceapp.repo
 
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.VideoModel
+import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
@@ -16,7 +17,8 @@ class FirebaseRepoImpl @Inject constructor(
     firestore: FirebaseFirestore,
 ) : FirebaseRepoInterFace {
     private val userCollection = firestore.collection("users")
-    private val postCollection = firestore.collection("posts")
+    private val freelancerJobPostCollection = firestore.collection("freelancerJobPost")
+    private val employerJobPostCollection = firestore.collection("employerJobPost")
     private val videoCollection = firestore.collection("videos")
 
     override fun login(email: String, password: String): Task<AuthResult> {
@@ -44,13 +46,22 @@ class FirebaseRepoImpl @Inject constructor(
     }
 
     override fun addFreelancerJobPostToFirestore(post: FreelancerJobPost): Task<Void> {
-        return postCollection.document(post.postId.toString()).set(post)
+        return freelancerJobPostCollection.document(post.postId.toString()).set(post)
     }
 
     override fun getAllFreelancerJobPostFromFirestore(): Task<QuerySnapshot> {
-        return postCollection.get()
+        return freelancerJobPostCollection.get()
     }
-    override fun saveVideoToFirestore(video: VideoModel):Task<Void> {
+
+    override fun addEmployerJobPostToFirestore(post: EmployerJobPost): Task<Void> {
+        return employerJobPostCollection.document(post.postId.toString()).set(post)
+    }
+
+    override fun getAllEmployerJobPostFromFirestore(): Task<QuerySnapshot> {
+        return employerJobPostCollection.get()
+    }
+
+    override fun saveVideoToFirestore(video: VideoModel): Task<Void> {
         return videoCollection.document(video.videoId.toString()).set(video)
     }
 

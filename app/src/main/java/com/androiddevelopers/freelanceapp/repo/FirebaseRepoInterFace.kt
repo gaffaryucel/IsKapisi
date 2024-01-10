@@ -2,6 +2,7 @@ package com.androiddevelopers.freelanceapp.repo
 
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.VideoModel
+import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
@@ -12,11 +13,13 @@ interface FirebaseRepoInterFace {
     fun login(email: String, password: String): Task<AuthResult>
     fun forgotPassword(email: String): Task<Void>
     fun register(email: String, password: String): Task<AuthResult>
-    fun addUserToFirestore(data: UserModel) : Task<Void>
+    fun addUserToFirestore(data: UserModel): Task<Void>
     fun deleteUserFromFirestore(documentId: String): Task<Void>
     fun getUserDataByDocumentId(documentId: String): Task<DocumentSnapshot>
     fun addFreelancerJobPostToFirestore(post: FreelancerJobPost): Task<Void>
     fun getAllFreelancerJobPostFromFirestore(): Task<QuerySnapshot>
+    fun addEmployerJobPostToFirestore(post: EmployerJobPost): Task<Void>
+    fun getAllEmployerJobPostFromFirestore(): Task<QuerySnapshot>
     fun saveVideoToFirestore(uri: VideoModel): Task<Void>
-    fun getVideoFromFirestore():  Task<QuerySnapshot>
+    fun getVideoFromFirestore(): Task<QuerySnapshot>
 }
