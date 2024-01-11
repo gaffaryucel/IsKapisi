@@ -5,7 +5,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.androiddevelopers.freelanceapp.databinding.CardFreelancerBinding
 import com.androiddevelopers.freelanceapp.databinding.RowFreelancerJobBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 
@@ -30,7 +29,7 @@ class FreelancerAdapter(
     override fun onBindViewHolder(holder: FreelancerViewHolder, position: Int) {
         with(holder) {
             with(binding) {
-                job = freelancerList[position]
+                freelancer = freelancerList[position]
             }
         }
     }
