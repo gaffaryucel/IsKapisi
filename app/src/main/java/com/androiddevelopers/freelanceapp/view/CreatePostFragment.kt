@@ -1,13 +1,13 @@
 package com.androiddevelopers.freelanceapp.view
 
 import android.app.AlertDialog
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.androiddevelopers.freelanceapp.databinding.FragmentCreatePostBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
@@ -62,6 +62,9 @@ class CreatePostFragment : Fragment() {
                 status = JobStatus.OPEN,
                 rating = null,
                 additionalDetails = "Additional details about the job.",
+                completedJobs = 0,
+                canceledJobs = 0,
+                unfinishedJobs = 0,
                 viewCount = 0,
                 isUrgent = false
             )
