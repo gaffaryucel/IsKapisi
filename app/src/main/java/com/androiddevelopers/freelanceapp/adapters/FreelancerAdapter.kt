@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.databinding.CardFreelancerBinding
+import com.androiddevelopers.freelanceapp.databinding.RowFreelancerJobBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 
 class FreelancerAdapter(
@@ -13,12 +14,12 @@ class FreelancerAdapter(
     private val freelancerList: ArrayList<FreelancerJobPost>
 ) : RecyclerView.Adapter<FreelancerAdapter.FreelancerViewHolder>() {
 
-    inner class FreelancerViewHolder(val binding: CardFreelancerBinding) :
+    inner class FreelancerViewHolder(val binding: RowFreelancerJobBinding) :
         RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FreelancerViewHolder {
         val binding =
-            CardFreelancerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            RowFreelancerJobBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return FreelancerViewHolder(binding)
     }
 
@@ -29,7 +30,7 @@ class FreelancerAdapter(
     override fun onBindViewHolder(holder: FreelancerViewHolder, position: Int) {
         with(holder) {
             with(binding) {
-                freelancer = freelancerList[position]
+                job = freelancerList[position]
             }
         }
     }
@@ -40,5 +41,4 @@ class FreelancerAdapter(
         freelancerList.addAll(newFreelancerList)
         notifyDataSetChanged()
     }
-
 }
