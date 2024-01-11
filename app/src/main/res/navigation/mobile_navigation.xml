@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_navigation_home_to_createShortVideoFragment"
             app:destination="@id/createShortVideoFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_chatsFragment"
+            app:destination="@id/chatsFragment" />
     </fragment>
 
     <fragment
@@ -65,6 +68,23 @@
         android:name="com.androiddevelopers.freelanceapp.view.CreateJobPostingFragment"
         android:label="CreateJobPostingFragment"
         tools:layout="@layout/fragment_create_job_posting" />
-
+    <fragment
+        android:id="@+id/chatsFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.ChatsFragment"
+        android:label="fragment_chats"
+        tools:layout="@layout/fragment_chats" >
+        <action
+            android:id="@+id/action_chatsFragment_to_messagesFragment"
+            app:destination="@id/messagesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/messagesFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.MessagesFragment"
+        android:label="fragment_messages"
+        tools:layout="@layout/fragment_messages" >
+        <argument
+            android:name="chat_id"
+            app:argType="string" />
+    </fragment>
 
 </navigation>

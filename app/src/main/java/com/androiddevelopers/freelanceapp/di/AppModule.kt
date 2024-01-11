@@ -10,11 +10,15 @@ import com.androiddevelopers.freelanceapp.repo.FirebaseRepoImpl
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.repo.RoomUserDatabaseRepoImpl
 import com.androiddevelopers.freelanceapp.repo.RoomUserDatabaseRepoInterface
+import com.androiddevelopers.freelanceapp.util.Util
+import com.androiddevelopers.freelanceapp.util.Util.DATABASE_URL
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -74,8 +78,12 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideFirebaseRepo(auth: FirebaseAuth, firestore: FirebaseFirestore): FirebaseRepoInterFace {
-        return FirebaseRepoImpl(auth,firestore)
+    fun provideRealtimeDatabase() = Firebase.database(DATABASE_URL)
+
+    @Singleton
+    @Provides
+    fun provideFirebaseRepo(auth: FirebaseAuth, firestore: FirebaseFirestore,database : FirebaseDatabase): FirebaseRepoInterFace {
+        return FirebaseRepoImpl(auth,firestore,database)
     }
     @Singleton
     @Provides

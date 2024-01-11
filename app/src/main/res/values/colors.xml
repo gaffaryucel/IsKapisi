@@ -35,5 +35,7 @@
     <color name="discover_card_bg_dark_color">#003554</color>
 
 
-
+    <!-- Chat Color-->
+    <color name="unread_count">#003554</color>
+    <color name="GREY">#707070</color>
 </resources>
