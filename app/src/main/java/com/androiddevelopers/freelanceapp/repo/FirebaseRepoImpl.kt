@@ -22,8 +22,8 @@ class FirebaseRepoImpl @Inject constructor(
     database: FirebaseDatabase,
 ) : FirebaseRepoInterFace {
     private val userCollection = firestore.collection("users")
-    private val freelancerJobPostCollection = firestore.collection("freelancerJobPost")
-    private val employerJobPostCollection = firestore.collection("employerJobPost")
+    private val freelancerPostCollection = firestore.collection("freelancer_posts")
+    private val employerPostCollection = firestore.collection("employer_posts")
     private val videoCollection = firestore.collection("videos")
     private val messagesReference = database.getReference("users")
     private val currentUserId = auth.currentUser?.uid ?: ""
@@ -31,6 +31,7 @@ class FirebaseRepoImpl @Inject constructor(
     override fun login(email: String, password: String): Task<AuthResult> {
         return auth.signInWithEmailAndPassword(email, password)
     }
+
     override fun forgotPassword(email: String): Task<Void> {
         return auth.sendPasswordResetEmail(email)
     }
@@ -47,18 +48,18 @@ class FirebaseRepoImpl @Inject constructor(
         return userCollection.document(documentId).get()
     }
     override fun addFreelancerJobPostToFirestore(post: FreelancerJobPost): Task<Void> {
-        return freelancerJobPostCollection.document(post.postId.toString()).set(post)
+        return freelancerPostCollection.document(post.postId.toString()).set(post)
     }
     override fun getAllFreelancerJobPostFromFirestore(): Task<QuerySnapshot> {
-        return freelancerJobPostCollection.get()
+        return freelancerPostCollection.get()
     }
 
     override fun addEmployerJobPostToFirestore(post: EmployerJobPost): Task<Void> {
-        return employerJobPostCollection.document(post.postId.toString()).set(post)
+        return employerPostCollection.document(post.postId.toString()).set(post)
     }
 
     override fun getAllEmployerJobPostFromFirestore(): Task<QuerySnapshot> {
-        return employerJobPostCollection.get()
+        return employerPostCollection.get()
     }
 
     override fun saveVideoToFirestore(video: VideoModel): Task<Void> {
