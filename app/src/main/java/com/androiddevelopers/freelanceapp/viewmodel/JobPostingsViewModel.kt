@@ -37,8 +37,12 @@ constructor(
                     val list: ArrayList<EmployerJobPost> = ArrayList()
 
                     querySnapshot.forEach { queryDocumentSnapshot ->
-                        list.add(
+                        val employerJobPost =
                             queryDocumentSnapshot.toObject(EmployerJobPost::class.java)
+                        //firebase üzerinde oluşturulan verinin döküman idsini postId ye bağlıyoruz
+                        employerJobPost.postId = queryDocumentSnapshot.id
+                        list.add(
+                            employerJobPost
                         )
                     }
 
