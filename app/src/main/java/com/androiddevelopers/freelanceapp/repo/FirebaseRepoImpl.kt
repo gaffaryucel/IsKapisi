@@ -22,8 +22,8 @@ class FirebaseRepoImpl @Inject constructor(
     database: FirebaseDatabase,
 ) : FirebaseRepoInterFace {
     private val userCollection = firestore.collection("users")
-    private val freelancerJobPostCollection = firestore.collection("freelancerJobPost")
-    private val employerJobPostCollection = firestore.collection("employerJobPost")
+    private val freelancerPostCollection = firestore.collection("posts")
+    private val employerPostCollection = firestore.collection("job_posting")
     private val videoCollection = firestore.collection("videos")
     private val messagesReference = database.getReference("users")
     private val currentUserId = auth.currentUser?.uid ?: ""
@@ -31,6 +31,7 @@ class FirebaseRepoImpl @Inject constructor(
     override fun login(email: String, password: String): Task<AuthResult> {
         return auth.signInWithEmailAndPassword(email, password)
     }
+
     override fun forgotPassword(email: String): Task<Void> {
         return auth.sendPasswordResetEmail(email)
     }
@@ -43,27 +44,31 @@ class FirebaseRepoImpl @Inject constructor(
     override fun deleteUserFromFirestore(documentId: String): Task<Void> {
         return userCollection.document(documentId).delete()
     }
+
     override fun getUserDataByDocumentId(documentId: String): Task<DocumentSnapshot> {
         return userCollection.document(documentId).get()
     }
+
     override fun addFreelancerJobPostToFirestore(post: FreelancerJobPost): Task<Void> {
-        return freelancerJobPostCollection.document(post.postId.toString()).set(post)
-    }
-    override fun getAllFreelancerJobPostFromFirestore(): Task<QuerySnapshot> {
-        return freelancerJobPostCollection.get()
+        return freelancerPostCollection.document(post.postId.toString()).set(post)
     }
 
-    override fun addEmployerJobPostToFirestore(post: EmployerJobPost): Task<Void> {
-        return employerJobPostCollection.document(post.postId.toString()).set(post)
+    override fun getAllFreelancerJobPostFromFirestore(): Task<QuerySnapshot> {
+        return freelancerPostCollection.get()
+    }
+
+    override fun addEmployerJobPostToFirestore(job: EmployerJobPost): Task<Void> {
+        return employerPostCollection.document().set(job)
     }
 
     override fun getAllEmployerJobPostFromFirestore(): Task<QuerySnapshot> {
-        return employerJobPostCollection.get()
+        return employerPostCollection.get()
     }
 
     override fun saveVideoToFirestore(video: VideoModel): Task<Void> {
         return videoCollection.document(video.videoId.toString()).set(video)
     }
+
     override fun getVideoFromFirestore(): Task<QuerySnapshot> {
         return videoCollection.get()
     }

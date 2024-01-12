@@ -63,7 +63,6 @@ class CreatePostFragment : Fragment() {
                 rating = null,
                 additionalDetails = "Additional details about the job.",
                 completedJobs = 0,
-                canceledJobs = 0,
                 unfinishedJobs = 0,
                 viewCount = 0,
                 isUrgent = false

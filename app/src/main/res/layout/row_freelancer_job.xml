@@ -1,73 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
-        android:src="@drawable/image_placeholder"
-        android:id="@+id/ivJobPost"
+    <data>
+
+        <variable
+            name="freelancer"
+            type="com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost" />
+
+    </data>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="250dp"/>
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/ivPostOwner"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:src="@drawable/image_placeholder"
-            android:layout_margin="8dp"
-            android:layout_width="50dp"
-            android:layout_height="50dp"/>
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tvJobPostTitle"
-            app:layout_constraintStart_toEndOf="@+id/ivPostOwner"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_width="0dp"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardEmployer"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="2"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:padding="5dp"
-            android:text="bu bir freelancer iş ilanıdır ve herkes için değildir"
-            android:layout_marginStart="5dp"/>
+            android:layout_margin="4dp"
+            app:cardCornerRadius="10dp">
 
-        <TextView
-            app:layout_constraintStart_toEndOf="@+id/ivPostOwner"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvJobPostTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:textSize="16sp"
-            android:padding="5dp"
-            android:text="bu bir freelancer iş ilanıdır ve herkes için değildir"
-            android:layout_marginStart="5dp"/>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="300dp">
 
-            <LinearLayout
-                android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@id/ivPostOwner"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/tvJobPostTitle"
-                android:layout_marginTop="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/ivUserStartCount"
-                    android:text="4.0"
-                    android:textSize="18dp"
-                    android:textStyle="bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
                 <ImageView
-                    android:id="@+id/ivStar"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:src="@drawable/baseline_star_24"/>
-            </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</LinearLayout>
+                    android:id="@+id/ivCardFreelancer"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:src="@drawable/image_placeholder"
+                    app:layout_constraintBottom_toTopOf="@id/card_freelance_guideline_horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cardFreelancerDetail"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/card_freelance_guideline_horizontal">
+
+                    <TextView
+                        android:id="@+id/cardFreelancerTextViewTitleextViewTitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:maxLines="2"
+                        android:padding="3dp"
+                        android:text="@{freelancer.title}"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toStartOf="@id/card_freelance_guideline_vertical_right"
+                        app:layout_constraintStart_toStartOf="@id/card_freelance_guideline_vertical_left"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Freelancer Title" />
+
+                    <TextView
+                        android:id="@+id/cardFreelancerTextViewDescription"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:maxLines="3"
+                        android:padding="3dp"
+                        android:text="@{freelancer.description}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/card_freelance_guideline_vertical_right"
+                        app:layout_constraintStart_toStartOf="@id/card_freelance_guideline_vertical_left"
+                        app:layout_constraintTop_toBottomOf="@id/cardFreelancerTextViewTitleextViewTitle"
+                        tools:text="Freelancer Description" />
+
+                    <ImageView
+                        android:id="@+id/ivPostOwner"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_margin="4dp"
+                        android:src="@drawable/image_placeholder"
+                        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+                        app:layout_constraintEnd_toStartOf="@id/card_freelance_guideline_vertical_left"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/card_freelance_guideline_vertical_left"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/ivPostOwner">
+
+                        <TextView
+                            android:id="@+id/ivUserStartCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{freelancer.rating.toString()}"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            tools:text="5.0" />
+
+                        <ImageView
+                            android:id="@+id/ivStar"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:src="@drawable/baseline_star_24"
+                            tools:ignore="ContentDescription" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/cardFreelanceTextViewPrice"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@{freelancer.budget.toString()}"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toTopOf="@+id/cardFreelanceButtonBuy"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/card_freelance_guideline_vertical_right"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="₺5000" />
+
+                    <Button
+                        android:id="@+id/cardFreelanceButtonBuy"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Buy"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/card_freelance_guideline_vertical_right"
+                        app:layout_constraintTop_toBottomOf="@+id/cardFreelanceTextViewPrice" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/card_freelance_guideline_vertical_left"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.2" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/card_freelance_guideline_vertical_right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.75" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/card_freelance_guideline_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_percent="0.7" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+</layout>

@@ -21,9 +21,9 @@ interface FirebaseRepoInterFace {
     fun getUserDataByDocumentId(documentId: String): Task<DocumentSnapshot>
     fun addFreelancerJobPostToFirestore(post: FreelancerJobPost): Task<Void>
     fun getAllFreelancerJobPostFromFirestore(): Task<QuerySnapshot>
-    fun addEmployerJobPostToFirestore(post: EmployerJobPost): Task<Void>
+    fun addEmployerJobPostToFirestore(job: EmployerJobPost): Task<Void>
     fun getAllEmployerJobPostFromFirestore(): Task<QuerySnapshot>
-    fun saveVideoToFirestore(uri: VideoModel): Task<Void>
+    fun saveVideoToFirestore(video: VideoModel): Task<Void>
     fun getVideoFromFirestore(): Task<QuerySnapshot>
     fun sendMessageToRealtimeDatabase(chatId : String,message: MessageModel): Task<Void>
     fun addMessageInChatMatesRoom(chatMateId : String,chatId : String,message: MessageModel): Task<Void>

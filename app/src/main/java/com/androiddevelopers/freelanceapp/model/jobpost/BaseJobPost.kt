@@ -16,8 +16,6 @@ open class BaseJobPost {
     var status: JobStatus? = null // İlanın durumu (Açık, Kapalı, Tamamlanan)
     var additionalDetails: String? = null // İş ilanıyla ilgili ek detaylar
     var completedJobs: Int? = null // Tamamlanan iş sayısı
-    var canceledJobs: Int? = null // İptal edilen iş sayısı
-    var unfinishedJobs: Int? = null // Zamanında bitmeyen iş sayısı
     var viewCount: Int? = null // İlanın kaç kez görüntülendiği
     var isUrgent: Boolean? = null // İşin acil olduğunu belirtmek için
 
@@ -36,8 +34,6 @@ open class BaseJobPost {
         status: JobStatus?,
         additionalDetails: String?,
         completedJobs: Int?,
-        canceledJobs: Int?,
-        unfinishedJobs: Int?,
         viewCount: Int?,
         isUrgent: Boolean?
     ) {
@@ -54,8 +50,6 @@ open class BaseJobPost {
         this.status = status
         this.additionalDetails = additionalDetails
         this.completedJobs = completedJobs
-        this.canceledJobs = canceledJobs
-        this.unfinishedJobs = unfinishedJobs
         this.viewCount = viewCount
         this.isUrgent = isUrgent
     }
