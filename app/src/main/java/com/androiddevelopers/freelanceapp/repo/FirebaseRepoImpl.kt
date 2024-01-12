@@ -22,8 +22,8 @@ class FirebaseRepoImpl @Inject constructor(
     database: FirebaseDatabase,
 ) : FirebaseRepoInterFace {
     private val userCollection = firestore.collection("users")
-    private val freelancerPostCollection = firestore.collection("freelancer_posts")
-    private val employerPostCollection = firestore.collection("employer_posts")
+    private val freelancerPostCollection = firestore.collection("posts")
+    private val employerPostCollection = firestore.collection("job_posting")
     private val videoCollection = firestore.collection("videos")
     private val messagesReference = database.getReference("users")
     private val currentUserId = auth.currentUser?.uid ?: ""
@@ -44,18 +44,21 @@ class FirebaseRepoImpl @Inject constructor(
     override fun deleteUserFromFirestore(documentId: String): Task<Void> {
         return userCollection.document(documentId).delete()
     }
+
     override fun getUserDataByDocumentId(documentId: String): Task<DocumentSnapshot> {
         return userCollection.document(documentId).get()
     }
+
     override fun addFreelancerJobPostToFirestore(post: FreelancerJobPost): Task<Void> {
         return freelancerPostCollection.document(post.postId.toString()).set(post)
     }
+
     override fun getAllFreelancerJobPostFromFirestore(): Task<QuerySnapshot> {
         return freelancerPostCollection.get()
     }
 
-    override fun addEmployerJobPostToFirestore(post: EmployerJobPost): Task<Void> {
-        return employerPostCollection.document(post.postId.toString()).set(post)
+    override fun addEmployerJobPostToFirestore(job: EmployerJobPost): Task<Void> {
+        return employerPostCollection.document().set(job)
     }
 
     override fun getAllEmployerJobPostFromFirestore(): Task<QuerySnapshot> {
@@ -65,6 +68,7 @@ class FirebaseRepoImpl @Inject constructor(
     override fun saveVideoToFirestore(video: VideoModel): Task<Void> {
         return videoCollection.document(video.videoId.toString()).set(video)
     }
+
     override fun getVideoFromFirestore(): Task<QuerySnapshot> {
         return videoCollection.get()
     }
