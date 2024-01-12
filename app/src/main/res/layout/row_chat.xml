@@ -42,7 +42,6 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLength="25"
-                android:text="@{chatItem.userName}"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -54,7 +53,6 @@
                 android:ellipsize="end"
                 android:fontFamily="sans-serif"
                 android:maxLines="1"
-                android:text="@{chatItem.chatLastMessage}"
                 android:textColor="@color/GREY"
                 android:textSize="12sp" />
         </LinearLayout>

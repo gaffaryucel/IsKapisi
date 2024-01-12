@@ -22,11 +22,11 @@ interface FirebaseRepoInterFace {
     fun getAllFreelancerJobPostFromFirestore(): Task<QuerySnapshot>
     fun saveVideoToFirestore(uri: VideoModel): Task<Void>
     fun getVideoFromFirestore():  Task<QuerySnapshot>
-    fun sendMessageToRealtimeDatabase(chatId : String,message: MessageModel): Task<Void>
+    fun sendMessageToRealtimeDatabase(userID : String,chatId : String,message: MessageModel): Task<Void>
     fun addMessageInChatMatesRoom(chatMateId : String,chatId : String,message: MessageModel): Task<Void>
-    fun getAllMessagesFromRealtimeDatabase(chatId : String): DatabaseReference
-    fun createChatRoomForOwner(chat : ChatModel): Task<Void>
+    fun getAllMessagesFromRealtimeDatabase(currentUserId : String,chatId : String): DatabaseReference
+    fun createChatRoomForOwner(currentUserId : String,chat : ChatModel): Task<Void>
     fun createChatRoomForChatMate(userId : String,chat : ChatModel): Task<Void>
-    fun getAllChatRooms() : DatabaseReference
+    fun getAllChatRooms(currentUserId : String) : DatabaseReference
 
 }

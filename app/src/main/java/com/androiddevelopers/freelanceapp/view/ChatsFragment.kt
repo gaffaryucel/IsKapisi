@@ -16,6 +16,7 @@ import com.androiddevelopers.freelanceapp.model.ChatModel
 import com.androiddevelopers.freelanceapp.viewmodel.ChatsViewModel
 import com.androiddevelopers.freelanceapp.viewmodel.MessagesViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.UUID
 
 @AndroidEntryPoint
 class ChatsFragment : Fragment() {
@@ -40,15 +41,13 @@ class ChatsFragment : Fragment() {
 
         binding.fabCreateChatRoom.setOnClickListener{
             viewModel.createChatRoom(
-                "DvWVkwOYkzSU83ae7UaiNXM3Beg1",
                 ChatModel(
-                    "mychatroom",
-                    "ABF1jc1soJS2Q5YDi5J4CLstayy2",
+                    UUID.randomUUID().toString(),
                     "DvWVkwOYkzSU83ae7UaiNXM3Beg1",
-                    "gaffar",
-                    "asdasd",
-                    "asdasd",
-                    "123132"
+                    "gaffar yücel",
+                    "image.com",
+                    "bu son mesaj",
+                    "00:00"
                 )
             )
         }

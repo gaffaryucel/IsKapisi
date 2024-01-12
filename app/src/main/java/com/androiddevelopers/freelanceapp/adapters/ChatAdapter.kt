@@ -38,11 +38,15 @@ class ChatAdapter :  RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
     override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
         val chat = chatsList[position]
+
         holder.binding.apply {
             chatItem = chat
         }
         holder.itemView.setOnClickListener {
-            val action = ChatsFragmentDirections.actionChatsFragmentToMessagesFragment(chat.chatId.toString())
+            val action = ChatsFragmentDirections.actionChatsFragmentToMessagesFragment(
+                chat.chatId.toString(),
+                chat.receiverId.toString()
+            )
             Navigation.findNavController(it).navigate(action)
         }
     }

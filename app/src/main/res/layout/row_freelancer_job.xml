@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:orientation="vertical"
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -33,7 +34,8 @@
             android:textStyle="bold"
             android:padding="5dp"
             android:text="bu bir freelancer iş ilanıdır ve herkes için değildir"
-            android:layout_marginStart="5dp"/>
+            android:layout_marginStart="5dp"
+            tools:ignore="MissingConstraints" />
 
         <TextView
             app:layout_constraintStart_toEndOf="@+id/ivPostOwner"
@@ -47,27 +49,27 @@
             android:text="bu bir freelancer iş ilanıdır ve herkes için değildir"
             android:layout_marginStart="5dp"/>
 
-            <LinearLayout
-                android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@id/ivPostOwner"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/tvJobPostTitle"
-                android:layout_marginTop="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/ivPostOwner"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tvJobPostTitle"
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/ivUserStartCount"
-                    android:text="4.0"
-                    android:textSize="18dp"
-                    android:textStyle="bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <ImageView
-                    android:id="@+id/ivStar"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:src="@drawable/baseline_star_24"/>
-            </LinearLayout>
+            <TextView
+                android:id="@+id/ivUserStartCount"
+                android:text="4.0"
+                android:textSize="18dp"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <ImageView
+                android:id="@+id/ivStar"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/baseline_star_24"/>
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

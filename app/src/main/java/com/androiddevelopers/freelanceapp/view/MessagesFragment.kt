@@ -40,18 +40,20 @@ class MessagesFragment : Fragment() {
         val chatId = arguments?.let {
             it.getString("chat_id")
         }
+
+        val messageReceiver = arguments?.let {
+            it.getString("receiver")
+        }
+
         viewModel.getMessages(chatId ?: "")
+
         observeLiveData()
         binding.btnSendMessage.setOnClickListener {
+            val message = binding.etMessageBox.text.toString()
             viewModel.sendMessage(
                 chatId ?: "",
-                MessageModel(
-                    "123",
-                    "bu ilk mesaj",
-                    "vasdklnfsadnv",
-                    "vasdklnfsadnv"
-                ),
-                "DvWVkwOYkzSU83ae7UaiNXM3Beg1"
+                message,
+                messageReceiver ?: ""
             )
         }
     }

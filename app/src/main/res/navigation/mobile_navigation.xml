@@ -76,6 +76,9 @@
         <argument
             android:name="chat_id"
             app:argType="string" />
+        <argument
+            android:name="receiver"
+            app:argType="string" />
     </fragment>
 
 
