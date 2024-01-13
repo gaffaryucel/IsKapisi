@@ -9,17 +9,20 @@
         android:id="@+id/navigation_home"
         android:name="com.androiddevelopers.freelanceapp.view.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_navigation_home_to_createShortVideoFragment"
             app:destination="@id/createShortVideoFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_chatsFragment"
+            app:destination="@id/chatsFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/navigation_discover"
         android:name="com.androiddevelopers.freelanceapp.view.DiscoverFragment"
         android:label="Keşfet"
-        tools:layout="@layout/fragment_discover" >
+        tools:layout="@layout/fragment_discover">
         <action
             android:id="@+id/action_navigation_discover_to_shortVideoFragment"
             app:destination="@id/shortVideoFragment" />
@@ -35,7 +38,11 @@
         android:id="@+id/navigation_job_postings"
         android:name="com.androiddevelopers.freelanceapp.view.JobPostingsFragment"
         android:label="İş ilanları"
-        tools:layout="@layout/fragment_job_postings" />
+        tools:layout="@layout/fragment_job_postings">
+        <action
+            android:id="@+id/action_navigation_job_postings_to_createJobPostingFragment"
+            app:destination="@id/createJobPostingFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_profile"
@@ -51,11 +58,33 @@
         android:id="@+id/shortVideoFragment"
         android:name="com.androiddevelopers.freelanceapp.view.ShortVideoFragment"
         android:label="fragment_short_video"
-        tools:layout="@layout/fragment_short_video" >
+        tools:layout="@layout/fragment_short_video">
         <argument
             android:name="position"
             app:argType="integer" />
     </fragment>
-
+    <fragment
+        android:id="@+id/createJobPostingFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.CreateJobPostingFragment"
+        android:label="CreateJobPostingFragment"
+        tools:layout="@layout/fragment_create_job_posting" />
+    <fragment
+        android:id="@+id/chatsFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.ChatsFragment"
+        android:label="fragment_chats"
+        tools:layout="@layout/fragment_chats" >
+        <action
+            android:id="@+id/action_chatsFragment_to_messagesFragment"
+            app:destination="@id/messagesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/messagesFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.MessagesFragment"
+        android:label="fragment_messages"
+        tools:layout="@layout/fragment_messages" >
+        <argument
+            android:name="chat_id"
+            app:argType="string" />
+    </fragment>
 
 </navigation>

@@ -5,6 +5,7 @@ import com.androiddevelopers.freelanceapp.util.JobStatus
 class FreelancerJobPost: BaseJobPost {
     var freelancerId: String? = null // İlanı oluşturan freelancer'ın kimliği
     var rating: Double? = null // İşveren tarafından işin başarı derecesini belirtmek için
+    var unfinishedJobs: Int? = null // Zamanında bitmeyen iş sayısı
 
     constructor() : super()
 
@@ -21,6 +22,8 @@ class FreelancerJobPost: BaseJobPost {
         applicants: List<String>?,
         status: JobStatus?,
         additionalDetails: String?,
+        completedJobs: Int?,
+        unfinishedJobs: Int?,
         viewCount: Int?,
         isUrgent: Boolean?,
         freelancerId: String?,
@@ -38,10 +41,12 @@ class FreelancerJobPost: BaseJobPost {
         applicants,
         status,
         additionalDetails,
+        completedJobs,
         viewCount,
         isUrgent
     ) {
         this.freelancerId = freelancerId
         this.rating = rating
+        this.unfinishedJobs = unfinishedJobs
     }
 }

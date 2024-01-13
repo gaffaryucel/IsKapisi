@@ -36,14 +36,14 @@
 
             <androidx.appcompat.widget.SearchView
                 app:searchIcon="@drawable/baseline_search_24"
-                android:id="@+id/search_view"
+                android:id="@+id/homeSearchView"
                 android:layout_width="0dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/image_view_2"
-                app:layout_constraintStart_toEndOf="@+id/camera_icon"
+                app:layout_constraintStart_toEndOf="@id/camera_icon"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
@@ -65,7 +65,7 @@
             android:indeterminate="true" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/home_screen_recycler_view"
+            android:id="@+id/homeRecyclerView"
             setHasFixedSize="@{true}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

@@ -3,7 +3,8 @@ package com.androiddevelopers.freelanceapp.model.jobpost
 import com.androiddevelopers.freelanceapp.util.JobStatus
 
 class EmployerJobPost : BaseJobPost {
-    private var employerId: String? = null // İlanı oluşturan işverenin kimliği
+    var employerId: String? = null // İlanı oluşturan işverenin kimliği
+    var canceledJobs: Int? = null // İptal edilen iş sayısı
 
     constructor() : super()
 
@@ -20,6 +21,8 @@ class EmployerJobPost : BaseJobPost {
         applicants: List<String>?,
         status: JobStatus?,
         additionalDetails: String?,
+        completedJobs: Int?,
+        canceledJobs: Int?,
         viewCount: Int?,
         isUrgent: Boolean?,
         employerId: String?
@@ -36,9 +39,11 @@ class EmployerJobPost : BaseJobPost {
         applicants,
         status,
         additionalDetails,
+        completedJobs,
         viewCount,
         isUrgent
     ) {
         this.employerId = employerId
+        this.canceledJobs = canceledJobs
     }
 }
