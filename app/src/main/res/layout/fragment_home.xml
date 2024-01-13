@@ -15,7 +15,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        style="@style/AppBackGroundStyle"
         tools:context=".view.HomeFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,7 +36,6 @@
 
             <androidx.appcompat.widget.SearchView
                 app:searchIcon="@drawable/baseline_search_24"
-                style="@style/SearchViewStyle"
                 android:id="@+id/homeSearchView"
                 android:layout_width="0dp"
                 android:layout_marginStart="10dp"
