@@ -128,4 +128,35 @@
         <item name="android:src">@drawable/message_icon_dark</item>
     </style>
 
+    <style name="StyleTextInputEditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/edittextHeight</item>
+    </style>
+    <!-- EditText With TextInputLayout -->
+    <style name="StyleTextInputLayout">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/createJobPostingMarginTop</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/edittextCornerRadius</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/edittextCornerRadius</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/edittextCornerRadius</item>
+        <item name="boxCornerRadiusTopStart">@dimen/edittextCornerRadius</item>
+        <item name="layout_constraintWidth_max">@dimen/edittextMaxWidth</item>
+        <item name="boxStrokeWidth">2dp</item>
+        <item name="boxStrokeWidthFocused">3dp</item>
+    </style>
+    <!-- DropDown With TextInputLayout -->
+    <style name="StyleDropDownTextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/createJobPostingMarginTop</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/edittextCornerRadius</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/edittextCornerRadius</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/edittextCornerRadius</item>
+        <item name="boxCornerRadiusTopStart">@dimen/edittextCornerRadius</item>
+        <item name="layout_constraintWidth_max">@dimen/edittextMaxWidth</item>
+        <item name="boxStrokeWidth">2dp</item>
+        <item name="boxStrokeWidthFocused">3dp</item>
+    </style>
+
 </resources>
