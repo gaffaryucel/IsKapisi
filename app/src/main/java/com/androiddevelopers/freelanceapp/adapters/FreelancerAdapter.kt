@@ -29,7 +29,7 @@ class FreelancerAdapter(
     override fun onBindViewHolder(holder: FreelancerViewHolder, position: Int) {
         with(holder) {
             with(binding) {
-                freelancer = freelancerList[position]
+                job = freelancerList[position]
             }
         }
     }

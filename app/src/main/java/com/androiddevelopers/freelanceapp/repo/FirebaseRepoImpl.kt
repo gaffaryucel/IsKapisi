@@ -31,7 +31,6 @@ class FirebaseRepoImpl @Inject constructor(
     override fun login(email: String, password: String): Task<AuthResult> {
         return auth.signInWithEmailAndPassword(email, password)
     }
-
     override fun forgotPassword(email: String): Task<Void> {
         return auth.sendPasswordResetEmail(email)
     }
@@ -44,15 +43,12 @@ class FirebaseRepoImpl @Inject constructor(
     override fun deleteUserFromFirestore(documentId: String): Task<Void> {
         return userCollection.document(documentId).delete()
     }
-
     override fun getUserDataByDocumentId(documentId: String): Task<DocumentSnapshot> {
         return userCollection.document(documentId).get()
     }
-
     override fun addFreelancerJobPostToFirestore(post: FreelancerJobPost): Task<Void> {
         return freelancerPostCollection.document(post.postId.toString()).set(post)
     }
-
     override fun getAllFreelancerJobPostFromFirestore(): Task<QuerySnapshot> {
         return freelancerPostCollection.get()
     }
@@ -68,7 +64,6 @@ class FirebaseRepoImpl @Inject constructor(
     override fun saveVideoToFirestore(video: VideoModel): Task<Void> {
         return videoCollection.document(video.videoId.toString()).set(video)
     }
-
     override fun getVideoFromFirestore(): Task<QuerySnapshot> {
         return videoCollection.get()
     }
