@@ -67,26 +67,18 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/edittextLayoutEmail"
-                style="@style/EditTextThemeOverlay"
+                style="@style/StyleTextInputLayout"
                 isEmptyCheck="@{edittextEmail}"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:boxCornerRadiusBottomEnd="@dimen/edittextCornerRadius"
-                app:boxCornerRadiusBottomStart="@dimen/edittextCornerRadius"
-                app:boxCornerRadiusTopEnd="@dimen/edittextCornerRadius"
-                app:boxCornerRadiusTopStart="@dimen/edittextCornerRadius"
                 app:endIconMode="clear_text"
                 app:errorEnabled="true"
                 app:layout_constraintBottom_toTopOf="@+id/edittextLayoutPassword"
                 app:layout_constraintEnd_toStartOf="@+id/guidelineMidLayoutEnd"
                 app:layout_constraintStart_toEndOf="@+id/guidelineMidLayoutStart"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_max="@dimen/edittextMaxWidth">
+                app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edittextEmail"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/edittextHeight"
+                    style="@style/StyleTextInputEditText"
                     android:hint="@string/hint_edittext_email"
                     android:inputType="textEmailAddress"
                     tools:ignore="TextContrastCheck" />
@@ -94,26 +86,19 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/edittextLayoutPassword"
+                style="@style/StyleTextInputLayout"
                 passwordCheck="@{edittextPassword}"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                app:boxCornerRadiusBottomEnd="@dimen/edittextCornerRadius"
-                app:boxCornerRadiusBottomStart="@dimen/edittextCornerRadius"
-                app:boxCornerRadiusTopEnd="@dimen/edittextCornerRadius"
-                app:boxCornerRadiusTopStart="@dimen/edittextCornerRadius"
                 app:endIconMode="password_toggle"
                 app:errorEnabled="true"
                 app:layout_constraintBottom_toTopOf="@+id/textForgotPassword"
                 app:layout_constraintEnd_toStartOf="@+id/guidelineMidLayoutEnd"
                 app:layout_constraintStart_toEndOf="@+id/guidelineMidLayoutStart"
-                app:layout_constraintTop_toBottomOf="@+id/edittextLayoutEmail"
-                app:layout_constraintWidth_max="@dimen/edittextMaxWidth">
+                app:layout_constraintTop_toBottomOf="@+id/edittextLayoutEmail">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edittextPassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/edittextHeight"
+                    style="@style/StyleTextInputEditText"
                     android:hint="@string/hint_edittext_password"
                     android:inputType="textPassword"
                     tools:ignore="TextContrastCheck" />
