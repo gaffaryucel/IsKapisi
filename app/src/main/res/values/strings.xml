@@ -32,4 +32,15 @@
     <string name="login_dialog_error_message">Hata mesajı:</string>
     <string name="app_web_client_id">926001727029-eam99mu4utbnqhv090rt4mav59sk5tef.apps.googleusercontent.com</string>
     <string name="login_title_message">Hesabınız ile giriş yapın.</string>
+    <string name="save">Kaydet</string>
+    <string name="create_job_posting_toolbar_title">Yeni İşveren İlanı Oluştur"</string>
+    <string name="enter_budget">Bütçenizi girin</string>
+    <string name="enter_deadline">İlan bitiş tarihini girin</string>
+    <string name="enter_location">Freelancer çalışma şekli</string>
+    <string name="enter_skills_required">Gerekli yetenekleri girin</string>
+    <string name="enter_description">İlan açıklamasını girin</string>
+    <string name="enter_title">Başlık girin</string>
+    <string name="add">Ekle</string>
+    <string name="enter_skill">Yeni yetenek ekleyin</string>
+    <string name="delete">Sil</string>
 </resources>
