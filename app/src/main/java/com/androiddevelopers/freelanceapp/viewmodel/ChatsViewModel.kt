@@ -25,37 +25,19 @@ class ChatsViewModel  @Inject constructor(
     val chatRooms : LiveData<List<ChatModel>>
         get() = _chatRooms
 
+    private var _userIdList = MutableLiveData<List<String>>()
+    val userIdList : LiveData<List<String>>
+        get() = _userIdList
+
     private var _messageStatus = MutableLiveData<Resource<Boolean>>()
     val messageStatus : LiveData<Resource<Boolean>>
         get() = _messageStatus
 
 
-
-    fun createChatRoom(chat : ChatModel) {
-        _messageStatus.value = Resource.loading(null)
-        repo.createChatRoomForOwner(currentUserId ?: "",chat)
-            .addOnSuccessListener {
-                _messageStatus.value = Resource.success(null)
-            }
-            .addOnFailureListener { error ->
-                _messageStatus.value = error.localizedMessage?.let { Resource.error(it,null) }
-            }
-        val newChat = createChatForChatMate(chat)
-        repo.createChatRoomForChatMate(chat.receiverId.toString(),newChat)
+    init {
+        getChatRooms()
     }
-
-    private fun createChatForChatMate(chat: ChatModel) : ChatModel {
-        return ChatModel(
-            chat.chatId,
-            currentUserId,
-            "emirhan yücel",
-            "www.image.com",
-            "bu son mesaj değil",
-            "11:02"
-        )
-    }
-
-    fun getChatRooms () {
+    private fun getChatRooms () {
         _messageStatus.value = Resource.loading(null)
         repo.getAllChatRooms(currentUserId ?: "").addListenerForSingleValueEvent(
             object : ValueEventListener {
@@ -69,11 +51,19 @@ class ChatsViewModel  @Inject constructor(
                         }
                     }
                     _chatRooms.value = messageList
+                    getUsersIdFromList(messageList)
                 }
 
                 override fun onCancelled(error: DatabaseError) {
                     _messageStatus.value =  Resource.error(error.message,null) }
             }
         )
+    }
+    private fun getUsersIdFromList(chatList : List<ChatModel>){
+        val userList = ArrayList<String>()
+        for (i in chatList){
+            userList.add(i.receiverId.toString())
+        }
+        _userIdList.value =userList
     }
 }

@@ -73,4 +73,8 @@ class FirebaseRepoImpl @Inject constructor(
     override fun getAllChatRooms(currentUserId : String) : DatabaseReference {
         return messagesReference.child(currentUserId)
     }
+
+    override fun getUsersFromFirestore(): Task<QuerySnapshot> {
+        return userCollection.get()
+    }
 }

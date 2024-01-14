@@ -67,6 +67,9 @@
         <action
             android:id="@+id/action_chatsFragment_to_messagesFragment"
             app:destination="@id/messagesFragment" />
+        <action
+            android:id="@+id/action_chatsFragment_to_createChatRoomFragment"
+            app:destination="@id/createChatRoomFragment" />
     </fragment>
     <fragment
         android:id="@+id/messagesFragment"
@@ -79,6 +82,12 @@
         <argument
             android:name="receiver"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/createChatRoomFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.CreateChatRoomFragment"
+        android:label="fragment_create_chat_room"
+        tools:layout="@layout/fragment_create_chat_room" >
     </fragment>
 
 

@@ -28,5 +28,6 @@ interface FirebaseRepoInterFace {
     fun createChatRoomForOwner(currentUserId : String,chat : ChatModel): Task<Void>
     fun createChatRoomForChatMate(userId : String,chat : ChatModel): Task<Void>
     fun getAllChatRooms(currentUserId : String) : DatabaseReference
+    fun getUsersFromFirestore() : Task<QuerySnapshot>
 
 }

@@ -81,7 +81,7 @@ class RegisterViewModel @Inject constructor(
     }
 
     private fun makeUser(userId : String,userName: String,email: String) : UserModel {
-        return UserModel(userId,userName,email)
+        return UserModel(userId,userName,email,"")
     }
 
     private fun isPasswordConfirmed(password: String,confirmPassword : String): Boolean {
