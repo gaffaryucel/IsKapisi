@@ -102,4 +102,7 @@
     <!-- Chat Color-->
     <color name="unread_count">#003554</color>
     <color name="GREY">#707070</color>
+
+    <color name="delete_button">@color/md_theme_light_error</color>
+    <color name="text_outline">@color/md_theme_light_outline</color>
 </resources>
