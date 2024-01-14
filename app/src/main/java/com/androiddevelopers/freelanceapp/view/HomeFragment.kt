@@ -97,6 +97,10 @@ class HomeFragment : Fragment() {
                 listFreelancerJobPost.addAll(list)
             }
         }
+        binding.ivMessage.setOnClickListener {
+            val action = HomeFragmentDirections.actionNavigationHomeToChatsFragment()
+            Navigation.findNavController(it).navigate(action)
+        }
     }
 
     private fun setupDialogs() {

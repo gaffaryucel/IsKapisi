@@ -5,6 +5,7 @@ class UserModel{
     var userId: String? = null
     var username: String? = null
     var email: String? = null
+    var userImage: String? = null
 
     constructor()
 
@@ -12,10 +13,12 @@ class UserModel{
         userId: String?,
         username: String?,
         email: String?,
+        userImage: String?,
     ) {
         this.userId = userId
         this.username = username
         this.email = email
+        this.userImage = userImage
     }
 }
 
