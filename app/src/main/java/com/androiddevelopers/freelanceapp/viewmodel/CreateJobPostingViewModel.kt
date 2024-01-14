@@ -23,6 +23,10 @@ constructor(
     val firebaseMessage: LiveData<Resource<Boolean>>
         get() = _firebaseMessage
 
+    private var _skills = MutableLiveData<ArrayList<String>>()
+    val skills: LiveData<ArrayList<String>>
+        get() = _skills
+
     fun addJobPostingToFirebase(jobPost: EmployerJobPost) = viewModelScope.launch {
         _firebaseMessage.value = Resource.loading(true)
         jobPost.employerId = firebaseAuth.currentUser?.uid ?: ""
@@ -38,5 +42,9 @@ constructor(
                     }
             }
         }
+    }
+
+    fun setSkills(newSkills: ArrayList<String>) {
+        _skills.value = newSkills
     }
 }
