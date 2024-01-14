@@ -7,11 +7,10 @@
 
         <import type="androidx.navigation.Navigation" />
 
-        <import type="com.androiddevelopers.freelanceapp.R" />
-
         <variable
-            name="fragment"
-            type="com.androiddevelopers.freelanceapp.view.CreateJobPostingFragment" />
+            name="rvSkillAdapter"
+            type="com.androiddevelopers.freelanceapp.adapters.SkillAdapter" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,7 +27,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/baseline_keyboard_arrow_left_24"
             app:navigationOnClickListener="@{() -> Navigation.findNavController(toolbar).popBackStack()}"
-            app:title="Yeni İşveren İlanı Oluştur" />
+            app:title="@string/create_job_posting_toolbar_title" />
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/createJobPostProgressBar"
@@ -57,6 +56,27 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guidelineHorizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_percent="0.35" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guidelineVerticalLeft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.1" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guidelineVerticalRight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.9" />
+
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imageView"
                     android:layout_width="0dp"
@@ -65,138 +85,155 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="8dp"
-                    app:layout_constraintBottom_toTopOf="@+id/guideline"
+                    app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/image_placeholder" />
+                    app:srcCompat="@drawable/image_placeholder"
+                    tools:ignore="ImageContrastCheck" />
 
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline"
-                    android:layout_width="wrap_content"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/budgetTextInputLayout"
+                    style="@style/StyleTextInputLayout"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layout_constraintGuide_percent="0.35" />
+                    android:layout_marginTop="@dimen/createJobPostingMarginTop"
+                    app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalRight"
+                    app:layout_constraintStart_toStartOf="@+id/guidelineVerticalLeft"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView"
+                    app:prefixText="₺">
 
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_percent="0.1" />
-
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_percent="0.9" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/budgetTextInputEditText"
+                        style="@style/StyleTextInputEditText"
+                        android:hint="@string/enter_budget"
+                        tools:ignore="TextContrastCheck" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/titleTextInputLayout"
+                    style="@style/StyleTextInputLayout"
+                    isEmptyCheck="@{titleTextInputEditText}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline3"
-                    app:layout_constraintStart_toStartOf="@+id/guideline2"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView"
-                    isEmptyCheck="@{titleTextInputEditText}">
+                    android:layout_marginTop="@dimen/createJobPostingMarginTop"
+                    app:endIconMode="clear_text"
+                    app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalRight"
+                    app:layout_constraintStart_toStartOf="@+id/guidelineVerticalLeft"
+                    app:layout_constraintTop_toBottomOf="@+id/budgetTextInputLayout">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/titleTextInputEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Başlık girin" />
+                        style="@style/StyleTextInputEditText"
+                        android:hint="@string/enter_title"
+                        tools:ignore="TextContrastCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/descriptionTextInputLayout"
+                    style="@style/StyleTextInputLayout"
+                    isEmptyCheck="@{descriptionTextInputEditText}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline3"
-                    app:layout_constraintStart_toStartOf="@+id/guideline2"
-                    app:layout_constraintTop_toBottomOf="@+id/titleTextInputLayout"
-                    isEmptyCheck="@{descriptionTextInputEditText}">
+                    android:layout_marginTop="@dimen/createJobPostingMarginTop"
+                    app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalRight"
+                    app:layout_constraintStart_toStartOf="@+id/guidelineVerticalLeft"
+                    app:layout_constraintTop_toBottomOf="@+id/titleTextInputLayout">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/descriptionTextInputEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="İlan açıklamasını girin"
-                        android:maxLines="4" />
+                        style="@style/StyleTextInputEditText"
+                        android:hint="@string/enter_description"
+                        android:maxLines="4"
+                        tools:ignore="TextContrastCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- TODO: İstenen özelikler için liste oluştur-->
                 <!-- TODO: Liste dinamik olsun, kullanıcı ekleme çıkarma yapabilsin-->
                 <!-- TODO: Bir edittext ve kaydet-->
                 <!-- TODO: Bir recycler card listesi ve sil tuşu-->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/skillsRequiredTextInputLayout"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline3"
-                    app:layout_constraintStart_toStartOf="@+id/guideline2"
-                    app:layout_constraintTop_toBottomOf="@+id/descriptionTextInputLayout">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/skillsRequiredTextInputEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Gerekli yetenekleri girin" />
-                </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- TODO: Lokasyonl listeden gelebilir-->
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/locationRequiredTextInputLayout"
+                    android:id="@+id/locationTextInputLayout"
+                    style="@style/StyleTextInputLayout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline3"
-                    app:layout_constraintStart_toStartOf="@+id/guideline2"
-                    app:layout_constraintTop_toBottomOf="@+id/skillsRequiredTextInputLayout">
+                    android:layout_marginTop="@dimen/createJobPostingMarginTop"
+                    app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalRight"
+                    app:layout_constraintStart_toStartOf="@+id/guidelineVerticalLeft"
+                    app:layout_constraintTop_toBottomOf="@+id/descriptionTextInputLayout">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/locationsRequiredTextInputEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Freelancer çalışma şekli" />
+                        android:id="@+id/locationsTextInputEditText"
+                        style="@style/StyleTextInputEditText"
+                        android:hint="@string/enter_location"
+                        tools:ignore="TextContrastCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- TODO: Datepicker olacak-->
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/deadlineRequiredTextInputLayout"
+                    android:id="@+id/deadlineTextInputLayout"
+                    style="@style/StyleTextInputLayout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline3"
-                    app:layout_constraintStart_toStartOf="@+id/guideline2"
-                    app:layout_constraintTop_toBottomOf="@+id/locationRequiredTextInputLayout">
+                    android:layout_marginTop="@dimen/createJobPostingMarginTop"
+                    app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalRight"
+                    app:layout_constraintStart_toStartOf="@+id/guidelineVerticalLeft"
+                    app:layout_constraintTop_toBottomOf="@+id/locationTextInputLayout">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/deadlineRequiredTextInputEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="İlan bitiş tarihini girin" />
+                        android:id="@+id/deadlineTextInputEditText"
+                        style="@style/StyleTextInputEditText"
+                        android:hint="@string/enter_deadline"
+                        tools:ignore="TextContrastCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/budgetRequiredTextInputLayout"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/skillsRequiredLayout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline3"
-                    app:layout_constraintStart_toStartOf="@+id/guideline2"
-                    app:layout_constraintTop_toBottomOf="@+id/deadlineRequiredTextInputLayout"
-                    app:prefixText="₺">
+                    android:layout_marginTop="@dimen/createJobPostingMarginTop"
+                    app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalRight"
+                    app:layout_constraintStart_toStartOf="@+id/guidelineVerticalLeft"
+                    app:layout_constraintTop_toBottomOf="@+id/deadlineTextInputLayout">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/budgetRequiredTextInputEditText"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/skillAddTextInputLayout"
+                        style="@style/StyleTextInputLayout"
+                        isEmptyCheck="@{skillAddEditText}"
+                        android:layout_marginTop="0dp"
+                        android:layout_weight="1"
+                        app:endIconDrawable="@drawable/baseline_add_24"
+                        app:endIconMode="custom"
+                        app:errorEnabled="true"
+                        app:layout_constraintBottom_toTopOf="@id/skillRowRecyclerView"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/skillAddEditText"
+                            style="@style/StyleTextInputEditText"
+                            android:hint="@string/enter_skills_required"
+                            tools:ignore="TextContrastCheck" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/skillRowRecyclerView"
+                        setHasFixedSize="@{true}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Bütçenizi girin" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:adapter="@{rvSkillAdapter}"
+                        android:padding="4dp"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/skillAddTextInputLayout" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <Button
                     android:id="@+id/createjobPostButton"
@@ -206,11 +243,11 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="8dp"
-                    android:text="Kaydet"
+                    android:text="@string/save"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline3"
-                    app:layout_constraintStart_toStartOf="@+id/guideline2"
-                    app:layout_constraintTop_toBottomOf="@+id/budgetRequiredTextInputLayout" />
+                    app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalRight"
+                    app:layout_constraintStart_toStartOf="@+id/guidelineVerticalLeft"
+                    app:layout_constraintTop_toBottomOf="@+id/skillsRequiredLayout" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
