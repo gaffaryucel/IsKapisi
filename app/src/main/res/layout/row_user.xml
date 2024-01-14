@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="chatItem"
-            type="com.androiddevelopers.freelanceapp.model.ChatModel" />
+            name="userItem"
+            type="com.androiddevelopers.freelanceapp.model.UserModel" />
     </data>
 
     <RelativeLayout
@@ -37,38 +37,18 @@
             android:paddingVertical="8dp">
 
             <TextView
-                android:id="@+id/chatName"
+                android:id="@+id/tvuserName"
                 android:layout_width="match_parent"
-                android:text="@{chatItem.receiverUserName}"
                 android:layout_height="wrap_content"
+                android:text="@{userItem.username}"
                 android:ellipsize="end"
                 android:maxLength="25"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/chatLastMessage"
-                android:text="@{chatItem.chatLastMessage}"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:fontFamily="sans-serif"
-                android:maxLines="1"
-                android:textColor="@color/GREY"
-                android:textSize="12sp" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/chatLastMessageTimeStamp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="14dp"
-            android:fontFamily="sans-serif"
-            android:text="@{chatItem.chatLastMessageTimestamp}"
-            android:textColor="@color/GREY"
-            android:textSize="10sp" />
 
     </RelativeLayout>
 </layout>

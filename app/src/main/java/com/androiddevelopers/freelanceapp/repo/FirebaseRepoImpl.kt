@@ -26,7 +26,6 @@ class FirebaseRepoImpl @Inject constructor(
     private val employerPostCollection = firestore.collection("job_posting")
     private val videoCollection = firestore.collection("videos")
     private val messagesReference = database.getReference("users")
-    private val currentUserId = auth.currentUser?.uid ?: ""
 
     override fun login(email: String, password: String): Task<AuthResult> {
         return auth.signInWithEmailAndPassword(email, password)
@@ -67,22 +66,26 @@ class FirebaseRepoImpl @Inject constructor(
     override fun getVideoFromFirestore(): Task<QuerySnapshot> {
         return videoCollection.get()
     }
-    override fun sendMessageToRealtimeDatabase(chatId : String,message: MessageModel): Task<Void> {
-        return messagesReference.child(currentUserId).child(chatId).child("messages").child(message.messageId.toString()).setValue(message)
+    override fun sendMessageToRealtimeDatabase(userId: String,chatId : String,message: MessageModel): Task<Void> {
+        return messagesReference.child(userId).child(chatId).child("messages").child(message.messageId.toString()).setValue(message)
     }
-    override fun addMessageInChatMatesRoom(chatMateId : String,chatId : String,message: MessageModel): Task<Void> {
-        return messagesReference.child(chatMateId).child(chatId).child("messages").child(message.messageId.toString()).setValue(message)
+    override fun addMessageInChatMatesRoom(userId: String,chatId : String,message: MessageModel): Task<Void> {
+        return messagesReference.child(userId).child(chatId).child("messages").child(message.messageId.toString()).setValue(message)
     }
-    override fun getAllMessagesFromRealtimeDatabase(chatId : String): DatabaseReference {
+    override fun getAllMessagesFromRealtimeDatabase(currentUserId : String,chatId : String): DatabaseReference {
         return messagesReference.child(currentUserId).child(chatId).child("messages")
     }
-    override fun createChatRoomForOwner(chat : ChatModel): Task<Void> {
+    override fun createChatRoomForOwner(currentUserId : String,chat : ChatModel): Task<Void> {
         return messagesReference.child(currentUserId).child(chat.chatId.toString()).setValue(chat)
     }
     override fun createChatRoomForChatMate(userId : String,chat : ChatModel): Task<Void> {
         return messagesReference.child(userId).child(chat.chatId.toString()).setValue(chat)
     }
-    override fun getAllChatRooms() : DatabaseReference {
+    override fun getAllChatRooms(currentUserId : String) : DatabaseReference {
         return messagesReference.child(currentUserId)
+    }
+
+    override fun getUsersFromFirestore(): Task<QuerySnapshot> {
+        return userCollection.get()
     }
 }

@@ -16,19 +16,23 @@ interface FirebaseRepoInterFace {
     fun login(email: String, password: String): Task<AuthResult>
     fun forgotPassword(email: String): Task<Void>
     fun register(email: String, password: String): Task<AuthResult>
-    fun addUserToFirestore(data: UserModel): Task<Void>
+    fun addUserToFirestore(data: UserModel) : Task<Void>
     fun deleteUserFromFirestore(documentId: String): Task<Void>
     fun getUserDataByDocumentId(documentId: String): Task<DocumentSnapshot>
     fun addFreelancerJobPostToFirestore(post: FreelancerJobPost): Task<Void>
     fun getAllFreelancerJobPostFromFirestore(): Task<QuerySnapshot>
+    fun saveVideoToFirestore(uri: VideoModel): Task<Void>
+    fun getVideoFromFirestore():  Task<QuerySnapshot>
+    fun sendMessageToRealtimeDatabase(userID : String,chatId : String,message: MessageModel): Task<Void>
+    fun addMessageInChatMatesRoom(chatMateId : String,chatId : String,message: MessageModel): Task<Void>
+    fun getAllMessagesFromRealtimeDatabase(currentUserId : String,chatId : String): DatabaseReference
+    fun createChatRoomForOwner(currentUserId : String,chat : ChatModel): Task<Void>
+    fun createChatRoomForChatMate(userId : String,chat : ChatModel): Task<Void>
+    fun getAllChatRooms(currentUserId : String) : DatabaseReference
+    fun getUsersFromFirestore() : Task<QuerySnapshot>
+  
     fun addEmployerJobPostToFirestore(job: EmployerJobPost): Task<Void>
     fun getAllEmployerJobPostFromFirestore(): Task<QuerySnapshot>
-    fun saveVideoToFirestore(video: VideoModel): Task<Void>
-    fun getVideoFromFirestore(): Task<QuerySnapshot>
-    fun sendMessageToRealtimeDatabase(chatId : String,message: MessageModel): Task<Void>
-    fun addMessageInChatMatesRoom(chatMateId : String,chatId : String,message: MessageModel): Task<Void>
-    fun getAllMessagesFromRealtimeDatabase(chatId : String): DatabaseReference
-    fun createChatRoomForOwner(chat : ChatModel): Task<Void>
-    fun createChatRoomForChatMate(userId : String,chat : ChatModel): Task<Void>
-    fun getAllChatRooms() : DatabaseReference
+
 }
+
