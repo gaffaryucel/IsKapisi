@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="androidx.navigation.Navigation" />
+
+        <variable
+            name="rvSkillAdapter"
+            type="com.androiddevelopers.freelanceapp.adapters.SkillAdapter" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".view.CreateJobPostingFragment">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="@drawable/baseline_keyboard_arrow_left_24"
+            app:navigationOnClickListener="@{() -> Navigation.findNavController(toolbar).popBackStack()}"
+            app:title="@string/create_job_posting_toolbar_title" />
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/createJobPostProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            app:layout_constraintBottom_toTopOf="@id/createJonPostScrollView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+        <ScrollView
+            android:id="@+id/createJonPostScrollView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/createJobPostProgressBar">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guidelineHorizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_percent="0.35" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guidelineVerticalLeft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.1" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guidelineVerticalRight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.9" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/image_placeholder"
+                    tools:ignore="ImageContrastCheck" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/budgetTextInputLayout"
+                    style="@style/StyleTextInputLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/createJobPostingMarginTop"
+                    app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalRight"
+                    app:layout_constraintStart_toStartOf="@+id/guidelineVerticalLeft"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView"
+                    app:prefixText="₺">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/budgetTextInputEditText"
+                        style="@style/StyleTextInputEditText"
+                        android:hint="@string/enter_budget"
+                        tools:ignore="TextContrastCheck" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/titleTextInputLayout"
+                    style="@style/StyleTextInputLayout"
+                    isEmptyCheck="@{titleTextInputEditText}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/createJobPostingMarginTop"
+                    app:endIconMode="clear_text"
+                    app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalRight"
+                    app:layout_constraintStart_toStartOf="@+id/guidelineVerticalLeft"
+                    app:layout_constraintTop_toBottomOf="@+id/budgetTextInputLayout">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/titleTextInputEditText"
+                        style="@style/StyleTextInputEditText"
+                        android:hint="@string/enter_title"
+                        tools:ignore="TextContrastCheck" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/descriptionTextInputLayout"
+                    style="@style/StyleTextInputLayout"
+                    isEmptyCheck="@{descriptionTextInputEditText}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/createJobPostingMarginTop"
+                    app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalRight"
+                    app:layout_constraintStart_toStartOf="@+id/guidelineVerticalLeft"
+                    app:layout_constraintTop_toBottomOf="@+id/titleTextInputLayout">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/descriptionTextInputEditText"
+                        style="@style/StyleTextInputEditText"
+                        android:hint="@string/enter_description"
+                        android:maxLines="4"
+                        tools:ignore="TextContrastCheck" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- TODO: İstenen özelikler için liste oluştur-->
+                <!-- TODO: Liste dinamik olsun, kullanıcı ekleme çıkarma yapabilsin-->
+                <!-- TODO: Bir edittext ve kaydet-->
+                <!-- TODO: Bir recycler card listesi ve sil tuşu-->
+
+
+                <!-- TODO: Lokasyonl listeden gelebilir-->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/locationTextInputLayout"
+                    style="@style/StyleTextInputLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/createJobPostingMarginTop"
+                    app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalRight"
+                    app:layout_constraintStart_toStartOf="@+id/guidelineVerticalLeft"
+                    app:layout_constraintTop_toBottomOf="@+id/descriptionTextInputLayout">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/locationsTextInputEditText"
+                        style="@style/StyleTextInputEditText"
+                        android:hint="@string/enter_location"
+                        tools:ignore="TextContrastCheck" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- TODO: Datepicker olacak-->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/deadlineTextInputLayout"
+                    style="@style/StyleTextInputLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/createJobPostingMarginTop"
+                    app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalRight"
+                    app:layout_constraintStart_toStartOf="@+id/guidelineVerticalLeft"
+                    app:layout_constraintTop_toBottomOf="@+id/locationTextInputLayout">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/deadlineTextInputEditText"
+                        style="@style/StyleTextInputEditText"
+                        android:hint="@string/enter_deadline"
+                        tools:ignore="TextContrastCheck" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/skillsRequiredLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/createJobPostingMarginTop"
+                    app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalRight"
+                    app:layout_constraintStart_toStartOf="@+id/guidelineVerticalLeft"
+                    app:layout_constraintTop_toBottomOf="@+id/deadlineTextInputLayout">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/skillAddTextInputLayout"
+                        style="@style/StyleTextInputLayout"
+                        isEmptyCheck="@{skillAddEditText}"
+                        android:layout_marginTop="0dp"
+                        android:layout_weight="1"
+                        app:endIconDrawable="@drawable/baseline_add_24"
+                        app:endIconMode="custom"
+                        app:errorEnabled="true"
+                        app:layout_constraintBottom_toTopOf="@id/skillRowRecyclerView"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/skillAddEditText"
+                            style="@style/StyleTextInputEditText"
+                            android:hint="@string/enter_skills_required"
+                            tools:ignore="TextContrastCheck" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/skillRowRecyclerView"
+                        setHasFixedSize="@{true}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:adapter="@{rvSkillAdapter}"
+                        android:padding="4dp"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/skillAddTextInputLayout" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <Button
+                    android:id="@+id/createjobPostButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/save"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalRight"
+                    app:layout_constraintStart_toStartOf="@+id/guidelineVerticalLeft"
+                    app:layout_constraintTop_toBottomOf="@+id/skillsRequiredLayout" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

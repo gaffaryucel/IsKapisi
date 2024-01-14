@@ -4,6 +4,7 @@ import com.androiddevelopers.freelanceapp.model.ChatModel
 import com.androiddevelopers.freelanceapp.model.MessageModel
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.VideoModel
+import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
@@ -29,5 +30,9 @@ interface FirebaseRepoInterFace {
     fun createChatRoomForChatMate(userId : String,chat : ChatModel): Task<Void>
     fun getAllChatRooms(currentUserId : String) : DatabaseReference
     fun getUsersFromFirestore() : Task<QuerySnapshot>
+  
+    fun addEmployerJobPostToFirestore(job: EmployerJobPost): Task<Void>
+    fun getAllEmployerJobPostFromFirestore(): Task<QuerySnapshot>
 
 }
+

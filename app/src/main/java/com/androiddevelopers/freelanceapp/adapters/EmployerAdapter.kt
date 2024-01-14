@@ -12,6 +12,7 @@ class EmployerAdapter(
     private val context: Context,
     private val employerList: ArrayList<EmployerJobPost>
 ) : RecyclerView.Adapter<EmployerAdapter.EmployerViewHolder>() {
+
     inner class EmployerViewHolder(val binding: CardEmployerBinding) :
         RecyclerView.ViewHolder(binding.root)
 
@@ -39,4 +40,5 @@ class EmployerAdapter(
         employerList.addAll(newEmployerList)
         notifyDataSetChanged()
     }
+
 }
