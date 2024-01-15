@@ -2,4 +2,6 @@
 <resources>
     <color name="delete_button">@color/md_theme_dark_error</color>
     <color name="text_outline">@color/md_theme_dark_outline</color>
+
+
 </resources>

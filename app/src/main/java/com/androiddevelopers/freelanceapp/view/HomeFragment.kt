@@ -51,7 +51,6 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.getAllFreelanceJobPost()
-
         errorDialog = AlertDialog.Builder(context).create()
 
 
@@ -60,7 +59,7 @@ class HomeFragment : Fragment() {
         observeLiveData(viewLifecycleOwner)
 
         with(binding) {
-            search(homeSearchView)
+            search(searchView)
 
             adapter = freelancerAdapter
 

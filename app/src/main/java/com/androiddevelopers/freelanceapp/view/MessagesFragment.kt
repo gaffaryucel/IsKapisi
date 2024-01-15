@@ -14,6 +14,7 @@ import com.androiddevelopers.freelanceapp.databinding.FragmentShortVideoBinding
 import com.androiddevelopers.freelanceapp.model.MessageModel
 import com.androiddevelopers.freelanceapp.viewmodel.MessagesViewModel
 import com.androiddevelopers.freelanceapp.viewmodel.ShortVideoViewModel
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -40,28 +41,32 @@ class MessagesFragment : Fragment() {
         val chatId = arguments?.let {
             it.getString("chat_id")
         }
-
         val messageReceiver = arguments?.let {
             it.getString("receiver")
+        }
+        val receiverName = arguments?.let {
+            it.getString("receiver_name")
+        }
+        val userImage = arguments?.let {
+            it.getString("receiver_image")
         }
 
         viewModel.getMessages(chatId ?: "")
 
         observeLiveData()
-        binding.btnSendMessage.setOnClickListener {
-            val message = binding.etMessageBox.text.toString()
-            viewModel.sendMessage(
-                chatId ?: "",
-                message,
-                messageReceiver ?: ""
-            )
-        }
+
+        Glide.with(requireContext()).load(
+         userImage
+        ).into(
+            binding.ivUser
+        )
+        binding.tvUserName.text = receiverName
     }
 
 
     private fun observeLiveData(){
         viewModel.messages.observe(viewLifecycleOwner, Observer {
-            println("chat : "+it)
+            
         })
     }
 }

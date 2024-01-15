@@ -45,7 +45,9 @@ class ChatAdapter :  RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
         holder.itemView.setOnClickListener {
             val action = ChatsFragmentDirections.actionChatsFragmentToMessagesFragment(
                 chat.chatId.toString(),
-                chat.receiverId.toString()
+                chat.receiverId.toString(),
+                chat.receiverUserName.toString(),
+                chat.receiverUserImage.toString()
             )
             Navigation.findNavController(it).navigate(action)
         }
