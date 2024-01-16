@@ -27,9 +27,7 @@ class FreelancerAdapter(
     }
 
     override fun onBindViewHolder(holder: FreelancerViewHolder, position: Int) {
-        with(holder) {
-
-        }
+        holder.binding.freelancer = freelancerList[position]
     }
 
     @SuppressLint("NotifyDataSetChanged")

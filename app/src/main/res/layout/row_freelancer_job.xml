@@ -31,11 +31,11 @@
                     android:id="@+id/ivCardFreelancer"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:src="@drawable/image_placeholder"
                     app:layout_constraintBottom_toTopOf="@id/card_freelance_guideline_horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@drawable/image_placeholder" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cardFreelancerDetail"
@@ -50,6 +50,7 @@
                         android:id="@+id/cardFreelancerTextViewTitleextViewTitle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:hint="@string/hint_freelancer_title"
                         android:maxLines="2"
                         android:padding="3dp"
                         android:text="@{freelancer.title}"
@@ -57,21 +58,20 @@
                         android:textStyle="bold"
                         app:layout_constraintEnd_toStartOf="@id/card_freelance_guideline_vertical_right"
                         app:layout_constraintStart_toStartOf="@id/card_freelance_guideline_vertical_left"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="Freelancer Title" />
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/cardFreelancerTextViewDescription"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
+                        android:hint="@string/hint_freelancer_description"
                         android:maxLines="3"
                         android:padding="3dp"
                         android:text="@{freelancer.description}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/card_freelance_guideline_vertical_right"
                         app:layout_constraintStart_toStartOf="@id/card_freelance_guideline_vertical_left"
-                        app:layout_constraintTop_toBottomOf="@id/cardFreelancerTextViewTitleextViewTitle"
-                        tools:text="Freelancer Description" />
+                        app:layout_constraintTop_toBottomOf="@id/cardFreelancerTextViewTitleextViewTitle" />
 
                     <ImageView
                         android:id="@+id/ivPostOwner"
