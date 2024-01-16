@@ -196,8 +196,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/createJobPostingMarginTop"
                     app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalRight"
-                    app:layout_constraintStart_toStartOf="@+id/guidelineVerticalLeft"
-                    app:layout_constraintTop_toBottomOf="@+id/deadlineTextInputLayout">
+                    app:layout_constraintStart_toEndOf="@+id/guidelineVerticalLeft"
+                    app:layout_constraintTop_toBottomOf="@+id/deadlineTextInputLayout"
+                    app:layout_constraintWidth_max="@dimen/edittextMaxWidth">
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/skillAddTextInputLayout"
@@ -247,7 +248,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalRight"
                     app:layout_constraintStart_toStartOf="@+id/guidelineVerticalLeft"
-                    app:layout_constraintTop_toBottomOf="@+id/skillsRequiredLayout" />
+                    app:layout_constraintTop_toBottomOf="@+id/skillsRequiredLayout"
+                    app:layout_constraintWidth_max="@dimen/buttonMaxWidth" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
