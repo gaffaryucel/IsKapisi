@@ -45,4 +45,5 @@
     <string name="delete">Sil</string>
     <string name="hint_freelancer_title">Freelancer Title</string>
     <string name="hint_freelancer_description">Freelancer Description</string>
+    <string name="buy">Satın Al</string>
 </resources>

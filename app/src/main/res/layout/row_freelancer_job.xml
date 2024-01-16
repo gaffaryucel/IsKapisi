@@ -35,6 +35,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription,ImageContrastCheck"
                     tools:src="@drawable/image_placeholder" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -54,6 +55,7 @@
                         android:maxLines="2"
                         android:padding="3dp"
                         android:text="@{freelancer.title}"
+                        android:textColorHint="#78909C"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toStartOf="@id/card_freelance_guideline_vertical_right"
@@ -71,7 +73,8 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/card_freelance_guideline_vertical_right"
                         app:layout_constraintStart_toStartOf="@id/card_freelance_guideline_vertical_left"
-                        app:layout_constraintTop_toBottomOf="@id/cardFreelancerTextViewTitleextViewTitle" />
+                        app:layout_constraintTop_toBottomOf="@id/cardFreelancerTextViewTitleextViewTitle"
+                        tools:ignore="TextContrastCheck" />
 
                     <ImageView
                         android:id="@+id/ivPostOwner"
@@ -79,40 +82,27 @@
                         android:layout_height="0dp"
                         android:layout_margin="4dp"
                         android:src="@drawable/image_placeholder"
-                        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+                        app:layout_constraintBottom_toTopOf="@+id/ivUserStartCount"
                         app:layout_constraintEnd_toStartOf="@id/card_freelance_guideline_vertical_left"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription,ImageContrastCheck" />
 
-                    <LinearLayout
-                        android:id="@+id/linearLayout"
-                        android:layout_width="0dp"
+                    <TextView
+                        android:id="@+id/ivUserStartCount"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="4dp"
-                        android:gravity="center"
-                        android:orientation="horizontal"
+                        android:text="@{freelancer.rating.toString()}"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:drawableEndCompat="@drawable/baseline_star_24"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/card_freelance_guideline_vertical_left"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/ivPostOwner">
+                        app:layout_constraintTop_toBottomOf="@id/ivPostOwner"
+                        tools:text="5.0" />
 
-                        <TextView
-                            android:id="@+id/ivUserStartCount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@{freelancer.rating.toString()}"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            tools:text="5.0" />
-
-                        <ImageView
-                            android:id="@+id/ivStar"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:src="@drawable/baseline_star_24"
-                            tools:ignore="ContentDescription" />
-
-                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/cardFreelanceTextViewPrice"
@@ -130,9 +120,9 @@
 
                     <Button
                         android:id="@+id/cardFreelanceButtonBuy"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Buy"
+                        android:text="@string/buy"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/card_freelance_guideline_vertical_right"
