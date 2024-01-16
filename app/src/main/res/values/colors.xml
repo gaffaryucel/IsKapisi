@@ -105,5 +105,6 @@
 
     <color name="delete_button">@color/md_theme_light_error</color>
     <color name="text_outline">@color/md_theme_light_outline</color>
+    <color name="text_outline_hint">@color/md_theme_light_onSurfaceVariant</color>
 
 </resources>

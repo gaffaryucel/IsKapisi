@@ -31,9 +31,8 @@ fun isEmptyCheck(viewLayout: TextInputLayout, viewText: TextInputEditText) {
             if (s != null) {
                 if (viewLayout.error != null) {
                     viewLayout.error = null
+                    viewLayout.isErrorEnabled = false
                 }
-            } else {
-                viewLayout.error = viewLayout.context.getString(R.string.text_empty_error)
             }
         }
 
@@ -43,7 +42,7 @@ fun isEmptyCheck(viewLayout: TextInputLayout, viewText: TextInputEditText) {
 
     viewText.setOnFocusChangeListener { _, hasFocus ->
         run {
-            if (hasFocus && viewText.text.toString().isEmpty()) {
+            if (!hasFocus && viewText.text.toString().isEmpty()) {
                 viewLayout.error = viewLayout.context.getString(R.string.text_empty_error)
             }
         }
@@ -86,7 +85,7 @@ fun passwordCheck(viewLayout: TextInputLayout, viewText: TextInputEditText) {
 
     viewText.setOnFocusChangeListener { _, hasFocus ->
         run {
-            if (hasFocus && viewText.text.toString().isEmpty()) {
+            if (!hasFocus && viewText.text.toString().isEmpty()) {
                 viewLayout.error = viewLayout.context.getString(R.string.password_error)
             }
         }

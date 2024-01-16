@@ -16,12 +16,17 @@ import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.util.JobStatus
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.viewmodel.CreateJobPostingViewModel
+import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 @AndroidEntryPoint
 class CreateJobPostingFragment : Fragment() {
     private lateinit var view: View
     private lateinit var viewModel: CreateJobPostingViewModel
+    private lateinit var datePicker: MaterialDatePicker<Long>
     private var _binding: FragmentCreateJobPostingBinding? = null
     private val binding get() = _binding!!
 
@@ -37,6 +42,11 @@ class CreateJobPostingFragment : Fragment() {
         viewModel = ViewModelProvider(this)[CreateJobPostingViewModel::class.java]
         _binding = FragmentCreateJobPostingBinding.inflate(inflater, container, false)
         view = binding.root
+
+        datePicker = MaterialDatePicker.Builder
+            .datePicker()
+            .setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR)
+            .build()
 
         //skill recycler view için adaptörümüzü bağlıyoruz
         skillAdapter = SkillAdapter(viewModel, arrayListOf())
@@ -75,6 +85,27 @@ class CreateJobPostingFragment : Fragment() {
                     deadline = deadlineTextInputEditText.text.toString(),
                     budget = budgetTextInputEditText.text.toString().toDouble()
                 )
+            }
+
+            //ilan bitiş tarihi seçimi
+            deadlineTextInputEditText.setOnClickListener {
+                datePicker.show(requireActivity().supportFragmentManager, "Date Picker")
+                datePicker.addOnPositiveButtonClickListener { selection: Long ->
+                    val currentDate = Date().time
+
+                    if (selection > currentDate) {
+                        val dateFormatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+                        val date = dateFormatter.format(Date(selection))
+
+                        binding.deadlineTextInputEditText.setText(date)
+                        deadlineTextInputLayout.error = null
+                        deadlineTextInputLayout.isErrorEnabled = false
+                    } else {
+                        deadlineTextInputLayout.error = "Daha ileri bir tarih seçiniz"
+                    }
+
+
+                }
             }
         }
     }
