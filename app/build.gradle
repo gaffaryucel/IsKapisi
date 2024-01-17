@@ -1,12 +1,11 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'androidx.navigation.safeargs'
+    id 'androidx.navigation.safeargs.kotlin'
     id 'com.google.gms.google-services'
     id 'com.google.devtools.ksp'
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
-
 }
 
 android {
@@ -63,8 +62,8 @@ dependencies {
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
 
     //Navigation_Fragment
-    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
-    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.7.6"
+    implementation "androidx.navigation:navigation-ui-ktx:2.7.6"
 
     //firebase
     implementation platform('com.google.firebase:firebase-bom:32.7.0')
@@ -79,8 +78,9 @@ dependencies {
 
 
     //ROom
+    //noinspection GradleDependency
     implementation "androidx.room:room-runtime:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
+    ksp "androidx.room:room-compiler:$room_version"
 
     //Facebook SDK
     implementation 'com.facebook.android:facebook-android-sdk:16.3.0'

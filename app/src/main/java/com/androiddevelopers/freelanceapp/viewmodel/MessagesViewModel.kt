@@ -13,7 +13,10 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.text.SimpleDateFormat
 import java.util.ArrayList
+import java.util.Date
+import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 
@@ -32,6 +35,7 @@ class MessagesViewModel @Inject constructor(
     private var _messageStatus = MutableLiveData<Resource<Boolean>>()
     val messageStatus : LiveData<Resource<Boolean>>
         get() = _messageStatus
+
 
 
     fun sendMessage(
@@ -68,7 +72,8 @@ class MessagesViewModel @Inject constructor(
             messageId,
             messageData,
             messageSender,
-            messageReceiver
+            messageReceiver,
+            getCurrentTime()
         )
     }
 
@@ -78,7 +83,6 @@ class MessagesViewModel @Inject constructor(
             object : ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val messageList = mutableListOf<MessageModel>()
-                    println("onChanged")
 
                     for (messageSnapshot in snapshot.children) {
                         val message = messageSnapshot.getValue(MessageModel::class.java)
@@ -86,12 +90,22 @@ class MessagesViewModel @Inject constructor(
                             messageList.add(it)
                         }
                     }
-                    _messages.value = messageList
+                    val sortedList = sortListByDate(messageList)
+                    _messages.value = sortedList
                 }
 
                 override fun onCancelled(error: DatabaseError) {
                     _messageStatus.value =  Resource.error(error.message,null) }
             }
         )
+    }
+    private fun getCurrentTime(): String {
+        val currentTime = System.currentTimeMillis()
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        val date = Date(currentTime)
+        return dateFormat.format(date)
+    }
+    fun sortListByDate(yourList: List<MessageModel>): List<MessageModel> {
+        return yourList.sortedBy { it.timestamp }
     }
 }
