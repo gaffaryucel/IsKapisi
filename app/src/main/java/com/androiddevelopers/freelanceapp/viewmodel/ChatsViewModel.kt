@@ -39,7 +39,7 @@ class ChatsViewModel  @Inject constructor(
     }
     private fun getChatRooms () {
         _messageStatus.value = Resource.loading(null)
-        repo.getAllChatRooms(currentUserId ?: "").addListenerForSingleValueEvent(
+        repo.getAllChatRooms(currentUserId ?: "").addValueEventListener(
             object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val messageList = mutableListOf<ChatModel>()

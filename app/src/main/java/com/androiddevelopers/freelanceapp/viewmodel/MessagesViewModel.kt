@@ -13,6 +13,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.util.ArrayList
 import java.util.UUID
 import javax.inject.Inject
 
@@ -55,6 +56,8 @@ class MessagesViewModel @Inject constructor(
         repo.addMessageInChatMatesRoom(messageReceiver,chatId,usersMessage)
     }
 
+
+
     private fun createChatModelForCurrentUser(
         messageData: String,
         messageSender: String,
@@ -71,10 +74,11 @@ class MessagesViewModel @Inject constructor(
 
     fun getMessages(chatId : String) {
         _messageStatus.value = Resource.loading(null)
-        repo.getAllMessagesFromRealtimeDatabase(currentUserId ?: "",chatId).addListenerForSingleValueEvent(
+        repo.getAllMessagesFromRealtimeDatabase(currentUserId ?: "",chatId).addValueEventListener(
             object : ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val messageList = mutableListOf<MessageModel>()
+                    println("onChanged")
 
                     for (messageSnapshot in snapshot.children) {
                         val message = messageSnapshot.getValue(MessageModel::class.java)
