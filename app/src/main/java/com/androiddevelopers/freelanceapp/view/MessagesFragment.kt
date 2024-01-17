@@ -1,21 +1,18 @@
 package com.androiddevelopers.freelanceapp.view
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import com.androiddevelopers.freelanceapp.R
-import com.androiddevelopers.freelanceapp.adapters.VideoAdapter
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.androiddevelopers.freelanceapp.adapters.MessageAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentMessagesBinding
-import com.androiddevelopers.freelanceapp.databinding.FragmentShortVideoBinding
-import com.androiddevelopers.freelanceapp.model.MessageModel
+import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.viewmodel.MessagesViewModel
-import com.androiddevelopers.freelanceapp.viewmodel.ShortVideoViewModel
 import com.bumptech.glide.Glide
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,6 +22,9 @@ class MessagesFragment : Fragment() {
 
     private var _binding: FragmentMessagesBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var adapter : MessageAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -53,7 +53,6 @@ class MessagesFragment : Fragment() {
 
         viewModel.getMessages(chatId ?: "")
 
-        observeLiveData()
 
         Glide.with(requireContext()).load(
          userImage
@@ -61,12 +60,45 @@ class MessagesFragment : Fragment() {
             binding.ivUser
         )
         binding.tvUserName.text = receiverName
+
+        binding.btnSend.setOnClickListener{
+            val message = binding.messageInput.text.toString()
+            viewModel.sendMessage(
+                chatId.toString(),
+                message,
+                messageReceiver.toString()
+            )
+            binding.messageInput.setText("")
+
+            val lastItemPosition = adapter.itemCount - 1
+            if (lastItemPosition >= 0) {
+                binding.messageRecyclerView.smoothScrollToPosition(lastItemPosition)
+            }
+        }
+
+        adapter = MessageAdapter()
+        val layoutManager = LinearLayoutManager(requireContext())
+        layoutManager.stackFromEnd = true
+        binding.messageRecyclerView.setLayoutManager(layoutManager)
+        binding.messageRecyclerView.adapter = adapter
+
+        observeLiveData()
+
+
     }
+
+
+
 
 
     private fun observeLiveData(){
         viewModel.messages.observe(viewLifecycleOwner, Observer {
-            
+            adapter.messageList = it
+            adapter.notifyDataSetChanged()
+            val lastItemPosition = adapter.itemCount - 1
+            if (lastItemPosition >= 0) {
+                binding.messageRecyclerView.smoothScrollToPosition(lastItemPosition)
+            }
         })
     }
 }

@@ -75,6 +75,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/messageRecyclerView"
+        app:layout_constraintBottom_toTopOf="@id/messageInputContainer"
+        app:layout_constrainedHeight="true"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:padding="5dp"
@@ -89,7 +91,7 @@
         android:background="@drawable/input_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/voiceRecordingOrSend"
+        app:layout_constraintRight_toLeftOf="@+id/btnSend"
         tools:context="com.example.chattutorial.ChannelActivity">
 
         <ImageButton
@@ -109,7 +111,8 @@
             android:layout_marginStart="12dp"
             android:background="@android:color/transparent"
             android:hint="Type a message"
-            android:text="@={viewModel.messageInputText}"
+            android:textColorHint="@color/GREY"
+            android:textColor="@color/black"
             app:layout_constraintLeft_toRightOf="@+id/addEmoticon"
             app:layout_constraintRight_toLeftOf="@+id/addAttachment" />
 
@@ -138,7 +141,7 @@
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/voiceRecordingOrSend"
+        android:id="@+id/btnSend"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_margin="6dp"

@@ -38,7 +38,7 @@ class JobPostingsFragment : Fragment() {
         _binding = FragmentJobPostingsBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        employerAdapter = EmployerAdapter(view.context, arrayListOf())
+        employerAdapter = EmployerAdapter(requireContext(), arrayListOf())
         listEmployerJobPost = arrayListOf()
 
         return view
@@ -52,14 +52,13 @@ class JobPostingsFragment : Fragment() {
         errorDialog = AlertDialog.Builder(context).create()
 
         setProgressBar(false)
-        setupDialogs()
+
+        //setupDialogs() kod çalıştığında uygulama çöküyor
         observeLiveData(viewLifecycleOwner)
 
         with(binding) {
             adapter = employerAdapter
-
             search(jobPostingSearchView)
-
         }
     }
 
