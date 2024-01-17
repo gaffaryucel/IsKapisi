@@ -1,10 +1,20 @@
 package com.androiddevelopers.freelanceapp.view
 
+import android.app.Activity
 import android.app.AlertDialog
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
@@ -27,6 +37,9 @@ class CreateJobPostingFragment : Fragment() {
     private lateinit var view: View
     private lateinit var viewModel: CreateJobPostingViewModel
     private lateinit var datePicker: MaterialDatePicker<Long>
+    private lateinit var selectedImageUri: Uri
+    private lateinit var imageLauncher: ActivityResultLauncher<Intent>
+
     private var _binding: FragmentCreateJobPostingBinding? = null
     private val binding get() = _binding!!
 
@@ -108,6 +121,14 @@ class CreateJobPostingFragment : Fragment() {
                 }
             }
         }
+
+        imageLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    //   selectedVideoUri = result.data?.data
+                    //   showPostView();
+                }
+            }
     }
 
     override fun onDestroyView() {
@@ -199,5 +220,47 @@ class CreateJobPostingFragment : Fragment() {
                 employerId = employerId,
             )
         )
+    }
+
+    private fun chooseImage() {
+        if (checkPermission()) {
+            openImagePicker()
+        }
+    }
+
+    private fun openImagePicker() {
+        //TODO
+        if (checkPermission()) {
+            val imageIntent =
+                Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+
+        }
+    }
+
+    private fun checkPermission(): Boolean {
+        val currentPermission = chooseImagePermission()
+        return if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                currentPermission
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            true
+        } else {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(currentPermission),
+                800
+            )
+            false
+        }
+
+    }
+
+    private fun chooseImagePermission(): String {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            android.Manifest.permission.READ_MEDIA_IMAGES
+        } else {
+            android.Manifest.permission.READ_EXTERNAL_STORAGE
+        }
     }
 }
