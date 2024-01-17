@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.databinding.RowFreelancerJobBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 
+@Suppress("unused")
 class FreelancerAdapter(
     private val context: Context,
     private val freelancerList: ArrayList<FreelancerJobPost>
@@ -27,9 +28,7 @@ class FreelancerAdapter(
     }
 
     override fun onBindViewHolder(holder: FreelancerViewHolder, position: Int) {
-        with(holder) {
-
-        }
+        holder.binding.freelancer = freelancerList[position]
     }
 
     @SuppressLint("NotifyDataSetChanged")
