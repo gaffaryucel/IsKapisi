@@ -61,7 +61,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    app:layout_constraintGuide_percent="0.35" />
+                    app:layout_constraintGuide_percent="0.28" />
 
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guidelineVerticalLeft"
@@ -89,7 +89,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/image_placeholder"
+                    app:layout_constraintWidth_min="300dp"
+                    app:srcCompat="@drawable/placeholder"
                     tools:ignore="ImageContrastCheck" />
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -248,6 +249,19 @@
                     app:layout_constraintStart_toStartOf="@+id/guidelineVerticalLeft"
                     app:layout_constraintTop_toBottomOf="@+id/skillsRequiredLayout"
                     app:layout_constraintWidth_max="@dimen/buttonMaxWidth" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fabLoadImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:clickable="true"
+                    app:fabCustomSize="48dp"
+                    app:fabSize="auto"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageView"
+                    app:layout_constraintEnd_toEndOf="@id/budgetTextInputLayout"
+                    app:srcCompat="@drawable/baseline_add_a_photo_24" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
