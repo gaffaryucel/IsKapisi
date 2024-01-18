@@ -25,6 +25,7 @@ import com.androiddevelopers.freelanceapp.databinding.FragmentCreateJobPostingBi
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.util.JobStatus
 import com.androiddevelopers.freelanceapp.util.Status
+import com.androiddevelopers.freelanceapp.util.downloadImage
 import com.androiddevelopers.freelanceapp.viewmodel.CreateJobPostingViewModel
 import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint
@@ -96,7 +97,8 @@ class CreateJobPostingFragment : Fragment() {
                     skillsRequired = skillList,
                     location = locationsTextInputEditText.text.toString(),
                     deadline = deadlineTextInputEditText.text.toString(),
-                    budget = budgetTextInputEditText.text.toString().toDouble()
+                    budget = budgetTextInputEditText.text.toString().toDouble(),
+                    images = listOf(selectedImageUri.toString())
                 )
             }
 
@@ -120,13 +122,20 @@ class CreateJobPostingFragment : Fragment() {
 
                 }
             }
+
+            fabLoadImage.setOnClickListener {
+                chooseImage()
+            }
         }
 
         imageLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == Activity.RESULT_OK) {
-                    //   selectedVideoUri = result.data?.data
-                    //   showPostView();
+                    result.data?.data?.let {
+                        selectedImageUri = it
+                        //seçilen resmi create ekranında göstermek için
+                        downloadImage(binding.imageView, it.toString())
+                    }
                 }
             }
     }
@@ -229,12 +238,12 @@ class CreateJobPostingFragment : Fragment() {
     }
 
     private fun openImagePicker() {
-        //TODO
-        if (checkPermission()) {
-            val imageIntent =
-                Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-
-        }
+        val imageIntent =
+            Intent(
+                Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            )
+        imageLauncher.launch(imageIntent)
     }
 
     private fun checkPermission(): Boolean {

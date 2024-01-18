@@ -27,6 +27,7 @@ constructor(
     val skills: LiveData<ArrayList<String>>
         get() = _skills
 
+    //TODO: resim için storege yükleme metodu ekle
     fun addJobPostingToFirebase(jobPost: EmployerJobPost) = viewModelScope.launch {
         _firebaseMessage.value = Resource.loading(true)
         jobPost.employerId = firebaseAuth.currentUser?.uid ?: ""
