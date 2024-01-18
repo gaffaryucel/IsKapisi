@@ -3,5 +3,5 @@
     <color name="delete_button">@color/md_theme_dark_error</color>
     <color name="text_outline">@color/md_theme_dark_outline</color>
     <color name="text_outline_hint">@color/md_theme_dark_onSurfaceVariant</color>
-
+    <color name="navigation_back">@color/md_theme_dark_onSurface</color>
 </resources>
