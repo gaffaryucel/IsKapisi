@@ -1,5 +1,6 @@
 package com.androiddevelopers.freelanceapp.viewmodel
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -27,11 +28,34 @@ constructor(
     val skills: LiveData<ArrayList<String>>
         get() = _skills
 
-    //TODO: resim için storege yükleme metodu ekle
-    fun addJobPostingToFirebase(jobPost: EmployerJobPost) = viewModelScope.launch {
+    fun addImageAndJobPostToFirebase(uri: Uri, jobPost: EmployerJobPost) = viewModelScope.launch {
         _firebaseMessage.value = Resource.loading(true)
-        jobPost.employerId = firebaseAuth.currentUser?.uid ?: ""
+        uri.lastPathSegment?.let { file ->
+            firebaseRepo.addImageToStorage(uri, file).addOnSuccessListener { task ->
+                task.storage.downloadUrl
+                    .addOnSuccessListener {
+                        jobPost.images = listOf(it.toString())
+                        jobPost.employerId = firebaseAuth.currentUser?.uid ?: ""
+                        addJobPostingToFirebase(jobPost)
+                    }.addOnFailureListener {
+                        _firebaseMessage.value =
+                            it.localizedMessage?.let { message ->
+                                _firebaseMessage.value = Resource.loading(false)
+                                Resource.error(message, false)
+                            }
+                    }
+            }.addOnFailureListener {
+                _firebaseMessage.value =
+                    it.localizedMessage?.let { message ->
+                        _firebaseMessage.value = Resource.loading(false)
+                        Resource.error(message, false)
+                    }
+            }
+        }
+    }
 
+    private fun addJobPostingToFirebase(jobPost: EmployerJobPost) = viewModelScope.launch {
+        //_firebaseMessage.value = Resource.loading(true)
         firebaseRepo.addEmployerJobPostToFirestore(jobPost).addOnCompleteListener { task ->
             _firebaseMessage.value = Resource.loading(false)
             if (task.isSuccessful) {

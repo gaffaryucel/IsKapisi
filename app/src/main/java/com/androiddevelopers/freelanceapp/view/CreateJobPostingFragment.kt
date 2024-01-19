@@ -35,7 +35,6 @@ import java.util.*
 
 @AndroidEntryPoint
 class CreateJobPostingFragment : Fragment() {
-    private lateinit var view: View
     private lateinit var viewModel: CreateJobPostingViewModel
     private lateinit var datePicker: MaterialDatePicker<Long>
     private lateinit var selectedImageUri: Uri
@@ -55,7 +54,7 @@ class CreateJobPostingFragment : Fragment() {
     ): View {
         viewModel = ViewModelProvider(this)[CreateJobPostingViewModel::class.java]
         _binding = FragmentCreateJobPostingBinding.inflate(inflater, container, false)
-        view = binding.root
+        val view = binding.root
 
         datePicker = MaterialDatePicker.Builder
             .datePicker()
@@ -91,14 +90,16 @@ class CreateJobPostingFragment : Fragment() {
 
             //yeni iş ilanını veri tabanına göndermek için kaydet butonunu dinliyoruz
             createjobPostButton.setOnClickListener {
-                save(
-                    title = titleTextInputEditText.text.toString(),
-                    description = descriptionTextInputEditText.text.toString(),
-                    skillsRequired = skillList,
-                    location = locationsTextInputEditText.text.toString(),
-                    deadline = deadlineTextInputEditText.text.toString(),
-                    budget = budgetTextInputEditText.text.toString().toDouble(),
-                    images = listOf(selectedImageUri.toString())
+                viewModel.addImageAndJobPostToFirebase( //resim ve işveren ilanı bilgilerini view modele gönderiyoruz
+                    selectedImageUri, // resmin cihazdaki konumu
+                    createEmployerJobPost( // işveren ilanı için formda doldurulan yerler ile birlikte sınıf oluşturuyoruz
+                        title = titleTextInputEditText.text.toString(),
+                        description = descriptionTextInputEditText.text.toString(),
+                        skillsRequired = skillList,
+                        location = locationsTextInputEditText.text.toString(),
+                        deadline = deadlineTextInputEditText.text.toString(),
+                        budget = budgetTextInputEditText.text.toString().toDouble()
+                    )
                 )
             }
 
@@ -189,7 +190,7 @@ class CreateJobPostingFragment : Fragment() {
         }
     }
 
-    private fun save(
+    private fun createEmployerJobPost(
         postId: String? = "",
         title: String? = "",
         description: String? = "",
@@ -207,27 +208,25 @@ class CreateJobPostingFragment : Fragment() {
         viewCount: Int? = 0,
         isUrgent: Boolean? = false,
         employerId: String? = ""
-    ) {
-        viewModel.addJobPostingToFirebase(
-            EmployerJobPost(
-                postId = postId,
-                title = title,
-                description = description,
-                images = images,
-                skillsRequired = skillsRequired,
-                budget = budget,
-                deadline = deadline,
-                location = location,
-                datePosted = datePosted,
-                applicants = applicants,
-                status = status,
-                additionalDetails = additionalDetails,
-                completedJobs = completedJobs,
-                canceledJobs = canceledJobs,
-                viewCount = viewCount,
-                isUrgent = isUrgent,
-                employerId = employerId,
-            )
+    ): EmployerJobPost {
+        return EmployerJobPost(
+            postId = postId,
+            title = title,
+            description = description,
+            images = images,
+            skillsRequired = skillsRequired,
+            budget = budget,
+            deadline = deadline,
+            location = location,
+            datePosted = datePosted,
+            applicants = applicants,
+            status = status,
+            additionalDetails = additionalDetails,
+            completedJobs = completedJobs,
+            canceledJobs = canceledJobs,
+            viewCount = viewCount,
+            isUrgent = isUrgent,
+            employerId = employerId,
         )
     }
 

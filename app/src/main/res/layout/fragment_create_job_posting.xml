@@ -109,6 +109,7 @@
                         android:id="@+id/budgetTextInputEditText"
                         style="@style/StyleTextInputEditText"
                         android:hint="@string/enter_budget"
+                        android:inputType="number|numberDecimal|numberSigned"
                         tools:ignore="TextContrastCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -151,7 +152,7 @@
                         tools:ignore="TextContrastCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- TODO: Lokasyonl listeden gelebilir-->
+                <!-- TODO: Lokasyonlar listeden gelebilir-->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/locationTextInputLayout"
                     style="@style/StyleTextInputLayout"
@@ -257,11 +258,13 @@
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
                     android:clickable="true"
+                    android:focusable="true"
                     app:fabCustomSize="48dp"
                     app:fabSize="auto"
                     app:layout_constraintBottom_toBottomOf="@+id/imageView"
                     app:layout_constraintEnd_toEndOf="@id/budgetTextInputLayout"
-                    app:srcCompat="@drawable/baseline_add_a_photo_24" />
+                    app:srcCompat="@drawable/baseline_add_a_photo_24"
+                    tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
