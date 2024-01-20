@@ -77,21 +77,87 @@
                     android:orientation="vertical"
                     app:layout_constraintGuide_percent="0.9" />
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/imageView"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layoutImageViews"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="8dp"
                     app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_min="300dp"
-                    app:srcCompat="@drawable/placeholder"
-                    tools:ignore="ImageContrastCheck" />
+                    app:layout_constraintWidth_max="@dimen/edittextMaxWidth">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/previousImage"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="4dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/imageView"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/baseline_keyboard_arrow_left_24" />
+
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/nextImage"
+                        app:layout_constraintStart_toEndOf="@id/previousImage"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/placeholder"
+                        tools:ignore="ImageContrastCheck" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/nextImage"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="4dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/imageView"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/baseline_keyboard_arrow_right_24" />
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fabDeleteImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="16dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:backgroundTint="@color/delete_button"
+                        app:fabCustomSize="30dp"
+                        app:fabSize="auto"
+                        app:layout_constraintEnd_toEndOf="@id/layoutImageViews"
+                        app:layout_constraintTop_toTopOf="@+id/layoutImageViews"
+                        app:srcCompat="@drawable/baseline_close_24"
+                        tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fabLoadImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="8dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:fabCustomSize="48dp"
+                        app:fabSize="auto"
+                        app:layout_constraintBottom_toBottomOf="@+id/layoutImageViews"
+                        app:layout_constraintEnd_toEndOf="@id/layoutImageViews"
+                        app:srcCompat="@drawable/baseline_add_a_photo_24"
+                        tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/budgetTextInputLayout"
@@ -102,7 +168,7 @@
                     app:endIconMode="clear_text"
                     app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalRight"
                     app:layout_constraintStart_toStartOf="@+id/guidelineVerticalLeft"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView"
+                    app:layout_constraintTop_toBottomOf="@+id/guidelineHorizontal"
                     app:prefixText="₺">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -251,20 +317,6 @@
                     app:layout_constraintTop_toBottomOf="@+id/skillsRequiredLayout"
                     app:layout_constraintWidth_max="@dimen/buttonMaxWidth" />
 
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/fabLoadImage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    app:fabCustomSize="48dp"
-                    app:fabSize="auto"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageView"
-                    app:layout_constraintEnd_toEndOf="@id/budgetTextInputLayout"
-                    app:srcCompat="@drawable/baseline_add_a_photo_24"
-                    tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>

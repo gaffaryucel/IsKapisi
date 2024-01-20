@@ -27,17 +27,51 @@
                 android:layout_width="match_parent"
                 android:layout_height="300dp">
 
-                <ImageView
-                    android:id="@+id/ivCardEmployer"
-                    downloadImage="@{employer.images[0]}"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:layout_constraintBottom_toTopOf="@id/card_employer_guideline_horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="ContentDescription,ImageContrastCheck"
-                    tools:src="@drawable/image_placeholder" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/previousImageEmployerCard"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="4dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/ivCardEmployer"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/baseline_keyboard_arrow_left_24" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/ivCardEmployer"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/nextImageEmployerCard"
+                        app:layout_constraintStart_toEndOf="@id/previousImageEmployerCard"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription,ImageContrastCheck"
+                        tools:src="@drawable/image_placeholder" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/nextImageEmployerCard"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="4dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/ivCardEmployer"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/baseline_keyboard_arrow_right_24" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cardEmployerDetail"
