@@ -29,6 +29,7 @@
 
                 <ImageView
                     android:id="@+id/ivCardFreelancer"
+                    downloadImage="@{freelancer.images[0]}"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:layout_constraintBottom_toTopOf="@id/card_freelance_guideline_horizontal"
