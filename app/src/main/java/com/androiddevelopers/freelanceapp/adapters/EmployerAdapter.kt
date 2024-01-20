@@ -1,16 +1,15 @@
 package com.androiddevelopers.freelanceapp.adapters
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.databinding.RowEmployerJobBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
+import com.androiddevelopers.freelanceapp.util.downloadImage
 
-@Suppress("unused")
 class EmployerAdapter(
-    private val context: Context,
     private val employerList: ArrayList<EmployerJobPost>
 ) : RecyclerView.Adapter<EmployerAdapter.EmployerViewHolder>() {
 
@@ -28,7 +27,53 @@ class EmployerAdapter(
     }
 
     override fun onBindViewHolder(holder: EmployerViewHolder, position: Int) {
-        holder.binding.employer = employerList[position]
+        val employerJobPost = employerList[position]
+        var currentImage = 0
+        with(holder) {
+            with(binding) {
+                employer = employerJobPost
+
+                val imageList: List<String>? = employerJobPost.images
+                if (imageList != null) {
+                    if (imageList.size == 1) {
+                        previousImageEmployerCard.visibility = View.INVISIBLE
+                        nextImageEmployerCard.visibility = View.INVISIBLE
+                        downloadImage(ivCardEmployer, imageList[currentImage])
+
+                    } else if (imageList.size > 1) {
+                        previousImageEmployerCard.visibility = View.INVISIBLE
+                        nextImageEmployerCard.visibility = View.VISIBLE
+                        downloadImage(ivCardEmployer, imageList[currentImage])
+
+                        previousImageEmployerCard.setOnClickListener {
+                            nextImageEmployerCard.visibility = View.VISIBLE
+                            --currentImage
+                            if (currentImage <= 0) {
+                                previousImageEmployerCard.visibility = View.INVISIBLE
+                                downloadImage(ivCardEmployer, imageList[currentImage])
+                            } else {
+                                downloadImage(ivCardEmployer, imageList[currentImage])
+                            }
+                        }
+
+                        nextImageEmployerCard.setOnClickListener {
+                            previousImageEmployerCard.visibility = View.VISIBLE
+                            ++currentImage
+                            if (currentImage >= imageList.size - 1) {
+                                nextImageEmployerCard.visibility = View.INVISIBLE
+                                downloadImage(ivCardEmployer, imageList[imageList.size - 1])
+                            } else {
+                                downloadImage(ivCardEmployer, imageList[currentImage])
+                            }
+
+                        }
+                    }
+                } else {
+                    downloadImage(ivCardEmployer, null)
+                }
+            }
+        }
+
     }
 
     @SuppressLint("NotifyDataSetChanged")
