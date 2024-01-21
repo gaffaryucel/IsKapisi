@@ -1,6 +1,7 @@
 package com.androiddevelopers.freelanceapp.view
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -38,7 +39,7 @@ class JobPostingsFragment : Fragment() {
         _binding = FragmentJobPostingsBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        employerAdapter = EmployerAdapter(requireContext(), arrayListOf())
+        employerAdapter = EmployerAdapter(arrayListOf())
         listEmployerJobPost = arrayListOf()
 
         return view
@@ -49,11 +50,11 @@ class JobPostingsFragment : Fragment() {
 
         viewModel.getAllEmployerJobPost()
 
-        errorDialog = AlertDialog.Builder(context).create()
+        errorDialog = AlertDialog.Builder(requireContext()).create()
 
         setProgressBar(false)
 
-        //setupDialogs() kod çalıştığında uygulama çöküyor
+        setupDialogs(requireContext())
         observeLiveData(viewLifecycleOwner)
 
         with(binding) {
@@ -95,7 +96,7 @@ class JobPostingsFragment : Fragment() {
         }
     }
 
-    private fun setupDialogs() {
+    private fun setupDialogs(context: Context) {
         with(errorDialog) {
             setTitle(context.getString(R.string.login_dialog_error))
             setCancelable(false)

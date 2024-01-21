@@ -1,5 +1,6 @@
 package com.androiddevelopers.freelanceapp.viewmodel
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -27,10 +28,58 @@ constructor(
     val skills: LiveData<ArrayList<String>>
         get() = _skills
 
-    fun addJobPostingToFirebase(jobPost: EmployerJobPost) = viewModelScope.launch {
-        _firebaseMessage.value = Resource.loading(true)
-        jobPost.employerId = firebaseAuth.currentUser?.uid ?: ""
+    private var _imageUriList = MutableLiveData<ArrayList<Uri>>()
+    val imageUriList: LiveData<ArrayList<Uri>>
+        get() = _imageUriList
 
+    private var _imageIndex = MutableLiveData<Int>()
+    val imageIndex: LiveData<Int>
+        get() = _imageIndex
+
+    private var _imageSize = MutableLiveData<Int>()
+    val imageSize: LiveData<Int>
+        get() = _imageSize
+
+    fun addImageAndJobPostToFirebase(
+        newUriList: ArrayList<Uri>,
+        jobPost: EmployerJobPost,
+        downloadUriList: ArrayList<String> = arrayListOf()
+    ) {
+        if (newUriList.size > 0) {
+            val uri = newUriList[0]
+            _firebaseMessage.value = Resource.loading(true)
+            uri.lastPathSegment?.let { file ->
+                firebaseRepo.addImageToStorage(uri, file)
+                    .addOnSuccessListener { task ->
+                        task.storage.downloadUrl
+                            .addOnSuccessListener {
+                                newUriList.removeAt(0)
+                                downloadUriList.add(it.toString())
+                                addImageAndJobPostToFirebase(newUriList, jobPost, downloadUriList)
+                            }.addOnFailureListener {
+                                _firebaseMessage.value =
+                                    it.localizedMessage?.let { message ->
+                                        _firebaseMessage.value = Resource.loading(false)
+                                        Resource.error(message, false)
+                                    }
+                            }
+                    }.addOnFailureListener {
+                        _firebaseMessage.value =
+                            it.localizedMessage?.let { message ->
+                                _firebaseMessage.value = Resource.loading(false)
+                                Resource.error(message, false)
+                            }
+                    }
+            }
+        } else {
+            jobPost.images = downloadUriList
+            jobPost.employerId = firebaseAuth.currentUser?.uid ?: ""
+            addJobPostingToFirebase(jobPost)
+        }
+    }
+
+    private fun addJobPostingToFirebase(jobPost: EmployerJobPost) = viewModelScope.launch {
+        //_firebaseMessage.value = Resource.loading(true)
         firebaseRepo.addEmployerJobPostToFirestore(jobPost).addOnCompleteListener { task ->
             _firebaseMessage.value = Resource.loading(false)
             if (task.isSuccessful) {
@@ -42,6 +91,15 @@ constructor(
                     }
             }
         }
+    }
+
+    fun setImageUriList(newList: ArrayList<Uri>) = viewModelScope.launch {
+        _imageUriList.value = newList
+        _imageSize.value = newList.size
+    }
+
+    fun setImageIndex(size: Int) = viewModelScope.launch {
+        _imageIndex.value = size
     }
 
     fun setSkills(newSkills: ArrayList<String>) {

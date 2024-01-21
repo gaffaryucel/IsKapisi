@@ -10,7 +10,6 @@ import com.androiddevelopers.freelanceapp.repo.FirebaseRepoImpl
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.repo.RoomUserDatabaseRepoImpl
 import com.androiddevelopers.freelanceapp.repo.RoomUserDatabaseRepoInterface
-import com.androiddevelopers.freelanceapp.util.Util
 import com.androiddevelopers.freelanceapp.util.Util.DATABASE_URL
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
@@ -22,6 +21,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import dagger.Module
 import dagger.Provides
@@ -49,9 +49,10 @@ object AppModule {
     fun provideUserDao(appDatabase: UserDatabase): UserDao {
         return appDatabase.userDao()
     }
+
     @Provides
     @Singleton
-    fun provideGlide(@ApplicationContext context: Context) : RequestManager  {
+    fun provideGlide(@ApplicationContext context: Context): RequestManager {
         val circularProgressDrawable = CircularProgressDrawable(context)
         circularProgressDrawable.strokeWidth = 5f
         circularProgressDrawable.centerRadius = 30f
@@ -82,9 +83,15 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideFirebaseRepo(auth: FirebaseAuth, firestore: FirebaseFirestore,database : FirebaseDatabase): FirebaseRepoInterFace {
-        return FirebaseRepoImpl(auth,firestore,database)
+    fun provideFirebaseRepo(
+        auth: FirebaseAuth,
+        firestore: FirebaseFirestore,
+        database: FirebaseDatabase,
+        storage: FirebaseStorage
+    ): FirebaseRepoInterFace {
+        return FirebaseRepoImpl(auth, firestore, database, storage)
     }
+
     @Singleton
     @Provides
     fun provideRoomUserDatabaseRepo(dao: UserDao): RoomUserDatabaseRepoInterface {

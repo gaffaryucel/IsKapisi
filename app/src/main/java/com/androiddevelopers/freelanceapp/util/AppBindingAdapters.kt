@@ -1,10 +1,15 @@
 package com.androiddevelopers.freelanceapp.util
 
+import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
+import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.androiddevelopers.freelanceapp.R
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
@@ -90,10 +95,32 @@ fun passwordCheck(viewLayout: TextInputLayout, viewText: TextInputEditText) {
             }
         }
     }
-
 }
 
 @BindingAdapter("setHasFixedSize")
 fun setHasFixedSize(view: RecyclerView, value: Boolean) {
     view.setHasFixedSize(value)
+}
+
+//Bu üç metodu adaptör içinde databinding ile resimleri yüklemek için ekledik
+@BindingAdapter("downloadImage")
+fun downloadImage(view: ImageView, url: String?) {
+    view.imageDownload(url, view.context)
+}
+
+fun ImageView.imageDownload(url: String?, context: Context) {
+    val options =
+        RequestOptions()
+            .placeholder(createPlaceholder(context))
+            .error(R.drawable.placeholder)
+
+    Glide.with(context).setDefaultRequestOptions(options).load(url).into(this)
+}
+
+fun createPlaceholder(context: Context): CircularProgressDrawable {
+    return CircularProgressDrawable(context).apply {
+        strokeWidth = 8f
+        centerRadius = 40f
+        start()
+    }
 }

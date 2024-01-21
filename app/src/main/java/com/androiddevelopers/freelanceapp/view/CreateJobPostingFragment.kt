@@ -1,10 +1,20 @@
 package com.androiddevelopers.freelanceapp.view
 
+import android.app.Activity
 import android.app.AlertDialog
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
@@ -15,6 +25,7 @@ import com.androiddevelopers.freelanceapp.databinding.FragmentCreateJobPostingBi
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.util.JobStatus
 import com.androiddevelopers.freelanceapp.util.Status
+import com.androiddevelopers.freelanceapp.util.downloadImage
 import com.androiddevelopers.freelanceapp.viewmodel.CreateJobPostingViewModel
 import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,9 +35,13 @@ import java.util.*
 
 @AndroidEntryPoint
 class CreateJobPostingFragment : Fragment() {
-    private lateinit var view: View
     private lateinit var viewModel: CreateJobPostingViewModel
     private lateinit var datePicker: MaterialDatePicker<Long>
+    private lateinit var selectedImages: ArrayList<Uri>
+    private var selectedImagesSize = 0
+    private var selectedImagesIndex = 0
+    private lateinit var imageLauncher: ActivityResultLauncher<Intent>
+
     private var _binding: FragmentCreateJobPostingBinding? = null
     private val binding get() = _binding!!
 
@@ -41,7 +56,7 @@ class CreateJobPostingFragment : Fragment() {
     ): View {
         viewModel = ViewModelProvider(this)[CreateJobPostingViewModel::class.java]
         _binding = FragmentCreateJobPostingBinding.inflate(inflater, container, false)
-        view = binding.root
+        val view = binding.root
 
         datePicker = MaterialDatePicker.Builder
             .datePicker()
@@ -52,6 +67,14 @@ class CreateJobPostingFragment : Fragment() {
         skillAdapter = SkillAdapter(viewModel, arrayListOf())
         //ekleme işleminde kullanabilmek için skill listesinin örneğini oluşturduk
         skillList = arrayListOf()
+
+        selectedImages = arrayListOf()
+
+        with(binding) {
+            fabDeleteImage.visibility = View.INVISIBLE
+            previousImage.visibility = View.INVISIBLE
+            nextImage.visibility = View.INVISIBLE
+        }
 
         return view
     }
@@ -77,13 +100,16 @@ class CreateJobPostingFragment : Fragment() {
 
             //yeni iş ilanını veri tabanına göndermek için kaydet butonunu dinliyoruz
             createjobPostButton.setOnClickListener {
-                save(
-                    title = titleTextInputEditText.text.toString(),
-                    description = descriptionTextInputEditText.text.toString(),
-                    skillsRequired = skillList,
-                    location = locationsTextInputEditText.text.toString(),
-                    deadline = deadlineTextInputEditText.text.toString(),
-                    budget = budgetTextInputEditText.text.toString().toDouble()
+                viewModel.addImageAndJobPostToFirebase( //resim ve işveren ilanı bilgilerini view modele gönderiyoruz
+                    selectedImages, // resmin cihazdaki konumu
+                    createEmployerJobPost( // işveren ilanı için formda doldurulan yerler ile birlikte sings oluşturuyoruz
+                        title = titleTextInputEditText.text.toString(),
+                        description = descriptionTextInputEditText.text.toString(),
+                        skillsRequired = skillList,
+                        location = locationsTextInputEditText.text.toString(),
+                        deadline = deadlineTextInputEditText.text.toString(),
+                        budget = budgetTextInputEditText.text.toString().toDouble()
+                    )
                 )
             }
 
@@ -107,7 +133,58 @@ class CreateJobPostingFragment : Fragment() {
 
                 }
             }
+
+
+            fabLoadImage.setOnClickListener {
+                chooseImage()
+            }
+
+
+
+            fabDeleteImage.setOnClickListener {
+                selectedImages.removeAt(selectedImagesIndex)
+                viewModel.setImageUriList(selectedImages)
+                if (selectedImagesIndex > 0) {
+                    viewModel.setImageIndex(selectedImagesIndex - 1)
+                } else {
+                    viewModel.setImageIndex(0)
+                }
+            }
+
+            previousImage.setOnClickListener {
+                if (selectedImagesIndex > 0) {
+                    viewModel.setImageIndex(selectedImagesIndex - 1)
+                }
+            }
+
+            nextImage.setOnClickListener {
+                if (selectedImagesIndex < selectedImagesSize - 1) {
+                    viewModel.setImageIndex(selectedImagesIndex + 1)
+                }
+
+            }
         }
+
+        imageLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    result.data?.data?.let {
+                        selectedImages.add(it)
+
+                        with(viewModel) {
+                            setImageUriList(selectedImages)
+                            //setImageSize(selectedImages.size)
+                            setImageIndex(selectedImages.lastIndex)
+                        }
+
+                        //downloadImage(binding.imageView, selectedImages.last().toString())
+//                        selectedImageUri = it
+//                        //seçilen resmi create ekranında göstermek için
+//                        downloadImage(binding.imageView, it.toString())
+
+                    }
+                }
+            }
     }
 
     override fun onDestroyView() {
@@ -135,6 +212,68 @@ class CreateJobPostingFragment : Fragment() {
                 skillAdapter.skillsRefresh(list)
                 skillList = list
             }
+
+            imageUriList.observe(owner) {
+                selectedImages = it
+            }
+
+            imageIndex.observe(owner) {
+                selectedImagesIndex = it
+
+                with(binding) {
+                    if (selectedImagesSize > 0) {
+                        if (selectedImagesIndex <= 0) {
+                            downloadImage(
+                                binding.imageView,
+                                selectedImages[0].toString()
+                            )
+                            previousImage.visibility = View.INVISIBLE
+                            if (selectedImagesSize > 1) {
+                                nextImage.visibility = View.VISIBLE
+                            } else {
+                                nextImage.visibility = View.INVISIBLE
+                            }
+                        } else if (selectedImagesIndex >= selectedImagesSize - 1) {
+                            downloadImage(
+                                binding.imageView,
+                                selectedImages[selectedImagesSize - 1].toString()
+                            )
+
+                            nextImage.visibility = View.INVISIBLE
+                            previousImage.visibility = View.VISIBLE
+                        } else {
+                            downloadImage(
+                                binding.imageView,
+                                selectedImages[selectedImagesIndex].toString()
+                            )
+
+                            previousImage.visibility = View.VISIBLE
+                            nextImage.visibility = View.VISIBLE
+                        }
+                    } else {
+                        downloadImage(
+                            binding.imageView,
+                            null
+                        )
+
+                        previousImage.visibility = View.INVISIBLE
+                        nextImage.visibility = View.INVISIBLE
+                    }
+                }
+
+            }
+
+            imageSize.observe(owner) {
+                selectedImagesSize = it
+
+                with(binding) {
+                    if (selectedImagesSize > 0) {
+                        fabDeleteImage.visibility = View.VISIBLE
+                    } else {
+                        fabDeleteImage.visibility = View.INVISIBLE
+                    }
+                }
+            }
         }
     }
 
@@ -155,11 +294,11 @@ class CreateJobPostingFragment : Fragment() {
         if (isVisible) {
             binding.createJobPostProgressBar.visibility = View.VISIBLE
         } else {
-            binding.createJobPostProgressBar.visibility = View.GONE
+            binding.createJobPostProgressBar.visibility = View.INVISIBLE
         }
     }
 
-    private fun save(
+    private fun createEmployerJobPost(
         postId: String? = "",
         title: String? = "",
         description: String? = "",
@@ -177,27 +316,67 @@ class CreateJobPostingFragment : Fragment() {
         viewCount: Int? = 0,
         isUrgent: Boolean? = false,
         employerId: String? = ""
-    ) {
-        viewModel.addJobPostingToFirebase(
-            EmployerJobPost(
-                postId = postId,
-                title = title,
-                description = description,
-                images = images,
-                skillsRequired = skillsRequired,
-                budget = budget,
-                deadline = deadline,
-                location = location,
-                datePosted = datePosted,
-                applicants = applicants,
-                status = status,
-                additionalDetails = additionalDetails,
-                completedJobs = completedJobs,
-                canceledJobs = canceledJobs,
-                viewCount = viewCount,
-                isUrgent = isUrgent,
-                employerId = employerId,
-            )
+    ): EmployerJobPost {
+        return EmployerJobPost(
+            postId = postId,
+            title = title,
+            description = description,
+            images = images,
+            skillsRequired = skillsRequired,
+            budget = budget,
+            deadline = deadline,
+            location = location,
+            datePosted = datePosted,
+            applicants = applicants,
+            status = status,
+            additionalDetails = additionalDetails,
+            completedJobs = completedJobs,
+            canceledJobs = canceledJobs,
+            viewCount = viewCount,
+            isUrgent = isUrgent,
+            employerId = employerId,
         )
+    }
+
+    private fun chooseImage() {
+        if (checkPermission()) {
+            openImagePicker()
+        }
+    }
+
+    private fun openImagePicker() {
+        val imageIntent =
+            Intent(
+                Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            )
+        imageLauncher.launch(imageIntent)
+    }
+
+    private fun checkPermission(): Boolean {
+        val currentPermission = chooseImagePermission()
+        return if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                currentPermission
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            true
+        } else {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(currentPermission),
+                800
+            )
+            false
+        }
+
+    }
+
+    private fun chooseImagePermission(): String {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            android.Manifest.permission.READ_MEDIA_IMAGES
+        } else {
+            android.Manifest.permission.READ_EXTERNAL_STORAGE
+        }
     }
 }
