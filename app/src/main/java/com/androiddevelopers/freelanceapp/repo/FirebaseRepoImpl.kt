@@ -2,6 +2,7 @@ package com.androiddevelopers.freelanceapp.repo
 
 import android.net.Uri
 import com.androiddevelopers.freelanceapp.model.ChatModel
+import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
 import com.androiddevelopers.freelanceapp.model.MessageModel
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.VideoModel
@@ -29,6 +30,7 @@ class FirebaseRepoImpl @Inject constructor(
     private val freelancerPostCollection = firestore.collection("posts")
     private val employerPostCollection = firestore.collection("job_posting")
     private val videoCollection = firestore.collection("videos")
+    private val discoverPostRef = firestore.collection("discover_posts")
     private val messagesReference = database.getReference("users")
     private val jobPostImagesParentRef = storage.reference.child("jobPost/images")
 
@@ -115,5 +117,13 @@ class FirebaseRepoImpl @Inject constructor(
     }
     override fun getUsersFromFirestore(): Task<QuerySnapshot> {
         return userCollection.get()
+    }
+
+    override fun uploadDiscoverPostToFirestore(post: DiscoverPostModel): Task<Void> {
+        return discoverPostRef.document(post.postId.toString()).set(post)
+    }
+
+    override fun getAllDiscoverPostsFromFirestore(post: DiscoverPostModel): Task<QuerySnapshot> {
+        return discoverPostRef.get()
     }
 }

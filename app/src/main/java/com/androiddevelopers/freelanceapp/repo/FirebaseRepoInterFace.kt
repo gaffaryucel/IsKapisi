@@ -2,6 +2,7 @@ package com.androiddevelopers.freelanceapp.repo
 
 import android.net.Uri
 import com.androiddevelopers.freelanceapp.model.ChatModel
+import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
 import com.androiddevelopers.freelanceapp.model.MessageModel
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.VideoModel
@@ -44,5 +45,10 @@ interface FirebaseRepoInterFace {
     fun addEmployerJobPostToFirestore(job: EmployerJobPost): Task<Void>
     fun getAllEmployerJobPostFromFirestore(): Task<QuerySnapshot>
     fun addImageToStorage(uri: Uri, file: String): UploadTask
+
+    fun uploadDiscoverPostToFirestore(post: DiscoverPostModel): Task<Void>
+    fun getAllDiscoverPostsFromFirestore(post: DiscoverPostModel): Task<QuerySnapshot>
+
+
 }
 

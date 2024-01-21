@@ -8,11 +8,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.MessageAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentMessagesBinding
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.viewmodel.MessagesViewModel
 import com.bumptech.glide.Glide
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -100,5 +102,24 @@ class MessagesFragment : Fragment() {
                 binding.messageRecyclerView.smoothScrollToPosition(lastItemPosition)
             }
         })
+    }
+    override fun onResume() {
+        super.onResume()
+        hideBottomNavigation()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        showBottomNavigation()
+    }
+
+    private fun hideBottomNavigation() {
+        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
+        bottomNavigationView?.visibility = View.GONE
+    }
+
+    private fun showBottomNavigation() {
+        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
+        bottomNavigationView?.visibility = View.VISIBLE
     }
 }

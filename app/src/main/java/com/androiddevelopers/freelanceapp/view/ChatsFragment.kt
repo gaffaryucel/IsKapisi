@@ -16,6 +16,7 @@ import com.androiddevelopers.freelanceapp.databinding.FragmentChatsBinding
 import com.androiddevelopers.freelanceapp.model.ChatModel
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.viewmodel.ChatsViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -79,7 +80,24 @@ class ChatsFragment : Fragment() {
             adapter.notifyDataSetChanged()
             userList = it as ArrayList<ChatModel>
         })
+    }
+    override fun onResume() {
+        super.onResume()
+        hideBottomNavigation()
+    }
 
+    override fun onPause() {
+        super.onPause()
+        showBottomNavigation()
+    }
 
+    private fun hideBottomNavigation() {
+        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
+        bottomNavigationView?.visibility = View.GONE
+    }
+
+    private fun showBottomNavigation() {
+        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
+        bottomNavigationView?.visibility = View.VISIBLE
     }
 }

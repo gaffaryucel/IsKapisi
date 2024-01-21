@@ -3,12 +3,10 @@ package com.androiddevelopers.freelanceapp.adapters
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.databinding.RowDiscoverBinding
-import com.androiddevelopers.freelanceapp.view.DiscoverFragmentDirections
 import com.bumptech.glide.Glide
 
 class DiscoverAdapter : RecyclerView.Adapter<DiscoverAdapter.DiscoverViewHolder>() {
@@ -44,8 +42,7 @@ class DiscoverAdapter : RecyclerView.Adapter<DiscoverAdapter.DiscoverViewHolder>
         val video = imageList[position]
         Glide.with(holder.itemView.context).load(video).into(holder.binding.ivDiscoverVideo)
         holder.itemView.setOnClickListener {
-            val action = DiscoverFragmentDirections.actionNavigationDiscoverToShortVideoFragment(position)
-            Navigation.findNavController(it).navigate(action)
+
         }
     }
 }

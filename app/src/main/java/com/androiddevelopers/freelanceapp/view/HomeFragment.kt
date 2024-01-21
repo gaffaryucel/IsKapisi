@@ -64,7 +64,7 @@ class HomeFragment : Fragment() {
             adapter = freelancerAdapter
 
             cameraIcon.setOnClickListener {
-                val action = HomeFragmentDirections.actionNavigationHomeToCreateShortVideoFragment()
+                val action = HomeFragmentDirections.actionNavigationHomeToCreateDiscoverPostFragment()
                 Navigation.findNavController(it).navigate(action)
             }
         }

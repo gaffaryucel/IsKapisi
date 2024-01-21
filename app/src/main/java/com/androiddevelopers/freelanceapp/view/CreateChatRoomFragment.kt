@@ -10,11 +10,13 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.ChatAdapter
 import com.androiddevelopers.freelanceapp.adapters.CreateChatAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentCreateChatRoomBinding
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.viewmodel.CreateChatRoomViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -64,5 +66,24 @@ class CreateChatRoomFragment : Fragment() {
                 viewModel.createChatRoom(idList,it)
             }
         })
+    }
+    override fun onResume() {
+        super.onResume()
+        hideBottomNavigation()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        showBottomNavigation()
+    }
+
+    private fun hideBottomNavigation() {
+        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
+        bottomNavigationView?.visibility = View.GONE
+    }
+
+    private fun showBottomNavigation() {
+        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
+        bottomNavigationView?.visibility = View.VISIBLE
     }
 }
