@@ -8,12 +8,12 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.databinding.RowDiscoverBinding
+import com.androiddevelopers.freelanceapp.databinding.RowDiscoverDetailsBinding
 import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
 import com.androiddevelopers.freelanceapp.view.DiscoverFragmentDirections
 import com.bumptech.glide.Glide
-import java.util.NavigableMap
 
-class DiscoverAdapter : RecyclerView.Adapter<DiscoverAdapter.DiscoverViewHolder>() {
+class DiscoverPostDetailsAdapter : RecyclerView.Adapter<DiscoverPostDetailsAdapter.DiscoverPostDetailsViewHolder>() {
 
     private val diffUtil = object : DiffUtil.ItemCallback<DiscoverPostModel>() {
         override fun areItemsTheSame(oldItem: DiscoverPostModel, newItem: DiscoverPostModel): Boolean {
@@ -31,23 +31,22 @@ class DiscoverAdapter : RecyclerView.Adapter<DiscoverAdapter.DiscoverViewHolder>
         get() = recyclerListDiffer.currentList
         set(value) = recyclerListDiffer.submitList(value)
 
-    inner class DiscoverViewHolder(val binding: RowDiscoverBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class DiscoverPostDetailsViewHolder(val binding: RowDiscoverDetailsBinding) : RecyclerView.ViewHolder(binding.root)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiscoverViewHolder {
-        val binding = RowDiscoverBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return DiscoverViewHolder(binding)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiscoverPostDetailsViewHolder {
+        val binding = RowDiscoverDetailsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return DiscoverPostDetailsViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
         return postList.size
     }
 
-    override fun onBindViewHolder(holder: DiscoverViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: DiscoverPostDetailsViewHolder, position: Int) {
         val post = postList[position]
-        Glide.with(holder.itemView.context).load(post.images?.get(0)).into(holder.binding.ivDiscoverVPost)
-        holder.itemView.setOnClickListener {
-            val action = DiscoverFragmentDirections.actionNavigationDiscoverToDiscoverDetailsFragment(position.toString())
-            Navigation.findNavController(it).navigate(action)
+        Glide.with(holder.itemView.context).load(post.images?.get(0)).into(holder.binding.ivPost)
+        holder.binding.apply {
+            postItem = post
         }
     }
 }

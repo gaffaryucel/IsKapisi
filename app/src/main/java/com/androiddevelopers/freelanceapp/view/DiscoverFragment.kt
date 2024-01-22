@@ -42,8 +42,8 @@ class DiscoverFragment : Fragment() {
     }
     @SuppressLint("NotifyDataSetChanged")
     private fun observeLiveData() {
-        viewModel.videoData.observe(viewLifecycleOwner, Observer {
-            adapter.imageList = it
+        viewModel.postData.observe(viewLifecycleOwner, Observer {
+            adapter.postList = it
             adapter.notifyDataSetChanged()
         })
     }

@@ -47,7 +47,7 @@ interface FirebaseRepoInterFace {
     fun addImageToStorage(uri: Uri, file: String): UploadTask
 
     fun uploadDiscoverPostToFirestore(post: DiscoverPostModel): Task<Void>
-    fun getAllDiscoverPostsFromFirestore(post: DiscoverPostModel): Task<QuerySnapshot>
+    fun getAllDiscoverPostsFromFirestore(): Task<QuerySnapshot>
 
 
 }

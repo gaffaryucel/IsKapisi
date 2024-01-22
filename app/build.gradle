@@ -85,6 +85,8 @@ dependencies {
     //Facebook SDK
     implementation 'com.facebook.android:facebook-android-sdk:16.3.0'
 
+    //circleimageview
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
 
 }
 kapt {

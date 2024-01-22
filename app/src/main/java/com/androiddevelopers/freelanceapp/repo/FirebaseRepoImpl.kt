@@ -123,7 +123,7 @@ class FirebaseRepoImpl @Inject constructor(
         return discoverPostRef.document(post.postId.toString()).set(post)
     }
 
-    override fun getAllDiscoverPostsFromFirestore(post: DiscoverPostModel): Task<QuerySnapshot> {
+    override fun getAllDiscoverPostsFromFirestore(): Task<QuerySnapshot> {
         return discoverPostRef.get()
     }
 }

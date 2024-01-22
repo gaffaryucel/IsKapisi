@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="postItem"
+            type="com.androiddevelopers.freelanceapp.model.DiscoverPostModel" />
+    </data>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edittextHeight">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/ivUserProfile"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="@dimen/edittextHeight"
+                android:layout_height="@dimen/edittextHeight"
+                android:padding="8dp"
+                android:src="@drawable/placeholder"
+                app:civ_border_width="2dp"
+                app:civ_border_color="#FF000000"/>
+
+            <TextView
+                android:text="@{postItem.title}"
+                android:id="@+id/tvUserName"
+                app:layout_constraintStart_toEndOf="@id/ivUserProfile"
+                app:layout_constraintEnd_toEndOf="@id/ivMore"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"/>
+
+            <ImageView
+                android:id="@+id/ivMore"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="40dp"
+                android:layout_height="40dp"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageView
+            android:id="@+id/ivPost"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"/>
+
+        <TextView
+            android:text="@{postItem.title}"
+            android:id="@+id/tvPostTitle"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"/>
+
+        <TextView
+            android:text="@{postItem.description}"
+            android:id="@+id/tvPostDescription"
+            android:textSize="16sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="3"/>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edittextHeight">
+
+            <ImageView
+                android:id="@+id/ivLike"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="@dimen/edittextHeight"
+                android:layout_height="@dimen/edittextHeight"
+                android:padding="15dp"
+                android:src="@drawable/ic_favorite"
+                app:civ_border_width="2dp"
+                app:civ_border_color="#FF000000"/>
+
+            <ImageView
+                android:id="@+id/ivComment"
+                app:layout_constraintStart_toEndOf="@id/ivLike"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="@dimen/edittextHeight"
+                android:layout_height="@dimen/edittextHeight"
+                android:padding="15dp"
+                android:src="@drawable/messenger_bubble_small_white"
+                app:civ_border_width="2dp"
+                app:civ_border_color="#FF000000"/>
+
+
+            <ImageView
+                android:id="@+id/ivShare"
+                android:src="@drawable/ic_share"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="@dimen/edittextHeight"
+                android:layout_height="@dimen/edittextHeight"
+                android:padding="15dp"
+                app:civ_border_width="2dp"
+                app:civ_border_color="#FF000000"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </LinearLayout>
+</layout>
