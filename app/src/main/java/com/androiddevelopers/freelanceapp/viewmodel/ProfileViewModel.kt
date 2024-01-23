@@ -34,6 +34,10 @@ class ProfileViewModel @Inject constructor(
 
     private var _savedUserData = roomRepo.observeUserData()
     val savedUserData = _savedUserData
+
+    init {
+        getUserDataFromFirebase()
+    }
     fun getUserDataFromFirebase(){
         _message.value = Resource.loading(null)
         firebaseRepo.getUserDataByDocumentId(userId)
@@ -41,8 +45,6 @@ class ProfileViewModel @Inject constructor(
                 if (documentSnapshot.exists()) {
                     val user = documentSnapshot.toObject(UserModel::class.java)
                     if (user != null) {
-                        println("firebase succes")
-                        // Model üzerinden veriyi işle (burada örnek olarak print ediyoruz)
                         _userData.value = convertToUserProfileModel(user ?: UserModel())
                         _message.value = Resource.success(null)
                         try {
@@ -97,7 +99,6 @@ class ProfileViewModel @Inject constructor(
         }
     }
     private fun convertToUserProfileModel(userModel: UserModel): UserProfileModel {
-        println("convertToUserProfileModel")
         return UserProfileModel(
             userId = userModel.userId ?: "",
             username = userModel.username ?: "",

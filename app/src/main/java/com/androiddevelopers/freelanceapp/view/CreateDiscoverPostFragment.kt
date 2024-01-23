@@ -76,7 +76,7 @@ class CreateDiscoverPostFragment : Fragment() {
         binding.shareButton.setOnClickListener {
             val postModel = getPostDataAndCreateDiscoverPostModel()
             if (resultByteArray.isNotEmpty()) {
-                viewModel.uploadProfilePicture(
+                viewModel.uploadPostPicture(
                     postModel,
                     resultByteArray
                 )

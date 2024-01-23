@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.Resource
@@ -20,6 +21,7 @@ constructor(
     private val firebaseRepo: FirebaseRepoInterFace,
     private val firebaseAuth: FirebaseAuth
 ) : ViewModel() {
+
     private var _firebaseMessage = MutableLiveData<Resource<Boolean>>()
     val firebaseMessage: LiveData<Resource<Boolean>>
         get() = _firebaseMessage
@@ -84,6 +86,7 @@ constructor(
             _firebaseMessage.value = Resource.loading(false)
             if (task.isSuccessful) {
                 _firebaseMessage.value = Resource.success(true)
+                updateUserData(jobPost)
             } else {
                 _firebaseMessage.value =
                     task.exception?.localizedMessage?.let { message ->
@@ -105,4 +108,8 @@ constructor(
     fun setSkills(newSkills: ArrayList<String>) {
         _skills.value = newSkills
     }
+    private fun updateUserData(jobPost : EmployerJobPost){
+        firebaseRepo.uploadDataInUserNode(firebaseAuth.currentUser?.uid.toString(),jobPost,"job_post",jobPost.postId.toString())
+    }
+
 }

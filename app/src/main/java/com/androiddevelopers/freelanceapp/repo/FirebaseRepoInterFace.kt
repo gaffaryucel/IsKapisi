@@ -45,10 +45,9 @@ interface FirebaseRepoInterFace {
     fun addEmployerJobPostToFirestore(job: EmployerJobPost): Task<Void>
     fun getAllEmployerJobPostFromFirestore(): Task<QuerySnapshot>
     fun addImageToStorage(uri: Uri, file: String): UploadTask
-
     fun uploadDiscoverPostToFirestore(post: DiscoverPostModel): Task<Void>
     fun getAllDiscoverPostsFromFirestore(): Task<QuerySnapshot>
-
+    fun uploadDataInUserNode(userId : String,data: Any,type : String,dataId : String) : Task<Void>
 
 }
 

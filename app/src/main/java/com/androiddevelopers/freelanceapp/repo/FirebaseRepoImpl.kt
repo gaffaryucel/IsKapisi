@@ -126,4 +126,11 @@ class FirebaseRepoImpl @Inject constructor(
     override fun getAllDiscoverPostsFromFirestore(): Task<QuerySnapshot> {
         return discoverPostRef.get()
     }
+
+    override fun uploadDataInUserNode(userId : String,data: Any,type : String,dataId : String): Task<Void> {
+        return userCollection.document(userId)
+            .collection(type)
+            .document(dataId)
+            .set(data)
+    }
 }

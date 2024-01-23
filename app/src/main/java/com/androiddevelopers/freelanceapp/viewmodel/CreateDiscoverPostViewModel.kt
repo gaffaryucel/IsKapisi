@@ -30,11 +30,11 @@ class CreateDiscoverPostViewModel @Inject constructor(
     private val _uploadPhotoMessage = MutableLiveData<Resource<String>>()
     val uploadPhotoMessage : LiveData<Resource<String>> = _uploadPhotoMessage
 
-    fun uploadProfilePicture(postModel : DiscoverPostModel, r: ByteArray) = viewModelScope.launch {
+    fun uploadPostPicture(postModel : DiscoverPostModel, r: ByteArray) = viewModelScope.launch {
         _uploadPhotoMessage.value = Resource.loading("loading")
 
         val photoFileName = "${UUID.randomUUID()}.jpg"
-        val photoRef = storageReference.child("users/${currentUserId}/profilePhoto/$photoFileName")
+        val photoRef = storageReference.child("users/${currentUserId}/postPhotos/$photoFileName")
 
         photoRef.putBytes(r)
             .addOnSuccessListener {
@@ -58,6 +58,7 @@ class CreateDiscoverPostViewModel @Inject constructor(
 
     private fun uploadPostToFirestore(postModel: DiscoverPostModel){
         repo.uploadDiscoverPostToFirestore(postModel)
+        updateUserData(postModel)
     }
 
     fun createDiscoverPostModel(
@@ -77,5 +78,8 @@ class CreateDiscoverPostViewModel @Inject constructor(
         val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
         val date = Date(currentTime)
         return dateFormat.format(date)
+    }
+    private fun updateUserData(discoverPost : DiscoverPostModel){
+        repo.uploadDataInUserNode(currentUserId.toString(),discoverPost,"discover",discoverPost.postId.toString())
     }
 }
