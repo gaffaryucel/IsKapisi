@@ -209,7 +209,12 @@
                         />
                 </LinearLayout>
             </LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvProfile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
+
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </layout>

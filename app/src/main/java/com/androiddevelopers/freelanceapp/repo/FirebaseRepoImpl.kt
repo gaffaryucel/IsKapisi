@@ -61,7 +61,7 @@ class FirebaseRepoImpl @Inject constructor(
     }
 
     override fun addEmployerJobPostToFirestore(job: EmployerJobPost): Task<Void> {
-        return employerPostCollection.document().set(job)
+        return employerPostCollection.document(job.postId.toString()).set(job)
     }
 
     override fun getAllEmployerJobPostFromFirestore(): Task<QuerySnapshot> {

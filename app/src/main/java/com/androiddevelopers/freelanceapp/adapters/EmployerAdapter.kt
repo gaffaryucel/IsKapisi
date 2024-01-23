@@ -77,7 +77,7 @@ class EmployerAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun employerRefresh(newEmployerList: ArrayList<EmployerJobPost>) {
+    fun employerRefresh(newEmployerList: List<EmployerJobPost>) {
         employerList.clear()
         employerList.addAll(newEmployerList)
         notifyDataSetChanged()

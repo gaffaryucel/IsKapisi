@@ -12,6 +12,7 @@ import com.androiddevelopers.freelanceapp.util.Resource
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,6 +48,7 @@ constructor(
         jobPost: EmployerJobPost,
         downloadUriList: ArrayList<String> = arrayListOf()
     ) {
+        val postId = UUID.randomUUID().toString()
         if (newUriList.size > 0) {
             val uri = newUriList[0]
             _firebaseMessage.value = Resource.loading(true)
@@ -76,6 +78,7 @@ constructor(
         } else {
             jobPost.images = downloadUriList
             jobPost.employerId = firebaseAuth.currentUser?.uid ?: ""
+            jobPost.postId = postId
             addJobPostingToFirebase(jobPost)
         }
     }

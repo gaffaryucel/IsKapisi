@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.Resource
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,7 +16,8 @@ import javax.inject.Inject
 class JobPostingsViewModel
 @Inject
 constructor(
-    private val firebaseRepo: FirebaseRepoInterFace
+    private val firebaseRepo: FirebaseRepoInterFace,
+    private val auth: FirebaseAuth
 ) : ViewModel() {
     private var _firebaseMessage = MutableLiveData<Resource<Boolean>>()
     val firebaseMessage: LiveData<Resource<Boolean>>
@@ -24,6 +26,8 @@ constructor(
     private var _firebaseLiveData = MutableLiveData<ArrayList<EmployerJobPost>>()
     val firebaseLiveData: LiveData<ArrayList<EmployerJobPost>>
         get() = _firebaseLiveData
+
+    private val userId = auth.currentUser!!.uid
 
     fun getAllEmployerJobPost() = viewModelScope.launch {
         _firebaseMessage.value = Resource.loading(true)
@@ -58,6 +62,4 @@ constructor(
                 }
             }
     }
-
-
 }
