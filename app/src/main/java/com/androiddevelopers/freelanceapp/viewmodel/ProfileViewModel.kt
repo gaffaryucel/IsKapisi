@@ -4,8 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.UserProfileModel
+import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
+import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.repo.RoomUserDatabaseRepoInterface
 import com.androiddevelopers.freelanceapp.util.Resource
@@ -32,11 +35,26 @@ class ProfileViewModel @Inject constructor(
     val userData : LiveData<UserProfileModel>
         get() = _userData
 
+    private val _freelancerJobPosts = MutableLiveData<List<FreelancerJobPost>>()
+    val freelanceJobPosts : LiveData<List<FreelancerJobPost>>
+        get() = _freelancerJobPosts
+
+    private val _employerJobPosts = MutableLiveData<List<EmployerJobPost>>()
+    val employerJobPosts : LiveData<List<EmployerJobPost>>
+        get() = _employerJobPosts
+
+    private val _discoverPosts = MutableLiveData<List<DiscoverPostModel>>()
+    val discoverPosts : LiveData<List<DiscoverPostModel>>
+        get() = _discoverPosts
+
     private var _savedUserData = roomRepo.observeUserData()
     val savedUserData = _savedUserData
 
     init {
         getUserDataFromFirebase()
+        getDiscoverPostsFromUser()
+        getEmployerJobPostsFromUser()
+        getFreelancerJobPostsFromUser()
     }
     fun getUserDataFromFirebase(){
         _message.value = Resource.loading(null)
@@ -105,4 +123,54 @@ class ProfileViewModel @Inject constructor(
             email = userModel.email
         )
     }
+
+    private fun getFreelancerJobPostsFromUser(){
+        firebaseRepo.getAllFreelancerJobPostsFromUser(userId)
+            .addOnSuccessListener {
+                val postList = mutableListOf<FreelancerJobPost>()
+                for (document in it.documents) {
+                    // Belgeden her bir videoyu çek
+                    val post = document.toObject(FreelancerJobPost::class.java)
+                    post?.let { postList.add(post) }
+                    _message.value = Resource.success(null)
+                }
+                _freelancerJobPosts.value = postList
+            }.addOnFailureListener { exception ->
+                // Hata durzumunda işlemleri buraya ekleyebilirsiniz
+                _message.value = Resource.error("Belge alınamadı. Hata: $exception", null)
+            }
+    }
+    private fun getEmployerJobPostsFromUser(){
+        firebaseRepo.getAllEmployerJobPostsFromUser(userId)
+            .addOnSuccessListener {
+                val postList = mutableListOf<EmployerJobPost>()
+                for (document in it.documents) {
+                    // Belgeden her bir videoyu çek
+                    val post = document.toObject(EmployerJobPost::class.java)
+                    post?.let { postList.add(post) }
+                    _message.value = Resource.success(null)
+                }
+                _employerJobPosts.value = postList
+            }.addOnFailureListener { exception ->
+                // Hata durzumunda işlemleri buraya ekleyebilirsiniz
+                _message.value = Resource.error("Belge alınamadı. Hata: $exception", null)
+            }
+    }
+    private fun getDiscoverPostsFromUser(){
+        firebaseRepo.getAllDiscoverPostsFromUser(userId)
+            .addOnSuccessListener {
+                val postList = mutableListOf<DiscoverPostModel>()
+                for (document in it.documents) {
+                    // Belgeden her bir videoyu çek
+                    val post = document.toObject(DiscoverPostModel::class.java)
+                    post?.let { postList.add(post) }
+                    _message.value = Resource.success(null)
+                }
+                _discoverPosts.value = postList
+            }.addOnFailureListener { exception ->
+                // Hata durzumunda işlemleri buraya ekleyebilirsiniz
+                _message.value = Resource.error("Belge alınamadı. Hata: $exception", null)
+            }
+    }
+
 }

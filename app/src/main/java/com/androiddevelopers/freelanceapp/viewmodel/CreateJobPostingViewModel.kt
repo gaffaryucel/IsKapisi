@@ -86,7 +86,6 @@ constructor(
             _firebaseMessage.value = Resource.loading(false)
             if (task.isSuccessful) {
                 _firebaseMessage.value = Resource.success(true)
-                updateUserData(jobPost)
             } else {
                 _firebaseMessage.value =
                     task.exception?.localizedMessage?.let { message ->
@@ -94,6 +93,7 @@ constructor(
                     }
             }
         }
+        updateUserData(jobPost)
     }
 
     fun setImageUriList(newList: ArrayList<Uri>) = viewModelScope.launch {
@@ -109,7 +109,10 @@ constructor(
         _skills.value = newSkills
     }
     private fun updateUserData(jobPost : EmployerJobPost){
-        firebaseRepo.uploadDataInUserNode(firebaseAuth.currentUser?.uid.toString(),jobPost,"job_post",jobPost.postId.toString())
+        try {
+            firebaseRepo.uploadDataInUserNode(firebaseAuth.currentUser?.uid.toString(),jobPost,"job_post",jobPost.postId.toString())
+        }catch (e : Exception){
+            println("error : "+ e.localizedMessage)
+        }
     }
-
 }

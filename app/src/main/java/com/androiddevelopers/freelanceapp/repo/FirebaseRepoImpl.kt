@@ -133,4 +133,16 @@ class FirebaseRepoImpl @Inject constructor(
             .document(dataId)
             .set(data)
     }
+
+    override fun getAllDiscoverPostsFromUser(userId : String): Task<QuerySnapshot> {
+        return userCollection.document(userId).collection("discover").get()
+    }
+
+    override fun getAllEmployerJobPostsFromUser(userId : String): Task<QuerySnapshot> {
+        return userCollection.document(userId).collection("employer_job_post").get()
+    }
+
+    override fun getAllFreelancerJobPostsFromUser(userId : String): Task<QuerySnapshot> {
+        return userCollection.document(userId).collection("freelancer_job_post").get()
+    }
 }

@@ -16,38 +16,49 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.UploadTask
 
 interface FirebaseRepoInterFace {
+    // Auth işlemleri
     fun login(email: String, password: String): Task<AuthResult>
     fun forgotPassword(email: String): Task<Void>
     fun register(email: String, password: String): Task<AuthResult>
-    fun addUserToFirestore(data: UserModel) : Task<Void>
+
+    // Firestore User işlemleri
+    fun addUserToFirestore(data: UserModel): Task<Void>
     fun deleteUserFromFirestore(documentId: String): Task<Void>
     fun getUserDataByDocumentId(documentId: String): Task<DocumentSnapshot>
+    fun getUsersFromFirestore(): Task<QuerySnapshot>
+    fun uploadDataInUserNode(userId: String, data: Any, type: String, dataId: String): Task<Void>
+
+    // Firestore Freelancer Job Post işlemleri
     fun addFreelancerJobPostToFirestore(post: FreelancerJobPost): Task<Void>
     fun getAllFreelancerJobPostFromFirestore(): Task<QuerySnapshot>
-    fun saveVideoToFirestore(video: VideoModel): Task<Void>
-    fun getVideoFromFirestore(): Task<QuerySnapshot>
-    fun sendMessageToRealtimeDatabase(
-        userId: String,
-        chatId: String,
-        message: MessageModel
-    ): Task<Void>
 
-    fun addMessageInChatMatesRoom(
-        chatMateId: String,
-        chatId: String,
-        message: MessageModel
-    ): Task<Void>
-    fun getAllMessagesFromRealtimeDatabase(currentUserId : String,chatId : String): DatabaseReference
-    fun createChatRoomForOwner(currentUserId : String,chat : ChatModel): Task<Void>
-    fun createChatRoomForChatMate(userId : String,chat : ChatModel): Task<Void>
-    fun getAllChatRooms(currentUserId : String) : DatabaseReference
-    fun getUsersFromFirestore() : Task<QuerySnapshot>
+    // Firestore Employer Job Post işlemleri
     fun addEmployerJobPostToFirestore(job: EmployerJobPost): Task<Void>
     fun getAllEmployerJobPostFromFirestore(): Task<QuerySnapshot>
-    fun addImageToStorage(uri: Uri, file: String): UploadTask
+
+    // Firestore Video işlemleri
+    fun saveVideoToFirestore(video: VideoModel): Task<Void>
+    fun getVideoFromFirestore(): Task<QuerySnapshot>
+
+    // Firestore Discover Post işlemleri
     fun uploadDiscoverPostToFirestore(post: DiscoverPostModel): Task<Void>
     fun getAllDiscoverPostsFromFirestore(): Task<QuerySnapshot>
-    fun uploadDataInUserNode(userId : String,data: Any,type : String,dataId : String) : Task<Void>
+
+    // Realtime Database Chat işlemleri
+    fun sendMessageToRealtimeDatabase(userId: String, chatId: String, message: MessageModel): Task<Void>
+    fun addMessageInChatMatesRoom(chatMateId: String, chatId: String, message: MessageModel): Task<Void>
+    fun getAllMessagesFromRealtimeDatabase(currentUserId: String, chatId: String): DatabaseReference
+    fun createChatRoomForOwner(currentUserId: String, chat: ChatModel): Task<Void>
+    fun createChatRoomForChatMate(userId: String, chat: ChatModel): Task<Void>
+    fun getAllChatRooms(currentUserId: String): DatabaseReference
+
+    // Firebase Storage işlemleri
+    fun addImageToStorage(uri: Uri, file: String): UploadTask
+
+    //User Profile Data İşlemleri
+    fun getAllDiscoverPostsFromUser(userId : String): Task<QuerySnapshot>
+    fun getAllEmployerJobPostsFromUser(userId : String): Task<QuerySnapshot>
+    fun getAllFreelancerJobPostsFromUser(userId : String): Task<QuerySnapshot>
 
 }
 
