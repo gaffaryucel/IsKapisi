@@ -16,6 +16,7 @@ import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.viewmodel.ProfileViewModel
 import com.androiddevelopers.freelanceapp.viewmodel.RegisterViewModel
+import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -52,7 +53,36 @@ class ProfileFragment : Fragment() {
         }
         binding.rvProfile.layoutManager = LinearLayoutManager(requireContext())
         observeLiveData()
+        setupTabLayout()
     }
+    private fun setupTabLayout(){
+        // TabLayout'a sekmeleri ekle
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Posts"))
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Freelancing"))
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Employers"))
+
+        // TabLayout'un tıklama olayını dinle
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                // Sekmeye tıklandığında, adapter'a yeni verileri set et
+                when (tab.position) {
+                    0 -> binding.rvProfile.adapter = discoverAdapter
+                    1 -> binding.rvProfile.adapter = freelancerAdapter
+                    2 -> binding.rvProfile.adapter = employerAdapter
+                    else -> binding.rvProfile.adapter = discoverAdapter
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                // Boş bırakılabilir
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                // Boş bırakılabilir
+            }
+        })
+    }
+
     private fun refreshData(){
         viewModel.getUserDataFromFirebase()
         binding.profileFragmentSwipeRefreshLayout.isRefreshing = false
