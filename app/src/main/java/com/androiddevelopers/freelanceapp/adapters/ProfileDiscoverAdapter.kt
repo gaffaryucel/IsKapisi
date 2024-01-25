@@ -3,14 +3,11 @@ package com.androiddevelopers.freelanceapp.adapters
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.androiddevelopers.freelanceapp.databinding.RowDiscoverBinding
 import com.androiddevelopers.freelanceapp.databinding.RowDiscoverPostsProfileBinding
 import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
-import com.androiddevelopers.freelanceapp.view.DiscoverFragmentDirections
 import com.bumptech.glide.Glide
 
 class ProfileDiscoverAdapter : RecyclerView.Adapter<ProfileDiscoverAdapter.ProfileDiscoverViewHolder>() {
