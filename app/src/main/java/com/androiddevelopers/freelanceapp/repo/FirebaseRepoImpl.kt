@@ -145,4 +145,16 @@ class FirebaseRepoImpl @Inject constructor(
     override fun getAllFreelancerJobPostsFromUser(userId : String): Task<QuerySnapshot> {
         return userCollection.document(userId).collection("freelancer_job_post").get()
     }
+
+    override fun updateUserInfo(userId: String, map: HashMap<String, Any?>):Task<Void> {
+        return userCollection.document(userId).update(map)
+    }
+
+    override fun follow(follower : String,followed: String): Task<Void> {
+        return userCollection.document(follower).collection("following").document(followed).set(followed)
+    }
+
+    override fun addFollower(follower: String, followed: String): Task<Void> {
+        return userCollection.document(followed).collection("followers").document(follower).set(follower)
+    }
 }

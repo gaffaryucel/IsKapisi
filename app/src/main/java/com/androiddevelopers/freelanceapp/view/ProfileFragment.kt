@@ -7,10 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.androiddevelopers.freelanceapp.adapters.DiscoverAdapter
 import com.androiddevelopers.freelanceapp.adapters.EmployerAdapter
 import com.androiddevelopers.freelanceapp.adapters.FreelancerAdapter
+import com.androiddevelopers.freelanceapp.adapters.ProfileDiscoverAdapter
+import com.androiddevelopers.freelanceapp.adapters.ProfileEmployerAdapter
+import com.androiddevelopers.freelanceapp.adapters.ProfileFreelancerAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentProfileBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.util.Status
@@ -22,9 +26,12 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
 
-    private lateinit var employerAdapter: EmployerAdapter
-    private lateinit var freelancerAdapter: FreelancerAdapter
-    private lateinit var discoverAdapter: DiscoverAdapter
+    private lateinit var employerAdapter: ProfileEmployerAdapter
+    private lateinit var freelancerAdapter: ProfileFreelancerAdapter
+    private lateinit var discoverAdapter: ProfileDiscoverAdapter
+    private var isDiscoverListEmpty = false
+    private var isFreelanceListEmpty = false
+    private var isEmployerListEmpty = false
 
     private lateinit var viewModel: ProfileViewModel
     private var _binding: FragmentProfileBinding? = null
@@ -39,9 +46,9 @@ class ProfileFragment : Fragment() {
         viewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
         val view = binding.root
 
-        employerAdapter = EmployerAdapter(arrayListOf())
-        freelancerAdapter = FreelancerAdapter(requireContext(), arrayListOf())
-        discoverAdapter = DiscoverAdapter()
+        employerAdapter = ProfileEmployerAdapter()
+        freelancerAdapter = ProfileFreelancerAdapter()
+        discoverAdapter = ProfileDiscoverAdapter()
 
         return view
     }
@@ -54,6 +61,10 @@ class ProfileFragment : Fragment() {
         binding.rvProfile.layoutManager = LinearLayoutManager(requireContext())
         observeLiveData()
         setupTabLayout()
+        binding.ivMore.setOnClickListener {
+            val action = ProfileFragmentDirections.actionNavigationProfileToEditUserProfileInfoFragment()
+            Navigation.findNavController(it).navigate(action)
+        }
     }
     private fun setupTabLayout(){
         // TabLayout'a sekmeleri ekle
@@ -66,10 +77,39 @@ class ProfileFragment : Fragment() {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 // Sekmeye tıklandığında, adapter'a yeni verileri set et
                 when (tab.position) {
-                    0 -> binding.rvProfile.adapter = discoverAdapter
-                    1 -> binding.rvProfile.adapter = freelancerAdapter
-                    2 -> binding.rvProfile.adapter = employerAdapter
-                    else -> binding.rvProfile.adapter = discoverAdapter
+                    0 -> {
+                        binding.rvProfile.adapter = discoverAdapter
+                        if (isDiscoverListEmpty){
+                            binding.rvProfile.visibility = View.GONE
+                            binding.tvEmptyList.visibility = View.VISIBLE
+                        }else{
+                            binding.rvProfile.visibility = View.VISIBLE
+                            binding.tvEmptyList.visibility = View.GONE
+                        }
+                    }
+                    1 -> {
+                        binding.rvProfile.adapter = freelancerAdapter
+                        if (isFreelanceListEmpty){
+                            binding.rvProfile.visibility = View.GONE
+                            binding.tvEmptyList.visibility = View.VISIBLE
+                        }else{
+                            binding.rvProfile.visibility = View.VISIBLE
+                            binding.tvEmptyList.visibility = View.GONE
+                        }
+                    }
+                    2 -> {
+                        binding.rvProfile.adapter = employerAdapter
+                        if (isEmployerListEmpty){
+                            binding.rvProfile.visibility = View.GONE
+                            binding.tvEmptyList.visibility = View.VISIBLE
+                        }else{
+                            binding.rvProfile.visibility = View.VISIBLE
+                            binding.tvEmptyList.visibility = View.GONE
+                        }
+                    }
+                    else -> {
+                        binding.rvProfile.adapter = discoverAdapter
+                    }
                 }
             }
 
@@ -112,16 +152,18 @@ class ProfileFragment : Fragment() {
         })
         viewModel.freelanceJobPosts.observe(viewLifecycleOwner, Observer {freelancerPosts ->
             if (freelancerPosts != null){
-                freelancerAdapter.freelancerRefresh(freelancerPosts as ArrayList<FreelancerJobPost>)
+                freelancerAdapter.postList = freelancerPosts
+                isFreelanceListEmpty = false
             }else{
-
+                isFreelanceListEmpty = true
             }
         })
         viewModel.employerJobPosts.observe(viewLifecycleOwner, Observer {jobPosts ->
             if (jobPosts != null){
-                employerAdapter.employerRefresh(jobPosts)
+                employerAdapter.postList = jobPosts
+                isEmployerListEmpty = false
             }else{
-
+                isEmployerListEmpty = true
             }
         })
         viewModel.discoverPosts.observe(viewLifecycleOwner, Observer {discoverPosts ->
@@ -129,7 +171,9 @@ class ProfileFragment : Fragment() {
                 discoverAdapter.postList = discoverPosts
                 binding.rvProfile.adapter = discoverAdapter
                 discoverAdapter.notifyDataSetChanged()
+                isDiscoverListEmpty = false
             }else{
+                isDiscoverListEmpty = true
 
             }
         })

@@ -51,7 +51,7 @@ class CreateChatRoomViewModel  @Inject constructor(
             chatId,
             userModel.userId,
             userModel.username,
-            userModel.userImage,
+            userModel.profileImageUrl,
             "",
             ""
         )
@@ -80,7 +80,7 @@ class CreateChatRoomViewModel  @Inject constructor(
             chatId,
             currentUserId,
             currentUserData.value?.username,
-            currentUserData.value?.userImage,
+            currentUserData.value?.profileImageUrl,
             "",
             ""
         )

@@ -48,7 +48,11 @@
         android:id="@+id/navigation_profile"
         android:name="com.androiddevelopers.freelanceapp.view.ProfileFragment"
         android:label="profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_navigation_profile_to_editUserProfileInfoFragment"
+            app:destination="@id/editUserProfileInfoFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/createJobPostingFragment"
@@ -107,4 +111,8 @@
             android:name="position"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/editUserProfileInfoFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.EditUserProfileInfoFragment"
+        tools:layout="@layout/fragment_edit_user_profile_info"/>
 </navigation>

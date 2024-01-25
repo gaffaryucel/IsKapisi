@@ -210,28 +210,28 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                    <LinearLayout
-                        android:orientation="horizontal"
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:layout_margin="6dp"
+                        android:id="@+id/btnEditProfile"
+                        android:layout_weight="1"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="40dp"
+                        android:background="@drawable/btn_job_offer_bg"
+                        android:text="Takip Et"
+                        tools:ignore="HardcodedText" />
 
-                        <Button
-                            android:layout_margin="6dp"
-                            android:id="@+id/btnEditProfile"
-                            android:layout_weight="1"
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:background="@drawable/btn_job_offer_bg"
-                            android:text="Profili düzenle"
-                            tools:ignore="HardcodedText" />
-
-                        <ImageView
-                            android:id="@+id/ivMoreInFollow"
-                            android:src="@drawable/ic_more"
-                            android:layout_gravity="center"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"/>
-                    </LinearLayout>
+                    <ImageView
+                        android:id="@+id/ivMoreInFollow"
+                        android:src="@drawable/ic_more"
+                        android:layout_gravity="center"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"/>
+                </LinearLayout>
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabLayout"

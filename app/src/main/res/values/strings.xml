@@ -49,4 +49,5 @@
     <string name="give_offer">Teklif Ver</string>
     <string name="hint_employer_title">Employer Title</string>
     <string name="hint_employer_description">Employer Description</string>
+    <string name="user_bio">Merhaba! Ben bir yapay zeka dil modeliyim ve çeşitli konularda yardımcı olabilirim. Bilgi tabanım, geniş bir konu yelpazesini kapsamaktadır. Sorularınızı sormaktan çekinmeyin ve size nasıl yardımcı olabileceğim konusunda bana söyleyin!</string>
 </resources>

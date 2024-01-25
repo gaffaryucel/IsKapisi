@@ -59,6 +59,8 @@ interface FirebaseRepoInterFace {
     fun getAllDiscoverPostsFromUser(userId : String): Task<QuerySnapshot>
     fun getAllEmployerJobPostsFromUser(userId : String): Task<QuerySnapshot>
     fun getAllFreelancerJobPostsFromUser(userId : String): Task<QuerySnapshot>
-
+    fun updateUserInfo(userId : String,map : HashMap<String, Any?>): Task<Void>
+    fun follow(follower : String,followed : String): Task<Void>
+    fun addFollower(follower : String,followed : String): Task<Void>
 }
 
