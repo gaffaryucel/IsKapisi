@@ -7,7 +7,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import com.androiddevelopers.freelanceapp.adapters.DiscoverAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentDiscoverBinding
@@ -39,6 +41,12 @@ class DiscoverFragment : Fragment() {
         binding.rvDiscover.layoutManager = GridLayoutManager(requireContext(),3)
         binding.rvDiscover.adapter = adapter
         observeLiveData()
+
+        binding.overlayLayout.setOnClickListener {
+            val action = DiscoverFragmentDirections.actionNavigationDiscoverToSearchFragment()
+            Navigation.findNavController(it).navigate(action)
+        }
+
     }
     @SuppressLint("NotifyDataSetChanged")
     private fun observeLiveData() {

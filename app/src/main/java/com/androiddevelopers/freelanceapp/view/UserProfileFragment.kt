@@ -11,10 +11,6 @@ import com.androiddevelopers.freelanceapp.viewmodel.UserProfileViewModel
 
 class UserProfileFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = UserProfileFragment()
-    }
-
     private lateinit var viewModel: UserProfileViewModel
 
     override fun onCreateView(

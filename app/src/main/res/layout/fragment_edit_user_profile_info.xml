@@ -8,130 +8,151 @@
             name="user"
             type="com.androiddevelopers.freelanceapp.model.UserModel" />
     </data>
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".view.EditUserProfileInfoFragment"
-        android:padding="16dp">
-
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_height="match_parent">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:context=".view.EditUserProfileInfoFragment"
+            android:padding="16dp">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/circleImageView"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_gravity="center"
-                android:padding="1dp"
-                android:src="@drawable/placeholder"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:id="@+id/changeProfilePhoto"
+                    android:text="save pp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/circleImageView"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:padding="1dp"
+                    android:src="@drawable/placeholder"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_margin="10dp"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{user.username}"
+                    app:layout_constraintStart_toEndOf="@+id/circleImageView"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_margin="10dp"
+                    android:textSize="14dp"
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{user.email}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/circleImageView" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
-                android:layout_margin="10dp"
-                android:textSize="18dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="5dp"
                 android:textStyle="bold"
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
+                android:textSize="20sp"
+                android:text="Kişisel Bilgiler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <EditText
+                android:id="@+id/etFullName"
+                android:text="@{user.fullName}"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TextView"
-                app:layout_constraintStart_toEndOf="@+id/circleImageView"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:hint="Full Name" />
 
             <TextView
-                android:layout_margin="10dp"
-                android:textSize="14dp"
-                android:id="@+id/textView2"
+                android:textSize="20sp"
+                android:id="@+id/etSkills"
+                android:text="@{user.skills.toString()}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Skills" />
+
+            <EditText
+                android:id="@+id/etCity"
+                android:text="@{user.location.city}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="City" />
+
+            <EditText
+                android:id="@+id/etCountry"
+                android:text="@{user.location.country}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Country" />
+
+            <EditText
+                android:id="@+id/etEducation"
+                android:text="@{user.education.get(0).institution}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Education" />
+
+            <EditText
+                android:id="@+id/etLanguages"
+                android:text="@{user.languages.get(0).language}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Languages" />
+
+            <EditText
+                android:id="@+id/etWorkExperience"
+                android:text="@{user.workExperience.get(0).companyName}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="WorkExperience" />
+
+            <EditText
+                android:id="@+id/etSocialMediaLinks"
+                android:text="@{user.socialMediaLinks.get(0).platform}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="SocialMediaLinks" />
+
+            <EditText
+                android:id="@+id/etContactInformation"
+                android:text="@{user.contactInformation.email}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="ContactInformation" />
+
+            <EditText
+                android:id="@+id/etPaymentMethods"
+                android:text="@{user.paymentMethods.get(0).method}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="ContactInformation" />
+
+            <Button
+                android:layout_gravity="center"
+                android:id="@+id/btnSave"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/circleImageView" />
+                android:text="Save" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
 
-        <TextView
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="5dp"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:text="Kişisel Bilgiler"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <EditText
-            android:id="@+id/etFullName"
-            android:text="@{user.fullName}"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Full Name" />
-
-        <TextView
-            android:textSize="20sp"
-            android:id="@+id/etSkills"
-            android:text="@{user.skills.toString()}"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Skills" />
-
-        <EditText
-            android:id="@+id/etCity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="City" />
-
-        <EditText
-            android:id="@+id/etCountry"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Country" />
-
-        <EditText
-            android:id="@+id/etEducation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Education" />
-
-        <EditText
-            android:id="@+id/etLanguages"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Languages" />
-
-        <EditText
-            android:id="@+id/etWorkExperience"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="WorkExperience" />
-
-        <EditText
-            android:id="@+id/etSocialMediaLinks"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="SocialMediaLinks" />
-
-        <EditText
-            android:id="@+id/etContactInformation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="ContactInformation" />
-
-        <EditText
-            android:id="@+id/etPaymentMethods"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="ContactInformation" />
-
-        <Button
-            android:layout_gravity="center"
-            android:id="@+id/btnSave"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Save" />
-
-    </LinearLayout>
+    </ScrollView>
 </layout>

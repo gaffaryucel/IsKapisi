@@ -26,6 +26,9 @@
         <action
             android:id="@+id/action_navigation_discover_to_discoverDetailsFragment"
             app:destination="@id/discoverDetailsFragment" />
+        <action
+            android:id="@+id/action_navigation_discover_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
 
     <fragment
@@ -115,4 +118,9 @@
         android:id="@+id/editUserProfileInfoFragment"
         android:name="com.androiddevelopers.freelanceapp.view.EditUserProfileInfoFragment"
         tools:layout="@layout/fragment_edit_user_profile_info"/>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
 </navigation>

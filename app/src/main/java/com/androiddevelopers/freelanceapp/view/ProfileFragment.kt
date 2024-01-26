@@ -61,7 +61,7 @@ class ProfileFragment : Fragment() {
         binding.rvProfile.layoutManager = LinearLayoutManager(requireContext())
         observeLiveData()
         setupTabLayout()
-        binding.ivMore.setOnClickListener {
+        binding.btnEditProfile.setOnClickListener {
             val action = ProfileFragmentDirections.actionNavigationProfileToEditUserProfileInfoFragment()
             Navigation.findNavController(it).navigate(action)
         }

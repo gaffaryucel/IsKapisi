@@ -12,6 +12,7 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -31,6 +32,10 @@ import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.viewmodel.CreatePostViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.util.UUID
 
@@ -42,9 +47,6 @@ class CreatePostFragment : Fragment() {
     private var _binding: FragmentCreatePostBinding? = null
     private val binding get() = _binding!!
 
-    private var uploadedDataProvider: AlertDialog? = null
-    private var errorDialog: AlertDialog? = null
-
     private val REQUEST_IMAGE_CAPTURE = 101
     private val REQUEST_IMAGE_PICK = 102
     private val PERMISSION_REQUEST_CODE = 200
@@ -52,7 +54,7 @@ class CreatePostFragment : Fragment() {
 
     private var resultByteArray = byteArrayOf()
     private var _tagList = MutableLiveData<List<String>>()
-
+    private var isBNHiden = false
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -72,6 +74,7 @@ class CreatePostFragment : Fragment() {
         observeLiveData()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setupOnClicks() {
         val tagList = ArrayList<String>()
 
@@ -98,12 +101,51 @@ class CreatePostFragment : Fragment() {
             _tagList.value = tagList
             binding.etTags.setText("")
             if (!isClicked){
-                binding.svCreateDiscoverPost.postDelayed({
-                    binding.svCreateDiscoverPost.smoothScrollTo(0, 800) // Y ekseninde yumuşak bir şekilde 500 piksel aşağı kaydır
+                binding.svCreatePost.postDelayed({
+                    binding.svCreatePost.smoothScrollTo(0, 800) // Y ekseninde yumuşak bir şekilde 500 piksel aşağı kaydır
                 }, 50) // 1000 milisaniye (1 saniye) sonra kaydırma işlemi başlatılır
                 isClicked = true
             }
         }
+        binding.ivClose.setOnClickListener {
+            findNavController().popBackStack()
+        }
+        binding.etTags.setOnTouchListener { view, motionEvent ->
+            if (motionEvent.action == MotionEvent.ACTION_DOWN) {
+                if (!isBNHiden){
+                    hideBottomNavigation()
+                }
+            }
+            false
+        }
+
+        binding.etTitle.setOnTouchListener { view, motionEvent ->
+            if (!isClicked){
+                GlobalScope.launch(Dispatchers.IO){
+                    delay(150)
+                    binding.svCreatePost.postDelayed({
+                        binding.svCreatePost.smoothScrollTo(0, 800) // Y ekseninde yumuşak bir şekilde 500 piksel aşağı kaydır
+                    }, 50)
+                    isClicked = true
+                }
+            }
+            if (motionEvent.action == MotionEvent.ACTION_DOWN) {
+                if (!isBNHiden){
+                    hideBottomNavigation()
+                }
+            }
+            false
+        }
+
+        binding.etDescription.setOnTouchListener { view, motionEvent ->
+            if (motionEvent.action == MotionEvent.ACTION_DOWN) {
+                if (!isBNHiden){
+                    hideBottomNavigation()
+                }
+            }
+            false
+        }
+
     }
 
     private fun observeLiveData() {
@@ -267,6 +309,24 @@ class CreatePostFragment : Fragment() {
         myBitmap?.compress(Bitmap.CompressFormat.JPEG, i, stream)
         return stream.toByteArray()
     }
+
+
+    private fun hideBottomNavigation() {
+        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
+        bottomNavigationView?.visibility = View.GONE
+        isBNHiden = true
+    }
+
+    private fun showBottomNavigation() {
+        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
+        bottomNavigationView?.visibility = View.VISIBLE
+    }
+
+    override fun onPause() {
+        super.onPause()
+        showBottomNavigation()
+    }
+
 
 
 }

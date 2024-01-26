@@ -15,6 +15,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
@@ -157,4 +158,10 @@ class FirebaseRepoImpl @Inject constructor(
     override fun addFollower(follower: String, followed: String): Task<Void> {
         return userCollection.document(followed).collection("followers").document(follower).set(follower)
     }
+
+    override fun updateProfilePhoto(userId: String, photoUrl:  HashMap<String, Any?>): Task<Void> {
+        return  userCollection.document(userId).update(photoUrl)
+    }
+
+
 }
