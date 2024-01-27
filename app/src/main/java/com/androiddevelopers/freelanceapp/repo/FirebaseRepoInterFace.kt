@@ -12,7 +12,6 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.UploadTask
 
@@ -46,23 +45,38 @@ interface FirebaseRepoInterFace {
     fun getAllDiscoverPostsFromFirestore(): Task<QuerySnapshot>
 
     // Realtime Database Chat işlemleri
-    fun sendMessageToRealtimeDatabase(userId: String, chatId: String, message: MessageModel): Task<Void>
-    fun addMessageInChatMatesRoom(chatMateId: String, chatId: String, message: MessageModel): Task<Void>
+    fun sendMessageToRealtimeDatabase(
+        userId: String,
+        chatId: String,
+        message: MessageModel
+    ): Task<Void>
+
+    fun addMessageInChatMatesRoom(
+        chatMateId: String,
+        chatId: String,
+        message: MessageModel
+    ): Task<Void>
+
     fun getAllMessagesFromRealtimeDatabase(currentUserId: String, chatId: String): DatabaseReference
     fun createChatRoomForOwner(currentUserId: String, chat: ChatModel): Task<Void>
     fun createChatRoomForChatMate(userId: String, chat: ChatModel): Task<Void>
     fun getAllChatRooms(currentUserId: String): DatabaseReference
 
     // Firebase Storage işlemleri
-    fun addImageToStorage(uri: Uri, file: String): UploadTask
+    fun addImageToStorageForJobPosting(
+        uri: Uri,
+        uId: String,
+        postId: String,
+        file: String
+    ): UploadTask
 
     //User Profile Data İşlemleri
-    fun getAllDiscoverPostsFromUser(userId : String): Task<QuerySnapshot>
-    fun getAllEmployerJobPostsFromUser(userId : String): Task<QuerySnapshot>
-    fun getAllFreelancerJobPostsFromUser(userId : String): Task<QuerySnapshot>
-    fun updateUserInfo(userId : String,map : HashMap<String, Any?>): Task<Void>
-    fun follow(follower : String,followed : String): Task<Void>
-    fun addFollower(follower : String,followed : String): Task<Void>
-    fun updateProfilePhoto(userId: String, photoUrl:  HashMap<String, Any?>): Task<Void>
+    fun getAllDiscoverPostsFromUser(userId: String): Task<QuerySnapshot>
+    fun getAllEmployerJobPostsFromUser(userId: String): Task<QuerySnapshot>
+    fun getAllFreelancerJobPostsFromUser(userId: String): Task<QuerySnapshot>
+    fun updateUserInfo(userId: String, map: HashMap<String, Any?>): Task<Void>
+    fun follow(follower: String, followed: String): Task<Void>
+    fun addFollower(follower: String, followed: String): Task<Void>
+    fun updateProfilePhoto(userId: String, photoUrl: HashMap<String, Any?>): Task<Void>
 }
 
