@@ -22,8 +22,6 @@ import androidx.navigation.Navigation
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.SkillAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentCreateJobPostingBinding
-import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
-import com.androiddevelopers.freelanceapp.util.JobStatus
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.util.downloadImage
 import com.androiddevelopers.freelanceapp.viewmodel.CreateJobPostingViewModel
@@ -31,7 +29,6 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
-
 
 @AndroidEntryPoint
 class CreateJobPostingFragment : Fragment() {
@@ -100,17 +97,20 @@ class CreateJobPostingFragment : Fragment() {
 
             //yeni iş ilanını veri tabanına göndermek için kaydet butonunu dinliyoruz
             createjobPostButton.setOnClickListener {
-                viewModel.addImageAndJobPostToFirebase( //resim ve işveren ilanı bilgilerini view modele gönderiyoruz
-                    selectedImages, // resmin cihazdaki konumu
-                    createEmployerJobPost( // işveren ilanı için formda doldurulan yerler ile birlikte sings oluşturuyoruz
-                        title = titleTextInputEditText.text.toString(),
-                        description = descriptionTextInputEditText.text.toString(),
-                        skillsRequired = skillList,
-                        location = locationsTextInputEditText.text.toString(),
-                        deadline = deadlineTextInputEditText.text.toString(),
-                        budget = budgetTextInputEditText.text.toString().toDouble()
+                with(viewModel) {
+                    addImageAndJobPostToFirebase( //resim ve işveren ilanı bilgilerini view modele gönderiyoruz
+                        selectedImages, // resmin cihazdaki konumu
+                        createEmployerJobPost( // işveren ilanı için formda doldurulan yerler ile birlikte gönderi oluşturuyoruz
+                            title = titleTextInputEditText.text.toString(),
+                            description = descriptionTextInputEditText.text.toString(),
+                            skillsRequired = skillList,
+                            location = locationsTextInputEditText.text.toString(),
+                            deadline = deadlineTextInputEditText.text.toString(),
+                            budget = budgetTextInputEditText.text.toString().toDouble(),
+                            postId = UUID.randomUUID().toString()
+                        )
                     )
-                )
+                }
             }
 
             //ilan bitiş tarihi seçimi
@@ -296,46 +296,6 @@ class CreateJobPostingFragment : Fragment() {
         } else {
             binding.createJobPostProgressBar.visibility = View.INVISIBLE
         }
-    }
-
-    private fun createEmployerJobPost(
-        postId: String? = "",
-        title: String? = "",
-        description: String? = "",
-        images: List<String>? = listOf(),
-        skillsRequired: List<String>? = listOf(),
-        budget: Double? = 0.0,
-        deadline: String? = "",
-        location: String? = "",
-        datePosted: String? = "",
-        applicants: List<String>? = listOf(),
-        status: JobStatus? = JobStatus.OPEN,
-        additionalDetails: String? = "",
-        completedJobs: Int? = 0,
-        canceledJobs: Int? = 0,
-        viewCount: Int? = 0,
-        isUrgent: Boolean? = false,
-        employerId: String? = ""
-    ): EmployerJobPost {
-        return EmployerJobPost(
-            postId = postId,
-            title = title,
-            description = description,
-            images = images,
-            skillsRequired = skillsRequired,
-            budget = budget,
-            deadline = deadline,
-            location = location,
-            datePosted = datePosted,
-            applicants = applicants,
-            status = status,
-            additionalDetails = additionalDetails,
-            completedJobs = completedJobs,
-            canceledJobs = canceledJobs,
-            viewCount = viewCount,
-            isUrgent = isUrgent,
-            employerId = employerId,
-        )
     }
 
     private fun chooseImage() {

@@ -41,8 +41,10 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        freelancerAdapter = FreelancerAdapter(view.context, arrayListOf())
+        freelancerAdapter = FreelancerAdapter()
         listFreelancerJobPost = arrayListOf()
+
+        binding.adapter = freelancerAdapter
 
         return view
     }
@@ -50,9 +52,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getAllFreelanceJobPost()
         errorDialog = AlertDialog.Builder(context).create()
-
 
         setProgressBar(false)
         setupDialogs()
@@ -60,8 +60,6 @@ class HomeFragment : Fragment() {
 
         with(binding) {
             search(searchView)
-
-            adapter = freelancerAdapter
 
             cameraIcon.setOnClickListener {
                 val action = HomeFragmentDirections.actionNavigationHomeToCreateDiscoverPostFragment()
@@ -92,7 +90,8 @@ class HomeFragment : Fragment() {
             }
 
             firebaseLiveData.observe(owner) { list ->
-                freelancerAdapter.freelancerRefresh(list) // firebase 'den gelen veriler ile adapter'i yeniliyoruz
+                freelancerAdapter.freelancerList =
+                    list // firebase 'den gelen veriler ile adapter'i yeniliyoruz
 
                 listFreelancerJobPost.clear()
                 // firebase 'den gelen son verilerin kopyasını saklıyoruz
@@ -147,7 +146,7 @@ class HomeFragment : Fragment() {
                             list.add(it)
                         }
                     }
-                    freelancerAdapter.freelancerRefresh(list)
+                    freelancerAdapter.freelancerList = list
                 }
 
                 return true

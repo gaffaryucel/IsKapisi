@@ -5,14 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
+import com.androiddevelopers.freelanceapp.util.JobStatus
 import com.androiddevelopers.freelanceapp.util.Resource
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -48,12 +47,12 @@ constructor(
         jobPost: EmployerJobPost,
         downloadUriList: ArrayList<String> = arrayListOf()
     ) {
-        val postId = UUID.randomUUID().toString()
+        val uId = firebaseAuth.currentUser?.uid ?: "null_uid"
         if (newUriList.size > 0) {
             val uri = newUriList[0]
             _firebaseMessage.value = Resource.loading(true)
             uri.lastPathSegment?.let { file ->
-                firebaseRepo.addImageToStorage(uri, file)
+                firebaseRepo.addImageToStorageForJobPosting(uri, uId, jobPost.postId!!, file)
                     .addOnSuccessListener { task ->
                         task.storage.downloadUrl
                             .addOnSuccessListener {
@@ -77,8 +76,7 @@ constructor(
             }
         } else {
             jobPost.images = downloadUriList
-            jobPost.employerId = firebaseAuth.currentUser?.uid ?: ""
-            jobPost.postId = postId
+            jobPost.employerId = uId
             addJobPostingToFirebase(jobPost)
         }
     }
@@ -111,11 +109,57 @@ constructor(
     fun setSkills(newSkills: ArrayList<String>) {
         _skills.value = newSkills
     }
-    private fun updateUserData(jobPost : EmployerJobPost){
+
+    private fun updateUserData(jobPost: EmployerJobPost) {
         try {
-            firebaseRepo.uploadDataInUserNode(firebaseAuth.currentUser?.uid.toString(),jobPost,"job_post",jobPost.postId.toString())
-        }catch (e : Exception){
-            println("error : "+ e.localizedMessage)
+            firebaseRepo.uploadDataInUserNode(
+                firebaseAuth.currentUser?.uid.toString(),
+                jobPost,
+                "job_post",
+                jobPost.postId.toString()
+            )
+        } catch (e: Exception) {
+            println("error : " + e.localizedMessage)
         }
+    }
+
+    fun createEmployerJobPost(
+        postId: String? = "",
+        title: String? = "",
+        description: String? = "",
+        images: List<String>? = listOf(),
+        skillsRequired: List<String>? = listOf(),
+        budget: Double? = 0.0,
+        deadline: String? = "",
+        location: String? = "",
+        datePosted: String? = "",
+        applicants: List<String>? = listOf(),
+        status: JobStatus? = JobStatus.OPEN,
+        additionalDetails: String? = "",
+        completedJobs: Int? = 0,
+        canceledJobs: Int? = 0,
+        viewCount: Int? = 0,
+        isUrgent: Boolean? = false,
+        employerId: String? = ""
+    ): EmployerJobPost {
+        return EmployerJobPost(
+            postId = postId,
+            title = title,
+            description = description,
+            images = images,
+            skillsRequired = skillsRequired,
+            budget = budget,
+            deadline = deadline,
+            location = location,
+            datePosted = datePosted,
+            applicants = applicants,
+            status = status,
+            additionalDetails = additionalDetails,
+            completedJobs = completedJobs,
+            canceledJobs = canceledJobs,
+            viewCount = viewCount,
+            isUrgent = isUrgent,
+            employerId = employerId,
+        )
     }
 }

@@ -39,7 +39,7 @@ class JobPostingsFragment : Fragment() {
         _binding = FragmentJobPostingsBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        employerAdapter = EmployerAdapter(arrayListOf())
+        employerAdapter = EmployerAdapter()
         listEmployerJobPost = arrayListOf()
 
         return view
@@ -47,8 +47,6 @@ class JobPostingsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel.getAllEmployerJobPost()
 
         errorDialog = AlertDialog.Builder(requireContext()).create()
 
@@ -86,7 +84,8 @@ class JobPostingsFragment : Fragment() {
             }
 
             firebaseLiveData.observe(owner) { list ->
-                employerAdapter.employerRefresh(list) // firebase 'den gelen veriler ile adapter'i yeniliyoruz
+                employerAdapter.employerList =
+                    list // firebase 'den gelen veriler ile adapter'i yeniliyoruz
 
                 listEmployerJobPost.clear()
                 // firebase 'den gelen son verilerin kopyasını saklıyoruz
@@ -137,7 +136,7 @@ class JobPostingsFragment : Fragment() {
                             list.add(it)
                         }
                     }
-                    employerAdapter.employerRefresh(list)
+                    employerAdapter.employerList = list
                 }
 
                 return true
