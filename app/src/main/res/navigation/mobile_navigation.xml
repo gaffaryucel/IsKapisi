@@ -38,16 +38,6 @@
         tools:layout="@layout/fragment_create_post" />
 
     <fragment
-        android:id="@+id/navigation_job_postings"
-        android:name="com.androiddevelopers.freelanceapp.view.JobPostingsFragment"
-        android:label="İş ilanları"
-        tools:layout="@layout/fragment_job_postings">
-        <action
-            android:id="@+id/action_navigation_job_postings_to_createJobPostingFragment"
-            app:destination="@id/createJobPostingFragment" />
-    </fragment>
-
-    <fragment
         android:id="@+id/navigation_profile"
         android:name="com.androiddevelopers.freelanceapp.view.ProfileFragment"
         android:label="profile"
@@ -57,12 +47,6 @@
             app:destination="@id/editUserProfileInfoFragment" />
     </fragment>
 
-    <fragment
-        android:id="@+id/createJobPostingFragment"
-        android:name="com.androiddevelopers.freelanceapp.view.CreateJobPostingFragment"
-        android:label="CreateJobPostingFragment"
-        tools:layout="@layout/fragment_create_job_posting" />
-  
     <fragment
         android:id="@+id/chatsFragment"
         android:name="com.androiddevelopers.freelanceapp.view.ChatsFragment"
@@ -117,10 +101,41 @@
     <fragment
         android:id="@+id/editUserProfileInfoFragment"
         android:name="com.androiddevelopers.freelanceapp.view.EditUserProfileInfoFragment"
-        tools:layout="@layout/fragment_edit_user_profile_info"/>
+        tools:layout="@layout/fragment_edit_user_profile_info" />
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.androiddevelopers.freelanceapp.view.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" />
+
+    <navigation
+        android:id="@+id/navigation_job_postings"
+        app:startDestination="@id/jobPostingFragment">
+        <fragment
+            android:id="@+id/jobPostingFragment"
+            android:name="com.androiddevelopers.freelanceapp.view.employer.JobPostingsFragment"
+            android:label="İş ilanları"
+            tools:layout="@layout/fragment_job_postings">
+            <action
+                android:id="@+id/action_navigation_job_postings_to_createJobPostingFragment"
+                app:destination="@id/createJobPostingFragment" />
+            <action
+                android:id="@+id/action_jobPostingFragment_to_detailJobPostingsFragment"
+                app:destination="@id/detailJobPostingsFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/createJobPostingFragment"
+            android:name="com.androiddevelopers.freelanceapp.view.employer.CreateJobPostingFragment"
+            android:label="CreateJobPostingFragment"
+            tools:layout="@layout/fragment_create_job_posting" />
+        <fragment
+            android:id="@+id/detailJobPostingsFragment"
+            android:name="com.androiddevelopers.freelanceapp.view.employer.DetailJobPostingsFragment"
+            android:label="fragment_detail_job_postings"
+            tools:layout="@layout/fragment_detail_job_postings">
+            <argument
+                android:name="post_id"
+                app:argType="string" />
+        </fragment>
+    </navigation>
 </navigation>

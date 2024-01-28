@@ -3,12 +3,14 @@ package com.androiddevelopers.freelanceapp.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.databinding.RowEmployerJobBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.util.AppDiffUtil
 import com.androiddevelopers.freelanceapp.util.downloadImage
+import com.androiddevelopers.freelanceapp.view.employer.JobPostingsFragmentDirections
 
 class EmployerAdapter : RecyclerView.Adapter<EmployerAdapter.EmployerViewHolder>() {
     private val diffUtil = AppDiffUtil<EmployerJobPost>()
@@ -37,6 +39,16 @@ class EmployerAdapter : RecyclerView.Adapter<EmployerAdapter.EmployerViewHolder>
         with(holder) {
             with(binding) {
                 employer = employerJobPost
+
+                cardEmployer.setOnClickListener {
+                    employerJobPost.postId?.let { id ->
+                        val directions =
+                            JobPostingsFragmentDirections.actionJobPostingFragmentToDetailJobPostingsFragment(
+                                id
+                            )
+                        Navigation.findNavController(it).navigate(directions)
+                    }
+                }
 
                 val imageList: List<String>? = employerJobPost.images
                 if (imageList != null) {
