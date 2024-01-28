@@ -117,10 +117,59 @@
     <fragment
         android:id="@+id/editUserProfileInfoFragment"
         android:name="com.androiddevelopers.freelanceapp.view.EditUserProfileInfoFragment"
-        tools:layout="@layout/fragment_edit_user_profile_info"/>
+        tools:layout="@layout/fragment_edit_user_profile_info">
+        <action
+            android:id="@+id/action_editUserProfileInfoFragment_to_editMainProfileInfoFragment"
+            app:destination="@id/editMainProfileInfoFragment" />
+        <action
+            android:id="@+id/action_editUserProfileInfoFragment_to_editProfilePersonalInfoFragment"
+            app:destination="@id/editProfilePersonalInfoFragment" />
+        <action
+            android:id="@+id/action_editUserProfileInfoFragment_to_editProfileServiceInfoFragment"
+            app:destination="@id/editProfileServiceInfoFragment" />
+        <action
+            android:id="@+id/action_editUserProfileInfoFragment_to_editProfileAccountSettingsFragment"
+            app:destination="@id/editProfileAccountSettingsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.androiddevelopers.freelanceapp.view.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/editMainProfileInfoFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.profileinfo.EditMainProfileInfoFragment"
+        android:label="fragment_edit_main_profile_info"
+        tools:layout="@layout/fragment_edit_main_profile_info" >
+        <argument
+            android:name="user_name"
+            app:argType="string" />
+        <argument android:name="bio"
+            app:argType="string" />
+        <argument android:name="image"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/editProfileAccountSettingsFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.profileinfo.EditProfileAccountSettingsFragment"
+        android:label="fragment_edit_profile_account_settings"
+        tools:layout="@layout/fragment_edit_profile_account_settings" />
+    <fragment
+        android:id="@+id/editProfilePersonalInfoFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.profileinfo.EditProfilePersonalInfoFragment"
+        android:label="fragment_edit_profile_personal_info"
+        tools:layout="@layout/fragment_edit_profile_personal_info" >
+        <argument
+            android:name="phone"
+            app:argType="string" />
+        <argument android:name="name" />
+        <argument android:name="country" />
+        <argument android:name="city" />
+        <argument android:name="address" />
+    </fragment>
+    <fragment
+        android:id="@+id/editProfileServiceInfoFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.profileinfo.EditProfileServiceInfoFragment"
+        android:label="fragment_edit_profile_service_info"
+        tools:layout="@layout/fragment_edit_profile_service_info" />
 </navigation>
