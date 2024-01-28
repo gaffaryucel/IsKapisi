@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_navigation_home_to_createDiscoverPostFragment"
             app:destination="@id/createDiscoverPostFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_detailPostFragment"
+            app:destination="@id/detailPostFragment" />
     </fragment>
 
     <fragment
@@ -41,7 +44,7 @@
         android:id="@+id/navigation_profile"
         android:name="com.androiddevelopers.freelanceapp.view.ProfileFragment"
         android:label="profile"
-        tools:layout="@layout/fragment_profile" >
+        tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_navigation_profile_to_editUserProfileInfoFragment"
             app:destination="@id/editUserProfileInfoFragment" />
@@ -51,7 +54,7 @@
         android:id="@+id/chatsFragment"
         android:name="com.androiddevelopers.freelanceapp.view.ChatsFragment"
         android:label="fragment_chats"
-        tools:layout="@layout/fragment_chats" >
+        tools:layout="@layout/fragment_chats">
         <action
             android:id="@+id/action_chatsFragment_to_messagesFragment"
             app:destination="@id/messagesFragment" />
@@ -59,12 +62,12 @@
             android:id="@+id/action_chatsFragment_to_createChatRoomFragment"
             app:destination="@id/createChatRoomFragment" />
     </fragment>
-  
+
     <fragment
         android:id="@+id/messagesFragment"
         android:name="com.androiddevelopers.freelanceapp.view.MessagesFragment"
         android:label="fragment_messages"
-        tools:layout="@layout/fragment_messages" >
+        tools:layout="@layout/fragment_messages">
         <argument
             android:name="chat_id"
             app:argType="string" />
@@ -82,8 +85,7 @@
         android:id="@+id/createChatRoomFragment"
         android:name="com.androiddevelopers.freelanceapp.view.CreateChatRoomFragment"
         android:label="fragment_create_chat_room"
-        tools:layout="@layout/fragment_create_chat_room" >
-    </fragment>
+        tools:layout="@layout/fragment_create_chat_room"></fragment>
     <fragment
         android:id="@+id/createDiscoverPostFragment"
         android:name="com.androiddevelopers.freelanceapp.view.CreateDiscoverPostFragment"
@@ -93,7 +95,7 @@
         android:id="@+id/discoverDetailsFragment"
         android:name="com.androiddevelopers.freelanceapp.view.DiscoverDetailsFragment"
         android:label="fragment_discover_details"
-        tools:layout="@layout/fragment_discover_details" >
+        tools:layout="@layout/fragment_discover_details">
         <argument
             android:name="position"
             app:argType="string" />
@@ -134,8 +136,18 @@
             android:label="fragment_detail_job_postings"
             tools:layout="@layout/fragment_detail_job_postings">
             <argument
-                android:name="post_id"
+                android:name="employer_job_post_id"
                 app:argType="string" />
         </fragment>
     </navigation>
+
+    <fragment
+        android:id="@+id/detailPostFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.DetailPostFragment"
+        android:label="DetailPostFragment"
+        tools:layout="@layout/fragment_detail_post">
+        <argument
+            android:name="freelancer_job_post_id"
+            app:argType="string" />
+    </fragment>
 </navigation>

@@ -1,4 +1,4 @@
-package com.androiddevelopers.freelanceapp.view.employer
+package com.androiddevelopers.freelanceapp.view
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -10,30 +10,31 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import com.androiddevelopers.freelanceapp.R
-import com.androiddevelopers.freelanceapp.databinding.FragmentDetailJobPostingsBinding
+import com.androiddevelopers.freelanceapp.databinding.FragmentDetailPostBinding
 import com.androiddevelopers.freelanceapp.util.Status
-import com.androiddevelopers.freelanceapp.viewmodel.employer.DetailJobPostingsViewModel
+import com.androiddevelopers.freelanceapp.viewmodel.DetailPostViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DetailJobPostingsFragment : Fragment() {
-    private lateinit var viewModel: DetailJobPostingsViewModel
-    private var _binding: FragmentDetailJobPostingsBinding? = null
+class DetailPostFragment : Fragment() {
+    private lateinit var viewModel: DetailPostViewModel
+    private var _binding: FragmentDetailPostBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var errorDialog: AlertDialog
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel = ViewModelProvider(this)[DetailJobPostingsViewModel::class.java]
-        _binding = FragmentDetailJobPostingsBinding.inflate(inflater, container, false)
+        viewModel = ViewModelProvider(this)[DetailPostViewModel::class.java]
+        _binding = FragmentDetailPostBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        val args = DetailJobPostingsFragmentArgs.fromBundle(requireArguments())
+        val args = DetailPostFragmentArgs.fromBundle(requireArguments())
 
-        viewModel.getEmployerJobPostWithDocumentByIdFromFirestore(args.employerJobPostId)
+        viewModel.getFreelancerJobPostWithDocumentByIdFromFirestore(args.freelancerJobPostId)
 
         return view
     }
@@ -55,7 +56,7 @@ class DetailJobPostingsFragment : Fragment() {
     private fun observeLiveData(owner: LifecycleOwner) {
         with(viewModel) {
             firebaseLiveData.observe(owner) {
-                binding.employer = it
+                binding.freelancer = it
             }
 
             firebaseMessage.observe(owner) {
@@ -89,9 +90,9 @@ class DetailJobPostingsFragment : Fragment() {
 
     private fun setProgressBar(isVisible: Boolean) {
         if (isVisible) {
-            binding.detailJobPostProgressBar.visibility = View.VISIBLE
+            binding.detailPostProgressBar.visibility = View.VISIBLE
         } else {
-            binding.detailJobPostProgressBar.visibility = View.INVISIBLE
+            binding.detailPostProgressBar.visibility = View.INVISIBLE
         }
     }
 
@@ -114,6 +115,5 @@ class DetailJobPostingsFragment : Fragment() {
         super.onPause()
         showBottomNavigation()
     }
-
 
 }
