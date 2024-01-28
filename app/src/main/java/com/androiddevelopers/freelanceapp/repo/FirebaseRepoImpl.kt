@@ -159,9 +159,8 @@ class FirebaseRepoImpl @Inject constructor(
         return userCollection.document(followed).collection("followers").document(follower).set(follower)
     }
 
-    override fun updateProfilePhoto(userId: String, photoUrl:  HashMap<String, Any?>): Task<Void> {
-        return  userCollection.document(userId).update(photoUrl)
+    override fun updateUserData(userId: String, updateData:  HashMap<String, Any?>): Task<Void> {
+        return  userCollection.document(userId).update(updateData)
     }
-
 
 }

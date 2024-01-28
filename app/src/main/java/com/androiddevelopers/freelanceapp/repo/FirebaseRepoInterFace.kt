@@ -63,6 +63,6 @@ interface FirebaseRepoInterFace {
     fun updateUserInfo(userId : String,map : HashMap<String, Any?>): Task<Void>
     fun follow(follower : String,followed : String): Task<Void>
     fun addFollower(follower : String,followed : String): Task<Void>
-    fun updateProfilePhoto(userId: String, photoUrl:  HashMap<String, Any?>): Task<Void>
+    fun updateUserData(userId: String, updateData:  HashMap<String, Any?>): Task<Void>
 }
 
