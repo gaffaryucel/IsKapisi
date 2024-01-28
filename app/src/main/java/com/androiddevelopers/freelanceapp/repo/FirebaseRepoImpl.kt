@@ -15,7 +15,6 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
@@ -33,26 +32,32 @@ class FirebaseRepoImpl @Inject constructor(
     private val videoCollection = firestore.collection("videos")
     private val discoverPostRef = firestore.collection("discover_posts")
     private val messagesReference = database.getReference("users")
-    private val jobPostImagesParentRef = storage.reference.child("jobPost/images")
+    private val imagesParentRef = storage.reference.child("user_images")
 
     override fun login(email: String, password: String): Task<AuthResult> {
         return auth.signInWithEmailAndPassword(email, password)
     }
+
     override fun forgotPassword(email: String): Task<Void> {
         return auth.sendPasswordResetEmail(email)
     }
+
     override fun register(email: String, password: String): Task<AuthResult> {
         return auth.createUserWithEmailAndPassword(email, password)
     }
+
     override fun addUserToFirestore(data: UserModel): Task<Void> {
         return userCollection.document(data.userId.toString()).set(data)
     }
+
     override fun deleteUserFromFirestore(documentId: String): Task<Void> {
         return userCollection.document(documentId).delete()
     }
+
     override fun getUserDataByDocumentId(documentId: String): Task<DocumentSnapshot> {
         return userCollection.document(documentId).get()
     }
+
     override fun addFreelancerJobPostToFirestore(post: FreelancerJobPost): Task<Void> {
         return freelancerPostCollection.document(post.postId.toString()).set(post)
     }
@@ -69,8 +74,18 @@ class FirebaseRepoImpl @Inject constructor(
         return employerPostCollection.get()
     }
 
-    override fun addImageToStorage(uri: Uri, file: String): UploadTask {
-        return jobPostImagesParentRef.child(file).putFile(uri)
+    override fun addImageToStorageForJobPosting(
+        uri: Uri,
+        uId: String,
+        postId: String,
+        file: String
+    ): UploadTask {
+        return imagesParentRef
+            .child(uId)
+            .child("job_posts")
+            .child(postId)
+            .child(file)
+            .putFile(uri)
     }
 
     override fun saveVideoToFirestore(video: VideoModel): Task<Void> {
@@ -113,9 +128,11 @@ class FirebaseRepoImpl @Inject constructor(
     override fun createChatRoomForChatMate(userId: String, chat: ChatModel): Task<Void> {
         return messagesReference.child(userId).child(chat.chatId.toString()).setValue(chat)
     }
-    override fun getAllChatRooms(currentUserId : String) : DatabaseReference {
+
+    override fun getAllChatRooms(currentUserId: String): DatabaseReference {
         return messagesReference.child(currentUserId)
     }
+
     override fun getUsersFromFirestore(): Task<QuerySnapshot> {
         return userCollection.get()
     }
@@ -128,14 +145,19 @@ class FirebaseRepoImpl @Inject constructor(
         return discoverPostRef.get()
     }
 
-    override fun uploadDataInUserNode(userId : String,data: Any,type : String,dataId : String): Task<Void> {
+    override fun uploadDataInUserNode(
+        userId: String,
+        data: Any,
+        type: String,
+        dataId: String
+    ): Task<Void> {
         return userCollection.document(userId)
             .collection(type)
             .document(dataId)
             .set(data)
     }
 
-    override fun getAllDiscoverPostsFromUser(userId : String): Task<QuerySnapshot> {
+   override fun getAllDiscoverPostsFromUser(userId : String): Task<QuerySnapshot> {
         return userCollection.document(userId).collection("discover").get()
     }
 

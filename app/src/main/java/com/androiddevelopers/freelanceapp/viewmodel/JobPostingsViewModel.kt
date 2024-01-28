@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.Resource
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,17 +16,18 @@ class JobPostingsViewModel
 @Inject
 constructor(
     private val firebaseRepo: FirebaseRepoInterFace,
-    private val auth: FirebaseAuth
 ) : ViewModel() {
     private var _firebaseMessage = MutableLiveData<Resource<Boolean>>()
     val firebaseMessage: LiveData<Resource<Boolean>>
         get() = _firebaseMessage
 
-    private var _firebaseLiveData = MutableLiveData<ArrayList<EmployerJobPost>>()
-    val firebaseLiveData: LiveData<ArrayList<EmployerJobPost>>
+    private var _firebaseLiveData = MutableLiveData<List<EmployerJobPost>>()
+    val firebaseLiveData: LiveData<List<EmployerJobPost>>
         get() = _firebaseLiveData
 
-    private val userId = auth.currentUser!!.uid
+    init {
+        getAllEmployerJobPost()
+    }
 
     fun getAllEmployerJobPost() = viewModelScope.launch {
         _firebaseMessage.value = Resource.loading(true)
@@ -38,21 +38,12 @@ constructor(
                 _firebaseMessage.value = Resource.loading(false)
 
                 it?.let { querySnapshot ->
-                    val list: ArrayList<EmployerJobPost> = ArrayList()
-
-                    querySnapshot.forEach { queryDocumentSnapshot ->
-                        val employerJobPost =
-                            queryDocumentSnapshot.toObject(EmployerJobPost::class.java)
-                        //firebase üzerinde oluşturulan verinin döküman idsini postId ye bağlıyoruz
-                        employerJobPost.postId = queryDocumentSnapshot.id
-                        list.add(
-                            employerJobPost
-                        )
+                    _firebaseLiveData.value = querySnapshot.map { document ->
+                        document.toObject(EmployerJobPost::class.java)
                     }
 
                     _firebaseMessage.value = Resource.success(true)
 
-                    _firebaseLiveData.value = list
                 }
             }.addOnFailureListener {
                 _firebaseMessage.value = Resource.loading(false)

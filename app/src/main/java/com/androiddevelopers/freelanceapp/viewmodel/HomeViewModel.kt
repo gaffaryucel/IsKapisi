@@ -22,9 +22,13 @@ constructor(
     val firebaseMessage: LiveData<Resource<Boolean>>
         get() = _firebaseMessage
 
-    private var _firebaseLiveData = MutableLiveData<ArrayList<FreelancerJobPost>>()
-    val firebaseLiveData: LiveData<ArrayList<FreelancerJobPost>>
+    private var _firebaseLiveData = MutableLiveData<List<FreelancerJobPost>>()
+    val firebaseLiveData: LiveData<List<FreelancerJobPost>>
         get() = _firebaseLiveData
+
+    init {
+        getAllFreelanceJobPost()
+    }
 
     fun getAllFreelanceJobPost() = viewModelScope.launch {
         _firebaseMessage.value = Resource.loading(true)
@@ -35,17 +39,11 @@ constructor(
                 _firebaseMessage.value = Resource.loading(false)
 
                 it?.let { querySnapshot ->
-                    val list: ArrayList<FreelancerJobPost> = ArrayList()
-
-                    querySnapshot.forEach { queryDocumentSnapshot ->
-                        list.add(
-                            queryDocumentSnapshot.toObject(FreelancerJobPost::class.java)
-                        )
+                    _firebaseLiveData.value = querySnapshot.map { document ->
+                        document.toObject(FreelancerJobPost::class.java)
                     }
 
                     _firebaseMessage.value = Resource.success(true)
-
-                    _firebaseLiveData.value = list
                 }
             }.addOnFailureListener {
                 _firebaseMessage.value = Resource.loading(false)
@@ -55,6 +53,4 @@ constructor(
                 }
             }
     }
-
-
 }
