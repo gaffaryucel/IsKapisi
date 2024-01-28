@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.databinding.RowCreateJobPostingSkillBinding
-import com.androiddevelopers.freelanceapp.viewmodel.CreateJobPostingViewModel
+import com.androiddevelopers.freelanceapp.viewmodel.employer.CreateJobPostingViewModel
 
 class SkillAdapter(
     private val viewModel: CreateJobPostingViewModel,

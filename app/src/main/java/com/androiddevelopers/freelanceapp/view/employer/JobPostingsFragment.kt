@@ -1,4 +1,4 @@
-package com.androiddevelopers.freelanceapp.view
+package com.androiddevelopers.freelanceapp.view.employer
 
 import android.app.AlertDialog
 import android.content.Context
@@ -16,7 +16,7 @@ import com.androiddevelopers.freelanceapp.adapters.EmployerAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentJobPostingsBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.util.Status
-import com.androiddevelopers.freelanceapp.viewmodel.JobPostingsViewModel
+import com.androiddevelopers.freelanceapp.viewmodel.employer.JobPostingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
