@@ -16,4 +16,7 @@
     <dimen name="edittextMaxWidth">480dp</dimen>
     <dimen name="buttonMaxWidth">300dp</dimen>
     <dimen name="createJobPostingMarginTop">8dp</dimen>
+    <dimen name="JobPostTag1Weight">100</dimen>
+    <dimen name="JobPostTag2Weight">43</dimen>
+    <dimen name="JobPostLinearLayoutMarginTop">8dp</dimen>
 </resources>
