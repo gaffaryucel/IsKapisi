@@ -53,4 +53,7 @@
     <string name="personal_info">E-posta telefon numarası ve daha fazlasını düzenleyin</string>
     <string name="service_info">Hizmet bilgilerinizi düzenleyin ve müşterilerinize neler yapabileceğinizi gösterin</string>
     <string name="options">Şifre değişikliği ve yardım talebi</string>
+    <string name="urgent_text">Bu ilan acil...</string>
+    <string name="text_colon">:</string>
+    <string name="button_detail_text">Detay</string>
 </resources>
