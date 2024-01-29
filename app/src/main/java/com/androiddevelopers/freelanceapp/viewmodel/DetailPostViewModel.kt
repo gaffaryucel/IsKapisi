@@ -31,7 +31,13 @@ constructor(
 
             firebaseRepo.getFreelancerJobPostWithDocumentByIdFromFirestore(documentId)
                 .addOnSuccessListener { document ->
-                    _firebaseLiveData.value = document.toObject(FreelancerJobPost::class.java)
+                    val freelancerJobPost = document.toObject(FreelancerJobPost::class.java)
+                    if (freelancerJobPost != null) {
+                        _firebaseLiveData.value = freelancerJobPost!!
+                    } else {
+                        _firebaseMessage.value =
+                            Resource.error("Belge alınırken hata oluştu.", false)
+                    }
 
                     _firebaseMessage.value = Resource.loading(false)
                     _firebaseMessage.value = Resource.success(true)
