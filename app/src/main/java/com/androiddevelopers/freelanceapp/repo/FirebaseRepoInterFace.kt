@@ -31,10 +31,12 @@ interface FirebaseRepoInterFace {
     // Firestore Freelancer Job Post işlemleri
     fun addFreelancerJobPostToFirestore(post: FreelancerJobPost): Task<Void>
     fun getAllFreelancerJobPostFromFirestore(): Task<QuerySnapshot>
+    fun getFreelancerJobPostWithDocumentByIdFromFirestore(documentId: String): Task<DocumentSnapshot>
 
     // Firestore Employer Job Post işlemleri
     fun addEmployerJobPostToFirestore(job: EmployerJobPost): Task<Void>
     fun getAllEmployerJobPostFromFirestore(): Task<QuerySnapshot>
+    fun getEmployerJobPostWithDocumentByIdFromFirestore(documentId: String): Task<DocumentSnapshot>
 
     // Firestore Video işlemleri
     fun saveVideoToFirestore(video: VideoModel): Task<Void>

@@ -2,11 +2,13 @@ package com.androiddevelopers.freelanceapp.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.databinding.RowFreelancerJobBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.util.AppDiffUtil
+import com.androiddevelopers.freelanceapp.view.HomeFragmentDirections
 
 class FreelancerAdapter : RecyclerView.Adapter<FreelancerAdapter.FreelancerViewHolder>() {
     private val diffUtil = AppDiffUtil<FreelancerJobPost>()
@@ -30,6 +32,19 @@ class FreelancerAdapter : RecyclerView.Adapter<FreelancerAdapter.FreelancerViewH
     }
 
     override fun onBindViewHolder(holder: FreelancerViewHolder, position: Int) {
-        holder.binding.freelancer = freelancerList[position]
+        val freelancerJobPost = freelancerList[position]
+
+        with(holder.binding) {
+            freelancer = freelancerJobPost
+
+            cardFreelancer.setOnClickListener {
+                freelancerJobPost.postId?.let { id ->
+                    val directions =
+                        HomeFragmentDirections
+                            .actionNavigationHomeToDetailPostFragment(id)
+                    Navigation.findNavController(it).navigate(directions)
+                }
+            }
+        }
     }
 }

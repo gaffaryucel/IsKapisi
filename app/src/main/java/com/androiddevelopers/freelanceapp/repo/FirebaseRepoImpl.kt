@@ -66,12 +66,20 @@ class FirebaseRepoImpl @Inject constructor(
         return freelancerPostCollection.get()
     }
 
+    override fun getFreelancerJobPostWithDocumentByIdFromFirestore(documentId: String): Task<DocumentSnapshot> {
+        return freelancerPostCollection.document(documentId).get()
+    }
+
     override fun addEmployerJobPostToFirestore(job: EmployerJobPost): Task<Void> {
         return employerPostCollection.document(job.postId.toString()).set(job)
     }
 
     override fun getAllEmployerJobPostFromFirestore(): Task<QuerySnapshot> {
         return employerPostCollection.get()
+    }
+
+    override fun getEmployerJobPostWithDocumentByIdFromFirestore(documentId: String): Task<DocumentSnapshot> {
+        return employerPostCollection.document(documentId).get()
     }
 
     override fun addImageToStorageForJobPosting(

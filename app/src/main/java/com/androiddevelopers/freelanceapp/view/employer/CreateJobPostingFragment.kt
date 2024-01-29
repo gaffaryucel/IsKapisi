@@ -1,4 +1,4 @@
-package com.androiddevelopers.freelanceapp.view
+package com.androiddevelopers.freelanceapp.view.employer
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -24,7 +24,8 @@ import com.androiddevelopers.freelanceapp.adapters.SkillAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentCreateJobPostingBinding
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.util.downloadImage
-import com.androiddevelopers.freelanceapp.viewmodel.CreateJobPostingViewModel
+import com.androiddevelopers.freelanceapp.viewmodel.employer.CreateJobPostingViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
@@ -338,5 +339,25 @@ class CreateJobPostingFragment : Fragment() {
         } else {
             android.Manifest.permission.READ_EXTERNAL_STORAGE
         }
+    }
+
+    private fun hideBottomNavigation() {
+        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
+        bottomNavigationView?.visibility = View.GONE
+    }
+
+    private fun showBottomNavigation() {
+        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
+        bottomNavigationView?.visibility = View.VISIBLE
+    }
+
+    override fun onResume() {
+        super.onResume()
+        hideBottomNavigation()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        showBottomNavigation()
     }
 }
