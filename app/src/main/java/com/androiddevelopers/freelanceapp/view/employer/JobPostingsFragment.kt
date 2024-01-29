@@ -34,7 +34,7 @@ class JobPostingsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel = ViewModelProvider(this)[JobPostingsViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity())[JobPostingsViewModel::class.java]
         _binding = FragmentJobPostingsBinding.inflate(inflater, container, false)
         val view = binding.root
 
@@ -143,5 +143,4 @@ class JobPostingsFragment : Fragment() {
 
         })
     }
-
 }

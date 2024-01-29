@@ -38,8 +38,10 @@ constructor(
                 _firebaseMessage.value = Resource.loading(false)
 
                 it?.let { querySnapshot ->
-                    _firebaseLiveData.value = querySnapshot.map { document ->
-                        document.toObject(EmployerJobPost::class.java)
+                    val list = ArrayList<EmployerJobPost>()
+                    querySnapshot.forEach { document ->
+                        list.add(document.toObject(EmployerJobPost::class.java))
+                        _firebaseLiveData.value = list
                     }
 
                     _firebaseMessage.value = Resource.success(true)

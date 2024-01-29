@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.FragmentDetailJobPostingsBinding
 import com.androiddevelopers.freelanceapp.util.Status
+import com.androiddevelopers.freelanceapp.util.downloadImage
 import com.androiddevelopers.freelanceapp.viewmodel.employer.DetailJobPostingsViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
@@ -55,7 +56,16 @@ class DetailJobPostingsFragment : Fragment() {
     private fun observeLiveData(owner: LifecycleOwner) {
         with(viewModel) {
             firebaseLiveData.observe(owner) {
+                it.employerId?.let { id -> getUserDataByDocumentId(id) }
+
                 binding.employer = it
+            }
+
+            firebaseUserData.observe(owner) {
+                with(binding) {
+                    user = it
+                    downloadImage(ivUserProfile, it.profileImageUrl)
+                }
             }
 
             firebaseMessage.observe(owner) {

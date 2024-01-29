@@ -15,12 +15,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        style="@style/AppBackGroundStyle"
         tools:context=".view.HomeFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:background="@color/toolbar_background"
             android:orientation="horizontal">
 
             <ImageView

@@ -10,6 +10,10 @@
         <variable
             name="employer"
             type="com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost" />
+
+        <variable
+            name="user"
+            type="com.androiddevelopers.freelanceapp.model.UserModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,12 +25,15 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:background="@color/toolbar_background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/baseline_keyboard_arrow_left_24"
+            app:navigationIconTint="@color/toolbar_navigation_icon"
             app:navigationOnClickListener="@{() -> Navigation.findNavController(toolbar).popBackStack()}"
-            app:title="@{employer.title}" />
+            app:title="@{employer.title}"
+            app:titleTextColor="@color/toolbar_navigation_icon" />
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/detailJobPostProgressBar"
@@ -45,10 +52,127 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/detailJobPostProgressBar">
+            app:layout_constraintTop_toBottomOf="@+id/detailJobPostProgressBar"
+            app:layout_constraintWidth_max="600dp">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guidelineVerticalLeft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.1" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guidelineVerticalRight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.9" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardProfileEmployerDetail"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    app:cardCornerRadius="5dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/ivUserProfile"
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:src="@drawable/placeholder"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/textUserName"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/textUserName"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="@{user.username}"
+                            android:textAlignment="center"
+                            android:textSize="20sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/ivUserProfile"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="User Name" />
+
+                        <TextView
+                            android:id="@+id/textUserExperience"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginTop="4dp"
+                            android:text="@{user.bio}"
+                            android:textAlignment="center"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="@id/textUserName"
+                            app:layout_constraintTop_toBottomOf="@id/textUserName"
+                            tools:text="User Bio" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toStartOf="@id/guidelineVerticalRight"
+                    app:layout_constraintStart_toEndOf="@id/guidelineVerticalLeft"
+                    app:layout_constraintTop_toBottomOf="@id/cardProfileEmployerDetail">
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guidelineHorizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_percent="0.70" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/ivPostImages"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginTop="8dp"
+                        android:src="@drawable/placeholder"
+                        app:layout_constraintBottom_toTopOf="@id/guidelineHorizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/textJobPostDescription"
+                        style="@style/JopPostDetailTexts"
+                        android:text="@{employer.description}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/ivPostImages"
+                        tools:text="Post Description" />
+
+                    <TextView
+                        android:id="@+id/textJobPostLocation"
+                        style="@style/JopPostDetailTexts"
+                        android:text="@{employer.location}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/textJobPostDescription"
+                        tools:text="Post Location" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

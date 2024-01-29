@@ -85,8 +85,7 @@
         android:id="@+id/createChatRoomFragment"
         android:name="com.androiddevelopers.freelanceapp.view.CreateChatRoomFragment"
         android:label="fragment_create_chat_room"
-        tools:layout="@layout/fragment_create_chat_room">
-    </fragment>
+        tools:layout="@layout/fragment_create_chat_room" />
     <fragment
         android:id="@+id/createDiscoverPostFragment"
         android:name="com.androiddevelopers.freelanceapp.view.CreateDiscoverPostFragment"
@@ -127,13 +126,15 @@
         android:id="@+id/editMainProfileInfoFragment"
         android:name="com.androiddevelopers.freelanceapp.view.profileinfo.EditMainProfileInfoFragment"
         android:label="fragment_edit_main_profile_info"
-        tools:layout="@layout/fragment_edit_main_profile_info" >
+        tools:layout="@layout/fragment_edit_main_profile_info">
         <argument
             android:name="user_name"
             app:argType="string" />
-        <argument android:name="bio"
+        <argument
+            android:name="bio"
             app:argType="string" />
-        <argument android:name="image"
+        <argument
+            android:name="image"
             app:argType="string" />
     </fragment>
     <fragment
@@ -145,7 +146,7 @@
         android:id="@+id/editProfilePersonalInfoFragment"
         android:name="com.androiddevelopers.freelanceapp.view.profileinfo.EditProfilePersonalInfoFragment"
         android:label="fragment_edit_profile_personal_info"
-        tools:layout="@layout/fragment_edit_profile_personal_info" >
+        tools:layout="@layout/fragment_edit_profile_personal_info">
         <argument
             android:name="phone"
             app:argType="string" />
@@ -159,4 +160,41 @@
         android:name="com.androiddevelopers.freelanceapp.view.profileinfo.EditProfileServiceInfoFragment"
         android:label="fragment_edit_profile_service_info"
         tools:layout="@layout/fragment_edit_profile_service_info" />
+
+    <fragment
+        android:id="@+id/navigation_job_postings"
+        android:name="com.androiddevelopers.freelanceapp.view.employer.JobPostingsFragment"
+        android:label="İş ilanları"
+        tools:layout="@layout/fragment_job_postings">
+        <action
+            android:id="@+id/action_navigation_job_postings_to_createJobPostingFragment"
+            app:destination="@id/createJobPostingFragment" />
+        <action
+            android:id="@+id/action_jobPostingFragment_to_detailJobPostingsFragment"
+            app:destination="@id/detailJobPostingsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createJobPostingFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.employer.CreateJobPostingFragment"
+        android:label="CreateJobPostingFragment"
+        tools:layout="@layout/fragment_create_job_posting" />
+    <fragment
+        android:id="@+id/detailJobPostingsFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.employer.DetailJobPostingsFragment"
+        android:label="fragment_detail_job_postings"
+        tools:layout="@layout/fragment_detail_job_postings">
+        <argument
+            android:name="employer_job_post_id"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/detailPostFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.DetailPostFragment"
+        android:label="DetailPostFragment"
+        tools:layout="@layout/fragment_detail_post">
+        <argument
+            android:name="freelancer_job_post_id"
+            app:argType="string" />
+    </fragment>
 </navigation>
