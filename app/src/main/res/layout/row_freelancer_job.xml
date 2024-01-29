@@ -113,17 +113,17 @@
                         android:text="@{freelancer.budget.toString()}"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toTopOf="@+id/cardFreelanceButtonBuy"
+                        app:layout_constraintBottom_toTopOf="@+id/cardFreelanceButtonDetail"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/card_freelance_guideline_vertical_right"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="₺5000" />
 
                     <Button
-                        android:id="@+id/cardFreelanceButtonBuy"
+                        android:id="@+id/cardFreelanceButtonDetail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/buy"
+                        android:text="@string/button_detail_text"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/card_freelance_guideline_vertical_right"
