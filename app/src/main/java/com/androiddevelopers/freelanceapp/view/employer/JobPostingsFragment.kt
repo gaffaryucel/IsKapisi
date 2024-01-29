@@ -38,7 +38,7 @@ class JobPostingsFragment : Fragment() {
         _binding = FragmentJobPostingsBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        employerAdapter = EmployerAdapter()
+        employerAdapter = EmployerAdapter(viewModel)
         listEmployerJobPost = arrayListOf()
 
         return view
