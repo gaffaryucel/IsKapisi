@@ -165,35 +165,28 @@ class FirebaseRepoImpl @Inject constructor(
             .set(data)
     }
 
-    override fun getAllDiscoverPostsFromUser(userId: String): Task<QuerySnapshot> {
+   override fun getAllDiscoverPostsFromUser(userId : String): Task<QuerySnapshot> {
         return userCollection.document(userId).collection("discover").get()
     }
 
-    override fun getAllEmployerJobPostsFromUser(userId: String): Task<QuerySnapshot> {
+    override fun getAllEmployerJobPostsFromUser(userId : String): Task<QuerySnapshot> {
         return userCollection.document(userId).collection("job_post").get()
     }
 
-    override fun getAllFreelancerJobPostsFromUser(userId: String): Task<QuerySnapshot> {
+    override fun getAllFreelancerJobPostsFromUser(userId : String): Task<QuerySnapshot> {
         return userCollection.document(userId).collection("freelancer_job_post").get()
     }
 
-    override fun updateUserInfo(userId: String, map: HashMap<String, Any?>): Task<Void> {
-        return userCollection.document(userId).update(map)
-    }
-
-    override fun follow(follower: String, followed: String): Task<Void> {
-        return userCollection.document(follower).collection("following").document(followed)
-            .set(followed)
+    override fun follow(follower : String,followed: String): Task<Void> {
+        return userCollection.document(follower).collection("following").document(followed).set(followed)
     }
 
     override fun addFollower(follower: String, followed: String): Task<Void> {
-        return userCollection.document(followed).collection("followers").document(follower)
-            .set(follower)
+        return userCollection.document(followed).collection("followers").document(follower).set(follower)
     }
 
-    override fun updateProfilePhoto(userId: String, photoUrl: HashMap<String, Any?>): Task<Void> {
-        return userCollection.document(userId).update(photoUrl)
+    override fun updateUserData(userId: String, updateData:  HashMap<String, Any?>): Task<Void> {
+        return  userCollection.document(userId).update(updateData)
     }
-
 
 }

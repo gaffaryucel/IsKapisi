@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="fullName"
+            type="String" />
+        <variable
+            name="telephone"
+            type="String" />
+        <variable
+            name="country"
+            type="String" />
+        <variable
+            name="city"
+            type="String" />
+        <variable
+            name="address"
+            type="String" />
+
+    </data>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".view.profileinfo.EditProfilePersonalInfoFragment">
+
+
+        <EditText
+            android:id="@+id/etFirstName"
+            android:text="@{fullName}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Adın"/>
+
+        <EditText
+            android:id="@+id/etPhoneNumber"
+            android:text="@{telephone}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Telefon Numaran"/>
+
+
+        <EditText
+            android:id="@+id/etCountry"
+            android:text="@{country}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Yaşadığın ülke"/>
+
+        <EditText
+            android:id="@+id/etCity"
+            android:text="@{city}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Yaşadığın Şehir"/>
+
+        <EditText
+            android:id="@+id/etAddress"
+            android:text="@{address}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Adresin"/>
+
+        <Button
+            android:text="Kaydet"
+            android:id="@+id/btnSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</layout>

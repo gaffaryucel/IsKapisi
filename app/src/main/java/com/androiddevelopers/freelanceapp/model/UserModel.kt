@@ -7,6 +7,8 @@ class UserModel{
     var email: String? = null
     var profileImageUrl: String? = null
     var fullName: String? = null
+    var bio: String? = null
+    var phone: String? = null
     var skills: List<String>? = null
     var portfolio: List<PortfolioItem>? = null
     var reviews: List<Review>? = null
@@ -29,6 +31,8 @@ class UserModel{
         email: String? = null,
         profileImageUrl: String? = null,
         fullName: String? = null,
+        bio: String? = null,
+        phone: String? = null,
         skills: List<String>? = null,
         portfolio: List<PortfolioItem>? = null,
         reviews: List<Review>? = null,
@@ -47,6 +51,8 @@ class UserModel{
         this.email = email
         this.profileImageUrl = profileImageUrl
         this.fullName = fullName
+        this.bio = bio
+        this.phone = phone
         this.skills = skills
         this.portfolio = portfolio
         this.reviews = reviews
@@ -80,8 +86,9 @@ data class Availability(
 )
 
 data class Location(
+    var country: String? = null,
     var city: String? = null,
-    var country: String? = null
+    var address: String? = null
 )
 
 data class Education(
