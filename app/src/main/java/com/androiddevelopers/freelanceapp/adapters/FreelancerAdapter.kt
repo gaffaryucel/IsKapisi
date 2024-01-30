@@ -9,8 +9,10 @@ import com.androiddevelopers.freelanceapp.databinding.RowFreelancerJobBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.util.AppDiffUtil
 import com.androiddevelopers.freelanceapp.view.HomeFragmentDirections
+import com.androiddevelopers.freelanceapp.viewmodel.HomeViewModel
 
-class FreelancerAdapter : RecyclerView.Adapter<FreelancerAdapter.FreelancerViewHolder>() {
+class FreelancerAdapter(private val viewModel: HomeViewModel) :
+    RecyclerView.Adapter<FreelancerAdapter.FreelancerViewHolder>() {
     private val diffUtil = AppDiffUtil<FreelancerJobPost>()
 
     private val asyncListDiffer = AsyncListDiffer(this, diffUtil)
@@ -37,8 +39,15 @@ class FreelancerAdapter : RecyclerView.Adapter<FreelancerAdapter.FreelancerViewH
         with(holder.binding) {
             freelancer = freelancerJobPost
 
-            cardFreelancer.setOnClickListener {
+            cardFreelanceButtonDetail.setOnClickListener {
                 freelancerJobPost.postId?.let { id ->
+                    //firebase den gelen görüntüleme sayısını alıyoruz
+                    //karta tıklandığında 1 arttırıp firebase üzerinde ilgili değeri güncelliyoruz
+                    var count = freelancerJobPost.viewCount
+                    count = if (count == 0 || count == null) 1 else count + 1
+                    viewModel.updateViewCountFreelancerJobPostWithDocumentById(id, count)
+
+                    //ilan id numarası ile detay sayfasına yönlendirme yapıyoruz
                     val directions =
                         HomeFragmentDirections
                             .actionNavigationHomeToDetailPostFragment(id)

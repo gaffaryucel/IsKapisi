@@ -41,7 +41,7 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        freelancerAdapter = FreelancerAdapter()
+        freelancerAdapter = FreelancerAdapter(viewModel)
         listFreelancerJobPost = arrayListOf()
 
         binding.adapter = freelancerAdapter

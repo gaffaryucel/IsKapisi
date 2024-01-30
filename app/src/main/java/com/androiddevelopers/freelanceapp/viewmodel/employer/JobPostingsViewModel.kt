@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
+import com.androiddevelopers.freelanceapp.util.JobStatus
 import com.androiddevelopers.freelanceapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -40,7 +41,10 @@ constructor(
                 it?.let { querySnapshot ->
                     val list = ArrayList<EmployerJobPost>()
                     querySnapshot.forEach { document ->
-                        list.add(document.toObject(EmployerJobPost::class.java))
+                        val employerJobPost = document.toObject(EmployerJobPost::class.java)
+                        if (employerJobPost.status == JobStatus.OPEN) {
+                            list.add(employerJobPost)
+                        }
                         _firebaseLiveData.value = list
                     }
 
@@ -51,7 +55,23 @@ constructor(
                 _firebaseMessage.value = Resource.loading(false)
 
                 it.localizedMessage?.let { message ->
-                    Resource.error(message, false)
+                    _firebaseMessage.value = Resource.error(message, false)
+                }
+            }
+    }
+
+    fun updateViewCountEmployerJobPostWithDocumentById(postId: String, newCount: Int) {
+        _firebaseMessage.value = Resource.loading(true)
+        firebaseRepo.updateViewCountEmployerJobPostWithDocumentById(postId, newCount)
+            .addOnCompleteListener {
+                _firebaseMessage.value = Resource.loading(false)
+                if (it.isSuccessful) {
+                    _firebaseMessage.value = Resource.success(true)
+                } else {
+                    _firebaseMessage.value = Resource.loading(false)
+                    it.exception?.localizedMessage?.let { message ->
+                        _firebaseMessage.value = Resource.error(message, false)
+                    }
                 }
             }
     }

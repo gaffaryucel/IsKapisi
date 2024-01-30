@@ -11,8 +11,11 @@ import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.util.AppDiffUtil
 import com.androiddevelopers.freelanceapp.util.downloadImage
 import com.androiddevelopers.freelanceapp.view.employer.JobPostingsFragmentDirections
+import com.androiddevelopers.freelanceapp.viewmodel.employer.JobPostingsViewModel
 
-class EmployerAdapter : RecyclerView.Adapter<EmployerAdapter.EmployerViewHolder>() {
+class EmployerAdapter(private val viewModel: JobPostingsViewModel) :
+    RecyclerView.Adapter<EmployerAdapter.EmployerViewHolder>() {
+
     private val diffUtil = AppDiffUtil<EmployerJobPost>()
 
     private val asyncListDiffer = AsyncListDiffer(this, diffUtil)
@@ -39,8 +42,15 @@ class EmployerAdapter : RecyclerView.Adapter<EmployerAdapter.EmployerViewHolder>
         with(holder.binding) {
             employer = employerJobPost
 
-            cardEmployer.setOnClickListener {
+            cardEmployerButtonDetail.setOnClickListener {
                 employerJobPost.postId?.let { id ->
+                    //firebase den gelen görüntüleme sayısını alıyoruz
+                    //karta tıklandığında 1 arttırıp firebase üzerinde ilgili değeri güncelliyoruz
+                    var count = employerJobPost.viewCount
+                    count = if (count == 0 || count == null) 1 else count + 1
+                    viewModel.updateViewCountEmployerJobPostWithDocumentById(id, count)
+
+                    //ilan id numarası ile detay sayfasına yönlendirme yapıyoruz
                     val directions =
                         JobPostingsFragmentDirections
                             .actionJobPostingFragmentToDetailJobPostingsFragment(id)

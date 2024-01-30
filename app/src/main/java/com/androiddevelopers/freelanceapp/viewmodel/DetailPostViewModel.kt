@@ -1,5 +1,6 @@
 package com.androiddevelopers.freelanceapp.viewmodel
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -25,13 +26,20 @@ constructor(
     val firebaseLiveData: LiveData<FreelancerJobPost>
         get() = _firebaseLiveData
 
+    @SuppressLint("NullSafeMutableLiveData")
     fun getFreelancerJobPostWithDocumentByIdFromFirestore(documentId: String) =
         viewModelScope.launch {
             _firebaseMessage.value = Resource.loading(true)
 
             firebaseRepo.getFreelancerJobPostWithDocumentByIdFromFirestore(documentId)
                 .addOnSuccessListener { document ->
-                    _firebaseLiveData.value = document.toObject(FreelancerJobPost::class.java)
+                    val freelancerJobPost = document.toObject(FreelancerJobPost::class.java)
+                    if (freelancerJobPost != null) {
+                        _firebaseLiveData.value = freelancerJobPost
+                    } else {
+                        _firebaseMessage.value =
+                            Resource.error("Belge alınırken hata oluştu.", false)
+                    }
 
                     _firebaseMessage.value = Resource.loading(false)
                     _firebaseMessage.value = Resource.success(true)
