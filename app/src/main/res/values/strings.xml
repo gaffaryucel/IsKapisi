@@ -56,4 +56,5 @@
     <string name="urgent_text">Bu ilan acil…</string>
     <string name="text_colon">:</string>
     <string name="button_detail_text">Detay</string>
+    <string name="is_urgent_text">İlan acil mi?</string>
 </resources>

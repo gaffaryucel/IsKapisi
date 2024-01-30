@@ -99,7 +99,7 @@ constructor(
 
     fun setImageUriList(newList: ArrayList<Uri>) = viewModelScope.launch {
         _imageUriList.value = newList
-        _imageSize.value = newList.size
+        setImageIndex(newList.size)
     }
 
     fun setImageIndex(size: Int) = viewModelScope.launch {

@@ -4,6 +4,8 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -23,7 +25,6 @@ import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.SkillAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentCreateJobPostingBinding
 import com.androiddevelopers.freelanceapp.util.Status
-import com.androiddevelopers.freelanceapp.util.downloadImage
 import com.androiddevelopers.freelanceapp.viewmodel.employer.CreateJobPostingViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -68,11 +69,11 @@ class CreateJobPostingFragment : Fragment() {
 
         selectedImages = arrayListOf()
 
-        with(binding) {
-            fabDeleteImage.visibility = View.INVISIBLE
-            previousImage.visibility = View.INVISIBLE
-            nextImage.visibility = View.INVISIBLE
-        }
+//        with(binding) {
+//            fabDeleteImage.visibility = View.INVISIBLE
+//            previousImage.visibility = View.INVISIBLE
+//            nextImage.visibility = View.INVISIBLE
+//        }
 
         return view
     }
@@ -83,6 +84,8 @@ class CreateJobPostingFragment : Fragment() {
         setupDialogs()
         setProgressBar(false)
         observeLiveData(viewLifecycleOwner, view)
+
+        viewModel.setImageUriList(selectedImages)
 
         with(binding) {
             //data binding ile skill adaptörü set ediyoruz
@@ -108,7 +111,8 @@ class CreateJobPostingFragment : Fragment() {
                             location = locationsTextInputEditText.text.toString(),
                             deadline = deadlineTextInputEditText.text.toString(),
                             budget = budgetTextInputEditText.text.toString().toDouble(),
-                            postId = UUID.randomUUID().toString()
+                            postId = UUID.randomUUID().toString(),
+                            isUrgent = switchUrgentCreateJobPost.isChecked
                         )
                     )
                 }
@@ -135,35 +139,47 @@ class CreateJobPostingFragment : Fragment() {
                 }
             }
 
+            //switch background rengini değiştiriyoruz
+            switchUrgentCreateJobPost.trackTintList = ColorStateList(
+                arrayOf(
+                    intArrayOf(android.R.attr.state_checked),
+                    intArrayOf(-android.R.attr.state_checked)
+                ),
+                intArrayOf(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.toolbar_background
+                    ), Color.TRANSPARENT
+                )
+            )
 
             fabLoadImage.setOnClickListener {
                 chooseImage()
             }
 
 
-
-            fabDeleteImage.setOnClickListener {
-                selectedImages.removeAt(selectedImagesIndex)
-                viewModel.setImageUriList(selectedImages)
-                if (selectedImagesIndex > 0) {
-                    viewModel.setImageIndex(selectedImagesIndex - 1)
-                } else {
-                    viewModel.setImageIndex(0)
-                }
-            }
-
-            previousImage.setOnClickListener {
-                if (selectedImagesIndex > 0) {
-                    viewModel.setImageIndex(selectedImagesIndex - 1)
-                }
-            }
-
-            nextImage.setOnClickListener {
-                if (selectedImagesIndex < selectedImagesSize - 1) {
-                    viewModel.setImageIndex(selectedImagesIndex + 1)
-                }
-
-            }
+//            fabDeleteImage.setOnClickListener {
+//                selectedImages.removeAt(selectedImagesIndex)
+//                viewModel.setImageUriList(selectedImages)
+//                if (selectedImagesIndex > 0) {
+//                    viewModel.setImageIndex(selectedImagesIndex - 1)
+//                } else {
+//                    viewModel.setImageIndex(0)
+//                }
+//            }
+//
+//            previousImage.setOnClickListener {
+//                if (selectedImagesIndex > 0) {
+//                    viewModel.setImageIndex(selectedImagesIndex - 1)
+//                }
+//            }
+//
+//            nextImage.setOnClickListener {
+//                if (selectedImagesIndex < selectedImagesSize - 1) {
+//                    viewModel.setImageIndex(selectedImagesIndex + 1)
+//                }
+//
+//            }
         }
 
         imageLauncher =
@@ -172,11 +188,11 @@ class CreateJobPostingFragment : Fragment() {
                     result.data?.data?.let {
                         selectedImages.add(it)
 
-                        with(viewModel) {
-                            setImageUriList(selectedImages)
-                            //setImageSize(selectedImages.size)
-                            setImageIndex(selectedImages.lastIndex)
-                        }
+//                        with(viewModel) {
+//                            setImageUriList(selectedImages)
+//                            //setImageSize(selectedImages.size)
+//                            setImageIndex(selectedImages.lastIndex)
+//                        }
 
                         //downloadImage(binding.imageView, selectedImages.last().toString())
 //                        selectedImageUri = it
@@ -218,62 +234,74 @@ class CreateJobPostingFragment : Fragment() {
                 selectedImages = it
             }
 
-            imageIndex.observe(owner) {
-                selectedImagesIndex = it
-
-                with(binding) {
-                    if (selectedImagesSize > 0) {
-                        if (selectedImagesIndex <= 0) {
-                            downloadImage(
-                                binding.imageView,
-                                selectedImages[0].toString()
-                            )
-                            previousImage.visibility = View.INVISIBLE
-                            if (selectedImagesSize > 1) {
-                                nextImage.visibility = View.VISIBLE
-                            } else {
-                                nextImage.visibility = View.INVISIBLE
-                            }
-                        } else if (selectedImagesIndex >= selectedImagesSize - 1) {
-                            downloadImage(
-                                binding.imageView,
-                                selectedImages[selectedImagesSize - 1].toString()
-                            )
-
-                            nextImage.visibility = View.INVISIBLE
-                            previousImage.visibility = View.VISIBLE
-                        } else {
-                            downloadImage(
-                                binding.imageView,
-                                selectedImages[selectedImagesIndex].toString()
-                            )
-
-                            previousImage.visibility = View.VISIBLE
-                            nextImage.visibility = View.VISIBLE
-                        }
-                    } else {
-                        downloadImage(
-                            binding.imageView,
-                            null
-                        )
-
-                        previousImage.visibility = View.INVISIBLE
-                        nextImage.visibility = View.INVISIBLE
-                    }
-                }
-
-            }
-
+//            imageIndex.observe(owner) {
+//                selectedImagesIndex = it
+//
+//                with(binding) {
+//                    if (selectedImagesSize > 0) {
+//                        if (selectedImagesIndex <= 0) {
+//                            downloadImage(
+//                                binding.imageView,
+//                                selectedImages[0].toString()
+//                            )
+//                            previousImage.visibility = View.INVISIBLE
+//                            if (selectedImagesSize > 1) {
+//                                nextImage.visibility = View.VISIBLE
+//                            } else {
+//                                nextImage.visibility = View.INVISIBLE
+//                            }
+//                        } else if (selectedImagesIndex >= selectedImagesSize - 1) {
+//                            downloadImage(
+//                                binding.imageView,
+//                                selectedImages[selectedImagesSize - 1].toString()
+//                            )
+//
+//                            nextImage.visibility = View.INVISIBLE
+//                            previousImage.visibility = View.VISIBLE
+//                        } else {
+//                            downloadImage(
+//                                binding.imageView,
+//                                selectedImages[selectedImagesIndex].toString()
+//                            )
+//
+//                            previousImage.visibility = View.VISIBLE
+//                            nextImage.visibility = View.VISIBLE
+//                        }
+//                    } else {
+//                        downloadImage(
+//                            binding.imageView,
+//                            null
+//                        )
+//
+//                        previousImage.visibility = View.INVISIBLE
+//                        nextImage.visibility = View.INVISIBLE
+//                    }
+//                }
+//
+//            }
+//
             imageSize.observe(owner) {
                 selectedImagesSize = it
 
+                //seçilen resim olmadığında viewpager 'ı gizleyip boş bir resim gösteriyoruz
+                //resim seçildiğinde işlemi tersine alıyoruz
                 with(binding) {
-                    if (selectedImagesSize > 0) {
-                        fabDeleteImage.visibility = View.VISIBLE
+                    if (it == 0 || it == null) {
+                        imagePlaceHolderCreateJobPost.visibility = View.VISIBLE
+                        layoutImageViews.visibility = View.INVISIBLE
                     } else {
-                        fabDeleteImage.visibility = View.INVISIBLE
+                        imagePlaceHolderCreateJobPost.visibility = View.INVISIBLE
+                        layoutImageViews.visibility = View.VISIBLE
                     }
                 }
+
+//                with(binding) {
+//                    if (selectedImagesSize > 0) {
+//                        fabDeleteImage.visibility = View.VISIBLE
+//                    } else {
+//                        fabDeleteImage.visibility = View.INVISIBLE
+//                    }
+//                }
             }
         }
     }
