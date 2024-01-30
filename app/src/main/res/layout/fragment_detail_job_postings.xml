@@ -25,17 +25,12 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="@color/toolbar_background"
+            style="@style/MaterialToolbarStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:navigationIcon="@drawable/baseline_keyboard_arrow_left_24"
-            app:navigationIconTint="@color/toolbar_navigation_icon"
             app:navigationOnClickListener="@{() -> Navigation.findNavController(toolbar).popBackStack()}"
-            app:title="@{employer.title}"
-            app:titleTextColor="@color/toolbar_navigation_icon" />
+            app:title="@{employer.title}" />
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/detailJobPostProgressBar"
@@ -90,7 +85,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="4dp">
 
-                        <androidx.appcompat.widget.AppCompatImageView
+                        <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/ivUserProfile"
                             android:layout_width="80dp"
                             android:layout_height="80dp"
@@ -203,10 +198,10 @@
                         android:layout_width="0dp"
                         android:layout_height="250dp"
                         android:src="@drawable/placeholder"
+                        android:visibility="@{employer.images.size() == 0 ? View.GONE : View.VISIBLE}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:visibility="@{employer.images.size() == 0 ? View.GONE : View.VISIBLE}" />
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <LinearLayout
                         android:id="@+id/layoutJobPostBudget"
@@ -472,13 +467,13 @@
                     </LinearLayout>
 
                     <Button
-                        android:layout_marginTop="20dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:layout_constraintTop_toBottomOf="@id/layoutJobPostAdditionalDetails"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/give_offer"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        android:text="@string/give_offer" />
+                        app:layout_constraintTop_toBottomOf="@id/layoutJobPostAdditionalDetails" />
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
