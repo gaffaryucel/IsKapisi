@@ -76,16 +76,16 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:src="@drawable/placeholder"
-                    app:layout_constraintBottom_toBottomOf="@id/layoutImageViews"
-                    app:layout_constraintEnd_toEndOf="@id/layoutImageViews"
-                    app:layout_constraintStart_toStartOf="@id/layoutImageViews"
-                    app:layout_constraintTop_toTopOf="@id/layoutImageViews" />
+                    app:layout_constraintBottom_toBottomOf="@id/layoutImageViewsCreateJobPost"
+                    app:layout_constraintEnd_toEndOf="@id/layoutImageViewsCreateJobPost"
+                    app:layout_constraintStart_toStartOf="@id/layoutImageViewsCreateJobPost"
+                    app:layout_constraintTop_toTopOf="@id/layoutImageViewsCreateJobPost" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/layoutImageViews"
+                    android:id="@+id/layoutImageViewsCreateJobPost"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:padding="8dp"
+                    android:layout_margin="4dp"
                     app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontal"
                     app:layout_constraintEnd_toEndOf="@id/guidelineVerticalRight"
                     app:layout_constraintStart_toStartOf="@id/guidelineVerticalLeft"
@@ -95,8 +95,9 @@
 
                     <androidx.viewpager2.widget.ViewPager2
                         android:id="@+id/viewPagerCreateJobPost"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="0dp"
+                        android:orientation="horizontal"
                         app:layout_constraintBottom_toTopOf="@id/indicatorCreateJobPost"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -105,27 +106,28 @@
                     <me.relex.circleindicator.CircleIndicator3
                         android:id="@+id/indicatorCreateJobPost"
                         android:layout_width="0dp"
-                        android:layout_height="40dp"
+                        android:layout_height="20dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="@id/viewPagerCreateJobPost"
                         app:layout_constraintStart_toStartOf="@id/viewPagerCreateJobPost"
                         app:layout_constraintTop_toBottomOf="@id/viewPagerCreateJobPost" />
 
-                    <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/fabLoadImage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginBottom="8dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        app:fabCustomSize="48dp"
-                        app:fabSize="auto"
-                        app:layout_constraintBottom_toBottomOf="@+id/layoutImageViews"
-                        app:layout_constraintEnd_toEndOf="@id/layoutImageViews"
-                        app:srcCompat="@drawable/baseline_add_a_photo_24"
-                        tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fabLoadImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:fabCustomSize="48dp"
+                    app:fabSize="auto"
+                    app:layout_constraintBottom_toBottomOf="@+id/layoutImageViewsCreateJobPost"
+                    app:layout_constraintEnd_toEndOf="@id/layoutImageViewsCreateJobPost"
+                    app:srcCompat="@drawable/baseline_add_a_photo_24"
+                    tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
 
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/switchUrgentCreateJobPost"

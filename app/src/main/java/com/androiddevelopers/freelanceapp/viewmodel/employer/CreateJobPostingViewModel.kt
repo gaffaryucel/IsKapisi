@@ -34,10 +34,6 @@ constructor(
     val imageUriList: LiveData<ArrayList<Uri>>
         get() = _imageUriList
 
-    private var _imageIndex = MutableLiveData<Int>()
-    val imageIndex: LiveData<Int>
-        get() = _imageIndex
-
     private var _imageSize = MutableLiveData<Int>()
     val imageSize: LiveData<Int>
         get() = _imageSize
@@ -94,34 +90,31 @@ constructor(
                     }
             }
         }
-        updateUserData(jobPost)
+       //updateUserData(jobPost)
     }
 
     fun setImageUriList(newList: ArrayList<Uri>) = viewModelScope.launch {
         _imageUriList.value = newList
-        setImageIndex(newList.size)
+        _imageSize.value = newList.size
     }
 
-    fun setImageIndex(size: Int) = viewModelScope.launch {
-        _imageIndex.value = size
-    }
 
     fun setSkills(newSkills: ArrayList<String>) {
         _skills.value = newSkills
     }
 
-    private fun updateUserData(jobPost: EmployerJobPost) {
-        try {
-            firebaseRepo.uploadDataInUserNode(
-                firebaseAuth.currentUser?.uid.toString(),
-                jobPost,
-                "job_post",
-                jobPost.postId.toString()
-            )
-        } catch (e: Exception) {
-            println("error : " + e.localizedMessage)
-        }
-    }
+//    private fun updateUserData(jobPost: EmployerJobPost) {
+//        try {
+//            firebaseRepo.uploadDataInUserNode(
+//                firebaseAuth.currentUser?.uid.toString(),
+//                jobPost,
+//                "job_post",
+//                jobPost.postId.toString()
+//            )
+//        } catch (e: Exception) {
+//            println("error : " + e.localizedMessage)
+//        }
+//    }
 
     fun createEmployerJobPost(
         postId: String? = "",

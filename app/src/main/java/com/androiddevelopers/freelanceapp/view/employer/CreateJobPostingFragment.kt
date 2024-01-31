@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.SkillAdapter
+import com.androiddevelopers.freelanceapp.adapters.ViewPagerAdapterForCreateJobPost
 import com.androiddevelopers.freelanceapp.databinding.FragmentCreateJobPostingBinding
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.viewmodel.employer.CreateJobPostingViewModel
@@ -38,7 +39,6 @@ class CreateJobPostingFragment : Fragment() {
     private lateinit var datePicker: MaterialDatePicker<Long>
     private lateinit var selectedImages: ArrayList<Uri>
     private var selectedImagesSize = 0
-    private var selectedImagesIndex = 0
     private lateinit var imageLauncher: ActivityResultLauncher<Intent>
 
     private var _binding: FragmentCreateJobPostingBinding? = null
@@ -48,6 +48,8 @@ class CreateJobPostingFragment : Fragment() {
 
     private lateinit var skillAdapter: SkillAdapter
     private lateinit var skillList: ArrayList<String>
+
+    private lateinit var viewPagerAdapter: ViewPagerAdapterForCreateJobPost
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -69,11 +71,7 @@ class CreateJobPostingFragment : Fragment() {
 
         selectedImages = arrayListOf()
 
-//        with(binding) {
-//            fabDeleteImage.visibility = View.INVISIBLE
-//            previousImage.visibility = View.INVISIBLE
-//            nextImage.visibility = View.INVISIBLE
-//        }
+        viewPagerAdapter = ViewPagerAdapterForCreateJobPost(viewModel)
 
         return view
     }
@@ -91,6 +89,10 @@ class CreateJobPostingFragment : Fragment() {
             //data binding ile skill adaptörü set ediyoruz
             rvSkillAdapter = skillAdapter
 
+            //viewpager adapter ve indicatoru set ediyoruz
+            viewPagerCreateJobPost.adapter = viewPagerAdapter
+            indicatorCreateJobPost.setViewPager(viewPagerCreateJobPost)
+
             //skill text içindeki icon ile listeye yeni skill ekliyoruz
             // sonrasında yeni eklenen skill in recycler view de ve diğer yerlerde güncellenemsi iç viewmodel e gönderiyoruz
             skillAddTextInputLayout.setEndIconOnClickListener {
@@ -103,7 +105,7 @@ class CreateJobPostingFragment : Fragment() {
             createjobPostButton.setOnClickListener {
                 with(viewModel) {
                     addImageAndJobPostToFirebase( //resim ve işveren ilanı bilgilerini view modele gönderiyoruz
-                        selectedImages, // resmin cihazdaki konumu
+                        selectedImages, // yüklenecek resimlerin cihazdaki konumu
                         createEmployerJobPost( // işveren ilanı için formda doldurulan yerler ile birlikte gönderi oluşturuyoruz
                             title = titleTextInputEditText.text.toString(),
                             description = descriptionTextInputEditText.text.toString(),
@@ -157,29 +159,6 @@ class CreateJobPostingFragment : Fragment() {
                 chooseImage()
             }
 
-
-//            fabDeleteImage.setOnClickListener {
-//                selectedImages.removeAt(selectedImagesIndex)
-//                viewModel.setImageUriList(selectedImages)
-//                if (selectedImagesIndex > 0) {
-//                    viewModel.setImageIndex(selectedImagesIndex - 1)
-//                } else {
-//                    viewModel.setImageIndex(0)
-//                }
-//            }
-//
-//            previousImage.setOnClickListener {
-//                if (selectedImagesIndex > 0) {
-//                    viewModel.setImageIndex(selectedImagesIndex - 1)
-//                }
-//            }
-//
-//            nextImage.setOnClickListener {
-//                if (selectedImagesIndex < selectedImagesSize - 1) {
-//                    viewModel.setImageIndex(selectedImagesIndex + 1)
-//                }
-//
-//            }
         }
 
         imageLauncher =
@@ -187,18 +166,7 @@ class CreateJobPostingFragment : Fragment() {
                 if (result.resultCode == Activity.RESULT_OK) {
                     result.data?.data?.let {
                         selectedImages.add(it)
-
-//                        with(viewModel) {
-//                            setImageUriList(selectedImages)
-//                            //setImageSize(selectedImages.size)
-//                            setImageIndex(selectedImages.lastIndex)
-//                        }
-
-                        //downloadImage(binding.imageView, selectedImages.last().toString())
-//                        selectedImageUri = it
-//                        //seçilen resmi create ekranında göstermek için
-//                        downloadImage(binding.imageView, it.toString())
-
+                        viewModel.setImageUriList(selectedImages)
                     }
                 }
             }
@@ -232,54 +200,14 @@ class CreateJobPostingFragment : Fragment() {
 
             imageUriList.observe(owner) {
                 selectedImages = it
+                viewPagerAdapter.refreshList(it)
+                with(binding) {
+                    //indicatoru viewpager yeni liste ile set ediyoruz
+                    indicatorCreateJobPost.setViewPager(viewPagerCreateJobPost)
+                }
+
             }
 
-//            imageIndex.observe(owner) {
-//                selectedImagesIndex = it
-//
-//                with(binding) {
-//                    if (selectedImagesSize > 0) {
-//                        if (selectedImagesIndex <= 0) {
-//                            downloadImage(
-//                                binding.imageView,
-//                                selectedImages[0].toString()
-//                            )
-//                            previousImage.visibility = View.INVISIBLE
-//                            if (selectedImagesSize > 1) {
-//                                nextImage.visibility = View.VISIBLE
-//                            } else {
-//                                nextImage.visibility = View.INVISIBLE
-//                            }
-//                        } else if (selectedImagesIndex >= selectedImagesSize - 1) {
-//                            downloadImage(
-//                                binding.imageView,
-//                                selectedImages[selectedImagesSize - 1].toString()
-//                            )
-//
-//                            nextImage.visibility = View.INVISIBLE
-//                            previousImage.visibility = View.VISIBLE
-//                        } else {
-//                            downloadImage(
-//                                binding.imageView,
-//                                selectedImages[selectedImagesIndex].toString()
-//                            )
-//
-//                            previousImage.visibility = View.VISIBLE
-//                            nextImage.visibility = View.VISIBLE
-//                        }
-//                    } else {
-//                        downloadImage(
-//                            binding.imageView,
-//                            null
-//                        )
-//
-//                        previousImage.visibility = View.INVISIBLE
-//                        nextImage.visibility = View.INVISIBLE
-//                    }
-//                }
-//
-//            }
-//
             imageSize.observe(owner) {
                 selectedImagesSize = it
 
@@ -288,20 +216,12 @@ class CreateJobPostingFragment : Fragment() {
                 with(binding) {
                     if (it == 0 || it == null) {
                         imagePlaceHolderCreateJobPost.visibility = View.VISIBLE
-                        layoutImageViews.visibility = View.INVISIBLE
+                        layoutImageViewsCreateJobPost.visibility = View.INVISIBLE
                     } else {
                         imagePlaceHolderCreateJobPost.visibility = View.INVISIBLE
-                        layoutImageViews.visibility = View.VISIBLE
+                        layoutImageViewsCreateJobPost.visibility = View.VISIBLE
                     }
                 }
-
-//                with(binding) {
-//                    if (selectedImagesSize > 0) {
-//                        fabDeleteImage.visibility = View.VISIBLE
-//                    } else {
-//                        fabDeleteImage.visibility = View.INVISIBLE
-//                    }
-//                }
             }
         }
     }

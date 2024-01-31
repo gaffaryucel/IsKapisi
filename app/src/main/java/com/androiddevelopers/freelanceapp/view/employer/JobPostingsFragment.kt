@@ -83,8 +83,8 @@ class JobPostingsFragment : Fragment() {
             }
 
             firebaseLiveData.observe(owner) { list ->
-                employerAdapter.employerList =
-                    list // firebase 'den gelen veriler ile adapter'i yeniliyoruz
+                // firebase 'den gelen veriler ile adapter'i yeniliyoruz
+                employerAdapter.employerList = list
 
                 listEmployerJobPost.clear()
                 // firebase 'den gelen son verilerin kopyasını saklıyoruz

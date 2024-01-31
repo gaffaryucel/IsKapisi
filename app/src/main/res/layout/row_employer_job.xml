@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="employer"
             type="com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost" />
@@ -35,43 +37,56 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/previousImageEmployerCard"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginEnd="4dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/ivCardEmployer"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/baseline_keyboard_arrow_left_24" />
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/ivCardEmployer"
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardImagePlaceHolderJobPost"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/nextImageEmployerCard"
-                        app:layout_constraintStart_toEndOf="@id/previousImageEmployerCard"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:ignore="ContentDescription,ImageContrastCheck"
-                        tools:src="@drawable/image_placeholder" />
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/nextImageEmployerCard"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginEnd="4dp"
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/imagePlaceHolderJobPost"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/placeholder"
+                            tools:ignore="ImageContrastCheck" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/layoutImageViewsJobPost"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/ivCardEmployer"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/baseline_keyboard_arrow_right_24" />
+                        app:layout_constraintWidth_max="@dimen/edittextMaxWidth">
 
+
+                        <androidx.viewpager2.widget.ViewPager2
+                            android:id="@+id/viewPagerJobPost"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:orientation="horizontal"
+                            app:layout_constraintBottom_toTopOf="@id/indicatorJobPost"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <me.relex.circleindicator.CircleIndicator3
+                            android:id="@+id/indicatorJobPost"
+                            android:layout_width="0dp"
+                            android:layout_height="20dp"
+                            android:background="@color/indicator_background"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="@id/viewPagerJobPost"
+                            app:layout_constraintStart_toStartOf="@id/viewPagerJobPost"
+                            app:layout_constraintTop_toBottomOf="@id/viewPagerJobPost" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cardEmployerDetail"
