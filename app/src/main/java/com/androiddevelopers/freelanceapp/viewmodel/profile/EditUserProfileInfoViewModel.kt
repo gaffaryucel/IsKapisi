@@ -1,23 +1,13 @@
-package com.androiddevelopers.freelanceapp.viewmodel
+package com.androiddevelopers.freelanceapp.viewmodel.profile
 
-import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
 import com.androiddevelopers.freelanceapp.model.UserModel
-import com.androiddevelopers.freelanceapp.model.UserProfileModel
-import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
-import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
-import com.androiddevelopers.freelanceapp.repo.RoomUserDatabaseRepoInterface
 import com.androiddevelopers.freelanceapp.util.Resource
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.storage.FirebaseStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
-import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -62,5 +52,8 @@ class EditUserProfileInfoViewModel  @Inject constructor(
                 // Hata durzumunda işlemleri buraya ekleyebilirsiniz
                 _message.value = Resource.error("Belge alınamadı. Hata: $exception", null)
             }
+    }
+    fun signOut(){
+        firebaseAuth.signOut()
     }
 }

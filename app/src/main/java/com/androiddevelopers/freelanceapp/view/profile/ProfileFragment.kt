@@ -1,4 +1,4 @@
-package com.androiddevelopers.freelanceapp.view
+package com.androiddevelopers.freelanceapp.view.profile
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -8,18 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.androiddevelopers.freelanceapp.adapters.DiscoverAdapter
-import com.androiddevelopers.freelanceapp.adapters.EmployerAdapter
-import com.androiddevelopers.freelanceapp.adapters.FreelancerAdapter
 import com.androiddevelopers.freelanceapp.adapters.ProfileDiscoverAdapter
 import com.androiddevelopers.freelanceapp.adapters.ProfileEmployerAdapter
 import com.androiddevelopers.freelanceapp.adapters.ProfileFreelancerAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentProfileBinding
-import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.util.Status
-import com.androiddevelopers.freelanceapp.viewmodel.ProfileViewModel
-import com.androiddevelopers.freelanceapp.viewmodel.RegisterViewModel
+import com.androiddevelopers.freelanceapp.viewmodel.profile.ProfileViewModel
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -55,10 +51,10 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.rvProfile.layoutManager = GridLayoutManager(requireContext(),3)
         binding.profileFragmentSwipeRefreshLayout.setOnRefreshListener {
             refreshData()
         }
-        binding.rvProfile.layoutManager = LinearLayoutManager(requireContext())
         observeLiveData()
         setupTabLayout()
         binding.btnEditProfile.setOnClickListener {
@@ -78,40 +74,21 @@ class ProfileFragment : Fragment() {
                 // Sekmeye tıklandığında, adapter'a yeni verileri set et
                 when (tab.position) {
                     0 -> {
-                        binding.rvProfile.adapter = discoverAdapter
-                        if (isDiscoverListEmpty){
-                            binding.rvProfile.visibility = View.GONE
-                            binding.tvEmptyList.visibility = View.VISIBLE
-                        }else{
-                            binding.rvProfile.visibility = View.VISIBLE
-                            binding.tvEmptyList.visibility = View.GONE
-                        }
+                        showDiscoverItems()
                     }
                     1 -> {
-                        binding.rvProfile.adapter = freelancerAdapter
-                        if (isFreelanceListEmpty){
-                            binding.rvProfile.visibility = View.GONE
-                            binding.tvEmptyList.visibility = View.VISIBLE
-                        }else{
-                            binding.rvProfile.visibility = View.VISIBLE
-                            binding.tvEmptyList.visibility = View.GONE
-                        }
+                        showFreelancerItems()
                     }
                     2 -> {
-                        binding.rvProfile.adapter = employerAdapter
-                        if (isEmployerListEmpty){
-                            binding.rvProfile.visibility = View.GONE
-                            binding.tvEmptyList.visibility = View.VISIBLE
-                        }else{
-                            binding.rvProfile.visibility = View.VISIBLE
-                            binding.tvEmptyList.visibility = View.GONE
-                        }
+                        showEmployerItems()
                     }
                     else -> {
-                        binding.rvProfile.adapter = discoverAdapter
+                        showDiscoverItems()
                     }
                 }
             }
+
+
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
                 // Boş bırakılabilir
@@ -122,7 +99,43 @@ class ProfileFragment : Fragment() {
             }
         })
     }
+    private fun showDiscoverItems() {
+        binding.rvProfile.adapter = discoverAdapter
+        binding.rvProfile.layoutManager = GridLayoutManager(requireContext(),3)
+        try {
+            discoverAdapter.postList[0]
+            binding.rvProfile.visibility = View.VISIBLE
+            binding.tvEmptyList.visibility = View.GONE
+        }catch (e : Exception){
+            binding.rvProfile.visibility = View.GONE
+            binding.tvEmptyList.visibility = View.VISIBLE
+        }
 
+    }
+    private fun showFreelancerItems() {
+        binding.rvProfile.adapter = freelancerAdapter
+        binding.rvProfile.layoutManager = LinearLayoutManager(requireContext())
+        try {
+            freelancerAdapter.postList[0]
+            binding.rvProfile.visibility = View.VISIBLE
+            binding.tvEmptyList.visibility = View.GONE
+        }catch (e : Exception){
+            binding.rvProfile.visibility = View.GONE
+            binding.tvEmptyList.visibility = View.VISIBLE
+        }
+    }
+    private fun showEmployerItems() {
+        binding.rvProfile.adapter = employerAdapter
+        binding.rvProfile.layoutManager = LinearLayoutManager(requireContext())
+        try {
+            employerAdapter.postList[0]
+            binding.rvProfile.visibility = View.VISIBLE
+            binding.tvEmptyList.visibility = View.GONE
+        }catch (e : Exception) {
+            binding.rvProfile.visibility = View.GONE
+            binding.tvEmptyList.visibility = View.VISIBLE
+        }
+    }
     private fun refreshData(){
         viewModel.getUserDataFromFirebase()
         binding.profileFragmentSwipeRefreshLayout.isRefreshing = false
@@ -137,18 +150,33 @@ class ProfileFragment : Fragment() {
                 }
             }
         })
+        viewModel.allUserData.observe(viewLifecycleOwner, Observer {userData ->
+            binding.apply {
+                userInfo = userData
+            }
+        })
         viewModel.message.observe(viewLifecycleOwner, Observer {
-            when (it.status) {
+            /*
+              when (it.status) {
                 Status.SUCCESS -> {
-                 //
+                    binding.rvProfile.visibility = View.VISIBLE
+                    binding.tvEmptyList.visibility = View.GONE
+                    binding.pbPostLoading.visibility = View.GONE
+                }
+                Status.LOADING -> {
+                    binding.pbPostLoading.visibility = View.VISIBLE
+                    binding.tvEmptyList.visibility = View.GONE
                 }
                 Status.ERROR -> {
-                    //
+                    binding.tvEmptyList.visibility = View.VISIBLE
+                    binding.pbPostLoading.visibility = View.GONE
                 }
                 else->{
                     //
                 }
             }
+             */
+
         })
         viewModel.freelanceJobPosts.observe(viewLifecycleOwner, Observer {freelancerPosts ->
             if (freelancerPosts != null){
@@ -174,8 +202,8 @@ class ProfileFragment : Fragment() {
                 isDiscoverListEmpty = false
             }else{
                 isDiscoverListEmpty = true
-
             }
+            showDiscoverItems()
         })
     }
 

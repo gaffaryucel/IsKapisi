@@ -5,8 +5,9 @@
 
     <data>
         <variable
-            name="user"
-            type="com.androiddevelopers.freelanceapp.model.UserProfileModel" />
+            name="userInfo"
+            type="com.androiddevelopers.freelanceapp.model.UserModel" />
+
     </data>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -21,7 +22,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context=".view.ProfileFragment">
+                tools:context=".view.profile.ProfileFragment">
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -72,12 +73,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="@{user.username}"
+                        android:text="@{userInfo.username}"
                         android:textAlignment="center"
                         android:textSize="24sp"
                         android:textStyle="bold" />
                     <TextView
-                        android:text="Junior Android Developer"
+                        android:text="@{userInfo.jobTitle}"
                         android:textSize="18sp"
                         android:textStyle="normal"
                         android:id="@+id/tvUserTitle"
@@ -118,7 +119,7 @@
                 <TextView
                     android:textAlignment="center"
                     android:layout_marginTop="10dp"
-                    android:text="@string/user_bio"
+                    android:text="@{userInfo.bio}"
                     android:id="@+id/tvUserBio"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -245,14 +246,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
+
                 <TextView
                     android:visibility="gone"
                     android:id="@+id/tvEmptyList"
                     android:textSize="30sp"
+                    android:layout_marginTop="50dp"
+                    android:layout_marginBottom="50dp"
                     android:text="Gönderi Yok"
                     android:textAlignment="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
+                <ProgressBar
+                    android:visibility="gone"
+                    android:id="@+id/pbPostLoading"
+                    android:layout_marginTop="50dp"
+                    android:layout_marginBottom="50dp"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>

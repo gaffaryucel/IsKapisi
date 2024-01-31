@@ -36,10 +36,6 @@ interface FirebaseRepoInterFace {
     fun addEmployerJobPostToFirestore(job: EmployerJobPost): Task<Void>
     fun getAllEmployerJobPostFromFirestore(): Task<QuerySnapshot>
 
-    // Firestore Video işlemleri
-    fun saveVideoToFirestore(video: VideoModel): Task<Void>
-    fun getVideoFromFirestore(): Task<QuerySnapshot>
-
     // Firestore Discover Post işlemleri
     fun uploadDiscoverPostToFirestore(post: DiscoverPostModel): Task<Void>
     fun getAllDiscoverPostsFromFirestore(): Task<QuerySnapshot>
@@ -64,6 +60,12 @@ interface FirebaseRepoInterFace {
 
     // Firebase Storage işlemleri
     fun addImageToStorageForJobPosting(
+        uri: Uri,
+        uId: String,
+        postId: String,
+        file: String
+    ): UploadTask
+    fun addDiscoverPostImage(
         uri: Uri,
         uId: String,
         postId: String,

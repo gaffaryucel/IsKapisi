@@ -29,8 +29,7 @@ class FirebaseRepoImpl @Inject constructor(
     private val userCollection = firestore.collection("users")
     private val freelancerPostCollection = firestore.collection("posts")
     private val employerPostCollection = firestore.collection("job_posting")
-    private val videoCollection = firestore.collection("videos")
-    private val discoverPostRef = firestore.collection("discover_posts")
+    private val discoverPostCollection = firestore.collection("discover_posts")
     private val messagesReference = database.getReference("users")
     private val imagesParentRef = storage.reference.child("user_images")
 
@@ -88,12 +87,18 @@ class FirebaseRepoImpl @Inject constructor(
             .putFile(uri)
     }
 
-    override fun saveVideoToFirestore(video: VideoModel): Task<Void> {
-        return videoCollection.document(video.videoId.toString()).set(video)
-    }
-
-    override fun getVideoFromFirestore(): Task<QuerySnapshot> {
-        return videoCollection.get()
+    override fun addDiscoverPostImage(
+        uri: Uri,
+        uId: String,
+        postId: String,
+        file: String
+    ): UploadTask {
+        return imagesParentRef
+            .child(uId)
+            .child("job_posts")
+            .child(postId)
+            .child(file)
+            .putFile(uri)
     }
 
     override fun sendMessageToRealtimeDatabase(
@@ -138,11 +143,11 @@ class FirebaseRepoImpl @Inject constructor(
     }
 
     override fun uploadDiscoverPostToFirestore(post: DiscoverPostModel): Task<Void> {
-        return discoverPostRef.document(post.postId.toString()).set(post)
+        return discoverPostCollection.document(post.postId.toString()).set(post)
     }
 
     override fun getAllDiscoverPostsFromFirestore(): Task<QuerySnapshot> {
-        return discoverPostRef.get()
+        return discoverPostCollection.get()
     }
 
     override fun uploadDataInUserNode(
@@ -158,15 +163,15 @@ class FirebaseRepoImpl @Inject constructor(
     }
 
    override fun getAllDiscoverPostsFromUser(userId : String): Task<QuerySnapshot> {
-        return userCollection.document(userId).collection("discover").get()
+        return discoverPostCollection.whereEqualTo("postOwner", userId).get()
     }
 
     override fun getAllEmployerJobPostsFromUser(userId : String): Task<QuerySnapshot> {
-        return userCollection.document(userId).collection("job_post").get()
+        return employerPostCollection.whereEqualTo("employerId", userId).get()
     }
 
     override fun getAllFreelancerJobPostsFromUser(userId : String): Task<QuerySnapshot> {
-        return userCollection.document(userId).collection("freelancer_job_post").get()
+        return freelancerPostCollection.whereEqualTo("freelancerId", userId).get()
     }
 
     override fun follow(follower : String,followed: String): Task<Void> {
