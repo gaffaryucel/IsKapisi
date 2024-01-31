@@ -107,5 +107,6 @@
     <color name="text_outline">@color/md_theme_light_outline</color>
     <color name="text_outline_hint">@color/md_theme_light_onSurfaceVariant</color>
     <color name="navigation_back_next">@color/md_theme_light_onSurface</color>
-
+    <color name="toolbar_background">@color/md_theme_light_primary</color>
+    <color name="toolbar_navigation_icon">@color/md_theme_light_inverseOnSurface</color>
 </resources>

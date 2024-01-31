@@ -3,12 +3,14 @@ package com.androiddevelopers.freelanceapp.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.databinding.RowEmployerJobBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.util.AppDiffUtil
 import com.androiddevelopers.freelanceapp.util.downloadImage
+import com.androiddevelopers.freelanceapp.view.employer.JobPostingsFragmentDirections
 
 class EmployerAdapter : RecyclerView.Adapter<EmployerAdapter.EmployerViewHolder>() {
     private val diffUtil = AppDiffUtil<EmployerJobPost>()
@@ -34,47 +36,54 @@ class EmployerAdapter : RecyclerView.Adapter<EmployerAdapter.EmployerViewHolder>
     override fun onBindViewHolder(holder: EmployerViewHolder, position: Int) {
         val employerJobPost = employerList[position]
         var currentImage = 0
-        with(holder) {
-            with(binding) {
-                employer = employerJobPost
+        with(holder.binding) {
+            employer = employerJobPost
 
-                val imageList: List<String>? = employerJobPost.images
-                if (imageList != null) {
-                    if (imageList.size == 1) {
-                        previousImageEmployerCard.visibility = View.INVISIBLE
-                        nextImageEmployerCard.visibility = View.INVISIBLE
-                        downloadImage(ivCardEmployer, imageList[currentImage])
+            cardEmployer.setOnClickListener {
+                employerJobPost.postId?.let { id ->
+                    val directions =
+                        JobPostingsFragmentDirections
+                            .actionJobPostingFragmentToDetailJobPostingsFragment(id)
+                    Navigation.findNavController(it).navigate(directions)
+                }
+            }
 
-                    } else if (imageList.size > 1) {
-                        previousImageEmployerCard.visibility = View.INVISIBLE
+            val imageList: List<String>? = employerJobPost.images
+            if (imageList != null) {
+                if (imageList.size == 1) {
+                    previousImageEmployerCard.visibility = View.INVISIBLE
+                    nextImageEmployerCard.visibility = View.INVISIBLE
+                    downloadImage(ivCardEmployer, imageList[currentImage])
+
+                } else if (imageList.size > 1) {
+                    previousImageEmployerCard.visibility = View.INVISIBLE
+                    nextImageEmployerCard.visibility = View.VISIBLE
+                    downloadImage(ivCardEmployer, imageList[currentImage])
+
+                    previousImageEmployerCard.setOnClickListener {
                         nextImageEmployerCard.visibility = View.VISIBLE
-                        downloadImage(ivCardEmployer, imageList[currentImage])
-
-                        previousImageEmployerCard.setOnClickListener {
-                            nextImageEmployerCard.visibility = View.VISIBLE
-                            --currentImage
-                            if (currentImage <= 0) {
-                                previousImageEmployerCard.visibility = View.INVISIBLE
-                                downloadImage(ivCardEmployer, imageList[currentImage])
-                            } else {
-                                downloadImage(ivCardEmployer, imageList[currentImage])
-                            }
-                        }
-
-                        nextImageEmployerCard.setOnClickListener {
-                            previousImageEmployerCard.visibility = View.VISIBLE
-                            ++currentImage
-                            if (currentImage >= imageList.size - 1) {
-                                nextImageEmployerCard.visibility = View.INVISIBLE
-                                downloadImage(ivCardEmployer, imageList[imageList.size - 1])
-                            } else {
-                                downloadImage(ivCardEmployer, imageList[currentImage])
-                            }
+                        --currentImage
+                        if (currentImage <= 0) {
+                            previousImageEmployerCard.visibility = View.INVISIBLE
+                            downloadImage(ivCardEmployer, imageList[currentImage])
+                        } else {
+                            downloadImage(ivCardEmployer, imageList[currentImage])
                         }
                     }
-                } else {
-                    downloadImage(ivCardEmployer, null)
+
+                    nextImageEmployerCard.setOnClickListener {
+                        previousImageEmployerCard.visibility = View.VISIBLE
+                        ++currentImage
+                        if (currentImage >= imageList.size - 1) {
+                            nextImageEmployerCard.visibility = View.INVISIBLE
+                            downloadImage(ivCardEmployer, imageList[imageList.size - 1])
+                        } else {
+                            downloadImage(ivCardEmployer, imageList[currentImage])
+                        }
+                    }
                 }
+            } else {
+                downloadImage(ivCardEmployer, null)
             }
         }
     }
