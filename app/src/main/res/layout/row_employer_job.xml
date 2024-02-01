@@ -5,8 +5,6 @@
 
     <data>
 
-        <import type="android.view.View" />
-
         <variable
             name="employer"
             type="com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost" />
