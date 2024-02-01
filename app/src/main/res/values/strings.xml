@@ -57,4 +57,9 @@
     <string name="text_colon">:</string>
     <string name="button_detail_text">Detay</string>
     <string name="is_urgent_text">İlan acil mi?</string>
+    <string name="budget">Bütçe</string>
+    <string name="description">Açıklama</string>
+    <string name="location">İş Konumu</string>
+    <string name="deadline">İlan Sonu</string>
+    <string name="details">Ek Detaylar</string>
 </resources>
