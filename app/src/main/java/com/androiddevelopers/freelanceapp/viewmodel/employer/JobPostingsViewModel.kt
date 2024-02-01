@@ -30,7 +30,7 @@ constructor(
         getAllEmployerJobPost()
     }
 
-    fun getAllEmployerJobPost() = viewModelScope.launch {
+    private fun getAllEmployerJobPost() = viewModelScope.launch {
         _firebaseMessage.value = Resource.loading(true)
 
         firebaseRepo.getAllEmployerJobPostFromFirestore()
@@ -40,13 +40,14 @@ constructor(
 
                 it?.let { querySnapshot ->
                     val list = ArrayList<EmployerJobPost>()
-                    querySnapshot.forEach { document ->
+
+                    for (document in querySnapshot) {
                         val employerJobPost = document.toObject(EmployerJobPost::class.java)
                         if (employerJobPost.status == JobStatus.OPEN) {
                             list.add(employerJobPost)
                         }
-                        _firebaseLiveData.value = list
                     }
+                    _firebaseLiveData.value = list
 
                     _firebaseMessage.value = Resource.success(true)
 

@@ -25,17 +25,12 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="@color/toolbar_background"
+            style="@style/MaterialToolbarStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:navigationIcon="@drawable/baseline_keyboard_arrow_left_24"
-            app:navigationIconTint="@color/toolbar_navigation_icon"
             app:navigationOnClickListener="@{() -> Navigation.findNavController(toolbar).popBackStack()}"
-            app:title="@{employer.title}"
-            app:titleTextColor="@color/toolbar_navigation_icon" />
+            app:title="@{employer.title}" />
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/detailJobPostProgressBar"
@@ -90,7 +85,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="4dp">
 
-                        <androidx.appcompat.widget.AppCompatImageView
+                        <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/ivUserProfile"
                             android:layout_width="80dp"
                             android:layout_height="80dp"
@@ -198,15 +193,56 @@
                     app:layout_constraintStart_toEndOf="@id/guidelineVerticalLeft"
                     app:layout_constraintTop_toBottomOf="@id/layoutViewCount">
 
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/ivPostImages"
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardImagePlaceHolderJobPostDetail"
                         android:layout_width="0dp"
-                        android:layout_height="250dp"
-                        android:src="@drawable/placeholder"
+                        android:layout_height="200dp"
+                        android:visibility="@{employer.images.size() == 0 || employer.images.size() > 1 ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintBottom_toTopOf="@id/layoutJobPostBudget"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:visibility="@{employer.images.size() == 0 ? View.GONE : View.VISIBLE}" />
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/imagePlaceHolderJobPostDetail"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/placeholder"
+                            tools:ignore="ImageContrastCheck" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/layoutImageViewsJobPostDetail"
+                        android:layout_width="0dp"
+                        android:layout_height="200dp"
+                        android:visibility="@{employer.images.size() &lt; 2 ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintBottom_toTopOf="@id/layoutJobPostBudget"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.viewpager2.widget.ViewPager2
+                            android:id="@+id/viewPagerJobPostDetail"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:orientation="horizontal"
+                            app:layout_constraintBottom_toTopOf="@id/indicatorJobPostDetail"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <me.relex.circleindicator.CircleIndicator3
+                            android:id="@+id/indicatorJobPostDetail"
+                            android:layout_width="0dp"
+                            android:layout_height="20dp"
+                            android:background="@color/indicator_background"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="@id/viewPagerJobPostDetail"
+                            app:layout_constraintStart_toStartOf="@id/viewPagerJobPostDetail"
+                            app:layout_constraintTop_toBottomOf="@id/viewPagerJobPostDetail" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
                     <LinearLayout
                         android:id="@+id/layoutJobPostBudget"
@@ -217,7 +253,7 @@
                         android:orientation="horizontal"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/ivPostImages">
+                        app:layout_constraintTop_toBottomOf="@id/layoutImageViewsJobPostDetail">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
@@ -227,7 +263,7 @@
                             <TextView
                                 style="@style/JopPostDetailTexts"
                                 android:layout_width="wrap_content"
-                                android:text="Bütçe"
+                                android:text="@string/budget"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" />
@@ -279,7 +315,7 @@
                             <TextView
                                 style="@style/JopPostDetailTexts"
                                 android:layout_width="wrap_content"
-                                android:text="Açıklama"
+                                android:text="@string/description"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" />
@@ -331,7 +367,7 @@
                             <TextView
                                 style="@style/JopPostDetailTexts"
                                 android:layout_width="wrap_content"
-                                android:text="İş Konumu"
+                                android:text="@string/location"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" />
@@ -384,7 +420,7 @@
                             <TextView
                                 style="@style/JopPostDetailTexts"
                                 android:layout_width="wrap_content"
-                                android:text="İlan Sonu"
+                                android:text="@string/deadline"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" />
@@ -437,7 +473,7 @@
                             <TextView
                                 style="@style/JopPostDetailTexts"
                                 android:layout_width="wrap_content"
-                                android:text="Ek Detaylar"
+                                android:text="@string/details"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" />
@@ -472,13 +508,13 @@
                     </LinearLayout>
 
                     <Button
-                        android:layout_marginTop="20dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:layout_constraintTop_toBottomOf="@id/layoutJobPostAdditionalDetails"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/give_offer"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        android:text="@string/give_offer" />
+                        app:layout_constraintTop_toBottomOf="@id/layoutJobPostAdditionalDetails" />
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

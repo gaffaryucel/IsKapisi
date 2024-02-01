@@ -109,4 +109,5 @@
     <color name="navigation_back_next">@color/md_theme_light_onSurface</color>
     <color name="toolbar_background">@color/md_theme_light_primary</color>
     <color name="toolbar_navigation_icon">@color/md_theme_light_inverseOnSurface</color>
+    <color name="indicator_background">@color/md_theme_light_surface</color>
 </resources>

@@ -20,12 +20,10 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+            style="@style/MaterialToolbarStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:navigationIcon="@drawable/baseline_keyboard_arrow_left_24"
             app:navigationOnClickListener="@{() -> Navigation.findNavController(toolbar).popBackStack()}"
             app:title="@string/create_job_posting_toolbar_title" />
 
@@ -73,98 +71,84 @@
                     android:orientation="vertical"
                     app:layout_constraintGuide_percent="0.9" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/layoutImageViews"
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imagePlaceHolderCreateJobPost"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
+                    android:src="@drawable/placeholder"
+                    app:layout_constraintBottom_toBottomOf="@id/layoutImageViewsCreateJobPost"
+                    app:layout_constraintEnd_toEndOf="@id/layoutImageViewsCreateJobPost"
+                    app:layout_constraintStart_toStartOf="@id/layoutImageViewsCreateJobPost"
+                    app:layout_constraintTop_toTopOf="@id/layoutImageViewsCreateJobPost" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layoutImageViewsCreateJobPost"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_margin="4dp"
                     app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/guidelineVerticalRight"
+                    app:layout_constraintStart_toStartOf="@id/guidelineVerticalLeft"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintWidth_max="@dimen/edittextMaxWidth">
 
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/previousImage"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginEnd="4dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/imageView"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/baseline_keyboard_arrow_left_24" />
 
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/imageView"
-                        android:layout_width="0dp"
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/viewPagerCreateJobPost"
+                        android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/nextImage"
-                        app:layout_constraintStart_toEndOf="@id/previousImage"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/placeholder"
-                        tools:ignore="ImageContrastCheck" />
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/nextImage"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginEnd="4dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toTopOf="@id/indicatorCreateJobPost"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/imageView"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/baseline_keyboard_arrow_right_24" />
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                    <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/fabDeleteImage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="16dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        app:backgroundTint="@color/delete_button"
-                        app:fabCustomSize="30dp"
-                        app:fabSize="auto"
-                        app:layout_constraintEnd_toEndOf="@id/layoutImageViews"
-                        app:layout_constraintTop_toTopOf="@+id/layoutImageViews"
-                        app:srcCompat="@drawable/baseline_close_24"
-                        tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
-
-                    <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/fabLoadImage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginBottom="8dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        app:fabCustomSize="48dp"
-                        app:fabSize="auto"
-                        app:layout_constraintBottom_toBottomOf="@+id/layoutImageViews"
-                        app:layout_constraintEnd_toEndOf="@id/layoutImageViews"
-                        app:srcCompat="@drawable/baseline_add_a_photo_24"
-                        tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+                    <me.relex.circleindicator.CircleIndicator3
+                        android:id="@+id/indicatorCreateJobPost"
+                        android:layout_width="0dp"
+                        android:layout_height="20dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@id/viewPagerCreateJobPost"
+                        app:layout_constraintStart_toStartOf="@id/viewPagerCreateJobPost"
+                        app:layout_constraintTop_toBottomOf="@id/viewPagerCreateJobPost" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fabLoadImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:fabCustomSize="48dp"
+                    app:fabSize="auto"
+                    app:layout_constraintBottom_toBottomOf="@+id/layoutImageViewsCreateJobPost"
+                    app:layout_constraintEnd_toEndOf="@id/layoutImageViewsCreateJobPost"
+                    app:srcCompat="@drawable/baseline_add_a_photo_24"
+                    tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchUrgentCreateJobPost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:checked="false"
+                    android:text="@string/is_urgent_text"
+                    app:layout_constraintEnd_toEndOf="@id/guidelineVerticalRight"
+                    app:layout_constraintTop_toBottomOf="@id/guidelineHorizontal"
+                    app:thumbIcon="@drawable/default_switch_icon" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/budgetTextInputLayout"
                     style="@style/StyleTextInputLayout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/createJobPostingMarginTop"
                     app:endIconMode="clear_text"
                     app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalRight"
                     app:layout_constraintStart_toStartOf="@+id/guidelineVerticalLeft"
-                    app:layout_constraintTop_toBottomOf="@+id/guidelineHorizontal"
+                    app:layout_constraintTop_toBottomOf="@+id/switchUrgentCreateJobPost"
                     app:prefixText="₺">
 
                     <com.google.android.material.textfield.TextInputEditText
