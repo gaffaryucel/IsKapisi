@@ -41,7 +41,21 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        freelancerAdapter = FreelancerAdapter(viewModel)
+        freelancerAdapter = FreelancerAdapter { freelancerJobPost, v ->
+            freelancerJobPost.postId?.let { id ->
+                //firebase den gelen görüntüleme sayısını alıyoruz
+                //karta tıklandığında 1 arttırıp firebase üzerinde ilgili değeri güncelliyoruz
+                var count = freelancerJobPost.viewCount
+                count = if (count == 0 || count == null) 1 else count + 1
+                viewModel.updateViewCountFreelancerJobPostWithDocumentById(id, count)
+
+                //ilan id numarası ile detay sayfasına yönlendirme yapıyoruz
+                val directions =
+                    HomeFragmentDirections
+                        .actionNavigationHomeToDetailPostFragment(id)
+                Navigation.findNavController(v).navigate(directions)
+            }
+        }
         listFreelancerJobPost = arrayListOf()
 
         binding.adapter = freelancerAdapter
@@ -62,7 +76,8 @@ class HomeFragment : Fragment() {
             search(searchView)
 
             cameraIcon.setOnClickListener {
-                val action = HomeFragmentDirections.actionNavigationHomeToCreateDiscoverPostFragment()
+                val action =
+                    HomeFragmentDirections.actionNavigationHomeToCreateDiscoverPostFragment()
                 Navigation.findNavController(it).navigate(action)
             }
         }

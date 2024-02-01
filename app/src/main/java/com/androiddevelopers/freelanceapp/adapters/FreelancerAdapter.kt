@@ -1,17 +1,15 @@
 package com.androiddevelopers.freelanceapp.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.databinding.RowFreelancerJobBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.util.AppDiffUtil
-import com.androiddevelopers.freelanceapp.view.HomeFragmentDirections
-import com.androiddevelopers.freelanceapp.viewmodel.HomeViewModel
 
-class FreelancerAdapter(private val viewModel: HomeViewModel) :
+class FreelancerAdapter(private val listener: (FreelancerJobPost, View) -> Unit) :
     RecyclerView.Adapter<FreelancerAdapter.FreelancerViewHolder>() {
     private val diffUtil = AppDiffUtil<FreelancerJobPost>()
 
@@ -39,19 +37,10 @@ class FreelancerAdapter(private val viewModel: HomeViewModel) :
         with(holder.binding) {
             freelancer = freelancerJobPost
 
-            cardFreelanceButtonDetail.setOnClickListener {
+            cardFreelanceButtonDetail.setOnClickListener { v ->
                 freelancerJobPost.postId?.let { id ->
-                    //firebase den gelen görüntüleme sayısını alıyoruz
-                    //karta tıklandığında 1 arttırıp firebase üzerinde ilgili değeri güncelliyoruz
-                    var count = freelancerJobPost.viewCount
-                    count = if (count == 0 || count == null) 1 else count + 1
-                    viewModel.updateViewCountFreelancerJobPostWithDocumentById(id, count)
+                    listener(freelancerJobPost, v)
 
-                    //ilan id numarası ile detay sayfasına yönlendirme yapıyoruz
-                    val directions =
-                        HomeFragmentDirections
-                            .actionNavigationHomeToDetailPostFragment(id)
-                    Navigation.findNavController(it).navigate(directions)
                 }
             }
         }
