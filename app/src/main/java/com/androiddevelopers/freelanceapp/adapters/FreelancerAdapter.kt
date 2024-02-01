@@ -38,9 +38,8 @@ class FreelancerAdapter(private val listener: (FreelancerJobPost, View) -> Unit)
             freelancer = freelancerJobPost
 
             cardFreelanceButtonDetail.setOnClickListener { v ->
-                freelancerJobPost.postId?.let { id ->
+                freelancerJobPost.postId?.let {
                     listener(freelancerJobPost, v)
-
                 }
             }
         }
