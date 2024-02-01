@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import com.androiddevelopers.freelanceapp.R
+import com.androiddevelopers.freelanceapp.adapters.ViewPagerAdapterForImages
 import com.androiddevelopers.freelanceapp.databinding.FragmentDetailJobPostingsBinding
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.util.downloadImage
@@ -24,6 +25,7 @@ class DetailJobPostingsFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var errorDialog: AlertDialog
+    private lateinit var viewPagerAdapter: ViewPagerAdapterForImages
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -59,6 +61,19 @@ class DetailJobPostingsFragment : Fragment() {
                 it.employerId?.let { id -> getUserDataByDocumentId(id) }
 
                 binding.employer = it
+
+                it.images?.let { images ->
+                    with(binding) {
+                        if (images.size == 1) {
+                            downloadImage(imagePlaceHolderJobPostDetail, images[0])
+                        } else if (images.size > 1) {
+                            viewPagerAdapter = ViewPagerAdapterForImages(images)
+
+                            viewPagerJobPostDetail.adapter = viewPagerAdapter
+                            indicatorJobPostDetail.setViewPager(viewPagerJobPostDetail)
+                        }
+                    }
+                }
             }
 
             firebaseUserData.observe(owner) {
