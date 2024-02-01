@@ -16,15 +16,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.FragmentEditMainProfileInfoBinding
+import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.viewmodel.profile.EditMainProfileInfoViewModel
 import com.bumptech.glide.Glide
+import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.ByteArrayOutputStream
@@ -38,16 +42,14 @@ class EditMainProfileInfoFragment : Fragment() {
     private var allPermissionsGranted = false
     private var resultByteArray = byteArrayOf()
 
+    private var skillsList = ArrayList<String>()
+
+    private var user = UserModel()
     private lateinit var viewModel: EditMainProfileInfoViewModel
 
     private var _binding: FragmentEditMainProfileInfoBinding? = null
     private val binding get() = _binding!!
-
-    private var user_name : String? = null
-    private var email : String? = null
-    private var job_title : String? = null
-    private var biography : String? = null
-    private var image : String? = null
+    var isObserved = false
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -56,10 +58,6 @@ class EditMainProfileInfoFragment : Fragment() {
         viewModel = ViewModelProvider(this)[EditMainProfileInfoViewModel::class.java]
         _binding = FragmentEditMainProfileInfoBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        user_name = arguments?.getString("user_name") ?: ""
-        job_title = arguments?.getString("job_title") ?: ""
-        biography = arguments?.getString("bio") ?: ""
-        image = arguments?.getString("image") ?: ""
         return root
     }
 
@@ -67,18 +65,10 @@ class EditMainProfileInfoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requestPermissionsIfNeeded()
-        email = viewModel.email
-        if (image!!.isNotEmpty()){
-            Glide.with(requireContext()).load(image).into(binding.ivUserProfilePhoto)
-        }else{
-            binding.ivUserProfilePhoto.setBackgroundResource(R.drawable.placeholder)
-        }
-        binding.apply {
-            userName = user_name
-            eMail = email
-            bio = biography
-            job = job_title
-        }
+
+        observeLiveData()
+
+
         binding.btnSave.setOnClickListener {
             updateInfo()
         }
@@ -94,33 +84,52 @@ class EditMainProfileInfoFragment : Fragment() {
         binding.ivCancelUploadImage.setOnClickListener {
             binding.btnSaveProfilePhoto.visibility = View.INVISIBLE
             binding.ivCancelUploadImage.visibility = View.INVISIBLE
-            if (image!!.isNotEmpty()){
-                Glide.with(requireContext()).load(image).into(binding.ivUserProfilePhoto)
+            if (user.profileImageUrl!!.isNotEmpty()){
+                Glide.with(requireContext()).load(user.profileImageUrl).into(binding.ivUserProfilePhoto)
             }else{
                 binding.ivUserProfilePhoto.setBackgroundResource(R.drawable.placeholder)
             }
         }
-        observeLiveData()
+        binding.tvAddSkill.setOnClickListener{
+            val skill = binding.etAddSkill.text.toString()
+            if (skillsList.size < 5){
+                skillsList.add(skill)
+                when(skillsList.size){
+                    1->{binding.tvSkill1.text = skill}
+                    2->{binding.tvSkill2.text = skill}
+                    3->{binding.tvSkill3.text = skill}
+                    4->{binding.tvSkill4.text = skill}
+                    5->{binding.tvSkill5.text = skill}
+                }
+                binding.etAddSkill.setText("")
+                binding.svEditMainProfile.postDelayed({
+                    binding.svEditMainProfile.smoothScrollTo(0, 800) // Y ekseninde yumuşak bir şekilde 500 piksel aşağı kaydır
+                }, 50) // 50 milisaniye (1 saniye) sonra kaydırma işlemi başlatılır
+            }else{
+                Toast.makeText(requireContext(), "En fazla 5 yetenek girebilirsiniz", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
     private fun updateInfo(){
         val newUserName = binding.etUserName.text.toString()
-        if (!user_name.equals(newUserName) && newUserName.isNotEmpty()){
+        if (!user.username.equals(newUserName) && newUserName.isNotEmpty()){
             viewModel.updateUserInfo("username",newUserName)
         }
 
         val newEmail = binding.etEmail.text.toString()
-        if (!email.equals(newEmail)&& newEmail.isNotEmpty()){
+        if (!user.email.equals(newEmail)&& newEmail.isNotEmpty()){
             viewModel.updateUserInfo("email",newEmail)
         }
 
         val newBio = binding.etUserBio.text.toString()
-        if (!biography.equals(newBio)&& newBio.isNotEmpty()){
+        if (!user.bio.equals(newBio)&& newBio.isNotEmpty()){
             viewModel.updateUserInfo("bio",newBio)
         }
         val newJob = binding.etUserJob.text.toString()
-        if (!job_title.equals(newJob)&& newJob.isNotEmpty()){
+        if (!user.jobTitle.equals(newJob)&& newJob.isNotEmpty()){
             viewModel.updateUserInfo("jobTitle",newJob)
         }
+        viewModel.updateUserInfo("skills",skillsList)
     }
     private fun observeLiveData(){
         viewModel.uploadMessage.observe(viewLifecycleOwner, Observer {
@@ -131,6 +140,23 @@ class EditMainProfileInfoFragment : Fragment() {
                 Status.LOADING->{}
                 Status.ERROR->{
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
+        viewModel.userData.observe(viewLifecycleOwner, Observer {userData ->
+            binding.user = userData
+            user = userData
+            if (user.profileImageUrl != null){
+                Glide.with(requireContext()).load(user.profileImageUrl).into(binding.ivUserProfilePhoto)
+            }
+            skillsList = user.skills as ArrayList<String>
+            for ((index,skill) in skillsList.withIndex()){
+                when(index){
+                    0->{binding.tvSkill1.text = skill}
+                    1->{binding.tvSkill2.text = skill}
+                    2->{binding.tvSkill3.text = skill}
+                    3->{binding.tvSkill4.text = skill}
+                    4->{binding.tvSkill5.text = skill}
                 }
             }
         })

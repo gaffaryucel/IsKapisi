@@ -19,8 +19,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class EditProfilePersonalInfoFragment : Fragment() {
 
-
-
     private lateinit var viewModel: EditProfilePersonalInfoViewModel
 
     private var _binding: FragmentEditProfilePersonalInfoBinding? = null
@@ -38,7 +36,7 @@ class EditProfilePersonalInfoFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(EditProfilePersonalInfoViewModel::class.java)
         _binding = FragmentEditProfilePersonalInfoBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        _fullName = arguments?.getString("name") ?: ""
+        _fullName = arguments?.let { it.getString("name") ?: "" }
         _phoneNumber = arguments?.getString("phone") ?: ""
         _country = arguments?.getString("country") ?: ""
         _city = arguments?.getString("city") ?: ""

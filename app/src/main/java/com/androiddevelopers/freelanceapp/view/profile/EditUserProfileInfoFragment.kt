@@ -15,6 +15,7 @@ import com.androiddevelopers.freelanceapp.databinding.FragmentEditUserProfileInf
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.view.MainActivity
 import com.androiddevelopers.freelanceapp.viewmodel.profile.EditUserProfileInfoViewModel
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -41,12 +42,7 @@ class EditUserProfileInfoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.cardViewProfile.setOnClickListener{
-            val action = EditUserProfileInfoFragmentDirections.actionEditUserProfileInfoFragmentToEditMainProfileInfoFragment(
-                userData.value?.username.toString(),
-                userData.value?.bio.toString(),
-                userData.value?.profileImageUrl.toString(),
-                userData.value?.jobTitle.toString()
-            )
+            val action = EditUserProfileInfoFragmentDirections.actionEditUserProfileInfoFragmentToEditMainProfileInfoFragment()
             Navigation.findNavController(it).navigate(action)
         }
         binding.cardViewPersonalInfo.setOnClickListener{
@@ -74,6 +70,7 @@ class EditUserProfileInfoFragment : Fragment() {
             binding.apply {
                 user = data
             }
+            Glide.with(requireContext()).load(data.profileImageUrl).into(binding.ivUserPhoto)
         })
     }
 

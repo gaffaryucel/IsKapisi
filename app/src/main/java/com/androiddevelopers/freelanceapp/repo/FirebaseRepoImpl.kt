@@ -26,12 +26,17 @@ class FirebaseRepoImpl @Inject constructor(
     database: FirebaseDatabase,
     storage: FirebaseStorage
 ) : FirebaseRepoInterFace {
+    //FirestoreRef
     private val userCollection = firestore.collection("users")
     private val freelancerPostCollection = firestore.collection("posts")
     private val employerPostCollection = firestore.collection("job_posting")
     private val discoverPostCollection = firestore.collection("discover_posts")
-    private val messagesReference = database.getReference("users")
+    //StorageRef
     private val imagesParentRef = storage.reference.child("user_images")
+    //RealtimeRef
+    private val messagesReference = database.getReference("users")
+    private val userFollowRef = database.getReference("users_follow")
+
 
     override fun login(email: String, password: String): Task<AuthResult> {
         return auth.signInWithEmailAndPassword(email, password)
@@ -182,16 +187,19 @@ class FirebaseRepoImpl @Inject constructor(
         return freelancerPostCollection.whereEqualTo("freelancerId", userId).get()
     }
 
-    override fun follow(follower : String,followed: String): Task<Void> {
-        return userCollection.document(follower).collection("following").document(followed).set(followed)
+    override fun follow(currentUserId : String,followingId : String): Task<Void> {
+        userFollowRef.child(followingId).child("followers").child(currentUserId).setValue(currentUserId)
+        return userFollowRef.child(currentUserId).child("following").child(followingId).setValue(followingId)
     }
-
-    override fun addFollower(follower: String, followed: String): Task<Void> {
-        return userCollection.document(followed).collection("followers").document(follower).set(follower)
+    override fun unFollow(currentUserId: String, followingId: String): Task<Void> {
+        userFollowRef.child(followingId).child("followers").child(currentUserId).removeValue()
+        return userFollowRef.child(currentUserId).child("following").child(followingId).removeValue()
     }
-
     override fun updateUserData(userId: String, updateData:  HashMap<String, Any?>): Task<Void> {
         return  userCollection.document(userId).update(updateData)
+    }
+    override fun getFollowers(userId: String): DatabaseReference {
+        return userFollowRef.child(userId).child("followers")
     }
 
 }

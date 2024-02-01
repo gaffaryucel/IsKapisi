@@ -23,7 +23,6 @@ class EditMainProfileInfoViewModel  @Inject constructor(
     private val storageReference = storage.reference
 
     private val userId = firebaseAuth.currentUser!!.uid
-    val email = firebaseAuth.currentUser!!.email
 
     private var _message = MutableLiveData<Resource<UserModel>>()
     val message: LiveData<Resource<UserModel>>
@@ -36,6 +35,10 @@ class EditMainProfileInfoViewModel  @Inject constructor(
     private val _userData = MutableLiveData<UserModel>()
     val userData: LiveData<UserModel>
         get() = _userData
+
+    init {
+        getUserDataFromFirebase()
+    }
 
     fun uploadUserProfilePhoto(r: ByteArray) = viewModelScope.launch {
         val photoFileName = "${UUID.randomUUID()}.jpg"
@@ -58,10 +61,34 @@ class EditMainProfileInfoViewModel  @Inject constructor(
             }
     }
 
-    fun updateUserInfo(key : String,userhoto: String) {
+    fun updateUserInfo(key : String,userhoto: Any) {
         val photoMap = hashMapOf<String,Any?>(
             key to userhoto
         )
         firebaseRepo.updateUserData(userId,photoMap)
     }
+
+    private fun getUserDataFromFirebase(){
+        firebaseRepo.getUserDataByDocumentId(userId)
+            .addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    val user = documentSnapshot.toObject(UserModel::class.java)
+                    if (user != null) {
+                        _userData.value = user ?: UserModel()
+                        _message.value = Resource.success(null)
+                    }else{
+                        _message.value = Resource.error("Belirtilen belge bulunamadı",null)
+                    }
+                } else {
+                    // Belge yoksa işlemleri buraya ekleyebilirsiniz
+                    _message.value = Resource.error("kullanıcı kaydedilmemiş",null)
+                }
+            }
+            .addOnFailureListener { exception ->
+                // Hata durzumunda işlemleri buraya ekleyebilirsiniz
+                println("Belge alınamadı. Hata: $exception")
+                _message.value = Resource.error("Belge alınamadı. Hata: $exception",null)
+            }
+    }
+
 }

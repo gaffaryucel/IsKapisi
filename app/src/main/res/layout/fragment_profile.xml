@@ -36,14 +36,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="150dp"
                         tools:ignore="MissingConstraints" />
-                    <ImageView
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:layout_margin="8dp"
-                        android:id="@+id/idIvBackButton"
-                        android:src="@drawable/baseline_keyboard_arrow_left_24"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"/>
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         app:layout_constraintTop_toTopOf="parent"
@@ -89,36 +81,59 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
-                <LinearLayout
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal"
+                <com.google.android.flexbox.FlexboxLayout
                     android:layout_gravity="center"
+                    android:id="@+id/flexbox"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:layout_marginHorizontal="10dp"
-                        android:text="skill 1"
-                        android:textStyle="bold"
-                        android:textSize="18sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    app:flexWrap="wrap"
+                    app:alignItems="stretch"
+                    app:alignContent="stretch" >
 
                     <TextView
-                        android:layout_marginHorizontal="10dp"
-                        android:text="skill 2"
-                        android:textStyle="bold"
-                        android:textSize="18sp"
+                        android:gravity="center"
+                        android:id="@+id/tvSkill1"
+                        android:textSize="16sp"
+                        android:layout_margin="8dp"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        />
 
                     <TextView
-                        android:layout_marginHorizontal="10dp"
-                        android:text="skill 3"
-                        android:textStyle="bold"
-                        android:textSize="18sp"
+                        android:gravity="center"
+                        android:id="@+id/tvSkill2"
+                        android:textSize="16sp"
+                        android:layout_margin="8dp"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </LinearLayout>
+                        android:layout_height="wrap_content"
+                        />
+
+                    <TextView
+                        android:gravity="center"
+                        android:id="@+id/tvSkill3"
+                        android:layout_width="wrap_content"
+                        android:layout_margin="8dp"
+                        android:textSize="16sp"
+                        android:layout_height="wrap_content"
+                        />
+                    <TextView
+                        android:gravity="center"
+                        android:id="@+id/tvSkill4"
+                        android:textSize="16sp"
+                        android:layout_margin="8dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        />
+
+                    <TextView
+                        android:gravity="center"
+                        android:id="@+id/tvSkill5"
+                        android:layout_width="wrap_content"
+                        android:layout_margin="8dp"
+                        android:textSize="16sp"
+                        android:layout_height="wrap_content"
+                        />
+                </com.google.android.flexbox.FlexboxLayout>
                 <TextView
                     android:textAlignment="center"
                     android:layout_marginTop="10dp"

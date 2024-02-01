@@ -22,6 +22,8 @@ class UserModel{
     var socialMediaLinks: List<SocialMediaLink>? = null
     var contactInformation: ContactInformation? = null
     var paymentMethods: List<PaymentMethod>? = null
+    var followers: List<String>? = null
+    var following: List<String>? = null
 
 
     constructor()
@@ -47,6 +49,8 @@ class UserModel{
         socialMediaLinks: List<SocialMediaLink>? = null,
         contactInformation: ContactInformation? = null,
         paymentMethods: List<PaymentMethod>? = null,
+        followers: List<String>? = null,
+        following: List<String>? = null,
     ) {
         this.userId = userId
         this.username = username
@@ -68,6 +72,8 @@ class UserModel{
         this.socialMediaLinks = socialMediaLinks
         this.contactInformation = contactInformation
         this.paymentMethods = paymentMethods
+        this.followers = followers
+        this.following = following
     }
 }
 data class PortfolioItem(

@@ -140,6 +140,7 @@ class ProfileFragment : Fragment() {
         viewModel.getUserDataFromFirebase()
         binding.profileFragmentSwipeRefreshLayout.isRefreshing = false
     }
+
     private fun observeLiveData(){
         viewModel.savedUserData.observe(viewLifecycleOwner, Observer {userData ->
             if (userData == null){
@@ -153,6 +154,9 @@ class ProfileFragment : Fragment() {
         viewModel.allUserData.observe(viewLifecycleOwner, Observer {userData ->
             binding.apply {
                 userInfo = userData
+            }
+            if (userData.skills != null){
+                showSkills(userData.skills!!)
             }
         })
         viewModel.message.observe(viewLifecycleOwner, Observer {
@@ -205,6 +209,20 @@ class ProfileFragment : Fragment() {
             }
             showDiscoverItems()
         })
+        viewModel.followerCount.observe(viewLifecycleOwner, Observer {
+            binding.tvFollowersCount.text = it.toString()
+        })
     }
 
+    private fun showSkills(skills : List<String>){
+        for ((index,skill) in skills.withIndex()){
+            when(index){
+                0->{binding.tvSkill1.text = skill}
+                1->{binding.tvSkill2.text = skill}
+                2->{binding.tvSkill3.text = skill}
+                3->{binding.tvSkill4.text = skill}
+                4->{binding.tvSkill5.text = skill}
+            }
+        }
+    }
 }

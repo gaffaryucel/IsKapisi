@@ -132,16 +132,6 @@
         android:name="com.androiddevelopers.freelanceapp.view.profile.EditMainProfileInfoFragment"
         android:label="fragment_edit_main_profile_info"
         tools:layout="@layout/fragment_edit_main_profile_info" >
-        <argument
-            android:name="user_name"
-            app:argType="string" />
-        <argument android:name="bio"
-            app:argType="string" />
-        <argument android:name="image"
-            app:argType="string" />
-        <argument
-            android:name="job_title"
-            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/editProfileAccountSettingsFragment"

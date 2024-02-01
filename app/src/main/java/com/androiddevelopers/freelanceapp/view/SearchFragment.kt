@@ -10,12 +10,8 @@ import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.androiddevelopers.freelanceapp.R
-import com.androiddevelopers.freelanceapp.adapters.CreateChatAdapter
-import com.androiddevelopers.freelanceapp.adapters.DiscoverAdapter
 import com.androiddevelopers.freelanceapp.adapters.SearchAdapter
-import com.androiddevelopers.freelanceapp.databinding.FragmentDiscoverBinding
 import com.androiddevelopers.freelanceapp.databinding.FragmentSearchBinding
-import com.androiddevelopers.freelanceapp.viewmodel.DiscoverViewModel
 import com.androiddevelopers.freelanceapp.viewmodel.SearchViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
@@ -58,11 +54,6 @@ class SearchFragment : Fragment() {
                 return true
             }
         })
-        binding.svSearch.requestFocus()
-        val imm = activity?.getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
-        imm.toggleSoftInput(android.view.inputmethod.InputMethodManager.SHOW_FORCED, 0)
-        binding.svSearch.isIconified = false
-
         observeLiveData()
     }
     private fun observeLiveData(){

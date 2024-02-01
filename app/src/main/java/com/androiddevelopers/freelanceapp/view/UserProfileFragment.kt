@@ -7,19 +7,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.ProfileDiscoverAdapter
 import com.androiddevelopers.freelanceapp.adapters.ProfileEmployerAdapter
 import com.androiddevelopers.freelanceapp.adapters.ProfileFreelancerAdapter
-import com.androiddevelopers.freelanceapp.databinding.FragmentProfileBinding
 import com.androiddevelopers.freelanceapp.databinding.FragmentUserProfileBinding
 import com.androiddevelopers.freelanceapp.util.Status
-import com.androiddevelopers.freelanceapp.view.profile.ProfileFragmentDirections
 import com.androiddevelopers.freelanceapp.viewmodel.UserProfileViewModel
-import com.androiddevelopers.freelanceapp.viewmodel.profile.ProfileViewModel
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -40,6 +36,8 @@ class UserProfileFragment : Fragment() {
     private var _binding: FragmentUserProfileBinding? = null
     private val binding get() = _binding!!
 
+    private var isFollowing : Boolean? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -54,13 +52,14 @@ class UserProfileFragment : Fragment() {
         discoverAdapter = ProfileDiscoverAdapter()
 
         userId = arguments?.getString("id")
-
+        viewModel.getFollowers(userId ?: "")
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.rvProfile.layoutManager = GridLayoutManager(requireContext(),3)
+
         if (userId != null){
             viewModel.getUserDataFromFirebase(userId!!)
         }
@@ -69,8 +68,8 @@ class UserProfileFragment : Fragment() {
         }
         observeLiveData()
         setupTabLayout()
-        binding.btnEditProfile.setOnClickListener {
-
+        binding.btnFollow.setOnClickListener {
+            viewModel.followOrUnFollow(isFollowing ?: false)
         }
     }
     private fun setupTabLayout(){
@@ -206,6 +205,32 @@ class UserProfileFragment : Fragment() {
             }
             showDiscoverItems()
         })
-    }
+        viewModel.followStatus.observe(viewLifecycleOwner, Observer {
+            val following = it.data
+            when (it.status) {
+                Status.SUCCESS -> {
+                    if (following != null){
+                        if (following){
+                            isFollowing = true
+                            binding.btnFollow.text = "Takibi Bırak"
+                        }else{
+                            isFollowing = false
+                            binding.btnFollow.text = "Takibi Et"
+                        }
+                    }
+                }
 
+                Status.LOADING -> {
+                        //
+                }
+
+                Status.ERROR -> {
+                        //
+                }
+            }
+        })
+        viewModel.followerCount.observe(viewLifecycleOwner, Observer {
+            binding.tvFollowersCount.text = it.toString()
+        })
+    }
 }
