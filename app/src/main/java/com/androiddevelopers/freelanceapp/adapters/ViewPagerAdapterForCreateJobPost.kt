@@ -6,10 +6,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.databinding.ColumnViewpagerForCreateJobPostBinding
-import com.androiddevelopers.freelanceapp.viewmodel.employer.CreateJobPostingViewModel
 
 class ViewPagerAdapterForCreateJobPost(
-    private val viewModel: CreateJobPostingViewModel,
+    private val listener: (ArrayList<Uri>) -> Unit,
     private var images: ArrayList<Uri> = arrayListOf()
 ) :
     RecyclerView.Adapter<ViewPagerAdapterForCreateJobPost.ViewPagerHolder>() {
@@ -36,7 +35,7 @@ class ViewPagerAdapterForCreateJobPost(
 
             imageDeleteViewPagerCreateJobPost.setOnClickListener {
                 images.removeAt(position)
-                viewModel.setImageUriList(images)
+                listener(images)
             }
         }
 

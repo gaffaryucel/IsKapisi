@@ -71,7 +71,11 @@ class CreateJobPostingFragment : Fragment() {
 
         selectedImages = arrayListOf()
 
-        viewPagerAdapter = ViewPagerAdapterForCreateJobPost(viewModel)
+        viewPagerAdapter = ViewPagerAdapterForCreateJobPost(listener = {
+            viewModel.setImageUriList(it)
+        })
+
+
 
         return view
     }

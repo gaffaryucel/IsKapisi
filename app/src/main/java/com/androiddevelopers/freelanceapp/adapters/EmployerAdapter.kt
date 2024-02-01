@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.R
@@ -12,10 +11,8 @@ import com.androiddevelopers.freelanceapp.databinding.RowEmployerJobBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.util.AppDiffUtil
 import com.androiddevelopers.freelanceapp.util.downloadImage
-import com.androiddevelopers.freelanceapp.view.employer.JobPostingsFragmentDirections
-import com.androiddevelopers.freelanceapp.viewmodel.employer.JobPostingsViewModel
 
-class EmployerAdapter(private val viewModel: JobPostingsViewModel) :
+class EmployerAdapter(private val listener: (EmployerJobPost, View) -> Unit) :
     RecyclerView.Adapter<EmployerAdapter.EmployerViewHolder>() {
     private val diffUtil = AppDiffUtil<EmployerJobPost>()
     private val asyncListDiffer = AsyncListDiffer(this, diffUtil)
@@ -39,24 +36,14 @@ class EmployerAdapter(private val viewModel: JobPostingsViewModel) :
     override fun onBindViewHolder(holder: EmployerViewHolder, position: Int) {
         val employerJobPost = employerList[position]
 
-
         with(holder.binding) {
             employer = employerJobPost
 
-
-            cardEmployerButtonDetail.setOnClickListener {
-                employerJobPost.postId?.let { id ->
-                    //firebase den gelen görüntüleme sayısını alıyoruz
-                    //karta tıklandığında 1 arttırıp firebase üzerinde ilgili değeri güncelliyoruz
-                    var count = employerJobPost.viewCount
-                    count = if (count == 0 || count == null) 1 else count + 1
-                    viewModel.updateViewCountEmployerJobPostWithDocumentById(id, count)
-
-                    //ilan id numarası ile detay sayfasına yönlendirme yapıyoruz
-                    val directions =
-                        JobPostingsFragmentDirections
-                            .actionJobPostingFragmentToDetailJobPostingsFragment(id)
-                    Navigation.findNavController(it).navigate(directions)
+            cardEmployerButtonDetail.setOnClickListener { v ->
+                employerJobPost.postId?.let {
+                    //görüntüleme sayısı arttırma ve navigasyon işlemlerini
+                    //adapter dışında fragment içinde yapıyoruz
+                    listener(employerJobPost, v)
                 }
             }
 
