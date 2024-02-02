@@ -63,8 +63,6 @@ class UserProfileViewModel  @Inject constructor(
                         getDiscoverPostsFromUser(userId)
                         getEmployerJobPostsFromUser(userId)
                         getFreelancerJobPostsFromUser(userId)
-                        println("userData : "+user)
-                        checkFollowing(user.followers ?: emptyList())
                     }else{
                         _message.value = Resource.error("Belirtilen belge bulunamadı",null)
                     }
@@ -143,16 +141,6 @@ class UserProfileViewModel  @Inject constructor(
         }
     }
 
-
-    private fun checkFollowing(followers : List<String>) {
-        for (i in followers){
-            if (i.equals(currentUserId)){
-                _followStatus.value = Resource.success(true)
-            }else{
-                _followStatus.value = Resource.success(false)
-            }
-        }
-    }
     fun followOrUnFollow(isFollowing : Boolean){
         if (isFollowing){
             unFollow()

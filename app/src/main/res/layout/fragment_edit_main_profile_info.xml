@@ -4,8 +4,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
-            name="user"
-            type="com.androiddevelopers.freelanceapp.model.UserModel" />
+            name="username"
+            type="String" />
+        <variable
+            name="email"
+            type="String" />
+        <variable
+            name="bio"
+            type="String" />
     </data>
     <ScrollView
         android:id="@+id/svEditMainProfile"
@@ -60,7 +66,7 @@
 
             <EditText
                 android:id="@+id/etUserName"
-                android:text="@{user.username}"
+                android:text="@{username}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="kullanıcı adı" />
@@ -68,93 +74,19 @@
 
             <EditText
                 android:id="@+id/etEmail"
-                android:text="@{user.email}"
+                android:text="@{email}"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/edittextHeight"
                 android:hint="E-posta adresiniz" />
 
             <EditText
-                android:id="@+id/etUserJob"
-                android:text="@{user.jobTitle}"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="7"
-                android:hint="İşinizi girin" />
-
-            <EditText
                 android:id="@+id/etUserBio"
-                android:text="@{user.bio}"
+                android:text="@{bio}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="7"
                 android:hint="Kendinizden Bahsedin" />
 
-            <com.google.android.flexbox.FlexboxLayout
-                android:id="@+id/flexbox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:flexWrap="wrap"
-                app:alignItems="stretch"
-                app:alignContent="stretch" >
-
-                <TextView
-                    android:id="@+id/tvSkill1"
-                    android:textSize="16sp"
-                    android:layout_margin="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-
-                <TextView
-                    android:id="@+id/tvSkill2"
-                    android:textSize="16sp"
-                    android:layout_margin="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-
-                <TextView
-                    android:id="@+id/tvSkill3"
-                    android:layout_width="wrap_content"
-                    android:layout_margin="8dp"
-                    android:textSize="16sp"
-                    android:layout_height="wrap_content"
-                    />
-                <TextView
-                    android:id="@+id/tvSkill4"
-                    android:textSize="16sp"
-                    android:layout_margin="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-
-                <TextView
-                    android:id="@+id/tvSkill5"
-                    android:layout_width="wrap_content"
-                    android:layout_margin="8dp"
-                    android:textSize="16sp"
-                    android:layout_height="wrap_content"
-                    />
-            </com.google.android.flexbox.FlexboxLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/etAddSkill"
-                    android:layout_width="match_parent"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"/>
-
-                <TextView
-                    android:text="Ekle"
-                    android:textStyle="bold"
-                    android:layout_marginEnd="8dp"
-                    android:id="@+id/tvAddSkill"
-                    android:textSize="18sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
             <Button
                 android:layout_marginTop="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"

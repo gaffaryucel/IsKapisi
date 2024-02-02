@@ -42,7 +42,12 @@ class EditUserProfileInfoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.cardViewProfile.setOnClickListener{
-            val action = EditUserProfileInfoFragmentDirections.actionEditUserProfileInfoFragmentToEditMainProfileInfoFragment()
+            val action = EditUserProfileInfoFragmentDirections.actionEditUserProfileInfoFragmentToEditMainProfileInfoFragment(
+                userData.value?.username.toString(),
+                userData.value?.email.toString(),
+                userData.value?.bio.toString(),
+                userData.value?.profileImageUrl.toString()
+            )
             Navigation.findNavController(it).navigate(action)
         }
         binding.cardViewPersonalInfo.setOnClickListener{
@@ -53,6 +58,10 @@ class EditUserProfileInfoFragment : Fragment() {
                 userData.value?.location?.city.toString(),
                 userData.value?.location?.address.toString()
             )
+            Navigation.findNavController(it).navigate(action)
+        }
+        binding.cardViewServiceDetails.setOnClickListener{
+            val action = EditUserProfileInfoFragmentDirections.actionEditUserProfileInfoFragmentToEditProfileServiceInfoFragment()
             Navigation.findNavController(it).navigate(action)
         }
         binding.cardViewLogout.setOnClickListener{

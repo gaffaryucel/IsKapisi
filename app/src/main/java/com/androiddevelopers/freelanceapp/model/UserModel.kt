@@ -10,6 +10,7 @@ class UserModel{
     var bio: String? = null
     var phone: String? = null
     var jobTitle: String? = null
+    var jobDescription: String? = null
     var skills: List<String>? = null
     var portfolio: List<PortfolioItem>? = null
     var reviews: List<Review>? = null
@@ -22,9 +23,6 @@ class UserModel{
     var socialMediaLinks: List<SocialMediaLink>? = null
     var contactInformation: ContactInformation? = null
     var paymentMethods: List<PaymentMethod>? = null
-    var followers: List<String>? = null
-    var following: List<String>? = null
-
 
     constructor()
 
@@ -37,6 +35,7 @@ class UserModel{
         bio: String? = null,
         phone: String? = null,
         jobTitle: String? = null,
+        jobDescription: String? = null,
         skills: List<String>? = null,
         portfolio: List<PortfolioItem>? = null,
         reviews: List<Review>? = null,
@@ -49,8 +48,6 @@ class UserModel{
         socialMediaLinks: List<SocialMediaLink>? = null,
         contactInformation: ContactInformation? = null,
         paymentMethods: List<PaymentMethod>? = null,
-        followers: List<String>? = null,
-        following: List<String>? = null,
     ) {
         this.userId = userId
         this.username = username
@@ -60,6 +57,7 @@ class UserModel{
         this.bio = bio
         this.phone = phone
         this.jobTitle = jobTitle
+        this.jobDescription = jobDescription
         this.skills = skills
         this.portfolio = portfolio
         this.reviews = reviews
@@ -72,8 +70,6 @@ class UserModel{
         this.socialMediaLinks = socialMediaLinks
         this.contactInformation = contactInformation
         this.paymentMethods = paymentMethods
-        this.followers = followers
-        this.following = following
     }
 }
 data class PortfolioItem(

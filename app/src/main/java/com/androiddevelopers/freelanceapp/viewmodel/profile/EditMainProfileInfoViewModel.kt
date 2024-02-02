@@ -36,10 +36,6 @@ class EditMainProfileInfoViewModel  @Inject constructor(
     val userData: LiveData<UserModel>
         get() = _userData
 
-    init {
-        getUserDataFromFirebase()
-    }
-
     fun uploadUserProfilePhoto(r: ByteArray) = viewModelScope.launch {
         val photoFileName = "${UUID.randomUUID()}.jpg"
         val photoRef = storageReference.child("users/${userId}/profilePhoto/$photoFileName")
@@ -66,29 +62,6 @@ class EditMainProfileInfoViewModel  @Inject constructor(
             key to userhoto
         )
         firebaseRepo.updateUserData(userId,photoMap)
-    }
-
-    private fun getUserDataFromFirebase(){
-        firebaseRepo.getUserDataByDocumentId(userId)
-            .addOnSuccessListener { documentSnapshot ->
-                if (documentSnapshot.exists()) {
-                    val user = documentSnapshot.toObject(UserModel::class.java)
-                    if (user != null) {
-                        _userData.value = user ?: UserModel()
-                        _message.value = Resource.success(null)
-                    }else{
-                        _message.value = Resource.error("Belirtilen belge bulunamadı",null)
-                    }
-                } else {
-                    // Belge yoksa işlemleri buraya ekleyebilirsiniz
-                    _message.value = Resource.error("kullanıcı kaydedilmemiş",null)
-                }
-            }
-            .addOnFailureListener { exception ->
-                // Hata durzumunda işlemleri buraya ekleyebilirsiniz
-                println("Belge alınamadı. Hata: $exception")
-                _message.value = Resource.error("Belge alınamadı. Hata: $exception",null)
-            }
     }
 
 }

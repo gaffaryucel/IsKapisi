@@ -16,6 +16,7 @@ import com.androiddevelopers.freelanceapp.adapters.ProfileFreelancerAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentProfileBinding
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.viewmodel.profile.ProfileViewModel
+import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -158,6 +159,11 @@ class ProfileFragment : Fragment() {
             if (userData.skills != null){
                 showSkills(userData.skills!!)
             }
+            if (userData.profileImageUrl != null){
+                if (userData.profileImageUrl!!.isNotEmpty()){
+                    Glide.with(requireContext()).load(userData.profileImageUrl.toString()).into(binding.ivUserProfile)
+                }
+            }
         })
         viewModel.message.observe(viewLifecycleOwner, Observer {
             /*
@@ -207,6 +213,7 @@ class ProfileFragment : Fragment() {
             }else{
                 isDiscoverListEmpty = true
             }
+            binding.tvPostCount.text = discoverPosts.size.toString()
             showDiscoverItems()
         })
         viewModel.followerCount.observe(viewLifecycleOwner, Observer {

@@ -42,14 +42,16 @@ class EditMainProfileInfoFragment : Fragment() {
     private var allPermissionsGranted = false
     private var resultByteArray = byteArrayOf()
 
-    private var skillsList = ArrayList<String>()
-
-    private var user = UserModel()
     private lateinit var viewModel: EditMainProfileInfoViewModel
 
     private var _binding: FragmentEditMainProfileInfoBinding? = null
     private val binding get() = _binding!!
-    var isObserved = false
+
+    private var _username : String? = null
+    private var _email : String? = null
+    private var _bio : String? = null
+    private var _image : String? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -58,6 +60,11 @@ class EditMainProfileInfoFragment : Fragment() {
         viewModel = ViewModelProvider(this)[EditMainProfileInfoViewModel::class.java]
         _binding = FragmentEditMainProfileInfoBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        _username = arguments?.let { it.getString("username") ?: "" }
+        _email = arguments?.getString("email") ?: ""
+        _bio = arguments?.getString("bio") ?: ""
+        _image = arguments?.getString("image") ?: ""
+
         return root
     }
 
@@ -65,6 +72,12 @@ class EditMainProfileInfoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requestPermissionsIfNeeded()
+
+        binding.apply {
+            username = _username
+            email = _email
+            bio = _bio
+        }
 
         observeLiveData()
 
@@ -81,55 +94,40 @@ class EditMainProfileInfoFragment : Fragment() {
         binding.btnSaveProfilePhoto.setOnClickListener {
             viewModel.uploadUserProfilePhoto(resultByteArray)
         }
-        binding.ivCancelUploadImage.setOnClickListener {
-            binding.btnSaveProfilePhoto.visibility = View.INVISIBLE
-            binding.ivCancelUploadImage.visibility = View.INVISIBLE
-            if (user.profileImageUrl!!.isNotEmpty()){
-                Glide.with(requireContext()).load(user.profileImageUrl).into(binding.ivUserProfilePhoto)
+        if (_image!= null){
+            if (_image!!.isNotEmpty()){
+                Glide.with(requireContext()).load(_image).into(binding.ivUserProfilePhoto)
             }else{
                 binding.ivUserProfilePhoto.setBackgroundResource(R.drawable.placeholder)
             }
         }
-        binding.tvAddSkill.setOnClickListener{
-            val skill = binding.etAddSkill.text.toString()
-            if (skillsList.size < 5){
-                skillsList.add(skill)
-                when(skillsList.size){
-                    1->{binding.tvSkill1.text = skill}
-                    2->{binding.tvSkill2.text = skill}
-                    3->{binding.tvSkill3.text = skill}
-                    4->{binding.tvSkill4.text = skill}
-                    5->{binding.tvSkill5.text = skill}
+        binding.ivCancelUploadImage.setOnClickListener {
+            binding.btnSaveProfilePhoto.visibility = View.INVISIBLE
+            binding.ivCancelUploadImage.visibility = View.INVISIBLE
+            if (_image!= null){
+                if (_image!!.isNotEmpty()){
+                    Glide.with(requireContext()).load(_image).into(binding.ivUserProfilePhoto)
+                }else{
+                    binding.ivUserProfilePhoto.setBackgroundResource(R.drawable.placeholder)
                 }
-                binding.etAddSkill.setText("")
-                binding.svEditMainProfile.postDelayed({
-                    binding.svEditMainProfile.smoothScrollTo(0, 800) // Y ekseninde yumuşak bir şekilde 500 piksel aşağı kaydır
-                }, 50) // 50 milisaniye (1 saniye) sonra kaydırma işlemi başlatılır
-            }else{
-                Toast.makeText(requireContext(), "En fazla 5 yetenek girebilirsiniz", Toast.LENGTH_SHORT).show()
             }
         }
     }
     private fun updateInfo(){
         val newUserName = binding.etUserName.text.toString()
-        if (!user.username.equals(newUserName) && newUserName.isNotEmpty()){
+        if (_username.equals(newUserName) && newUserName.isNotEmpty()){
             viewModel.updateUserInfo("username",newUserName)
         }
 
         val newEmail = binding.etEmail.text.toString()
-        if (!user.email.equals(newEmail)&& newEmail.isNotEmpty()){
+        if (!_email.equals(newEmail)&& newEmail.isNotEmpty()){
             viewModel.updateUserInfo("email",newEmail)
         }
 
         val newBio = binding.etUserBio.text.toString()
-        if (!user.bio.equals(newBio)&& newBio.isNotEmpty()){
+        if (!_bio.equals(newBio)&& newBio.isNotEmpty()){
             viewModel.updateUserInfo("bio",newBio)
         }
-        val newJob = binding.etUserJob.text.toString()
-        if (!user.jobTitle.equals(newJob)&& newJob.isNotEmpty()){
-            viewModel.updateUserInfo("jobTitle",newJob)
-        }
-        viewModel.updateUserInfo("skills",skillsList)
     }
     private fun observeLiveData(){
         viewModel.uploadMessage.observe(viewLifecycleOwner, Observer {
@@ -140,23 +138,6 @@ class EditMainProfileInfoFragment : Fragment() {
                 Status.LOADING->{}
                 Status.ERROR->{
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
-                }
-            }
-        })
-        viewModel.userData.observe(viewLifecycleOwner, Observer {userData ->
-            binding.user = userData
-            user = userData
-            if (user.profileImageUrl != null){
-                Glide.with(requireContext()).load(user.profileImageUrl).into(binding.ivUserProfilePhoto)
-            }
-            skillsList = user.skills as ArrayList<String>
-            for ((index,skill) in skillsList.withIndex()){
-                when(index){
-                    0->{binding.tvSkill1.text = skill}
-                    1->{binding.tvSkill2.text = skill}
-                    2->{binding.tvSkill3.text = skill}
-                    3->{binding.tvSkill4.text = skill}
-                    4->{binding.tvSkill5.text = skill}
                 }
             }
         })
