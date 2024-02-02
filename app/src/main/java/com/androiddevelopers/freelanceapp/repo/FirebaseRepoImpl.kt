@@ -74,6 +74,13 @@ class FirebaseRepoImpl @Inject constructor(
         return freelancerPostCollection.document(documentId).get()
     }
 
+    override fun updateViewCountFreelancerJobPostWithDocumentById(
+        postId: String,
+        newCount: Int
+    ): Task<Void> {
+        return freelancerPostCollection.document(postId).update("viewCount", newCount)
+    }
+
     override fun addEmployerJobPostToFirestore(job: EmployerJobPost): Task<Void> {
         return employerPostCollection.document(job.postId.toString()).set(job)
     }
@@ -84,6 +91,13 @@ class FirebaseRepoImpl @Inject constructor(
 
     override fun getEmployerJobPostWithDocumentByIdFromFirestore(documentId: String): Task<DocumentSnapshot> {
         return employerPostCollection.document(documentId).get()
+    }
+
+    override fun updateViewCountEmployerJobPostWithDocumentById(
+        postId: String,
+        newCount: Int
+    ): Task<Void> {
+        return employerPostCollection.document(postId).update("viewCount", newCount)
     }
 
     override fun addImageToStorageForJobPosting(
@@ -175,6 +189,7 @@ class FirebaseRepoImpl @Inject constructor(
             .set(data)
     }
 
+   
    override fun getAllDiscoverPostsFromUser(userId : String): Task<QuerySnapshot> {
         return discoverPostCollection.whereEqualTo("postOwner", userId).get()
     }

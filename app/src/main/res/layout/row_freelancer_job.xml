@@ -8,7 +8,6 @@
         <variable
             name="freelancer"
             type="com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost" />
-
     </data>
 
     <LinearLayout
@@ -27,17 +26,64 @@
                 android:layout_width="match_parent"
                 android:layout_height="300dp">
 
-                <ImageView
-                    android:id="@+id/ivCardFreelancer"
-                    downloadImage="@{freelancer.images[0]}"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:layout_constraintBottom_toTopOf="@id/card_freelance_guideline_horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="ContentDescription,ImageContrastCheck"
-                    tools:src="@drawable/image_placeholder" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardImagePlaceHolderHome"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/imagePlaceHolderHome"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/placeholder"
+                            tools:ignore="ImageContrastCheck" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/layoutImageViewsHome"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintWidth_max="@dimen/edittextMaxWidth">
+
+
+                        <androidx.viewpager2.widget.ViewPager2
+                            android:id="@+id/viewPagerHome"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:orientation="horizontal"
+                            app:layout_constraintBottom_toTopOf="@id/indicatorHome"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <me.relex.circleindicator.CircleIndicator3
+                            android:id="@+id/indicatorHome"
+                            android:layout_width="0dp"
+                            android:layout_height="20dp"
+                            android:background="@color/indicator_background"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="@id/viewPagerHome"
+                            app:layout_constraintStart_toStartOf="@id/viewPagerHome"
+                            app:layout_constraintTop_toBottomOf="@id/viewPagerHome" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cardFreelancerDetail"
@@ -113,17 +159,17 @@
                         android:text="@{freelancer.budget.toString()}"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toTopOf="@+id/cardFreelanceButtonBuy"
+                        app:layout_constraintBottom_toTopOf="@+id/cardFreelanceButtonDetail"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/card_freelance_guideline_vertical_right"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="₺5000" />
 
                     <Button
-                        android:id="@+id/cardFreelanceButtonBuy"
+                        android:id="@+id/cardFreelanceButtonDetail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/buy"
+                        android:text="@string/button_detail_text"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/card_freelance_guideline_vertical_right"

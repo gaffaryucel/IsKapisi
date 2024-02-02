@@ -4,6 +4,8 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -21,9 +23,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.SkillAdapter
+import com.androiddevelopers.freelanceapp.adapters.ViewPagerAdapterForCreateJobPost
 import com.androiddevelopers.freelanceapp.databinding.FragmentCreateJobPostingBinding
 import com.androiddevelopers.freelanceapp.util.Status
-import com.androiddevelopers.freelanceapp.util.downloadImage
 import com.androiddevelopers.freelanceapp.viewmodel.employer.CreateJobPostingViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -37,7 +39,6 @@ class CreateJobPostingFragment : Fragment() {
     private lateinit var datePicker: MaterialDatePicker<Long>
     private lateinit var selectedImages: ArrayList<Uri>
     private var selectedImagesSize = 0
-    private var selectedImagesIndex = 0
     private lateinit var imageLauncher: ActivityResultLauncher<Intent>
 
     private var _binding: FragmentCreateJobPostingBinding? = null
@@ -47,6 +48,8 @@ class CreateJobPostingFragment : Fragment() {
 
     private lateinit var skillAdapter: SkillAdapter
     private lateinit var skillList: ArrayList<String>
+
+    private lateinit var viewPagerAdapter: ViewPagerAdapterForCreateJobPost
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,11 +71,11 @@ class CreateJobPostingFragment : Fragment() {
 
         selectedImages = arrayListOf()
 
-        with(binding) {
-            fabDeleteImage.visibility = View.INVISIBLE
-            previousImage.visibility = View.INVISIBLE
-            nextImage.visibility = View.INVISIBLE
-        }
+        viewPagerAdapter = ViewPagerAdapterForCreateJobPost(listener = {
+            viewModel.setImageUriList(it)
+        })
+
+
 
         return view
     }
@@ -84,9 +87,15 @@ class CreateJobPostingFragment : Fragment() {
         setProgressBar(false)
         observeLiveData(viewLifecycleOwner, view)
 
+        viewModel.setImageUriList(selectedImages)
+
         with(binding) {
             //data binding ile skill adaptörü set ediyoruz
             rvSkillAdapter = skillAdapter
+
+            //viewpager adapter ve indicatoru set ediyoruz
+            viewPagerCreateJobPost.adapter = viewPagerAdapter
+            indicatorCreateJobPost.setViewPager(viewPagerCreateJobPost)
 
             //skill text içindeki icon ile listeye yeni skill ekliyoruz
             // sonrasında yeni eklenen skill in recycler view de ve diğer yerlerde güncellenemsi iç viewmodel e gönderiyoruz
@@ -100,7 +109,7 @@ class CreateJobPostingFragment : Fragment() {
             createjobPostButton.setOnClickListener {
                 with(viewModel) {
                     addImageAndJobPostToFirebase( //resim ve işveren ilanı bilgilerini view modele gönderiyoruz
-                        selectedImages, // resmin cihazdaki konumu
+                        selectedImages, // yüklenecek resimlerin cihazdaki konumu
                         createEmployerJobPost( // işveren ilanı için formda doldurulan yerler ile birlikte gönderi oluşturuyoruz
                             title = titleTextInputEditText.text.toString(),
                             description = descriptionTextInputEditText.text.toString(),
@@ -108,7 +117,8 @@ class CreateJobPostingFragment : Fragment() {
                             location = locationsTextInputEditText.text.toString(),
                             deadline = deadlineTextInputEditText.text.toString(),
                             budget = budgetTextInputEditText.text.toString().toDouble(),
-                            postId = UUID.randomUUID().toString()
+                            postId = UUID.randomUUID().toString(),
+                            isUrgent = switchUrgentCreateJobPost.isChecked
                         )
                     )
                 }
@@ -135,35 +145,24 @@ class CreateJobPostingFragment : Fragment() {
                 }
             }
 
+            //switch background rengini değiştiriyoruz
+            switchUrgentCreateJobPost.trackTintList = ColorStateList(
+                arrayOf(
+                    intArrayOf(android.R.attr.state_checked),
+                    intArrayOf(-android.R.attr.state_checked)
+                ),
+                intArrayOf(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.toolbar_background
+                    ), Color.TRANSPARENT
+                )
+            )
 
             fabLoadImage.setOnClickListener {
                 chooseImage()
             }
 
-
-
-            fabDeleteImage.setOnClickListener {
-                selectedImages.removeAt(selectedImagesIndex)
-                viewModel.setImageUriList(selectedImages)
-                if (selectedImagesIndex > 0) {
-                    viewModel.setImageIndex(selectedImagesIndex - 1)
-                } else {
-                    viewModel.setImageIndex(0)
-                }
-            }
-
-            previousImage.setOnClickListener {
-                if (selectedImagesIndex > 0) {
-                    viewModel.setImageIndex(selectedImagesIndex - 1)
-                }
-            }
-
-            nextImage.setOnClickListener {
-                if (selectedImagesIndex < selectedImagesSize - 1) {
-                    viewModel.setImageIndex(selectedImagesIndex + 1)
-                }
-
-            }
         }
 
         imageLauncher =
@@ -171,18 +170,7 @@ class CreateJobPostingFragment : Fragment() {
                 if (result.resultCode == Activity.RESULT_OK) {
                     result.data?.data?.let {
                         selectedImages.add(it)
-
-                        with(viewModel) {
-                            setImageUriList(selectedImages)
-                            //setImageSize(selectedImages.size)
-                            setImageIndex(selectedImages.lastIndex)
-                        }
-
-                        //downloadImage(binding.imageView, selectedImages.last().toString())
-//                        selectedImageUri = it
-//                        //seçilen resmi create ekranında göstermek için
-//                        downloadImage(binding.imageView, it.toString())
-
+                        viewModel.setImageUriList(selectedImages)
                     }
                 }
             }
@@ -216,50 +204,10 @@ class CreateJobPostingFragment : Fragment() {
 
             imageUriList.observe(owner) {
                 selectedImages = it
-            }
-
-            imageIndex.observe(owner) {
-                selectedImagesIndex = it
-
+                viewPagerAdapter.refreshList(it)
                 with(binding) {
-                    if (selectedImagesSize > 0) {
-                        if (selectedImagesIndex <= 0) {
-                            downloadImage(
-                                binding.imageView,
-                                selectedImages[0].toString()
-                            )
-                            previousImage.visibility = View.INVISIBLE
-                            if (selectedImagesSize > 1) {
-                                nextImage.visibility = View.VISIBLE
-                            } else {
-                                nextImage.visibility = View.INVISIBLE
-                            }
-                        } else if (selectedImagesIndex >= selectedImagesSize - 1) {
-                            downloadImage(
-                                binding.imageView,
-                                selectedImages[selectedImagesSize - 1].toString()
-                            )
-
-                            nextImage.visibility = View.INVISIBLE
-                            previousImage.visibility = View.VISIBLE
-                        } else {
-                            downloadImage(
-                                binding.imageView,
-                                selectedImages[selectedImagesIndex].toString()
-                            )
-
-                            previousImage.visibility = View.VISIBLE
-                            nextImage.visibility = View.VISIBLE
-                        }
-                    } else {
-                        downloadImage(
-                            binding.imageView,
-                            null
-                        )
-
-                        previousImage.visibility = View.INVISIBLE
-                        nextImage.visibility = View.INVISIBLE
-                    }
+                    //indicatoru viewpager yeni liste ile set ediyoruz
+                    indicatorCreateJobPost.setViewPager(viewPagerCreateJobPost)
                 }
 
             }
@@ -267,11 +215,15 @@ class CreateJobPostingFragment : Fragment() {
             imageSize.observe(owner) {
                 selectedImagesSize = it
 
+                //seçilen resim olmadığında viewpager 'ı gizleyip boş bir resim gösteriyoruz
+                //resim seçildiğinde işlemi tersine alıyoruz
                 with(binding) {
-                    if (selectedImagesSize > 0) {
-                        fabDeleteImage.visibility = View.VISIBLE
+                    if (it == 0 || it == null) {
+                        imagePlaceHolderCreateJobPost.visibility = View.VISIBLE
+                        layoutImageViewsCreateJobPost.visibility = View.INVISIBLE
                     } else {
-                        fabDeleteImage.visibility = View.INVISIBLE
+                        imagePlaceHolderCreateJobPost.visibility = View.INVISIBLE
+                        layoutImageViewsCreateJobPost.visibility = View.VISIBLE
                     }
                 }
             }

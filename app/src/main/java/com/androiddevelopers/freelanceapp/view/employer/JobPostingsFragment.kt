@@ -11,6 +11,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.EmployerAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentJobPostingsBinding
@@ -34,11 +35,26 @@ class JobPostingsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel = ViewModelProvider(requireActivity())[JobPostingsViewModel::class.java]
+        viewModel = ViewModelProvider(this)[JobPostingsViewModel::class.java]
         _binding = FragmentJobPostingsBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        employerAdapter = EmployerAdapter()
+        employerAdapter = EmployerAdapter { employerJobPost, v ->
+            employerJobPost.postId?.let { id ->
+                //firebase den gelen görüntüleme sayısını alıyoruz
+                //karta tıklandığında 1 arttırıp firebase üzerinde ilgili değeri güncelliyoruz
+                var count = employerJobPost.viewCount
+                count = if (count == 0 || count == null) 1 else count + 1
+                viewModel.updateViewCountEmployerJobPostWithDocumentById(id, count)
+
+                //ilan id numarası ile detay sayfasına yönlendirme yapıyoruz
+                val directions =
+                    JobPostingsFragmentDirections
+                        .actionJobPostingFragmentToDetailJobPostingsFragment(id)
+                Navigation.findNavController(v).navigate(directions)
+            }
+        }
+
         listEmployerJobPost = arrayListOf()
 
         return view
@@ -83,8 +99,8 @@ class JobPostingsFragment : Fragment() {
             }
 
             firebaseLiveData.observe(owner) { list ->
-                employerAdapter.employerList =
-                    list // firebase 'den gelen veriler ile adapter'i yeniliyoruz
+                // firebase 'den gelen veriler ile adapter'i yeniliyoruz
+                employerAdapter.employerList = list
 
                 listEmployerJobPost.clear()
                 // firebase 'den gelen son verilerin kopyasını saklıyoruz
