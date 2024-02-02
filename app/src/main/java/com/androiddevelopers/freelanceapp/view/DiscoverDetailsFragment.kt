@@ -8,15 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.androiddevelopers.freelanceapp.R
-import com.androiddevelopers.freelanceapp.adapters.DiscoverAdapter
 import com.androiddevelopers.freelanceapp.adapters.DiscoverPostDetailsAdapter
-import com.androiddevelopers.freelanceapp.adapters.VideoAdapter
-import com.androiddevelopers.freelanceapp.databinding.FragmentDiscoverBinding
 import com.androiddevelopers.freelanceapp.databinding.FragmentDiscoverDetailsBinding
-import com.androiddevelopers.freelanceapp.databinding.FragmentShortVideoBinding
 import com.androiddevelopers.freelanceapp.viewmodel.DiscoverDetailsViewModel
-import com.androiddevelopers.freelanceapp.viewmodel.ShortVideoViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

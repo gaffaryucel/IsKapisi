@@ -40,10 +40,6 @@ interface FirebaseRepoInterFace {
     fun getEmployerJobPostWithDocumentByIdFromFirestore(documentId: String): Task<DocumentSnapshot>
     fun updateViewCountEmployerJobPostWithDocumentById(postId: String, newCount: Int): Task<Void>
 
-    // Firestore Video işlemleri
-    fun saveVideoToFirestore(video: VideoModel): Task<Void>
-    fun getVideoFromFirestore(): Task<QuerySnapshot>
-
     // Firestore Discover Post işlemleri
     fun uploadDiscoverPostToFirestore(post: DiscoverPostModel): Task<Void>
     fun getAllDiscoverPostsFromFirestore(): Task<QuerySnapshot>
@@ -73,13 +69,20 @@ interface FirebaseRepoInterFace {
         postId: String,
         file: String
     ): UploadTask
+    fun addDiscoverPostImage(
+        uri: Uri,
+        uId: String,
+        postId: String,
+        file: String
+    ): UploadTask
 
     //User Profile Data İşlemleri
     fun getAllDiscoverPostsFromUser(userId : String): Task<QuerySnapshot>
     fun getAllEmployerJobPostsFromUser(userId : String): Task<QuerySnapshot>
     fun getAllFreelancerJobPostsFromUser(userId : String): Task<QuerySnapshot>
-    fun follow(follower : String,followed : String): Task<Void>
-    fun addFollower(follower : String,followed : String): Task<Void>
+    fun follow(currentUserId: String, followingId: String): Task<Void>
+    fun unFollow(currentUserId: String, followingId: String): Task<Void>
     fun updateUserData(userId: String, updateData:  HashMap<String, Any?>): Task<Void>
+    fun getFollowers(userId: String): DatabaseReference
 }
 

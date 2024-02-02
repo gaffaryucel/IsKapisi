@@ -42,9 +42,9 @@
 
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="com.androiddevelopers.freelanceapp.view.ProfileFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.profile.ProfileFragment"
         android:label="profile"
-        tools:layout="@layout/fragment_profile">
+        tools:layout="@layout/fragment_profile" >
         <action
             android:id="@+id/action_navigation_profile_to_editUserProfileInfoFragment"
             app:destination="@id/editUserProfileInfoFragment" />
@@ -54,7 +54,7 @@
         android:id="@+id/chatsFragment"
         android:name="com.androiddevelopers.freelanceapp.view.ChatsFragment"
         android:label="fragment_chats"
-        tools:layout="@layout/fragment_chats">
+        tools:layout="@layout/fragment_chats" >
         <action
             android:id="@+id/action_chatsFragment_to_messagesFragment"
             app:destination="@id/messagesFragment" />
@@ -62,12 +62,12 @@
             android:id="@+id/action_chatsFragment_to_createChatRoomFragment"
             app:destination="@id/createChatRoomFragment" />
     </fragment>
-
+  
     <fragment
         android:id="@+id/messagesFragment"
         android:name="com.androiddevelopers.freelanceapp.view.MessagesFragment"
         android:label="fragment_messages"
-        tools:layout="@layout/fragment_messages">
+        tools:layout="@layout/fragment_messages" >
         <argument
             android:name="chat_id"
             app:argType="string" />
@@ -85,7 +85,8 @@
         android:id="@+id/createChatRoomFragment"
         android:name="com.androiddevelopers.freelanceapp.view.CreateChatRoomFragment"
         android:label="fragment_create_chat_room"
-        tools:layout="@layout/fragment_create_chat_room" />
+        tools:layout="@layout/fragment_create_chat_room" >
+    </fragment>
     <fragment
         android:id="@+id/createDiscoverPostFragment"
         android:name="com.androiddevelopers.freelanceapp.view.CreateDiscoverPostFragment"
@@ -95,14 +96,14 @@
         android:id="@+id/discoverDetailsFragment"
         android:name="com.androiddevelopers.freelanceapp.view.DiscoverDetailsFragment"
         android:label="fragment_discover_details"
-        tools:layout="@layout/fragment_discover_details">
+        tools:layout="@layout/fragment_discover_details" >
         <argument
             android:name="position"
             app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/editUserProfileInfoFragment"
-        android:name="com.androiddevelopers.freelanceapp.view.EditUserProfileInfoFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.profile.EditUserProfileInfoFragment"
         tools:layout="@layout/fragment_edit_user_profile_info">
         <action
             android:id="@+id/action_editUserProfileInfoFragment_to_editMainProfileInfoFragment"
@@ -121,14 +122,21 @@
         android:id="@+id/searchFragment"
         android:name="com.androiddevelopers.freelanceapp.view.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
+    </fragment>
     <fragment
         android:id="@+id/editMainProfileInfoFragment"
-        android:name="com.androiddevelopers.freelanceapp.view.profileinfo.EditMainProfileInfoFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.profile.EditMainProfileInfoFragment"
         android:label="fragment_edit_main_profile_info"
-        tools:layout="@layout/fragment_edit_main_profile_info">
+        tools:layout="@layout/fragment_edit_main_profile_info" >
         <argument
-            android:name="user_name"
+            android:name="username"
+            app:argType="string" />
+        <argument
+            android:name="email"
             app:argType="string" />
         <argument
             android:name="bio"
@@ -139,14 +147,14 @@
     </fragment>
     <fragment
         android:id="@+id/editProfileAccountSettingsFragment"
-        android:name="com.androiddevelopers.freelanceapp.view.profileinfo.EditProfileAccountSettingsFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.profile.EditProfileAccountSettingsFragment"
         android:label="fragment_edit_profile_account_settings"
         tools:layout="@layout/fragment_edit_profile_account_settings" />
     <fragment
         android:id="@+id/editProfilePersonalInfoFragment"
-        android:name="com.androiddevelopers.freelanceapp.view.profileinfo.EditProfilePersonalInfoFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.profile.EditProfilePersonalInfoFragment"
         android:label="fragment_edit_profile_personal_info"
-        tools:layout="@layout/fragment_edit_profile_personal_info">
+        tools:layout="@layout/fragment_edit_profile_personal_info" >
         <argument
             android:name="phone"
             app:argType="string" />
@@ -157,7 +165,7 @@
     </fragment>
     <fragment
         android:id="@+id/editProfileServiceInfoFragment"
-        android:name="com.androiddevelopers.freelanceapp.view.profileinfo.EditProfileServiceInfoFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.profile.EditProfileServiceInfoFragment"
         android:label="fragment_edit_profile_service_info"
         tools:layout="@layout/fragment_edit_profile_service_info" />
 
@@ -195,6 +203,14 @@
         tools:layout="@layout/fragment_detail_post">
         <argument
             android:name="freelancer_job_post_id"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/userProfileFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.UserProfileFragment"
+        tools:layout="@layout/fragment_user_profile">
+        <argument
+            android:name="id"
             app:argType="string" />
     </fragment>
 </navigation>

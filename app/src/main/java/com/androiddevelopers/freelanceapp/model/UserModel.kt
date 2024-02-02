@@ -9,6 +9,8 @@ class UserModel{
     var fullName: String? = null
     var bio: String? = null
     var phone: String? = null
+    var jobTitle: String? = null
+    var jobDescription: String? = null
     var skills: List<String>? = null
     var portfolio: List<PortfolioItem>? = null
     var reviews: List<Review>? = null
@@ -22,7 +24,6 @@ class UserModel{
     var contactInformation: ContactInformation? = null
     var paymentMethods: List<PaymentMethod>? = null
 
-
     constructor()
 
     constructor(
@@ -33,6 +34,8 @@ class UserModel{
         fullName: String? = null,
         bio: String? = null,
         phone: String? = null,
+        jobTitle: String? = null,
+        jobDescription: String? = null,
         skills: List<String>? = null,
         portfolio: List<PortfolioItem>? = null,
         reviews: List<Review>? = null,
@@ -53,6 +56,8 @@ class UserModel{
         this.fullName = fullName
         this.bio = bio
         this.phone = phone
+        this.jobTitle = jobTitle
+        this.jobDescription = jobDescription
         this.skills = skills
         this.portfolio = portfolio
         this.reviews = reviews

@@ -1,4 +1,4 @@
-package com.androiddevelopers.freelanceapp.viewmodel.profileinfo
+package com.androiddevelopers.freelanceapp.viewmodel.profile
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -23,7 +23,6 @@ class EditMainProfileInfoViewModel  @Inject constructor(
     private val storageReference = storage.reference
 
     private val userId = firebaseAuth.currentUser!!.uid
-    val email = firebaseAuth.currentUser!!.email
 
     private var _message = MutableLiveData<Resource<UserModel>>()
     val message: LiveData<Resource<UserModel>>
@@ -58,10 +57,11 @@ class EditMainProfileInfoViewModel  @Inject constructor(
             }
     }
 
-    fun updateUserInfo(key : String,userhoto: String) {
+    fun updateUserInfo(key : String,userhoto: Any) {
         val photoMap = hashMapOf<String,Any?>(
             key to userhoto
         )
         firebaseRepo.updateUserData(userId,photoMap)
     }
+
 }

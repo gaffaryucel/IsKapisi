@@ -142,7 +142,7 @@ class CreatePostViewModel  @Inject constructor(
             unfinishedJobs = unfinishedJobs,
             viewCount = viewCount,
             isUrgent = isUrgent,
-            freelancerId = freelancerId,
+            freelancerId = currentUserId,
             rating = rating
         )
     }

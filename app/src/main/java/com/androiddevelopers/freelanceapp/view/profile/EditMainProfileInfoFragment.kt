@@ -1,4 +1,4 @@
-package com.androiddevelopers.freelanceapp.view.profileinfo
+package com.androiddevelopers.freelanceapp.view.profile
 
 
 import android.Manifest
@@ -16,16 +16,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.FragmentEditMainProfileInfoBinding
+import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.util.Status
-import com.androiddevelopers.freelanceapp.viewmodel.profileinfo.EditMainProfileInfoViewModel
+import com.androiddevelopers.freelanceapp.viewmodel.profile.EditMainProfileInfoViewModel
 import com.bumptech.glide.Glide
+import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.ByteArrayOutputStream
@@ -44,10 +47,11 @@ class EditMainProfileInfoFragment : Fragment() {
     private var _binding: FragmentEditMainProfileInfoBinding? = null
     private val binding get() = _binding!!
 
-    private var user_name : String? = null
-    private var email : String? = null
-    private var biography : String? = null
-    private var image : String? = null
+    private var _username : String? = null
+    private var _email : String? = null
+    private var _bio : String? = null
+    private var _image : String? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -56,9 +60,11 @@ class EditMainProfileInfoFragment : Fragment() {
         viewModel = ViewModelProvider(this)[EditMainProfileInfoViewModel::class.java]
         _binding = FragmentEditMainProfileInfoBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        user_name = arguments?.getString("user_name")
-        biography = arguments?.getString("bio") ?: ""
-        image = arguments?.getString("image")
+        _username = arguments?.let { it.getString("username") ?: "" }
+        _email = arguments?.getString("email") ?: ""
+        _bio = arguments?.getString("bio") ?: ""
+        _image = arguments?.getString("image") ?: ""
+
         return root
     }
 
@@ -66,13 +72,16 @@ class EditMainProfileInfoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requestPermissionsIfNeeded()
-        email = viewModel.email
+
         binding.apply {
-            userName = user_name
-            eMail = email
-            bio = biography
+            username = _username
+            email = _email
+            bio = _bio
         }
-        Glide.with(requireContext()).load(image).into(binding.ivUserProfilePhoto)
+
+        observeLiveData()
+
+
         binding.btnSave.setOnClickListener {
             updateInfo()
         }
@@ -85,21 +94,38 @@ class EditMainProfileInfoFragment : Fragment() {
         binding.btnSaveProfilePhoto.setOnClickListener {
             viewModel.uploadUserProfilePhoto(resultByteArray)
         }
-        observeLiveData()
+        if (_image!= null){
+            if (_image!!.isNotEmpty()){
+                Glide.with(requireContext()).load(_image).into(binding.ivUserProfilePhoto)
+            }else{
+                binding.ivUserProfilePhoto.setBackgroundResource(R.drawable.placeholder)
+            }
+        }
+        binding.ivCancelUploadImage.setOnClickListener {
+            binding.btnSaveProfilePhoto.visibility = View.INVISIBLE
+            binding.ivCancelUploadImage.visibility = View.INVISIBLE
+            if (_image!= null){
+                if (_image!!.isNotEmpty()){
+                    Glide.with(requireContext()).load(_image).into(binding.ivUserProfilePhoto)
+                }else{
+                    binding.ivUserProfilePhoto.setBackgroundResource(R.drawable.placeholder)
+                }
+            }
+        }
     }
     private fun updateInfo(){
         val newUserName = binding.etUserName.text.toString()
-        if (!user_name.equals(newUserName) && newUserName.isNotEmpty()){
+        if (_username.equals(newUserName) && newUserName.isNotEmpty()){
             viewModel.updateUserInfo("username",newUserName)
         }
 
         val newEmail = binding.etEmail.text.toString()
-        if (!email.equals(newEmail)&& newEmail.isNotEmpty()){
+        if (!_email.equals(newEmail)&& newEmail.isNotEmpty()){
             viewModel.updateUserInfo("email",newEmail)
         }
 
         val newBio = binding.etUserBio.text.toString()
-        if (!biography.equals(newBio)&& newBio.isNotEmpty()){
+        if (!_bio.equals(newBio)&& newBio.isNotEmpty()){
             viewModel.updateUserInfo("bio",newBio)
         }
     }
@@ -138,12 +164,16 @@ class EditMainProfileInfoFragment : Fragment() {
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 REQUEST_IMAGE_CAPTURE -> {
+                    binding.btnSaveProfilePhoto.visibility = View.VISIBLE
+                    binding.ivCancelUploadImage.visibility = View.VISIBLE
                     val imageBitmap = data?.extras?.get("data") as Bitmap
                     binding.ivUserProfilePhoto.setImageBitmap(imageBitmap)
                     compressedForCam(imageBitmap)
                 }
 
                 REQUEST_IMAGE_PICK -> {
+                    binding.btnSaveProfilePhoto.visibility = View.VISIBLE
+                    binding.ivCancelUploadImage.visibility = View.VISIBLE
                     val selectedImageUri = data?.data
                     binding.ivUserProfilePhoto.setImageURI(selectedImageUri)
                     if (selectedImageUri != null) {

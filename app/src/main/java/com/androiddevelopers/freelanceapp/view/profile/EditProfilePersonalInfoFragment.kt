@@ -1,4 +1,4 @@
-package com.androiddevelopers.freelanceapp.view.profileinfo
+package com.androiddevelopers.freelanceapp.view.profile
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -9,20 +9,15 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import com.androiddevelopers.freelanceapp.R
-import com.androiddevelopers.freelanceapp.databinding.FragmentEditMainProfileInfoBinding
 import com.androiddevelopers.freelanceapp.databinding.FragmentEditProfilePersonalInfoBinding
 import com.androiddevelopers.freelanceapp.model.Location
 import com.androiddevelopers.freelanceapp.util.Status
-import com.androiddevelopers.freelanceapp.viewmodel.profileinfo.EditMainProfileInfoViewModel
-import com.androiddevelopers.freelanceapp.viewmodel.profileinfo.EditProfilePersonalInfoViewModel
-import com.bumptech.glide.Glide
+import com.androiddevelopers.freelanceapp.viewmodel.profile.EditProfilePersonalInfoViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class EditProfilePersonalInfoFragment : Fragment() {
-
-
 
     private lateinit var viewModel: EditProfilePersonalInfoViewModel
 
@@ -41,11 +36,11 @@ class EditProfilePersonalInfoFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(EditProfilePersonalInfoViewModel::class.java)
         _binding = FragmentEditProfilePersonalInfoBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        _fullName = arguments?.getString("name")
-        _phoneNumber = arguments?.getString("phone")
-        _country = arguments?.getString("country")
-        _city = arguments?.getString("city")
-        _address = arguments?.getString("address")
+        _fullName = arguments?.let { it.getString("name") ?: "" }
+        _phoneNumber = arguments?.getString("phone") ?: ""
+        _country = arguments?.getString("country") ?: ""
+        _city = arguments?.getString("city") ?: ""
+        _address = arguments?.getString("address") ?: ""
         return root
     }
 
