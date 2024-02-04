@@ -77,6 +77,8 @@
                             android:layout_width="0dp"
                             android:layout_height="20dp"
                             android:background="@color/indicator_background"
+                            app:ci_drawable="@drawable/indicator_drawable"
+                            app:ci_drawable_unselected="@drawable/indicator_drawable"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="@id/viewPagerHome"
                             app:layout_constraintStart_toStartOf="@id/viewPagerHome"
