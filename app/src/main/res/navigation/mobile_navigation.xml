@@ -185,12 +185,12 @@
         android:id="@+id/createJobPostingFragment"
         android:name="com.androiddevelopers.freelanceapp.view.employer.CreateJobPostingFragment"
         android:label="CreateJobPostingFragment"
-        tools:layout="@layout/fragment_create_job_posting" />
+        tools:layout="@layout/fragment_job_postings_create" />
     <fragment
         android:id="@+id/detailJobPostingsFragment"
         android:name="com.androiddevelopers.freelanceapp.view.employer.DetailJobPostingsFragment"
         android:label="fragment_detail_job_postings"
-        tools:layout="@layout/fragment_detail_job_postings">
+        tools:layout="@layout/fragment_job_postings_detail">
         <argument
             android:name="employer_job_post_id"
             app:argType="string" />
