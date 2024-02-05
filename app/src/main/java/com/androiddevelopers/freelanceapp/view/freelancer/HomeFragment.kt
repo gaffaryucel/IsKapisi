@@ -1,4 +1,4 @@
-package com.androiddevelopers.freelanceapp.view
+package com.androiddevelopers.freelanceapp.view.freelancer
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -16,7 +16,7 @@ import com.androiddevelopers.freelanceapp.adapters.FreelancerAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentHomeBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.util.Status
-import com.androiddevelopers.freelanceapp.viewmodel.HomeViewModel
+import com.androiddevelopers.freelanceapp.viewmodel.freelancer.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -75,10 +75,8 @@ class HomeFragment : Fragment() {
         with(binding) {
             search(searchView)
 
-            cameraIcon.setOnClickListener {
-                val action =
-                    HomeFragmentDirections.actionNavigationHomeToCreateDiscoverPostFragment()
-                Navigation.findNavController(it).navigate(action)
+            addIcon.setOnClickListener {
+                //TODO: popup ile create sayfası seçimi yaptır
             }
         }
     }

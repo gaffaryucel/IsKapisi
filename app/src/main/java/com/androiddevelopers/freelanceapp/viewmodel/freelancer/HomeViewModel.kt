@@ -1,4 +1,4 @@
-package com.androiddevelopers.freelanceapp.viewmodel
+package com.androiddevelopers.freelanceapp.viewmodel.freelancer
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
