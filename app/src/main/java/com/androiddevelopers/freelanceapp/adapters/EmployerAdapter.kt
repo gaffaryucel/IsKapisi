@@ -39,7 +39,7 @@ class EmployerAdapter(private val listener: (EmployerJobPost, View) -> Unit) :
         with(holder.binding) {
             employer = employerJobPost
 
-            cardEmployerButtonDetail.setOnClickListener { v ->
+            cardEmployer.setOnClickListener { v ->
                 employerJobPost.postId?.let {
                     //görüntüleme sayısı arttırma ve navigasyon işlemlerini
                     //adapter dışında fragment içinde yapıyoruz
