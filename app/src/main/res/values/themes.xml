@@ -120,10 +120,6 @@
     </style>
 
     <!-- Icons Style -->
-    <style name="CameraIconStyle">
-        <item name="android:src">@drawable/baseline_camera_dark</item>
-    </style>
-
     <style name="MessageIconStyle">
         <item name="android:src">@drawable/message_icon_dark</item>
     </style>
