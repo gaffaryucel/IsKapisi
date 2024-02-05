@@ -187,4 +187,11 @@
         <item name="navigationIconTint">@color/toolbar_navigation_icon</item>
     </style>
 
+    <style name="IndicatorStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">20dp</item>
+        <item name="ci_drawable">@drawable/indicator_drawable</item>
+        <item name="ci_drawable_unselected">@drawable/indicator_drawable</item>
+    </style>
+
 </resources>
