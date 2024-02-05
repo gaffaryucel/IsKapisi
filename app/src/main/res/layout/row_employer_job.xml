@@ -75,11 +75,7 @@
 
                         <me.relex.circleindicator.CircleIndicator3
                             android:id="@+id/indicatorJobPost"
-                            android:layout_width="0dp"
-                            android:layout_height="20dp"
-                            android:background="@color/indicator_background"
-                            app:ci_drawable="@drawable/indicator_drawable"
-                            app:ci_drawable_unselected="@drawable/indicator_drawable"
+                            style="@style/IndicatorStyle"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="@id/viewPagerJobPost"
                             app:layout_constraintStart_toStartOf="@id/viewPagerJobPost"
@@ -146,21 +142,22 @@
                         android:text="@{employer.budget.toString()}"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toTopOf="@+id/cardEmployerButtonDetail"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/card_employer_guideline_vertical_right"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="₺5000" />
-
-                    <Button
-                        android:id="@+id/cardEmployerButtonDetail"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/button_detail_text"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/card_employer_guideline_vertical_right"
-                        app:layout_constraintTop_toBottomOf="@+id/cardEmployerTextViewPrice" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.3"
+                        tools:text="₺5000" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/cardEmployerImageDetail"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginBottom="8dp"
+                        android:src="@drawable/baseline_arrow_forward_40"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
 
                     <androidx.constraintlayout.widget.Guideline
                         android:id="@+id/card_employer_guideline_vertical_left"
