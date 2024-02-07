@@ -14,12 +14,6 @@
         tools:ignore="HardcodedText" />
 
     <item
-        android:id="@+id/navigation_create_post"
-        android:icon="@drawable/plus"
-        tools:ignore="HardcodedText"
-        android:title="Oluştur"/>
-
-    <item
         android:id="@+id/navigation_job_postings"
         android:icon="@drawable/briefcase"
         tools:ignore="HardcodedText"

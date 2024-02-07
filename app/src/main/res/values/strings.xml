@@ -62,4 +62,7 @@
     <string name="location">İş Konumu</string>
     <string name="deadline">İlan Sonu</string>
     <string name="details">Ek Detaylar</string>
+    <string name="create_freelance_post">Create Freelance Post</string>
+    <string name="create_employer_post">Create Employer Post</string>
+    <string name="create_discover_post">Create Discover Post</string>
 </resources>

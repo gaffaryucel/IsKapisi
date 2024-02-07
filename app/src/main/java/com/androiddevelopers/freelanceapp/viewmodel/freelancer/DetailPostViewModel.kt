@@ -1,4 +1,4 @@
-package com.androiddevelopers.freelanceapp.viewmodel
+package com.androiddevelopers.freelanceapp.viewmodel.freelancer
 
 import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData

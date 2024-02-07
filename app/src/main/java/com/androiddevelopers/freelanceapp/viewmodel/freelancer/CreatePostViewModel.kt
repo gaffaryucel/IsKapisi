@@ -1,11 +1,9 @@
-package com.androiddevelopers.freelanceapp.viewmodel
+package com.androiddevelopers.freelanceapp.viewmodel.freelancer
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
-import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.JobStatus
@@ -15,9 +13,7 @@ import com.google.firebase.storage.FirebaseStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import java.util.UUID
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel

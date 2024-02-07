@@ -1,4 +1,4 @@
-package com.androiddevelopers.freelanceapp.view
+package com.androiddevelopers.freelanceapp.view.freelancer
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
@@ -16,7 +17,7 @@ import com.androiddevelopers.freelanceapp.adapters.FreelancerAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentHomeBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.util.Status
-import com.androiddevelopers.freelanceapp.viewmodel.HomeViewModel
+import com.androiddevelopers.freelanceapp.viewmodel.freelancer.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -31,6 +32,7 @@ class HomeFragment : Fragment() {
     private lateinit var freelancerAdapter: FreelancerAdapter
     private lateinit var listFreelancerJobPost: ArrayList<FreelancerJobPost>
     private lateinit var errorDialog: AlertDialog
+    private lateinit var popupMenu: PopupMenu
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,21 +69,22 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         errorDialog = AlertDialog.Builder(context).create()
+        popupMenu = PopupMenu(requireActivity(), binding.homeAddIcon)
 
         setProgressBar(false)
         setupDialogs()
+        setupPopupMenu(view)
         observeLiveData(viewLifecycleOwner)
 
         with(binding) {
             search(searchView)
 
-            cameraIcon.setOnClickListener {
-                val action =
-                    HomeFragmentDirections.actionNavigationHomeToCreateDiscoverPostFragment()
-                Navigation.findNavController(it).navigate(action)
+            homeAddIcon.setOnClickListener {
+                popupMenu.show()
             }
         }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -129,6 +132,38 @@ class HomeFragment : Fragment() {
                 context.getString(R.string.ok)
             ) { dialog, _ ->
                 dialog.cancel()
+            }
+        }
+    }
+
+    private fun setupPopupMenu(view: View) {
+        popupMenu.inflate(R.menu.add_popup_menu)
+        popupMenu.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.itemCreateFreelancePost -> {
+                    Navigation
+                        .findNavController(view)
+                        .navigate(R.id.action_global_createPostFragment)
+                    true
+                }
+
+                R.id.itemCreateEmployerPost -> {
+                    Navigation
+                        .findNavController(view)
+                        .navigate(R.id.action_global_createJobPostingFragment)
+                    true
+                }
+
+                R.id.itemCreateDiscoverPost -> {
+                    Navigation
+                        .findNavController(view)
+                        .navigate(R.id.action_global_createDiscoverPostFragment)
+                    true
+                }
+
+                else -> {
+                    false
+                }
             }
         }
     }

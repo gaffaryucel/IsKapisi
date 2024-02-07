@@ -40,7 +40,7 @@ class FreelancerAdapter(private val listener: (FreelancerJobPost, View) -> Unit)
         with(holder.binding) {
             freelancer = freelancerJobPost
 
-            cardFreelanceButtonDetail.setOnClickListener { v ->
+            cardFreelancer.setOnClickListener { v ->
                 freelancerJobPost.postId?.let {
                     //görüntüleme sayısı arttırma ve navigasyon işlemlerini
                     //adapter dışında fragment içinde yapıyoruz

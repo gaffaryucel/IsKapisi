@@ -11,7 +11,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.ViewPagerAdapterForImages
-import com.androiddevelopers.freelanceapp.databinding.FragmentDetailJobPostingsBinding
+import com.androiddevelopers.freelanceapp.databinding.FragmentJobPostingsDetailBinding
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.util.downloadImage
 import com.androiddevelopers.freelanceapp.viewmodel.employer.DetailJobPostingsViewModel
@@ -21,7 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class DetailJobPostingsFragment : Fragment() {
     private lateinit var viewModel: DetailJobPostingsViewModel
-    private var _binding: FragmentDetailJobPostingsBinding? = null
+    private var _binding: FragmentJobPostingsDetailBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var errorDialog: AlertDialog
@@ -31,7 +31,7 @@ class DetailJobPostingsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         viewModel = ViewModelProvider(this)[DetailJobPostingsViewModel::class.java]
-        _binding = FragmentDetailJobPostingsBinding.inflate(inflater, container, false)
+        _binding = FragmentJobPostingsDetailBinding.inflate(inflater, container, false)
         val view = binding.root
 
         val args = DetailJobPostingsFragmentArgs.fromBundle(requireArguments())

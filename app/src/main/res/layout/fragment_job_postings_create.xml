@@ -105,8 +105,7 @@
 
                     <me.relex.circleindicator.CircleIndicator3
                         android:id="@+id/indicatorCreateJobPost"
-                        android:layout_width="0dp"
-                        android:layout_height="20dp"
+                        style="@style/IndicatorStyle"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="@id/viewPagerCreateJobPost"
                         app:layout_constraintStart_toStartOf="@id/viewPagerCreateJobPost"
