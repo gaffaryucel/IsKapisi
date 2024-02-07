@@ -1,9 +1,8 @@
-package com.androiddevelopers.freelanceapp.view
+package com.androiddevelopers.freelanceapp.view.freelancer
 
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -24,12 +23,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.androiddevelopers.freelanceapp.R
-import com.androiddevelopers.freelanceapp.databinding.FragmentCreatePostBinding
-import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
+import com.androiddevelopers.freelanceapp.databinding.FragmentHomeCreatePostBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
-import com.androiddevelopers.freelanceapp.util.JobStatus
 import com.androiddevelopers.freelanceapp.util.Status
-import com.androiddevelopers.freelanceapp.viewmodel.CreatePostViewModel
+import com.androiddevelopers.freelanceapp.viewmodel.freelancer.CreatePostViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -37,14 +34,14 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
-import java.util.UUID
+import java.util.*
 
 @AndroidEntryPoint
 class CreatePostFragment : Fragment() {
 
     private lateinit var viewModel: CreatePostViewModel
 
-    private var _binding: FragmentCreatePostBinding? = null
+    private var _binding: FragmentHomeCreatePostBinding? = null
     private val binding get() = _binding!!
 
     private val REQUEST_IMAGE_CAPTURE = 101
@@ -61,7 +58,7 @@ class CreatePostFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         viewModel = ViewModelProvider(this)[CreatePostViewModel::class.java]
-        _binding = FragmentCreatePostBinding.inflate(inflater, container, false)
+        _binding = FragmentHomeCreatePostBinding.inflate(inflater, container, false)
         val root: View = binding.root
         return root
     }

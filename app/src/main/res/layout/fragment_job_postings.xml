@@ -5,10 +5,6 @@
 
     <data>
 
-        <import type="androidx.navigation.Navigation" />
-
-        <import type="com.androiddevelopers.freelanceapp.R" />
-
         <variable
             name="adapter"
             type="com.androiddevelopers.freelanceapp.adapters.EmployerAdapter" />
@@ -24,23 +20,11 @@
             android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:orientation="horizontal"
             android:background="@color/toolbar_background"
+            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:id="@+id/camera_icon"
-                style="@style/CameraIconStyle"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:padding="6dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="ContentDescription" />
-
 
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/jobPostingSearchView"
@@ -50,21 +34,10 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/image_view_2"
-                app:layout_constraintStart_toEndOf="@id/camera_icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:searchIcon="@drawable/baseline_search_24" />
-
-            <ImageView
-                android:id="@+id/image_view_2"
-                style="@style/MessageIconStyle"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:padding="6dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="ContentDescription" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -88,21 +61,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/jobPostingProgressBar" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:onClick="@{() -> Navigation.findNavController(floatingActionButton).navigate(R.id.action_navigation_job_postings_to_createJobPostingFragment)}"
-            android:src="@drawable/icon_add"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

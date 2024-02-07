@@ -120,10 +120,6 @@
     </style>
 
     <!-- Icons Style -->
-    <style name="CameraIconStyle">
-        <item name="android:src">@drawable/baseline_camera_dark</item>
-    </style>
-
     <style name="MessageIconStyle">
         <item name="android:src">@drawable/message_icon_dark</item>
     </style>
@@ -185,6 +181,13 @@
         <item name="titleTextColor">@color/toolbar_navigation_icon</item>
         <item name="navigationIcon">@drawable/baseline_keyboard_arrow_left_24</item>
         <item name="navigationIconTint">@color/toolbar_navigation_icon</item>
+    </style>
+
+    <style name="IndicatorStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">20dp</item>
+        <item name="ci_drawable">@drawable/indicator_drawable</item>
+        <item name="ci_drawable_unselected">@drawable/indicator_drawable</item>
     </style>
 
 </resources>

@@ -1,4 +1,4 @@
-package com.androiddevelopers.freelanceapp.view
+package com.androiddevelopers.freelanceapp.view.freelancer
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -10,16 +10,16 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import com.androiddevelopers.freelanceapp.R
-import com.androiddevelopers.freelanceapp.databinding.FragmentDetailPostBinding
+import com.androiddevelopers.freelanceapp.databinding.FragmentHomeDetailPostBinding
 import com.androiddevelopers.freelanceapp.util.Status
-import com.androiddevelopers.freelanceapp.viewmodel.DetailPostViewModel
+import com.androiddevelopers.freelanceapp.viewmodel.freelancer.DetailPostViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class DetailPostFragment : Fragment() {
     private lateinit var viewModel: DetailPostViewModel
-    private var _binding: FragmentDetailPostBinding? = null
+    private var _binding: FragmentHomeDetailPostBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var errorDialog: AlertDialog
@@ -29,7 +29,7 @@ class DetailPostFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         viewModel = ViewModelProvider(this)[DetailPostViewModel::class.java]
-        _binding = FragmentDetailPostBinding.inflate(inflater, container, false)
+        _binding = FragmentHomeDetailPostBinding.inflate(inflater, container, false)
         val view = binding.root
 
         val args = DetailPostFragmentArgs.fromBundle(requireArguments())

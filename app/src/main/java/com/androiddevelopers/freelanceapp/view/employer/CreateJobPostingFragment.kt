@@ -24,7 +24,7 @@ import androidx.navigation.Navigation
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.SkillAdapter
 import com.androiddevelopers.freelanceapp.adapters.ViewPagerAdapterForCreateJobPost
-import com.androiddevelopers.freelanceapp.databinding.FragmentCreateJobPostingBinding
+import com.androiddevelopers.freelanceapp.databinding.FragmentJobPostingsCreateBinding
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.viewmodel.employer.CreateJobPostingViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -41,7 +41,7 @@ class CreateJobPostingFragment : Fragment() {
     private var selectedImagesSize = 0
     private lateinit var imageLauncher: ActivityResultLauncher<Intent>
 
-    private var _binding: FragmentCreateJobPostingBinding? = null
+    private var _binding: FragmentJobPostingsCreateBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var errorDialog: AlertDialog
@@ -56,7 +56,7 @@ class CreateJobPostingFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         viewModel = ViewModelProvider(this)[CreateJobPostingViewModel::class.java]
-        _binding = FragmentCreateJobPostingBinding.inflate(inflater, container, false)
+        _binding = FragmentJobPostingsCreateBinding.inflate(inflater, container, false)
         val view = binding.root
 
         datePicker = MaterialDatePicker.Builder
