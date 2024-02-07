@@ -88,9 +88,10 @@
                     android:layout_height="wrap_content"
                     app:flexWrap="wrap"
                     app:alignItems="stretch"
-                    app:alignContent="stretch" >
+                    app:alignContent="stretch">
 
                     <TextView
+
                         android:gravity="center"
                         android:id="@+id/tvSkill1"
                         android:textSize="16sp"

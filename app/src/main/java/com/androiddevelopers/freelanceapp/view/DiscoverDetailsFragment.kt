@@ -8,9 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.DiscoverPostDetailsAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentDiscoverDetailsBinding
 import com.androiddevelopers.freelanceapp.viewmodel.DiscoverDetailsViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,9 +38,9 @@ class DiscoverDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupRv()
+        observeLiveData()
     }
-    private fun setupRv(){
+    private fun observeLiveData(){
         viewModel.discoverPosts.observe(viewLifecycleOwner, Observer {
             adapter.postList = it
             adapter.notifyDataSetChanged()
@@ -46,5 +48,26 @@ class DiscoverDetailsFragment : Fragment() {
             binding.rvDiscoverDetails.adapter = adapter
             binding.rvDiscoverDetails.scrollToPosition(position!!)
         })
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        hideBottomNavigation()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        showBottomNavigation()
+    }
+
+    private fun hideBottomNavigation() {
+        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
+        bottomNavigationView?.visibility = View.GONE
+    }
+
+    private fun showBottomNavigation() {
+        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
+        bottomNavigationView?.visibility = View.VISIBLE
     }
 }

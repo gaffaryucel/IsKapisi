@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.databinding.RowUserBinding
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.view.SearchFragmentDirections
+import com.bumptech.glide.Glide
 
 class SearchAdapter :  RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
 
@@ -38,6 +39,7 @@ class SearchAdapter :  RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
 
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
         val user = userList[position]
+        Glide.with(holder.itemView.context).load(user.profileImageUrl).into(holder.binding.chatImage)
 
         holder.binding.apply {
             userItem = user

@@ -8,10 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.FragmentEditProfileServiceInfoBinding
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.viewmodel.profile.EditProfileServiceInfoViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -77,16 +79,20 @@ class EditProfileServiceInfoFragment : Fragment() {
             }
         })
         viewModel.userData.observe(viewLifecycleOwner, Observer {userData ->
-            binding.user = userData
+            binding.apply {
+                user = userData
+            }
             user = userData
-            skillsList = user.skills as ArrayList<String>
-            for ((index,skill) in skillsList.withIndex()){
-                when(index){
-                    0->{binding.tvSkill1.text = skill}
-                    1->{binding.tvSkill2.text = skill}
-                    2->{binding.tvSkill3.text = skill}
-                    3->{binding.tvSkill4.text = skill}
-                    4->{binding.tvSkill5.text = skill}
+            if (user.skills != null){
+                skillsList = user.skills as ArrayList<String>
+                for ((index,skill) in skillsList.withIndex()){
+                    when(index){
+                        0->{binding.tvSkill1.text = skill}
+                        1->{binding.tvSkill2.text = skill}
+                        2->{binding.tvSkill3.text = skill}
+                        3->{binding.tvSkill4.text = skill}
+                        4->{binding.tvSkill5.text = skill}
+                    }
                 }
             }
         })
@@ -103,5 +109,24 @@ class EditProfileServiceInfoFragment : Fragment() {
         }
 
         viewModel.updateUserInfo("skills",skillsList)
+    }
+    override fun onResume() {
+        super.onResume()
+        hideBottomNavigation()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        showBottomNavigation()
+    }
+
+    private fun hideBottomNavigation() {
+        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
+        bottomNavigationView?.visibility = View.GONE
+    }
+
+    private fun showBottomNavigation() {
+        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
+        bottomNavigationView?.visibility = View.VISIBLE
     }
 }

@@ -161,6 +161,9 @@ class UserProfileFragment : Fragment() {
                     Glide.with(requireContext()).load(userData.profileImageUrl.toString()).into(binding.ivUserProfile)
                 }
             }
+            if (userData.skills != null){
+                showSkills(userData.skills!!)
+            }
         })
         viewModel.message.observe(viewLifecycleOwner, Observer {
               when (it.status) {
@@ -239,5 +242,16 @@ class UserProfileFragment : Fragment() {
         viewModel.followerCount.observe(viewLifecycleOwner, Observer {
             binding.tvFollowersCount.text = it.toString()
         })
+    }
+    private fun showSkills(skills : List<String>){
+        for ((index,skill) in skills.withIndex()){
+            when(index){
+                0->{binding.tvSkill1.text = skill}
+                1->{binding.tvSkill2.text = skill}
+                2->{binding.tvSkill3.text = skill}
+                3->{binding.tvSkill4.text = skill}
+                4->{binding.tvSkill5.text = skill}
+            }
+        }
     }
 }

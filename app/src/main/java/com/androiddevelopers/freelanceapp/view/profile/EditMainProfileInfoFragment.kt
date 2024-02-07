@@ -63,7 +63,7 @@ class EditMainProfileInfoFragment : Fragment() {
         _username = arguments?.let { it.getString("username") ?: "" }
         _email = arguments?.getString("email") ?: ""
         _bio = arguments?.getString("bio") ?: ""
-        _image = arguments?.getString("image") ?: ""
+        _image = arguments?.getString("image")
 
         return root
     }
@@ -94,23 +94,11 @@ class EditMainProfileInfoFragment : Fragment() {
         binding.btnSaveProfilePhoto.setOnClickListener {
             viewModel.uploadUserProfilePhoto(resultByteArray)
         }
-        if (_image!= null){
-            if (_image!!.isNotEmpty()){
-                Glide.with(requireContext()).load(_image).into(binding.ivUserProfilePhoto)
-            }else{
-                binding.ivUserProfilePhoto.setBackgroundResource(R.drawable.placeholder)
-            }
-        }
+
         binding.ivCancelUploadImage.setOnClickListener {
             binding.btnSaveProfilePhoto.visibility = View.INVISIBLE
             binding.ivCancelUploadImage.visibility = View.INVISIBLE
-            if (_image!= null){
-                if (_image!!.isNotEmpty()){
-                    Glide.with(requireContext()).load(_image).into(binding.ivUserProfilePhoto)
-                }else{
-                    binding.ivUserProfilePhoto.setBackgroundResource(R.drawable.placeholder)
-                }
-            }
+
         }
     }
     private fun updateInfo(){

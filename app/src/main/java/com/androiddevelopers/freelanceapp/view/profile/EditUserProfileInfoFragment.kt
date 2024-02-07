@@ -79,7 +79,9 @@ class EditUserProfileInfoFragment : Fragment() {
             binding.apply {
                 user = data
             }
-            Glide.with(requireContext()).load(data.profileImageUrl).into(binding.ivUserPhoto)
+            if (data.profileImageUrl!= null){
+                Glide.with(requireContext()).load(data.profileImageUrl).into(binding.ivUserPhoto)
+            }
         })
     }
 

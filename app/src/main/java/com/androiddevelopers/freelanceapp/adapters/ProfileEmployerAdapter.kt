@@ -43,7 +43,11 @@ class ProfileEmployerAdapter : RecyclerView.Adapter<ProfileEmployerAdapter.Profi
 
     override fun onBindViewHolder(holder: ProfileEmployerViewHolder, position: Int) {
         val post = postList[position]
-        Glide.with(holder.itemView.context).load(post.images?.get(0)).into(holder.binding.ivEmployerPost)
+        try {
+            Glide.with(holder.itemView.context).load(post.images?.get(0)).into(holder.binding.ivEmployerPost)
+        }catch (e : Exception){
+
+        }
         holder.binding.apply {
             employerPost = post
         }

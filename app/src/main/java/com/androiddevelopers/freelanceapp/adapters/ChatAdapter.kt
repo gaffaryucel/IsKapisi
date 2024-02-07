@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.databinding.RowChatBinding
 import com.androiddevelopers.freelanceapp.model.ChatModel
 import com.androiddevelopers.freelanceapp.view.ChatsFragmentDirections
+import com.bumptech.glide.Glide
 
 class ChatAdapter :  RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
@@ -39,6 +40,7 @@ class ChatAdapter :  RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
     override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
         val chat = chatsList[position]
 
+        Glide.with(holder.itemView.context).load(chat.receiverUserImage).into(holder.binding.chatImage)
         holder.binding.apply {
             chatItem = chat
         }

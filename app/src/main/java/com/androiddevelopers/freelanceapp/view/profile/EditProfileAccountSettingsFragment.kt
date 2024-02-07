@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.viewmodel.profile.EditProfileAccountSettingsViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class EditProfileAccountSettingsFragment : Fragment() {
 
@@ -28,6 +29,25 @@ class EditProfileAccountSettingsFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(EditProfileAccountSettingsViewModel::class.java)
         // TODO: Use the ViewModel
+    }
+    override fun onResume() {
+        super.onResume()
+        hideBottomNavigation()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        showBottomNavigation()
+    }
+
+    private fun hideBottomNavigation() {
+        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
+        bottomNavigationView?.visibility = View.GONE
+    }
+
+    private fun showBottomNavigation() {
+        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
+        bottomNavigationView?.visibility = View.VISIBLE
     }
 
 }
