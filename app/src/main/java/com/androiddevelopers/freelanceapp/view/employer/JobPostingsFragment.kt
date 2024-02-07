@@ -18,6 +18,7 @@ import com.androiddevelopers.freelanceapp.databinding.FragmentJobPostingsBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.viewmodel.employer.JobPostingsViewModel
+import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,6 +30,7 @@ class JobPostingsFragment : Fragment() {
     private lateinit var employerAdapter: EmployerAdapter
     private lateinit var listEmployerJobPost: ArrayList<EmployerJobPost>
     private lateinit var errorDialog: AlertDialog
+    private lateinit var firebaseUser: FirebaseUser
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,8 +45,10 @@ class JobPostingsFragment : Fragment() {
             employerJobPost.postId?.let { id ->
                 //firebase den gelen görüntüleme sayısını alıyoruz
                 //karta tıklandığında 1 arttırıp firebase üzerinde ilgili değeri güncelliyoruz
-                var count = employerJobPost.viewCount
-                count = if (count == 0 || count == null) 1 else count + 1
+                val count = mutableSetOf<String>()
+                employerJobPost.viewCount?.let { count.addAll(it) }
+                count.add(firebaseUser.uid)
+
                 viewModel.updateViewCountEmployerJobPostWithDocumentById(id, count)
 
                 //ilan id numarası ile detay sayfasına yönlendirme yapıyoruz
@@ -106,6 +110,10 @@ class JobPostingsFragment : Fragment() {
                 // firebase 'den gelen son verilerin kopyasını saklıyoruz
                 // search iptal edildiğinde bu verileri tekrar adapter'e set edeceğiz
                 listEmployerJobPost.addAll(list)
+            }
+
+            liveDataFirebaseUser.observe(owner) {
+                firebaseUser = it
             }
         }
     }

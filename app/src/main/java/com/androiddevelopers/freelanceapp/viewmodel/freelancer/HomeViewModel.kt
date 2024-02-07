@@ -8,6 +8,8 @@ import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.JobStatus
 import com.androiddevelopers.freelanceapp.util.Resource
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,6 +19,7 @@ class HomeViewModel
 @Inject
 constructor(
     private val firebaseRepo: FirebaseRepoInterFace,
+    firebaseAuth: FirebaseAuth
 ) : ViewModel() {
 
     private var _firebaseMessage = MutableLiveData<Resource<Boolean>>()
@@ -27,8 +30,13 @@ constructor(
     val firebaseLiveData: LiveData<List<FreelancerJobPost>>
         get() = _firebaseLiveData
 
+    private var _liveDataFirebaseUser = MutableLiveData<FirebaseUser>()
+    val liveDataFirebaseUser: LiveData<FirebaseUser>
+        get() = _liveDataFirebaseUser
+
     init {
         getAllFreelanceJobPost()
+        _liveDataFirebaseUser.value = firebaseAuth.currentUser
     }
 
     fun getAllFreelanceJobPost() = viewModelScope.launch {
@@ -60,9 +68,15 @@ constructor(
             }
     }
 
-    fun updateViewCountFreelancerJobPostWithDocumentById(postId: String, newCount: Int) {
+    fun updateViewCountFreelancerJobPostWithDocumentById(
+        postId: String,
+        newCount: MutableSet<String>
+    ) {
+        val list = arrayListOf<String>()
+        list.addAll(newCount)
+
         _firebaseMessage.value = Resource.loading(true)
-        firebaseRepo.updateViewCountFreelancerJobPostWithDocumentById(postId, newCount)
+        firebaseRepo.updateViewCountFreelancerJobPostWithDocumentById(postId, list)
             .addOnCompleteListener {
                 _firebaseMessage.value = Resource.loading(false)
                 if (it.isSuccessful) {

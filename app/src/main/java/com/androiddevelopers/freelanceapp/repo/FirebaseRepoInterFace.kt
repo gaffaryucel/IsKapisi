@@ -5,7 +5,6 @@ import com.androiddevelopers.freelanceapp.model.ChatModel
 import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
 import com.androiddevelopers.freelanceapp.model.MessageModel
 import com.androiddevelopers.freelanceapp.model.UserModel
-import com.androiddevelopers.freelanceapp.model.VideoModel
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.google.android.gms.tasks.Task
@@ -32,13 +31,19 @@ interface FirebaseRepoInterFace {
     fun addFreelancerJobPostToFirestore(post: FreelancerJobPost): Task<Void>
     fun getAllFreelancerJobPostFromFirestore(): Task<QuerySnapshot>
     fun getFreelancerJobPostWithDocumentByIdFromFirestore(documentId: String): Task<DocumentSnapshot>
-    fun updateViewCountFreelancerJobPostWithDocumentById(postId: String, newCount: Int): Task<Void>
+    fun updateViewCountFreelancerJobPostWithDocumentById(
+        postId: String,
+        newCount: List<String>
+    ): Task<Void>
 
     // Firestore Employer Job Post işlemleri
     fun addEmployerJobPostToFirestore(job: EmployerJobPost): Task<Void>
     fun getAllEmployerJobPostFromFirestore(): Task<QuerySnapshot>
     fun getEmployerJobPostWithDocumentByIdFromFirestore(documentId: String): Task<DocumentSnapshot>
-    fun updateViewCountEmployerJobPostWithDocumentById(postId: String, newCount: Int): Task<Void>
+    fun updateViewCountEmployerJobPostWithDocumentById(
+        postId: String,
+        newCount: List<String>
+    ): Task<Void>
 
     // Firestore Discover Post işlemleri
     fun uploadDiscoverPostToFirestore(post: DiscoverPostModel): Task<Void>

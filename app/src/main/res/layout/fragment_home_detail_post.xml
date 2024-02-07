@@ -7,9 +7,19 @@
 
         <import type="androidx.navigation.Navigation" />
 
+        <import type="android.view.View" />
+
         <variable
             name="freelancer"
             type="com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost" />
+
+        <variable
+            name="user"
+            type="com.androiddevelopers.freelanceapp.model.UserModel" />
+
+        <variable
+            name="viewCount"
+            type="String" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,8 +29,7 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+            style="@style/MaterialToolbarStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -45,7 +54,475 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/detailPostProgressBar">
+            app:layout_constraintTop_toBottomOf="@+id/detailPostProgressBar"
+            app:layout_constraintWidth_max="600dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guidelineVerticalLeft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.1" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guidelineVerticalRight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.9" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardProfileFreelancerDetail"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    app:cardCornerRadius="5dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/ivUserProfile"
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:src="@drawable/placeholder"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/textUserName"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/textUserName"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="@{user.username}"
+                            android:textAlignment="center"
+                            android:textSize="20sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/ivUserProfile"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="User Name" />
+
+                        <TextView
+                            android:id="@+id/textUserExperience"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="@{user.bio}"
+                            android:textAlignment="center"
+                            android:textSize="16sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="@id/textUserName"
+                            app:layout_constraintTop_toBottomOf="@id/textUserName"
+                            tools:text="User Bio" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layoutViewCount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="@id/cardProfileFreelancerDetail"
+                    app:layout_constraintStart_toStartOf="@id/cardProfileFreelancerDetail"
+                    app:layout_constraintTop_toBottomOf="@id/cardProfileFreelancerDetail">
+
+                    <LinearLayout
+                        android:id="@+id/layoutUrgent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:visibility="@{freelancer.isUrgent == true ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/ivUrgent"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_margin="3dp"
+                            android:src="@drawable/alert_circle"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="3dp"
+                            android:text="@string/urgent_text"
+                            android:textColor="@color/delete_button"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+
+                    <TextView
+                        android:id="@+id/textViewCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="3dp"
+                        android:text="@{viewCount}"
+                        android:textSize="16sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/ivViewCount"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="35" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/ivViewCount"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_margin="3dp"
+                        android:src="@drawable/eye_view_count"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toStartOf="@id/guidelineVerticalRight"
+                    app:layout_constraintStart_toEndOf="@id/guidelineVerticalLeft"
+                    app:layout_constraintTop_toBottomOf="@id/layoutViewCount">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardImagePlaceHolderPostDetail"
+                        android:layout_width="0dp"
+                        android:layout_height="200dp"
+                        android:visibility="@{freelancer.images.size() == 0 || freelancer.images.size() > 1 ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintBottom_toTopOf="@id/layoutPostBudget"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/imagePlaceHolderPostDetail"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/placeholder"
+                            tools:ignore="ImageContrastCheck" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/layoutImageViewsPostDetail"
+                        android:layout_width="0dp"
+                        android:layout_height="200dp"
+                        android:visibility="@{freelancer.images.size() &lt; 2 ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintBottom_toTopOf="@id/layoutPostBudget"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.viewpager2.widget.ViewPager2
+                            android:id="@+id/viewPagerPostDetail"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:orientation="horizontal"
+                            app:layout_constraintBottom_toTopOf="@id/indicatorPostDetail"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <me.relex.circleindicator.CircleIndicator3
+                            android:id="@+id/indicatorPostDetail"
+                            style="@style/IndicatorStyle"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="@id/viewPagerPostDetail"
+                            app:layout_constraintStart_toStartOf="@id/viewPagerPostDetail"
+                            app:layout_constraintTop_toBottomOf="@id/viewPagerPostDetail" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/layoutPostBudget"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/JobPostLinearLayoutMarginTop"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/layoutImageViewsPostDetail">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="@dimen/JobPostTag1Weight">
+
+                            <TextView
+                                style="@style/JopPostDetailTexts"
+                                android:layout_width="wrap_content"
+                                android:text="@string/wage"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                style="@style/JopPostDetailTextColon"
+                                android:text="@string/text_colon"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="@dimen/JobPostTag2Weight"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textPostBudget"
+                                style="@style/JopPostDetailTexts"
+                                android:text="@{freelancer.budget.toString()}"
+                                tools:text="Post Wage" />
+
+                            <com.google.android.material.divider.MaterialDivider
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutPostDescription"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/JobPostLinearLayoutMarginTop"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/layoutPostBudget">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="@dimen/JobPostTag1Weight">
+
+                            <TextView
+                                style="@style/JopPostDetailTexts"
+                                android:layout_width="wrap_content"
+                                android:text="@string/description"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                style="@style/JopPostDetailTextColon"
+                                android:text="@string/text_colon"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="@dimen/JobPostTag2Weight"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textPostDescription"
+                                style="@style/JopPostDetailTexts"
+                                android:text="@{freelancer.description}"
+                                tools:text="Post Description" />
+
+                            <com.google.android.material.divider.MaterialDivider
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutPostLocation"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/JobPostLinearLayoutMarginTop"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/layoutPostDescription">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="@dimen/JobPostTag1Weight">
+
+                            <TextView
+                                style="@style/JopPostDetailTexts"
+                                android:layout_width="wrap_content"
+                                android:text="@string/location"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                style="@style/JopPostDetailTextColon"
+                                android:layout_width="wrap_content"
+                                android:text="@string/text_colon"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="@dimen/JobPostTag2Weight"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textPostLocation"
+                                style="@style/JopPostDetailTexts"
+                                android:text="@{freelancer.location}"
+                                tools:text="Post Location" />
+
+                            <com.google.android.material.divider.MaterialDivider
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutPostDeadline"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/JobPostLinearLayoutMarginTop"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/layoutPostLocation">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="@dimen/JobPostTag1Weight">
+
+                            <TextView
+                                style="@style/JopPostDetailTexts"
+                                android:layout_width="wrap_content"
+                                android:text="@string/deadline"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                style="@style/JopPostDetailTextColon"
+                                android:layout_width="wrap_content"
+                                android:text="@string/text_colon"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="@dimen/JobPostTag2Weight"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textPostDeadline"
+                                style="@style/JopPostDetailTexts"
+                                android:text="@{freelancer.deadline}"
+                                tools:text="Post Deadline" />
+
+                            <com.google.android.material.divider.MaterialDivider
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutPostAdditionalDetails"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/JobPostLinearLayoutMarginTop"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/layoutPostDeadline">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="@dimen/JobPostTag1Weight">
+
+                            <TextView
+                                style="@style/JopPostDetailTexts"
+                                android:layout_width="wrap_content"
+                                android:text="@string/details"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                style="@style/JopPostDetailTextColon"
+                                android:layout_width="wrap_content"
+                                android:text="@string/text_colon"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="@dimen/JobPostTag2Weight"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textPostAdditionalDetails"
+                                style="@style/JopPostDetailTexts"
+                                android:text="@{freelancer.additionalDetails}"
+                                tools:text="Post Additional Details" />
+
+                            <com.google.android.material.divider.MaterialDivider
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/buttonBuy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/buy"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/layoutPostAdditionalDetails" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
 

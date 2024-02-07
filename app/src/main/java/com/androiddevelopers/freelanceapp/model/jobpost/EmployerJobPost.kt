@@ -23,7 +23,7 @@ class EmployerJobPost : BaseJobPost {
         additionalDetails: String?,
         completedJobs: Int?,
         canceledJobs: Int?,
-        viewCount: Int?,
+        viewCount: List<String>?,
         isUrgent: Boolean?,
         employerId: String?
     ) : super(

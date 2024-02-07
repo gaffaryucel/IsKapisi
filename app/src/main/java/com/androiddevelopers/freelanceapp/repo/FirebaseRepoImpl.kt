@@ -5,7 +5,6 @@ import com.androiddevelopers.freelanceapp.model.ChatModel
 import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
 import com.androiddevelopers.freelanceapp.model.MessageModel
 import com.androiddevelopers.freelanceapp.model.UserModel
-import com.androiddevelopers.freelanceapp.model.VideoModel
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.google.android.gms.tasks.Task
@@ -76,7 +75,7 @@ class FirebaseRepoImpl @Inject constructor(
 
     override fun updateViewCountFreelancerJobPostWithDocumentById(
         postId: String,
-        newCount: Int
+        newCount: List<String>
     ): Task<Void> {
         return freelancerPostCollection.document(postId).update("viewCount", newCount)
     }
@@ -95,7 +94,7 @@ class FirebaseRepoImpl @Inject constructor(
 
     override fun updateViewCountEmployerJobPostWithDocumentById(
         postId: String,
-        newCount: Int
+        newCount: List<String>
     ): Task<Void> {
         return employerPostCollection.document(postId).update("viewCount", newCount)
     }

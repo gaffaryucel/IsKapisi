@@ -1,6 +1,5 @@
 package com.androiddevelopers.freelanceapp.viewmodel.employer
 
-import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -31,7 +30,6 @@ constructor(
     val firebaseUserData: LiveData<UserModel>
         get() = _firebaseUserData
 
-    @SuppressLint("NullSafeMutableLiveData")
     fun getEmployerJobPostWithDocumentByIdFromFirestore(documentId: String) =
         viewModelScope.launch {
             _firebaseMessage.value = Resource.loading(true)
@@ -39,11 +37,12 @@ constructor(
             firebaseRepo.getEmployerJobPostWithDocumentByIdFromFirestore(documentId)
                 .addOnSuccessListener { document ->
                     val employerJobPost = document.toObject(EmployerJobPost::class.java)
-                    if (employerJobPost != null) {
-                        _firebaseLiveData.value = employerJobPost
-                    } else {
+
+                    employerJobPost?.let {
+                        _firebaseLiveData.value = it
+                    } ?: run {
                         _firebaseMessage.value =
-                            Resource.error("Belge alınırken hata oluştu.", false)
+                            Resource.error("İlan alınırken hata oluştu.", false)
                     }
 
                     _firebaseMessage.value = Resource.loading(false)
@@ -58,7 +57,6 @@ constructor(
                 }
         }
 
-    @SuppressLint("NullSafeMutableLiveData")
     fun getUserDataByDocumentId(documentId: String) =
         viewModelScope.launch {
             _firebaseMessage.value = Resource.loading(true)
@@ -67,9 +65,9 @@ constructor(
                 .addOnSuccessListener { document ->
                     val userModel = document.toObject(UserModel::class.java)
 
-                    if (userModel != null) {
-                        _firebaseUserData.value = userModel
-                    } else {
+                    userModel?.let {
+                        _firebaseUserData.value = it
+                    } ?: run {
                         _firebaseMessage.value =
                             Resource.error("Bu hesapla eşleşen kullanıcı bulunamadı", null)
                     }

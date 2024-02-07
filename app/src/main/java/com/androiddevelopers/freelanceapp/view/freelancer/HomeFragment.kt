@@ -18,6 +18,7 @@ import com.androiddevelopers.freelanceapp.databinding.FragmentHomeBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.viewmodel.freelancer.HomeViewModel
+import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -33,6 +34,7 @@ class HomeFragment : Fragment() {
     private lateinit var listFreelancerJobPost: ArrayList<FreelancerJobPost>
     private lateinit var errorDialog: AlertDialog
     private lateinit var popupMenu: PopupMenu
+    private lateinit var firebaseUser: FirebaseUser
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,8 +49,9 @@ class HomeFragment : Fragment() {
             freelancerJobPost.postId?.let { id ->
                 //firebase den gelen görüntüleme sayısını alıyoruz
                 //karta tıklandığında 1 arttırıp firebase üzerinde ilgili değeri güncelliyoruz
-                var count = freelancerJobPost.viewCount
-                count = if (count == 0 || count == null) 1 else count + 1
+                val count = mutableSetOf<String>()
+                freelancerJobPost.viewCount?.let { count.addAll(it) }
+                count.add(firebaseUser.uid)
                 viewModel.updateViewCountFreelancerJobPostWithDocumentById(id, count)
 
                 //ilan id numarası ile detay sayfasına yönlendirme yapıyoruz
@@ -116,7 +119,12 @@ class HomeFragment : Fragment() {
                 // search iptal edildiğinde bu verileri tekrar adapter'e set edeceğiz
                 listFreelancerJobPost.addAll(list)
             }
+
+            liveDataFirebaseUser.observe(owner) {
+                firebaseUser = it
+            }
         }
+
         binding.ivMessage.setOnClickListener {
             val action = HomeFragmentDirections.actionNavigationHomeToChatsFragment()
             Navigation.findNavController(it).navigate(action)
