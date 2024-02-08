@@ -16,6 +16,10 @@
         <variable
             name="user"
             type="com.androiddevelopers.freelanceapp.model.UserModel" />
+
+        <variable
+            name="viewCount"
+            type="String" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -168,7 +172,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="3dp"
-                        android:text="@{employer.viewCount.toString()}"
+                        android:text="@{viewCount}"
                         android:textSize="16sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/ivViewCount"
@@ -285,7 +289,7 @@
                                 android:id="@+id/textJobPostBudget"
                                 style="@style/JopPostDetailTexts"
                                 android:text="@{employer.budget.toString()}"
-                                tools:text="Post Description" />
+                                tools:text="Post Budget" />
 
                             <com.google.android.material.divider.MaterialDivider
                                 android:layout_width="match_parent"
@@ -506,6 +510,7 @@
                     </LinearLayout>
 
                     <Button
+                        android:id="@+id/buttonGiveOffer"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"

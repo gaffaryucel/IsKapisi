@@ -10,8 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import com.androiddevelopers.freelanceapp.R
+import com.androiddevelopers.freelanceapp.adapters.ViewPagerAdapterForImages
 import com.androiddevelopers.freelanceapp.databinding.FragmentHomeDetailPostBinding
 import com.androiddevelopers.freelanceapp.util.Status
+import com.androiddevelopers.freelanceapp.util.downloadImage
 import com.androiddevelopers.freelanceapp.viewmodel.freelancer.DetailPostViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,6 +25,7 @@ class DetailPostFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var errorDialog: AlertDialog
+    private lateinit var viewPagerAdapter: ViewPagerAdapterForImages
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,7 +59,35 @@ class DetailPostFragment : Fragment() {
     private fun observeLiveData(owner: LifecycleOwner) {
         with(viewModel) {
             firebaseLiveData.observe(owner) {
+                it.freelancerId?.let { id -> getUserDataByDocumentId(id) }
+
                 binding.freelancer = it
+
+                it.images?.let { images ->
+                    with(binding) {
+                        if (images.size == 1) {
+                            downloadImage(imagePlaceHolderPostDetail, images[0])
+                        } else if (images.size > 1) {
+                            viewPagerAdapter = ViewPagerAdapterForImages(images)
+
+                            viewPagerPostDetail.adapter = viewPagerAdapter
+                            indicatorPostDetail.setViewPager(viewPagerPostDetail)
+                        }
+                    }
+                }
+
+                var count = "0"
+                it.viewCount?.let { list ->
+                    count = list.size.toString()
+                }
+                binding.viewCount = count
+            }
+
+            firebaseUserData.observe(owner) {
+                with(binding) {
+                    user = it
+                    downloadImage(ivUserProfile, it.profileImageUrl)
+                }
             }
 
             firebaseMessage.observe(owner) {

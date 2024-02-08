@@ -65,4 +65,5 @@
     <string name="create_freelance_post">Create Freelance Post</string>
     <string name="create_employer_post">Create Employer Post</string>
     <string name="create_discover_post">Create Discover Post</string>
+    <string name="wage">Ücret</string>
 </resources>

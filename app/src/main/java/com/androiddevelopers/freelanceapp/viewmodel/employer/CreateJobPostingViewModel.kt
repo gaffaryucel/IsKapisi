@@ -117,23 +117,23 @@ constructor(
 //    }
 
     fun createEmployerJobPost(
-        postId: String? = "",
-        title: String? = "",
-        description: String? = "",
-        images: List<String>? = listOf(),
-        skillsRequired: List<String>? = listOf(),
-        budget: Double? = 0.0,
-        deadline: String? = "",
-        location: String? = "",
-        datePosted: String? = "",
-        applicants: List<String>? = listOf(),
+        postId: String? = null,
+        title: String? = null,
+        description: String? = null,
+        images: List<String>? = null,
+        skillsRequired: List<String>? = null,
+        budget: Double? = null,
+        deadline: String? = null,
+        location: String? = null,
+        datePosted: String? = null,
+        applicants: List<String>? = null,
         status: JobStatus? = JobStatus.OPEN,
-        additionalDetails: String? = "",
-        completedJobs: Int? = 0,
-        canceledJobs: Int? = 0,
-        viewCount: Int? = 0,
-        isUrgent: Boolean? = false,
-        employerId: String? = ""
+        additionalDetails: String? = null,
+        completedJobs: Int? = null,
+        canceledJobs: Int? = null,
+        viewCount: List<String>? = null,
+        isUrgent: Boolean? = null,
+        employerId: String? = null
     ): EmployerJobPost {
         return EmployerJobPost(
             postId = postId,

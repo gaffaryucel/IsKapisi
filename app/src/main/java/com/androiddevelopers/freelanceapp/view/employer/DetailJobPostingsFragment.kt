@@ -74,6 +74,12 @@ class DetailJobPostingsFragment : Fragment() {
                         }
                     }
                 }
+
+                var count = "0"
+                it.viewCount?.let { list ->
+                    count = list.size.toString()
+                }
+                binding.viewCount = count
             }
 
             firebaseUserData.observe(owner) {

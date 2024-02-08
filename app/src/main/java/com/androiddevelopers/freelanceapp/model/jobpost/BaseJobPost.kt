@@ -16,7 +16,7 @@ open class BaseJobPost {
     var status: JobStatus? = null // İlanın durumu (Açık, Kapalı, Tamamlanan)
     var additionalDetails: String? = null // İş ilanıyla ilgili ek detaylar
     var completedJobs: Int? = null // Tamamlanan iş sayısı
-    var viewCount: Int? = null // İlanın kaç kez görüntülendiği
+    var viewCount: List<String>? = null // İlanın kaç kez görüntülendiği
     var isUrgent: Boolean? = null // İşin acil olduğunu belirtmek için
 
     constructor()
@@ -34,7 +34,7 @@ open class BaseJobPost {
         status: JobStatus?,
         additionalDetails: String?,
         completedJobs: Int?,
-        viewCount: Int?,
+        viewCount: List<String>?,
         isUrgent: Boolean?
     ) {
         this.postId = postId

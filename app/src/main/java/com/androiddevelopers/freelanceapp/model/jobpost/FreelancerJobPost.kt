@@ -24,7 +24,7 @@ class FreelancerJobPost: BaseJobPost {
         additionalDetails: String?,
         completedJobs: Int?,
         unfinishedJobs: Int?,
-        viewCount: Int?,
+        viewCount: List<String>?,
         isUrgent: Boolean?,
         freelancerId: String?,
         rating: Double?
