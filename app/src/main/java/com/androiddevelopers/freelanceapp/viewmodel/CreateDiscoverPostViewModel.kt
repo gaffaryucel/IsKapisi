@@ -76,7 +76,9 @@ class CreateDiscoverPostViewModel @Inject constructor(
         return DiscoverPostModel(
             postId,currentUserId,
             description,tags,
-            emptyList(),getCurrentTime()
+            emptyList(),getCurrentTime(),
+            userData.value?.username.toString(),
+            userData.value?.profileImageUrl.toString()
         )
     }
     private fun getCurrentTime(): String {

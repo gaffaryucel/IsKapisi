@@ -57,9 +57,9 @@ class EditMainProfileInfoViewModel  @Inject constructor(
             }
     }
 
-    fun updateUserInfo(key : String,userhoto: Any) {
+    fun updateUserInfo(key : String,userPhoto: Any) {
         val photoMap = hashMapOf<String,Any?>(
-            key to userhoto
+            key to userPhoto
         )
         firebaseRepo.updateUserData(userId,photoMap)
     }

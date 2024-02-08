@@ -215,5 +215,14 @@ class FirebaseRepoImpl @Inject constructor(
     override fun getFollowers(userId: String): DatabaseReference {
         return userFollowRef.child(userId).child("followers")
     }
+    override fun likePost(postId: String, updateData:  HashMap<String, Any?>): Task<Void> {
+        return  discoverPostCollection.document(postId).update(updateData)
+    }
 
+    override fun getDiscoverPostDataFromFirebase(postId: String, ):Task<DocumentSnapshot> {
+        return discoverPostCollection.document(postId).get()
+    }
+    override fun commentToDiscoverPost(postId: String, updateData:  HashMap<String, Any?>): Task<Void> {
+        return  discoverPostCollection.document(postId).update(updateData)
+    }
 }

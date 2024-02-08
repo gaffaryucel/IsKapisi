@@ -45,6 +45,15 @@
         <action
             android:id="@+id/action_navigation_profile_to_editUserProfileInfoFragment"
             app:destination="@id/editUserProfileInfoFragment" />
+        <action
+            android:id="@+id/action_navigation_profile_to_profileDiscoverPostDetailsFragment"
+            app:destination="@id/profileDiscoverPostDetailsFragment" />
+        <action
+            android:id="@+id/action_navigation_profile_to_profileFreelancerPostDetailsFragment"
+            app:destination="@id/profileFreelancerPostDetailsFragment" />
+        <action
+            android:id="@+id/action_navigation_profile_to_profileEmployerPostDetailsFragment"
+            app:destination="@id/profileEmployerPostDetailsFragment" />
     </fragment>
 
     <fragment
@@ -96,6 +105,9 @@
         <argument
             android:name="position"
             app:argType="string" />
+        <action
+            android:id="@+id/action_discoverDetailsFragment_to_commentsFragment"
+            app:destination="@id/commentsFragment" />
     </fragment>
     <fragment
         android:id="@+id/editUserProfileInfoFragment"
@@ -233,6 +245,7 @@
         app:popUpToInclusive="true"
         app:popEnterAnim="@anim/nav_default_pop_enter_anim"
         app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
     <action
         android:id="@+id/action_global_createDiscoverPostFragment"
         app:destination="@id/createDiscoverPostFragment"
@@ -242,6 +255,7 @@
         app:popUpToInclusive="true"
         app:popEnterAnim="@anim/nav_default_pop_enter_anim"
         app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
     <action
         android:id="@+id/action_global_navigation_discover"
         app:destination="@id/navigation_discover"
@@ -251,6 +265,7 @@
         app:popUpToInclusive="true"
         app:popEnterAnim="@anim/nav_default_pop_enter_anim"
         app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
     <action
         android:id="@+id/action_global_navigation_job_postings"
         app:destination="@id/navigation_job_postings"
@@ -260,6 +275,7 @@
         app:popUpToInclusive="true"
         app:popEnterAnim="@anim/nav_default_pop_enter_anim"
         app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
     <action
         android:id="@+id/action_global_navigation_profile"
         app:destination="@id/navigation_profile"
@@ -269,4 +285,36 @@
         app:popUpToInclusive="true"
         app:popEnterAnim="@anim/nav_default_pop_enter_anim"
         app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
+    <fragment
+        android:id="@+id/profileDiscoverPostDetailsFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.profile.ProfileDiscoverPostDetailsFragment"
+        android:label="fragment_profile_discover_post_details"
+        tools:layout="@layout/fragment_profile_discover_post_details" >
+        <argument
+            android:name="p"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/profileFreelancerPostDetailsFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.profile.ProfileFreelancerPostDetailsFragment"
+        android:label="fragment_profile_freelancer_post_details"
+        tools:layout="@layout/fragment_profile_freelancer_post_details" />
+
+    <fragment
+        android:id="@+id/profileEmployerPostDetailsFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.profile.ProfileEmployerPostDetailsFragment"
+        android:label="fragment_profile_employer_post_details"
+        tools:layout="@layout/fragment_profile_employer_post_details" />
+
+    <fragment
+        android:id="@+id/commentsFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.CommentsFragment"
+        tools:layout="@layout/fragment_comments">
+        <argument
+            android:name="postId"
+            app:argType="string" />
+    </fragment>
+
 </navigation>

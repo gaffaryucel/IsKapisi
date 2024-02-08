@@ -30,10 +30,10 @@ class DiscoverViewModel  @Inject constructor(
         get() = _postData
 
     init {
-        getUserDataFromFirebase()
+        getAllDiscoverPostsFromFirestore()
     }
 
-    private fun getUserDataFromFirebase() {
+    private fun getAllDiscoverPostsFromFirestore() {
         _message.value = Resource.loading(null)
         firebaseRepo.getAllDiscoverPostsFromFirestore()
             .addOnSuccessListener {

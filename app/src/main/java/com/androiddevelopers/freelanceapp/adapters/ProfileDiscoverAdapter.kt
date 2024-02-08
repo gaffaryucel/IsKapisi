@@ -3,11 +3,13 @@ package com.androiddevelopers.freelanceapp.adapters
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.databinding.RowDiscoverPostsProfileBinding
 import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
+import com.androiddevelopers.freelanceapp.view.profile.ProfileFragmentDirections
 import com.bumptech.glide.Glide
 
 class ProfileDiscoverAdapter : RecyclerView.Adapter<ProfileDiscoverAdapter.ProfileDiscoverViewHolder>() {
@@ -43,7 +45,8 @@ class ProfileDiscoverAdapter : RecyclerView.Adapter<ProfileDiscoverAdapter.Profi
         val post = postList[position]
         Glide.with(holder.itemView.context).load(post.images?.get(0)).into(holder.binding.ivDiscoverVPostProfile)
         holder.itemView.setOnClickListener {
-
+            val action = ProfileFragmentDirections.actionNavigationProfileToProfileDiscoverPostDetailsFragment(position.toString())
+            Navigation.findNavController(it).navigate(action)
         }
     }
 }

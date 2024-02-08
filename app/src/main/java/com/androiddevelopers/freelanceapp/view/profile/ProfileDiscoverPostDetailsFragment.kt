@@ -1,4 +1,4 @@
-package com.androiddevelopers.freelanceapp.view
+package com.androiddevelopers.freelanceapp.view.profile
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -11,15 +11,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.DiscoverPostDetailsAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentDiscoverDetailsBinding
+import com.androiddevelopers.freelanceapp.databinding.FragmentProfileDiscoverPostDetailsBinding
 import com.androiddevelopers.freelanceapp.viewmodel.DiscoverDetailsViewModel
+import com.androiddevelopers.freelanceapp.viewmodel.profile.ProfileDiscoverPostDetailsViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DiscoverDetailsFragment : Fragment() {
+class ProfileDiscoverPostDetailsFragment : Fragment() {
 
-    private lateinit var viewModel: DiscoverDetailsViewModel
-    private var _binding: FragmentDiscoverDetailsBinding? = null
+    private lateinit var viewModel: ProfileDiscoverPostDetailsViewModel
+
+    private var _binding: FragmentProfileDiscoverPostDetailsBinding? = null
     private val binding get() = _binding!!
     private var adapter = DiscoverPostDetailsAdapter()
     private var position : Int? = 0
@@ -28,10 +31,10 @@ class DiscoverDetailsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel = ViewModelProvider(this)[DiscoverDetailsViewModel::class.java]
-        _binding = FragmentDiscoverDetailsBinding.inflate(inflater, container, false)
+        viewModel = ViewModelProvider(this)[ProfileDiscoverPostDetailsViewModel::class.java]
+        _binding = FragmentProfileDiscoverPostDetailsBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        val p = arguments?.getString("position")
+        val p = arguments?.getString("p")
         position = p?.toInt()
         return root
     }
@@ -40,20 +43,15 @@ class DiscoverDetailsFragment : Fragment() {
 
         observeLiveData()
 
-        adapter.like = { postId,likeCount->
-            viewModel.likePost(postId,likeCount)
-        }
-        adapter.dislike = { postId,likeCount->
-            viewModel.dislikePost(postId,likeCount)
-        }
+
     }
     private fun observeLiveData(){
         viewModel.discoverPosts.observe(viewLifecycleOwner, Observer {
             adapter.postList = it
             adapter.notifyDataSetChanged()
-            binding.rvDiscoverDetails.layoutManager = LinearLayoutManager(requireContext())
-            binding.rvDiscoverDetails.adapter = adapter
-            binding.rvDiscoverDetails.scrollToPosition(position!!)
+            binding.rvDiscoverPostDetails.layoutManager = LinearLayoutManager(requireContext())
+            binding.rvDiscoverPostDetails.adapter = adapter
+            binding.rvDiscoverPostDetails.scrollToPosition(position!!)
         })
     }
 
@@ -77,4 +75,5 @@ class DiscoverDetailsFragment : Fragment() {
         val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
         bottomNavigationView?.visibility = View.VISIBLE
     }
+
 }

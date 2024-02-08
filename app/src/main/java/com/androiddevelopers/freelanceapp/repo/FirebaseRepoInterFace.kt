@@ -89,5 +89,9 @@ interface FirebaseRepoInterFace {
     fun unFollow(currentUserId: String, followingId: String): Task<Void>
     fun updateUserData(userId: String, updateData:  HashMap<String, Any?>): Task<Void>
     fun getFollowers(userId: String): DatabaseReference
+    fun likePost(postId: String, updateData:  HashMap<String, Any?>): Task<Void>
+    fun getDiscoverPostDataFromFirebase(postId: String, ): Task<DocumentSnapshot>
+    fun commentToDiscoverPost(postId: String, updateData:  HashMap<String, Any?>): Task<Void>
+
 }
 
