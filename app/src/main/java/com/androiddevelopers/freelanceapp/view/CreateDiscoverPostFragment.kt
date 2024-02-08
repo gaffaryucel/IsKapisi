@@ -118,10 +118,8 @@ class CreateDiscoverPostFragment : Fragment() {
 
 
     private fun getPostDataAndCreateDiscoverPostModel() : DiscoverPostModel{
-        val title = binding.etTitle.text.toString()
         val description = binding.etDescription.text.toString()
         return viewModel.createDiscoverPostModel(
-            title,
             description,
             _tagList.value as List<String>
         )

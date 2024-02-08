@@ -28,7 +28,6 @@
                 app:civ_border_color="#FF000000"/>
 
             <TextView
-                android:text="@{postItem.title}"
                 android:id="@+id/tvUserName"
                 app:layout_constraintStart_toEndOf="@id/ivUserProfile"
                 app:layout_constraintEnd_toEndOf="@id/ivMore"
@@ -46,45 +45,27 @@
                 android:layout_height="40dp"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
         <ImageView
             android:id="@+id/ivPost"
+            android:src="@drawable/placeholder"
             android:layout_width="match_parent"
-            android:layout_height="250dp"/>
-
-        <TextView
-            android:text="@{postItem.title}"
-            android:id="@+id/tvPostTitle"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxLines="1"/>
-
-        <TextView
-            android:text="@{postItem.description}"
-            android:id="@+id/tvPostDescription"
-            android:textSize="16sp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxLines="3"/>
-
+            android:scaleType="center"
+            android:layout_height="wrap_content"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/edittextHeight">
 
-            <ImageView
+            <TextView
                 android:id="@+id/ivLike"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_width="@dimen/edittextHeight"
                 android:layout_height="@dimen/edittextHeight"
-                android:padding="15dp"
-                android:src="@drawable/ic_favorite"
-                app:civ_border_width="2dp"
-                app:civ_border_color="#FF000000"/>
+                app:drawableTopCompat="@drawable/ic_favorite"
+                android:textAlignment="center"
+                app:civ_border_width="2dp" />
 
             <ImageView
                 android:id="@+id/ivComment"
@@ -98,21 +79,16 @@
                 app:civ_border_width="2dp"
                 app:civ_border_color="#FF000000"/>
 
-
-            <ImageView
-                android:id="@+id/ivShare"
-                android:src="@drawable/ic_share"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_width="@dimen/edittextHeight"
-                android:layout_height="@dimen/edittextHeight"
-                android:padding="15dp"
-                app:civ_border_width="2dp"
-                app:civ_border_color="#FF000000"/>
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <TextView
+            android:text="@{postItem.description}"
+            android:layout_margin="4dp"
+            android:id="@+id/tvPostDescription"
+            android:textSize="16sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="3"/>
 
     </LinearLayout>
 </layout>

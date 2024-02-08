@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
+import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.Resource
 import com.google.firebase.auth.FirebaseAuth
@@ -30,6 +31,12 @@ class CreateDiscoverPostViewModel @Inject constructor(
     private val _uploadPhotoMessage = MutableLiveData<Resource<String>>()
     val uploadPhotoMessage : LiveData<Resource<String>> = _uploadPhotoMessage
 
+    private val _userData = MutableLiveData<UserModel>()
+    val userData : LiveData<UserModel> = _userData
+
+    init {
+        getUserDataFromFirebase()
+    }
     fun uploadPostPicture(postModel : DiscoverPostModel, r: ByteArray) = viewModelScope.launch {
         _uploadPhotoMessage.value = Resource.loading("loading")
 
@@ -62,14 +69,13 @@ class CreateDiscoverPostViewModel @Inject constructor(
     }
 
     fun createDiscoverPostModel(
-        title : String,
         description : String,
         tags : List<String>
     ) : DiscoverPostModel{
         val postId = UUID.randomUUID().toString()
         return DiscoverPostModel(
             postId,currentUserId,
-            title,description,tags,
+            description,tags,
             emptyList(),getCurrentTime()
         )
     }
@@ -81,5 +87,17 @@ class CreateDiscoverPostViewModel @Inject constructor(
     }
     private fun updateUserData(discoverPost : DiscoverPostModel){
         repo.uploadDataInUserNode(currentUserId.toString(),discoverPost,"discover",discoverPost.postId.toString())
+    }
+
+    private fun getUserDataFromFirebase() {
+        repo.getUserDataByDocumentId(currentUserId.toString())
+            .addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    val user = documentSnapshot.toObject(UserModel::class.java)
+                    if (user != null) {
+                        _userData.value = user ?: UserModel()
+                    }
+                }
+            }
     }
 }

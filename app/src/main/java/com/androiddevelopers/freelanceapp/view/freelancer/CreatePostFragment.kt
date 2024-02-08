@@ -51,7 +51,6 @@ class CreatePostFragment : Fragment() {
 
     private var resultByteArray = byteArrayOf()
     private var _tagList = MutableLiveData<List<String>>()
-    private var isBNHiden = false
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -91,56 +90,16 @@ class CreatePostFragment : Fragment() {
                 )
             }
         }
-        var isClicked = false
+
         binding.ivAddTag.setOnClickListener {
             val tag = binding.etTags.text.toString()
             tagList.add(tag)
             _tagList.value = tagList
             binding.etTags.setText("")
-            if (!isClicked){
-                binding.svCreatePost.postDelayed({
-                    binding.svCreatePost.smoothScrollTo(0, 800) // Y ekseninde yumuşak bir şekilde 500 piksel aşağı kaydır
-                }, 50) // 1000 milisaniye (1 saniye) sonra kaydırma işlemi başlatılır
-                isClicked = true
-            }
         }
+
         binding.ivClose.setOnClickListener {
             findNavController().popBackStack()
-        }
-        binding.etTags.setOnTouchListener { view, motionEvent ->
-            if (motionEvent.action == MotionEvent.ACTION_DOWN) {
-                if (!isBNHiden){
-                    hideBottomNavigation()
-                }
-            }
-            false
-        }
-
-        binding.etTitle.setOnTouchListener { view, motionEvent ->
-            if (!isClicked){
-                GlobalScope.launch(Dispatchers.IO){
-                    delay(150)
-                    binding.svCreatePost.postDelayed({
-                        binding.svCreatePost.smoothScrollTo(0, 800) // Y ekseninde yumuşak bir şekilde 500 piksel aşağı kaydır
-                    }, 50)
-                    isClicked = true
-                }
-            }
-            if (motionEvent.action == MotionEvent.ACTION_DOWN) {
-                if (!isBNHiden){
-                    hideBottomNavigation()
-                }
-            }
-            false
-        }
-
-        binding.etDescription.setOnTouchListener { view, motionEvent ->
-            if (motionEvent.action == MotionEvent.ACTION_DOWN) {
-                if (!isBNHiden){
-                    hideBottomNavigation()
-                }
-            }
-            false
         }
 
     }
@@ -308,15 +267,10 @@ class CreatePostFragment : Fragment() {
     }
 
 
-    private fun hideBottomNavigation() {
-        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
-        bottomNavigationView?.visibility = View.GONE
-        isBNHiden = true
-    }
 
-    private fun showBottomNavigation() {
-        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
-        bottomNavigationView?.visibility = View.VISIBLE
+    override fun onResume() {
+        super.onResume()
+        hideBottomNavigation()
     }
 
     override fun onPause() {
@@ -324,6 +278,13 @@ class CreatePostFragment : Fragment() {
         showBottomNavigation()
     }
 
+    private fun hideBottomNavigation() {
+        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
+        bottomNavigationView?.visibility = View.GONE
+    }
 
-
+    private fun showBottomNavigation() {
+        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
+        bottomNavigationView?.visibility = View.VISIBLE
+    }
 }
