@@ -25,6 +25,7 @@ import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.SkillAdapter
 import com.androiddevelopers.freelanceapp.adapters.ViewPagerAdapterForCreateJobPost
 import com.androiddevelopers.freelanceapp.databinding.FragmentJobPostingsCreateBinding
+import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.viewmodel.employer.CreateJobPostingViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -50,6 +51,7 @@ class CreateJobPostingFragment : Fragment() {
     private lateinit var skillList: ArrayList<String>
 
     private lateinit var viewPagerAdapter: ViewPagerAdapterForCreateJobPost
+    private var employerPostId: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -75,8 +77,6 @@ class CreateJobPostingFragment : Fragment() {
             viewModel.setImageUriList(it)
         })
 
-
-
         return view
     }
 
@@ -86,6 +86,12 @@ class CreateJobPostingFragment : Fragment() {
         setupDialogs()
         setProgressBar(false)
         observeLiveData(viewLifecycleOwner, view)
+
+        val employerId = arguments?.getString("employer_id")
+
+        employerId?.let { id ->
+            viewModel.getEmployerJobPostWithDocumentByIdFromFirestore(id)
+        }
 
         viewModel.setImageUriList(selectedImages)
 
@@ -117,7 +123,7 @@ class CreateJobPostingFragment : Fragment() {
                             location = locationsTextInputEditText.text.toString(),
                             deadline = deadlineTextInputEditText.text.toString(),
                             budget = budgetTextInputEditText.text.toString().toDouble(),
-                            postId = UUID.randomUUID().toString(),
+                            postId = employerPostId,
                             isUrgent = switchUrgentCreateJobPost.isChecked
                         )
                     )
@@ -209,7 +215,6 @@ class CreateJobPostingFragment : Fragment() {
                     //indicatoru viewpager yeni liste ile set ediyoruz
                     indicatorCreateJobPost.setViewPager(viewPagerCreateJobPost)
                 }
-
             }
 
             imageSize.observe(owner) {
@@ -227,6 +232,38 @@ class CreateJobPostingFragment : Fragment() {
                     }
                 }
             }
+
+            firebaseLiveData.observe(owner) {
+
+                setEditText(it)
+
+                it.postId?.let { id ->
+                    employerPostId = id
+                }
+
+                it.images?.let { images ->
+                    if (images.isNotEmpty()) {
+                        val uriList = images.map { s -> Uri.parse(s) }
+                        viewModel.setImageUriList(uriList as ArrayList<Uri>)
+                    }
+
+                }
+
+            }
+        }
+    }
+
+    private fun setEditText(post: EmployerJobPost) {
+        with(binding) {
+            budgetTextInputEditText.setText(post.budget.toString())
+            titleTextInputEditText.setText(post.title)
+            descriptionTextInputEditText.setText(post.description)
+            locationsTextInputEditText.setText(post.location)
+            deadlineTextInputEditText.setText(post.deadline)
+            post.skillsRequired?.let {
+                viewModel.setSkills(it as ArrayList<String>)
+            }
+
         }
     }
 

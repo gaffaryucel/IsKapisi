@@ -152,6 +152,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/budgetTextInputEditText"
+
                         style="@style/StyleTextInputEditText"
                         android:hint="@string/enter_budget"
                         android:inputType="number|numberDecimal|numberSigned"
