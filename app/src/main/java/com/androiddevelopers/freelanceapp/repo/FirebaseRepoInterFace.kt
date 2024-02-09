@@ -35,6 +35,7 @@ interface FirebaseRepoInterFace {
         postId: String,
         newCount: List<String>
     ): Task<Void>
+    fun deleteFreelancerJobPostFromFirestore(postId: String):Task<Void>
 
     // Firestore Employer Job Post işlemleri
     fun addEmployerJobPostToFirestore(job: EmployerJobPost): Task<Void>
@@ -44,6 +45,7 @@ interface FirebaseRepoInterFace {
         postId: String,
         newCount: List<String>
     ): Task<Void>
+    fun deleteEmployerJobPostFromFirestore(postId: String):Task<Void>
 
     // Firestore Discover Post işlemleri
     fun uploadDiscoverPostToFirestore(post: DiscoverPostModel): Task<Void>
