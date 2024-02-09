@@ -152,6 +152,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/budgetTextInputEditText"
+
                         style="@style/StyleTextInputEditText"
                         android:hint="@string/enter_budget"
                         android:inputType="number|numberDecimal|numberSigned"
@@ -282,7 +283,21 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <Button
-                    android:id="@+id/createjobPostButton"
+                    android:id="@+id/createJobPostDeleteButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:backgroundTint="@color/delete_button"
+                    android:text="@string/delete"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/createJobPostSaveButton"
+                    app:layout_constraintStart_toEndOf="@id/guidelineVerticalLeft"
+                    app:layout_constraintTop_toBottomOf="@id/skillsRequiredLayout" />
+
+                <Button
+                    android:id="@+id/createJobPostSaveButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -291,9 +306,9 @@
                     android:layout_marginBottom="8dp"
                     android:text="@string/save"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalRight"
-                    app:layout_constraintStart_toStartOf="@+id/guidelineVerticalLeft"
-                    app:layout_constraintTop_toBottomOf="@+id/skillsRequiredLayout"
+                    app:layout_constraintEnd_toStartOf="@id/guidelineVerticalRight"
+                    app:layout_constraintStart_toEndOf="@id/createJobPostDeleteButton"
+                    app:layout_constraintTop_toBottomOf="@id/skillsRequiredLayout"
                     app:layout_constraintWidth_max="@dimen/buttonMaxWidth" />
 
 

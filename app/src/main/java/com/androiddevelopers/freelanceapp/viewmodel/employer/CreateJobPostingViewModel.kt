@@ -1,6 +1,8 @@
 package com.androiddevelopers.freelanceapp.viewmodel.employer
 
 import android.net.Uri
+import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,9 +11,11 @@ import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.JobStatus
 import com.androiddevelopers.freelanceapp.util.Resource
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,6 +41,10 @@ constructor(
     private var _imageSize = MutableLiveData<Int>()
     val imageSize: LiveData<Int>
         get() = _imageSize
+
+    private var _firebaseLiveData = MutableLiveData<EmployerJobPost>()
+    val firebaseLiveData: LiveData<EmployerJobPost>
+        get() = _firebaseLiveData
 
     fun addImageAndJobPostToFirebase(
         newUriList: ArrayList<Uri>,
@@ -71,6 +79,9 @@ constructor(
                     }
             }
         } else {
+            if (jobPost.postId == null) {
+                jobPost.postId = UUID.randomUUID().toString()
+            }
             jobPost.images = downloadUriList
             jobPost.employerId = uId
             addJobPostingToFirebase(jobPost)
@@ -78,7 +89,7 @@ constructor(
     }
 
     private fun addJobPostingToFirebase(jobPost: EmployerJobPost) = viewModelScope.launch {
-        //_firebaseMessage.value = Resource.loading(true)
+        _firebaseMessage.value = Resource.loading(true)
         firebaseRepo.addEmployerJobPostToFirestore(jobPost).addOnCompleteListener { task ->
             _firebaseMessage.value = Resource.loading(false)
             if (task.isSuccessful) {
@@ -90,7 +101,23 @@ constructor(
                     }
             }
         }
-       //updateUserData(jobPost)
+        //updateUserData(jobPost)
+    }
+
+    fun deleteEmployerJobPostFromFirestore(postId: String, title: String?, view: View) = viewModelScope.launch {
+        _firebaseMessage.value = Resource.loading(true)
+        firebaseRepo.deleteEmployerJobPostFromFirestore(postId).addOnCompleteListener {task ->
+            _firebaseMessage.value = Resource.loading(false)
+            if (task.isSuccessful) {
+                _firebaseMessage.value = Resource.success(true)
+                Snackbar.make(view,"$title İlanınınz silindi.",Toast.LENGTH_SHORT).show()
+            } else {
+                _firebaseMessage.value =
+                    task.exception?.localizedMessage?.let { message ->
+                        Resource.error(message, false)
+                    }
+            }
+        }
     }
 
     fun setImageUriList(newList: ArrayList<Uri>) = viewModelScope.launch {
@@ -102,6 +129,33 @@ constructor(
     fun setSkills(newSkills: ArrayList<String>) {
         _skills.value = newSkills
     }
+
+    fun getEmployerJobPostWithDocumentByIdFromFirestore(documentId: String) =
+        viewModelScope.launch {
+            _firebaseMessage.value = Resource.loading(true)
+
+            firebaseRepo.getEmployerJobPostWithDocumentByIdFromFirestore(documentId)
+                .addOnSuccessListener { document ->
+                    val employerJobPost = document.toObject(EmployerJobPost::class.java)
+
+                    employerJobPost?.let {
+                        _firebaseLiveData.value = it
+                    } ?: run {
+                        _firebaseMessage.value =
+                            Resource.error("İlan alınırken hata oluştu.", false)
+                    }
+
+                    _firebaseMessage.value = Resource.loading(false)
+                    //_firebaseMessage.value = Resource.success(true)
+
+                }.addOnFailureListener {
+                    _firebaseMessage.value = Resource.loading(false)
+
+                    it.localizedMessage?.let { message ->
+                        _firebaseMessage.value = Resource.error(message, false)
+                    }
+                }
+        }
 
 //    private fun updateUserData(jobPost: EmployerJobPost) {
 //        try {

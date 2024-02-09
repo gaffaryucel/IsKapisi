@@ -80,6 +80,10 @@ class FirebaseRepoImpl @Inject constructor(
         return freelancerPostCollection.document(postId).update("viewCount", newCount)
     }
 
+    override fun deleteFreelancerJobPostFromFirestore(postId: String):Task<Void>{
+        return freelancerPostCollection.document(postId).delete()
+    }
+
     override fun addEmployerJobPostToFirestore(job: EmployerJobPost): Task<Void> {
         return employerPostCollection.document(job.postId.toString()).set(job)
     }
@@ -97,6 +101,10 @@ class FirebaseRepoImpl @Inject constructor(
         newCount: List<String>
     ): Task<Void> {
         return employerPostCollection.document(postId).update("viewCount", newCount)
+    }
+
+    override fun deleteEmployerJobPostFromFirestore(postId: String):Task<Void> {
+        return employerPostCollection.document(postId).delete()
     }
 
     override fun addImageToStorageForJobPosting(
