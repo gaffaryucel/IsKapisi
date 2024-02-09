@@ -1,6 +1,8 @@
 package com.androiddevelopers.freelanceapp.viewmodel.employer
 
 import android.net.Uri
+import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +11,7 @@ import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.JobStatus
 import com.androiddevelopers.freelanceapp.util.Resource
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -98,7 +101,23 @@ constructor(
                     }
             }
         }
-       //updateUserData(jobPost)
+        //updateUserData(jobPost)
+    }
+
+    fun deleteEmployerJobPostFromFirestore(postId: String, title: String?, view: View) = viewModelScope.launch {
+        _firebaseMessage.value = Resource.loading(true)
+        firebaseRepo.deleteEmployerJobPostFromFirestore(postId).addOnCompleteListener {task ->
+            _firebaseMessage.value = Resource.loading(false)
+            if (task.isSuccessful) {
+                _firebaseMessage.value = Resource.success(true)
+                Snackbar.make(view,"$title İlanınınz silindi.",Toast.LENGTH_SHORT).show()
+            } else {
+                _firebaseMessage.value =
+                    task.exception?.localizedMessage?.let { message ->
+                        Resource.error(message, false)
+                    }
+            }
+        }
     }
 
     fun setImageUriList(newList: ArrayList<Uri>) = viewModelScope.launch {

@@ -30,6 +30,7 @@ import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.viewmodel.employer.CreateJobPostingViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
@@ -96,6 +97,8 @@ class CreateJobPostingFragment : Fragment() {
         viewModel.setImageUriList(selectedImages)
 
         with(binding) {
+            //ilk açılışta create ekranı olduğu için delete butonunu gizliyoruz
+            createJobPostDeleteButton.visibility = View.GONE
             //data binding ile skill adaptörü set ediyoruz
             rvSkillAdapter = skillAdapter
 
@@ -112,7 +115,7 @@ class CreateJobPostingFragment : Fragment() {
             }
 
             //yeni iş ilanını veri tabanına göndermek için kaydet butonunu dinliyoruz
-            createjobPostButton.setOnClickListener {
+            createJobPostSaveButton.setOnClickListener {
                 with(viewModel) {
                     addImageAndJobPostToFirebase( //resim ve işveren ilanı bilgilerini view modele gönderiyoruz
                         selectedImages, // yüklenecek resimlerin cihazdaki konumu
@@ -235,35 +238,44 @@ class CreateJobPostingFragment : Fragment() {
 
             firebaseLiveData.observe(owner) {
 
-                setEditText(it)
+                setView(it)
 
                 it.postId?.let { id ->
                     employerPostId = id
                 }
-
-                it.images?.let { images ->
-                    if (images.isNotEmpty()) {
-                        val uriList = images.map { s -> Uri.parse(s) }
-                        viewModel.setImageUriList(uriList as ArrayList<Uri>)
-                    }
-
-                }
-
             }
         }
     }
 
-    private fun setEditText(post: EmployerJobPost) {
+    private fun setView(post: EmployerJobPost) {
         with(binding) {
+            post.images?.let { images ->
+                if (images.isNotEmpty()) {
+                    val uriList = images.map { s -> Uri.parse(s) }
+                    viewModel.setImageUriList(uriList as ArrayList<Uri>)
+                }
+            }
+
             budgetTextInputEditText.setText(post.budget.toString())
             titleTextInputEditText.setText(post.title)
             descriptionTextInputEditText.setText(post.description)
             locationsTextInputEditText.setText(post.location)
             deadlineTextInputEditText.setText(post.deadline)
+
             post.skillsRequired?.let {
                 viewModel.setSkills(it as ArrayList<String>)
             }
 
+            createJobPostDeleteButton.visibility = View.VISIBLE
+
+            createJobPostDeleteButton.setOnClickListener { v ->
+                post.postId?.let { id ->
+                    Snackbar.make(v,"İlan silinsin mi?",Snackbar.LENGTH_LONG).setAction("Evet") {
+                        viewModel.deleteEmployerJobPostFromFirestore(id, post.title, v)
+                    }.show()
+
+                }
+            }
         }
     }
 
