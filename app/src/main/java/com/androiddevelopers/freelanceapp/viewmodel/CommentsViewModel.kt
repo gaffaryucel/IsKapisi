@@ -62,7 +62,9 @@ class CommentsViewModel  @Inject constructor(
         val likeData = hashMapOf<String,Any?>(
             "comments" to mutableList
         )
-        firebaseRepo.commentToDiscoverPost(postId,likeData)
+        firebaseRepo.commentToDiscoverPost(postId,likeData).addOnSuccessListener {
+            getAllComments(postId)
+        }
     }
     fun makeComment(postId : String,comment : String){
         val commentId = UUID.randomUUID().toString()
