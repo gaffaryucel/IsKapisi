@@ -54,6 +54,12 @@ class ProfileEmployerAdapter : RecyclerView.Adapter<ProfileEmployerAdapter.Profi
         }
         holder.itemView.setOnClickListener { v ->
             post.postId?.let {
+                val action = ProfileFragmentDirections.actionNavigationProfileToDetailJobPostingsFragment(it)
+                Navigation.findNavController(v).navigate(action)
+            }
+        }
+        holder.binding.ivEditEmployerJobPost.setOnClickListener {v->
+            post.postId?.let {
                 val direction = ProfileFragmentDirections.actionGlobalCreateJobPostingFragment(it)
                 Navigation.findNavController(v).navigate(direction)
             }

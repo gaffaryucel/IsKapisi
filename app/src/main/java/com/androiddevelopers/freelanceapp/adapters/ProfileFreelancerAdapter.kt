@@ -68,10 +68,15 @@ class ProfileFreelancerAdapter :
 
         holder.itemView.setOnClickListener { v ->
             post.postId?.let {
+                val action = ProfileFragmentDirections.actionNavigationProfileToDetailPostFragment(it)
+                Navigation.findNavController(v).navigate(action)
+            }
+        }
+        holder.binding.ivEditFreelancerJobPost.setOnClickListener {v->
+            post.postId?.let {
                 val direction = ProfileFragmentDirections.actionGlobalCreatePostFragment(it)
                 Navigation.findNavController(v).navigate(direction)
             }
-
         }
     }
 }

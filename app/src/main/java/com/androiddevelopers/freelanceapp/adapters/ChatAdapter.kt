@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.databinding.RowChatBinding
 import com.androiddevelopers.freelanceapp.model.ChatModel
-import com.androiddevelopers.freelanceapp.view.ChatsFragmentDirections
+import com.androiddevelopers.freelanceapp.view.chat.ChatsFragmentDirections
 import com.bumptech.glide.Glide
 
 class ChatAdapter :  RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {

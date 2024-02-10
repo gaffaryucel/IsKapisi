@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#80000000"/> <!-- Adjust the alpha and color as per your preference -->
+    <corners android:radius="16dp"/> <!-- Adjust the corner radius to match the CardView corner radius -->
+</shape>

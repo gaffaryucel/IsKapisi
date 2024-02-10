@@ -9,9 +9,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.databinding.RowDiscoverBinding
 import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
-import com.androiddevelopers.freelanceapp.view.DiscoverFragmentDirections
+import com.androiddevelopers.freelanceapp.view.discover.DiscoverFragmentDirections
 import com.bumptech.glide.Glide
-import java.util.NavigableMap
 
 class DiscoverAdapter : RecyclerView.Adapter<DiscoverAdapter.DiscoverViewHolder>() {
 

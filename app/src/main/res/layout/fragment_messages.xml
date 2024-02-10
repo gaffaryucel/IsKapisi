@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.MessagesFragment">
+    tools:context=".view.chat.MessagesFragment">
 
     <LinearLayout
         android:id="@id/user_info_bar"

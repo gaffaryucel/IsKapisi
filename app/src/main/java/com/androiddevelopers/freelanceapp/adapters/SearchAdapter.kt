@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.databinding.RowUserBinding
 import com.androiddevelopers.freelanceapp.model.UserModel
-import com.androiddevelopers.freelanceapp.view.SearchFragmentDirections
+import com.androiddevelopers.freelanceapp.view.discover.SearchFragmentDirections
 import com.bumptech.glide.Glide
 
 class SearchAdapter :  RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {

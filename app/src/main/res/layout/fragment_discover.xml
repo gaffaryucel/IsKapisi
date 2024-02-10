@@ -6,7 +6,7 @@
     android:orientation="vertical"
     style="@style/AppBackGroundStyle"
     android:layout_height="match_parent"
-    tools:context=".view.DiscoverFragment">
+    tools:context=".view.discover.DiscoverFragment">
 
     <LinearLayout
         android:orientation="horizontal"

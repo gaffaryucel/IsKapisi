@@ -1,100 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
             name="postItem"
             type="com.androiddevelopers.freelanceapp.model.DiscoverPostModel" />
     </data>
-    <LinearLayout
-        android:orientation="vertical"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="15dp"
+        android:padding="8dp"
+        android:background="@drawable/cardview_background"
+        android:elevation="4dp"
+        app:cardCornerRadius="16dp">
+        <LinearLayout
+            android:layout_margin="8dp"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/edittextHeight">
+            android:layout_height="wrap_content">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/ivUserProfile"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_width="@dimen/edittextHeight"
-                android:layout_height="@dimen/edittextHeight"
-                android:padding="8dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_marginVertical="8dp"
+                android:id="@+id/userInfoBar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/edittextHeight">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/ivUserProfile"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_width="@dimen/edittextHeight"
+                    android:layout_height="@dimen/edittextHeight"
+                    android:padding="8dp"
+                    android:src="@drawable/placeholder"
+                    app:civ_border_width="2dp"
+                    app:civ_border_color="#FF000000"/>
+
+                <TextView
+                    android:id="@+id/tvUserName"
+                    app:layout_constraintStart_toEndOf="@id/ivUserProfile"
+                    app:layout_constraintEnd_toStartOf="@id/ivMore"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:text="@{postItem.ownerName}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"/>
+
+                <ImageView
+                    android:id="@+id/ivMore"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:src="@drawable/baseline_more_horiz_24"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <ImageView
+                android:id="@+id/ivPost"
+                android:layout_margin="8dp"
                 android:src="@drawable/placeholder"
-                app:civ_border_width="2dp"
-                app:civ_border_color="#FF000000"/>
+                android:layout_width="match_parent"
+                android:scaleType="center"
+                android:layout_height="450dp"/>
 
             <TextView
-                android:id="@+id/tvUserName"
-                app:layout_constraintStart_toEndOf="@id/ivUserProfile"
-                app:layout_constraintEnd_toEndOf="@id/ivMore"
-                app:layout_constraintTop_toTopOf="parent"
-                android:text="@{postItem.ownerName}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-
-            <ImageView
-                android:id="@+id/ivMore"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_width="40dp"
-                android:layout_height="40dp"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-        <ImageView
-            android:id="@+id/ivPost"
-            android:src="@drawable/placeholder"
-            android:layout_width="match_parent"
-            android:scaleType="center"
-            android:layout_height="wrap_content"/>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/edittextHeight">
-
-            <ImageView
-                android:id="@+id/ivLike"
-                android:layout_width="55dp"
-                android:layout_height="55dp"
-                android:src="@drawable/ic_favorite"
-                android:padding="6dp" />
-
-            <TextView
-                app:layout_constraintTop_toBottomOf="@id/ivLike"
-                app:layout_constraintStart_toStartOf="parent"
-                android:id="@+id/tvLike"
-                android:textAlignment="center"
-                android:text="123"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content" />
+                android:text="@{postItem.description}"
+                android:id="@+id/tvPostDescription"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:textSize="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="3"/>
 
 
-            <ImageView
-                android:id="@+id/ivComment"
-                app:layout_constraintStart_toEndOf="@id/ivLike"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_width="55dp"
-                android:layout_height="55dp"
-                android:src="@drawable/messenger_bubble_small_white"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_marginBottom="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/edittextHeight">
 
-              />
+                <ImageView
+                    android:id="@+id/ivLike"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:src="@drawable/ic_favorite"
+                    android:padding="6dp" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    app:layout_constraintEnd_toStartOf="@id/ivLike"
+                    app:layout_constraintTop_toTopOf="@id/ivLike"
+                    app:layout_constraintBottom_toBottomOf="@id/ivLike"
+                    android:id="@+id/tvLike"
+                    android:textAlignment="center"
+                    android:text="123"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content" />
 
-        <TextView
-            android:text="@{postItem.description}"
-            android:layout_margin="4dp"
-            android:id="@+id/tvPostDescription"
-            android:textSize="16sp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxLines="3"/>
 
-    </LinearLayout>
+                <ImageView
+                    android:id="@+id/ivComment"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:src="@drawable/messenger_bubble_small_white" />
+
+                <TextView
+                    app:layout_constraintStart_toEndOf="@id/ivComment"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:id="@+id/tvComment"
+                    android:textAlignment="textStart"
+                    android:text="13 yorum"
+                    android:layout_width="150dp"
+                    android:gravity="center"
+                    android:layout_height="0dp"
+                    tools:ignore="RtlCompat" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
 </layout>

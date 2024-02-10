@@ -8,12 +8,9 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.R
-import com.androiddevelopers.freelanceapp.databinding.RowDiscoverBinding
 import com.androiddevelopers.freelanceapp.databinding.RowDiscoverDetailsBinding
 import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
-import com.androiddevelopers.freelanceapp.model.UserModel
-import com.androiddevelopers.freelanceapp.view.DiscoverDetailsFragmentDirections
-import com.androiddevelopers.freelanceapp.view.DiscoverFragmentDirections
+import com.androiddevelopers.freelanceapp.view.discover.DiscoverDetailsFragmentDirections
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 
@@ -84,6 +81,10 @@ class DiscoverPostDetailsAdapter : RecyclerView.Adapter<DiscoverPostDetailsAdapt
         }
         holder.binding.ivComment.setOnClickListener {
             val action = DiscoverDetailsFragmentDirections.actionDiscoverDetailsFragmentToCommentsFragment(post.postId.toString())
+            Navigation.findNavController(it).navigate(action)
+        }
+        holder.binding.userInfoBar.setOnClickListener {
+            val action = DiscoverDetailsFragmentDirections.actionDiscoverDetailsFragmentToUserProfileFragment(post.postOwner.toString())
             Navigation.findNavController(it).navigate(action)
         }
     }

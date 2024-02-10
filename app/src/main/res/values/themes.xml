@@ -116,12 +116,12 @@
 
     <!-- App Background Style -->
     <style name="AppBackGroundStyle">
-        <item name="android:background">@color/light_bg_color</item>
+        <item name="android:background">#fbfbfb</item>
     </style>
 
     <!-- Icons Style -->
     <style name="MessageIconStyle">
-        <item name="android:src">@drawable/message_icon_dark</item>
+        <item name="android:src">@drawable/message_black</item>
     </style>
 
     <style name="StyleTextInputEditText">

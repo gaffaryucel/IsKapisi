@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:padding="10dp"
-        tools:context="view.ChatsFragment">
+        tools:context=".view.chat.ChatsFragment">
 
         <ImageView
             android:id="@+id/chatImage"

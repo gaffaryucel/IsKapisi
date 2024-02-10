@@ -10,9 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.DiscoverPostDetailsAdapter
-import com.androiddevelopers.freelanceapp.databinding.FragmentDiscoverDetailsBinding
 import com.androiddevelopers.freelanceapp.databinding.FragmentProfileDiscoverPostDetailsBinding
-import com.androiddevelopers.freelanceapp.viewmodel.DiscoverDetailsViewModel
 import com.androiddevelopers.freelanceapp.viewmodel.profile.ProfileDiscoverPostDetailsViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint

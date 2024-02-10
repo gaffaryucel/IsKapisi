@@ -104,7 +104,7 @@
 
     <!-- Icons Style -->
     <style name="MessageIconStyle" >
-        <item name="android:src">@drawable/message_icon_light</item>
+        <item name="android:src">@drawable/message_white</item>
     </style>
 
 </resources>

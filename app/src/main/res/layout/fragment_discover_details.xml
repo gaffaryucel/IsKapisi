@@ -3,10 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.DiscoverDetailsFragment">
+    tools:context=".view.discover.DiscoverDetailsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvDiscoverDetails"
+        android:background="#ededed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

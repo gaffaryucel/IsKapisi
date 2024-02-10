@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#f6d16d"
-    tools:context=".view.WelcomeFragment">
+    tools:context=".view.auth.WelcomeFragment">
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewpager"
