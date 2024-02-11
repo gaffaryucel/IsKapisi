@@ -30,8 +30,10 @@ class FirebaseRepoImpl @Inject constructor(
     private val freelancerPostCollection = firestore.collection("posts")
     private val employerPostCollection = firestore.collection("job_posting")
     private val discoverPostCollection = firestore.collection("discover_posts")
+
     //StorageRef
     private val imagesParentRef = storage.reference.child("user_images")
+
     //RealtimeRef
     private val messagesReference = database.getReference("users")
     private val userFollowRef = database.getReference("users_follow")
@@ -80,8 +82,22 @@ class FirebaseRepoImpl @Inject constructor(
         return freelancerPostCollection.document(postId).update("viewCount", newCount)
     }
 
-    override fun deleteFreelancerJobPostFromFirestore(postId: String):Task<Void>{
+    override fun deleteFreelancerJobPostFromFirestore(postId: String): Task<Void> {
         return freelancerPostCollection.document(postId).delete()
+    }
+
+    override fun updateLikeFreelancerJobPostFromFirestore(
+        postId: String,
+        likes: List<String>
+    ): Task<Void> {
+        return freelancerPostCollection.document(postId).update("likes", likes)
+    }
+
+    override fun updateSavedUsersFreelancerJobPostFromFirestore(
+        postId: String,
+        savedUsers: List<String>
+    ): Task<Void> {
+        return freelancerPostCollection.document(postId).update("savedUsers", savedUsers)
     }
 
     override fun addEmployerJobPostToFirestore(job: EmployerJobPost): Task<Void> {
@@ -103,8 +119,15 @@ class FirebaseRepoImpl @Inject constructor(
         return employerPostCollection.document(postId).update("viewCount", newCount)
     }
 
-    override fun deleteEmployerJobPostFromFirestore(postId: String):Task<Void> {
+    override fun deleteEmployerJobPostFromFirestore(postId: String): Task<Void> {
         return employerPostCollection.document(postId).delete()
+    }
+
+    override fun updateSavedUsersEmployerJobPostFromFirestore(
+        postId: String,
+        likes: List<String>
+    ): Task<Void> {
+        return employerPostCollection.document(postId).update("savedUsers", likes)
     }
 
     override fun addImageToStorageForJobPosting(
@@ -196,41 +219,52 @@ class FirebaseRepoImpl @Inject constructor(
             .set(data)
     }
 
-   
-   override fun getAllDiscoverPostsFromUser(userId : String): Task<QuerySnapshot> {
+
+    override fun getAllDiscoverPostsFromUser(userId: String): Task<QuerySnapshot> {
         return discoverPostCollection.whereEqualTo("postOwner", userId).get()
     }
 
-    override fun getAllEmployerJobPostsFromUser(userId : String): Task<QuerySnapshot> {
+    override fun getAllEmployerJobPostsFromUser(userId: String): Task<QuerySnapshot> {
         return employerPostCollection.whereEqualTo("employerId", userId).get()
     }
 
-    override fun getAllFreelancerJobPostsFromUser(userId : String): Task<QuerySnapshot> {
+    override fun getAllFreelancerJobPostsFromUser(userId: String): Task<QuerySnapshot> {
         return freelancerPostCollection.whereEqualTo("freelancerId", userId).get()
     }
 
-    override fun follow(currentUserId : String,followingId : String): Task<Void> {
-        userFollowRef.child(followingId).child("followers").child(currentUserId).setValue(currentUserId)
-        return userFollowRef.child(currentUserId).child("following").child(followingId).setValue(followingId)
+    override fun follow(currentUserId: String, followingId: String): Task<Void> {
+        userFollowRef.child(followingId).child("followers").child(currentUserId)
+            .setValue(currentUserId)
+        return userFollowRef.child(currentUserId).child("following").child(followingId)
+            .setValue(followingId)
     }
+
     override fun unFollow(currentUserId: String, followingId: String): Task<Void> {
         userFollowRef.child(followingId).child("followers").child(currentUserId).removeValue()
-        return userFollowRef.child(currentUserId).child("following").child(followingId).removeValue()
+        return userFollowRef.child(currentUserId).child("following").child(followingId)
+            .removeValue()
     }
-    override fun updateUserData(userId: String, updateData:  HashMap<String, Any?>): Task<Void> {
-        return  userCollection.document(userId).update(updateData)
+
+    override fun updateUserData(userId: String, updateData: HashMap<String, Any?>): Task<Void> {
+        return userCollection.document(userId).update(updateData)
     }
+
     override fun getFollowers(userId: String): DatabaseReference {
         return userFollowRef.child(userId).child("followers")
     }
-    override fun likePost(postId: String, updateData:  HashMap<String, Any?>): Task<Void> {
-        return  discoverPostCollection.document(postId).update(updateData)
+
+    override fun likePost(postId: String, updateData: HashMap<String, Any?>): Task<Void> {
+        return discoverPostCollection.document(postId).update(updateData)
     }
 
-    override fun getDiscoverPostDataFromFirebase(postId: String, ):Task<DocumentSnapshot> {
+    override fun getDiscoverPostDataFromFirebase(postId: String): Task<DocumentSnapshot> {
         return discoverPostCollection.document(postId).get()
     }
-    override fun commentToDiscoverPost(postId: String, updateData:  HashMap<String, Any?>): Task<Void> {
-        return  discoverPostCollection.document(postId).update(updateData)
+
+    override fun commentToDiscoverPost(
+        postId: String,
+        updateData: HashMap<String, Any?>
+    ): Task<Void> {
+        return discoverPostCollection.document(postId).update(updateData)
     }
 }
