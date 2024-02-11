@@ -90,4 +90,33 @@ constructor(
                 }
             }
     }
+
+    fun updateSavedUsersEmployerJobPostFromFirestore(
+        userId: String,
+        postId: String,
+        isSavedPost: Boolean,
+        savedUsers: List<String>
+    ) = viewModelScope.launch {
+        val list = mutableSetOf<String>()
+        list.addAll(savedUsers)
+
+        if (isSavedPost) {
+            list.add(userId)
+        } else {
+            list.remove(userId)
+        }
+
+        firebaseRepo.updateSavedUsersEmployerJobPostFromFirestore(postId, list.toList())
+            .addOnCompleteListener {
+                _firebaseMessage.value = Resource.loading(false)
+                if (it.isSuccessful) {
+                    _firebaseMessage.value = Resource.success(true)
+                } else {
+                    _firebaseMessage.value = Resource.loading(false)
+                    it.exception?.localizedMessage?.let { message ->
+                        _firebaseMessage.value = Resource.error(message, false)
+                    }
+                }
+            }
+    }
 }

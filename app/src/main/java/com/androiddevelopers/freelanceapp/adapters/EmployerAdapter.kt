@@ -11,9 +11,13 @@ import com.androiddevelopers.freelanceapp.databinding.RowEmployerJobBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.util.AppDiffUtil
 import com.androiddevelopers.freelanceapp.util.downloadImage
+import com.androiddevelopers.freelanceapp.util.snackbar
 
-class EmployerAdapter(private val listener: (EmployerJobPost, View) -> Unit) :
+class EmployerAdapter(private val userId: String) :
     RecyclerView.Adapter<EmployerAdapter.EmployerViewHolder>() {
+    lateinit var clickListener: ((EmployerJobPost, View) -> Unit)
+    lateinit var savedListener: ((String, Boolean, List<String>) -> Unit)
+
     private val diffUtil = AppDiffUtil<EmployerJobPost>()
     private val asyncListDiffer = AsyncListDiffer(this, diffUtil)
     var employerList: List<EmployerJobPost>
@@ -21,7 +25,16 @@ class EmployerAdapter(private val listener: (EmployerJobPost, View) -> Unit) :
         set(value) = asyncListDiffer.submitList(value)
 
     inner class EmployerViewHolder(val binding: RowEmployerJobBinding) :
-        RecyclerView.ViewHolder(binding.root)
+        RecyclerView.ViewHolder(binding.root) {
+        fun onClickCard(employerJobPost: EmployerJobPost, v: View) {
+            clickListener.invoke(employerJobPost, v)
+        }
+
+        fun isSavedPost(postId: String, isSavedPost: Boolean, savedUsers: List<String>) {
+            savedListener.invoke(postId, isSavedPost, savedUsers)
+            setSavedPost(binding, isSavedPost)
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EmployerViewHolder {
         val binding =
@@ -36,18 +49,58 @@ class EmployerAdapter(private val listener: (EmployerJobPost, View) -> Unit) :
     override fun onBindViewHolder(holder: EmployerViewHolder, position: Int) {
         val employerJobPost = employerList[position]
 
-        with(holder.binding) {
-            employer = employerJobPost
+        val savedUsers = employerJobPost.savedUsers
+        var isSavedPost = savedUsers?.contains(userId) ?: false
 
-            cardEmployer.setOnClickListener { v ->
-                employerJobPost.postId?.let {
-                    //görüntüleme sayısı arttırma ve navigasyon işlemlerini
-                    //adapter dışında fragment içinde yapıyoruz
-                    listener(employerJobPost, v)
+        val postId = employerJobPost.postId.toString()
+
+        with(holder) {
+            with(binding) {
+                employer = employerJobPost
+
+                setImageView(binding, employerJobPost.images)
+                setSavedPost(binding, isSavedPost)
+
+                cardEmployer.setOnClickListener { v ->
+                    employerJobPost.postId?.let {
+                        //görüntüleme sayısı arttırma ve navigasyon işlemlerini
+                        //adapter dışında fragment içinde yapıyoruz
+                        onClickCard(employerJobPost, v)
+                    }
                 }
-            }
 
-            val images = employerJobPost.images
+                imageViewSaved.setOnClickListener {
+                    isSavedPost = !isSavedPost
+
+                    if (savedUsers.isNullOrEmpty()) {
+                        isSavedPost(postId, isSavedPost, listOf())
+                    } else {
+                        isSavedPost(postId, isSavedPost, savedUsers)
+                    }
+
+                    if (isSavedPost) {
+                        "İlan kaydedilenler listenize eklendi".snackbar(binding.root)
+                    } else {
+                        "İlan kaydedilenler listenizden çıkarıldı".snackbar(binding.root)
+                    }
+                }
+
+            }
+        }
+    }
+
+    private fun setSavedPost(binding: RowEmployerJobBinding, isSavedPost: Boolean) {
+        with(binding) {
+            if (isSavedPost) {
+                imageViewSaved.setImageResource(R.drawable.baseline_bookmark_24)
+            } else {
+                imageViewSaved.setImageResource(R.drawable.baseline_bookmark_border_24)
+            }
+        }
+    }
+
+    private fun setImageView(binding: RowEmployerJobBinding, images: List<String>?) {
+        with(binding) {
             if (images?.size == 0) {
                 layoutImageViewsJobPost.visibility = View.GONE
                 cardImagePlaceHolderJobPost.visibility = View.VISIBLE
@@ -70,7 +123,7 @@ class EmployerAdapter(private val listener: (EmployerJobPost, View) -> Unit) :
                     }
                 }
             }
-
         }
     }
+
 }
