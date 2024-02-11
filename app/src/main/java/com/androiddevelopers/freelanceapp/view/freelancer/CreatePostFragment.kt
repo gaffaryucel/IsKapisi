@@ -11,7 +11,6 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -29,10 +28,6 @@ import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.viewmodel.freelancer.CreatePostViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.util.*
 
@@ -127,10 +122,10 @@ class CreatePostFragment : Fragment() {
     private fun getPostDataAndCreateFreelancerPostModel() : FreelancerJobPost {
         val title = binding.etTitle.text.toString()
         val description = binding.etDescription.text.toString()
-        return viewModel.createFreelancerJobPost(
+        return FreelancerJobPost(
             postId = UUID.randomUUID().toString(),
             title = title,
-            description =  description,
+            description = description,
             skillsRequired = _tagList.value
         )
     }

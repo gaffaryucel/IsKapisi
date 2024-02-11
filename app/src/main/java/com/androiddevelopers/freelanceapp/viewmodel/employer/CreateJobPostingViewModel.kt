@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
-import com.androiddevelopers.freelanceapp.util.JobStatus
 import com.androiddevelopers.freelanceapp.util.Resource
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -51,7 +50,7 @@ constructor(
         jobPost: EmployerJobPost,
         downloadUriList: ArrayList<String> = arrayListOf()
     ) {
-        val uId = firebaseAuth.currentUser?.uid ?: "null_uid"
+        val uId = firebaseAuth.currentUser?.uid.toString()
         if (newUriList.size > 0) {
             val uri = newUriList[0]
             _firebaseMessage.value = Resource.loading(true)
@@ -170,43 +169,4 @@ constructor(
 //        }
 //    }
 
-    fun createEmployerJobPost(
-        postId: String? = null,
-        title: String? = null,
-        description: String? = null,
-        images: List<String>? = null,
-        skillsRequired: List<String>? = null,
-        budget: Double? = null,
-        deadline: String? = null,
-        location: String? = null,
-        datePosted: String? = null,
-        applicants: List<String>? = null,
-        status: JobStatus? = JobStatus.OPEN,
-        additionalDetails: String? = null,
-        completedJobs: Int? = null,
-        canceledJobs: Int? = null,
-        viewCount: List<String>? = null,
-        isUrgent: Boolean? = null,
-        employerId: String? = null
-    ): EmployerJobPost {
-        return EmployerJobPost(
-            postId = postId,
-            title = title,
-            description = description,
-            images = images,
-            skillsRequired = skillsRequired,
-            budget = budget,
-            deadline = deadline,
-            location = location,
-            datePosted = datePosted,
-            applicants = applicants,
-            status = status,
-            additionalDetails = additionalDetails,
-            completedJobs = completedJobs,
-            canceledJobs = canceledJobs,
-            viewCount = viewCount,
-            isUrgent = isUrgent,
-            employerId = employerId,
-        )
-    }
 }

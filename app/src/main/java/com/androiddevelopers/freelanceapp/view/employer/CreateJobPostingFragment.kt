@@ -119,7 +119,7 @@ class CreateJobPostingFragment : Fragment() {
                 with(viewModel) {
                     addImageAndJobPostToFirebase( //resim ve işveren ilanı bilgilerini view modele gönderiyoruz
                         selectedImages, // yüklenecek resimlerin cihazdaki konumu
-                        createEmployerJobPost( // işveren ilanı için formda doldurulan yerler ile birlikte gönderi oluşturuyoruz
+                        EmployerJobPost( // işveren ilanı için formda doldurulan yerler ile birlikte gönderi oluşturuyoruz
                             title = titleTextInputEditText.text.toString(),
                             description = descriptionTextInputEditText.text.toString(),
                             skillsRequired = skillList,
