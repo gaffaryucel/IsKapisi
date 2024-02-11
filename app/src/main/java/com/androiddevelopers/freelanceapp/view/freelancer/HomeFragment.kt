@@ -48,6 +48,7 @@ class HomeFragment : Fragment() {
         val view = binding.root
 
         listFreelancerJobPost = arrayListOf()
+        binding.adapter = freelancerAdapter
 
         return view
     }
@@ -101,7 +102,7 @@ class HomeFragment : Fragment() {
         }
 
         with(binding) {
-            adapter = freelancerAdapter
+            //adapter = freelancerAdapter
 
             search(searchView)
 

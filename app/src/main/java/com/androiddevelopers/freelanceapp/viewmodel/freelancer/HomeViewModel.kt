@@ -19,11 +19,11 @@ constructor(
     private val firebaseRepo: FirebaseRepoInterFace
 ) : ViewModel() {
 
-    private var _firebaseMessage = MutableLiveData<Resource<Boolean>>()
+    private val _firebaseMessage = MutableLiveData<Resource<Boolean>>()
     val firebaseMessage: LiveData<Resource<Boolean>>
         get() = _firebaseMessage
 
-    private var _firebaseLiveData = MutableLiveData<List<FreelancerJobPost>>()
+    private val _firebaseLiveData = MutableLiveData<List<FreelancerJobPost>>()
     val firebaseLiveData: LiveData<List<FreelancerJobPost>>
         get() = _firebaseLiveData
 
@@ -32,26 +32,27 @@ constructor(
         getAllFreelanceJobPost()
     }
 
-    fun getAllFreelanceJobPost() = viewModelScope.launch {
+    private fun getAllFreelanceJobPost() = viewModelScope.launch {
         _firebaseMessage.value = Resource.loading(true)
 
         firebaseRepo.getAllFreelancerJobPostFromFirestore()
             .addOnSuccessListener {
-
                 _firebaseMessage.value = Resource.loading(false)
 
                 it?.let { querySnapshot ->
                     val list = ArrayList<FreelancerJobPost>()
+
                     querySnapshot.forEach { document ->
                         val freelancerJobPost = document.toObject(FreelancerJobPost::class.java)
                         if (freelancerJobPost.status == JobStatus.OPEN) {
                             list.add(freelancerJobPost)
                         }
-                        _firebaseLiveData.value = list
                     }
 
-                    _firebaseMessage.value = Resource.success(true)
+                    _firebaseLiveData.value = list
                 }
+
+                _firebaseMessage.value = Resource.success(true)
             }.addOnFailureListener {
                 _firebaseMessage.value = Resource.loading(false)
 

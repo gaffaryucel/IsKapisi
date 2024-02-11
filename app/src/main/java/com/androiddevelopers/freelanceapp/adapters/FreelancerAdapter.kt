@@ -1,15 +1,16 @@
 package com.androiddevelopers.freelanceapp.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.RowFreelancerJobBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
-import com.androiddevelopers.freelanceapp.util.AppDiffUtil
 import com.androiddevelopers.freelanceapp.util.downloadImage
 import com.androiddevelopers.freelanceapp.util.snackbar
 
@@ -19,7 +20,24 @@ class FreelancerAdapter(private val userId: String) :
     lateinit var likedListener: ((String, Boolean, List<String>) -> Unit)
     lateinit var savedListener: ((String, Boolean, List<String>) -> Unit)
 
-    private val diffUtil = AppDiffUtil<FreelancerJobPost>()
+    //private val diffUtil = AppDiffUtil<FreelancerJobPost>()
+
+    private val diffUtil = object : DiffUtil.ItemCallback<FreelancerJobPost>() {
+        override fun areItemsTheSame(
+            oldItem: FreelancerJobPost,
+            newItem: FreelancerJobPost
+        ): Boolean {
+            return oldItem.postId == newItem.postId
+        }
+
+        @SuppressLint("DiffUtilEquals")
+        override fun areContentsTheSame(
+            oldItem: FreelancerJobPost,
+            newItem: FreelancerJobPost
+        ): Boolean {
+            return oldItem == newItem
+        }
+    }
 
     private val asyncListDiffer = AsyncListDiffer(this, diffUtil)
     var freelancerList: List<FreelancerJobPost>

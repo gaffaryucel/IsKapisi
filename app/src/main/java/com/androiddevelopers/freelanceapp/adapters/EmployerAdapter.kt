@@ -58,7 +58,7 @@ class EmployerAdapter(private val userId: String) :
             with(binding) {
                 employer = employerJobPost
 
-                setImageView(binding, employerJobPost.images)
+                //setImageView(binding, employerJobPost.images)
                 setSavedPost(binding, isSavedPost)
 
                 cardEmployer.setOnClickListener { v ->

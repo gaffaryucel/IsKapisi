@@ -55,6 +55,7 @@ constructor(
                             list.add(employerJobPost)
                         }
                     }
+
                     _firebaseLiveData.value = list
 
                     _firebaseMessage.value = Resource.success(true)
