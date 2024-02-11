@@ -11,14 +11,13 @@ import com.androiddevelopers.freelanceapp.databinding.RowFreelancerJobBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.util.AppDiffUtil
 import com.androiddevelopers.freelanceapp.util.downloadImage
+import com.androiddevelopers.freelanceapp.util.snackbar
 
 class FreelancerAdapter(private val userId: String) :
     RecyclerView.Adapter<FreelancerAdapter.FreelancerViewHolder>() {
     lateinit var clickListener: ((FreelancerJobPost, View) -> Unit)
     lateinit var likedListener: ((String, Boolean, List<String>) -> Unit)
     lateinit var savedListener: ((String, Boolean, List<String>) -> Unit)
-
-    private var likeCount: Int? = null
 
     private val diffUtil = AppDiffUtil<FreelancerJobPost>()
 
@@ -89,10 +88,17 @@ class FreelancerAdapter(private val userId: String) :
 
                 imageViewSaved.setOnClickListener {
                     isSavedPost = !isSavedPost
+
                     if (savedUsers.isNullOrEmpty()) {
                         isSavedPost(postId, isSavedPost, listOf())
                     } else {
                         isSavedPost(postId, isSavedPost, savedUsers)
+                    }
+
+                    if (isSavedPost) {
+                        "İlan kaydedilenler listenize eklendi".snackbar(binding.root)
+                    } else {
+                        "İlan kaydedilenler listenizden çıkarıldı".snackbar(binding.root)
                     }
                 }
             }
