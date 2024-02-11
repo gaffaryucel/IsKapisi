@@ -5,29 +5,29 @@ import com.androiddevelopers.freelanceapp.util.JobStatus
 class FreelancerJobPost: BaseJobPost {
     var freelancerId: String? = null // İlanı oluşturan freelancer'ın kimliği
     var rating: Double? = null // İşveren tarafından işin başarı derecesini belirtmek için
-    var unfinishedJobs: Int? = null // Zamanında bitmeyen iş sayısı
+    var likes: List<String>? = null //gönderiyi beğenen kişiler
 
     constructor() : super()
 
     constructor(
-        postId: String?,
-        title: String?,
-        description: String?,
-        images: List<String>?,
-        skillsRequired: List<String>?,
-        budget: Double?,
-        deadline: String?,
-        location: String?,
-        datePosted: String?,
-        applicants: List<String>?,
-        status: JobStatus?,
-        additionalDetails: String?,
-        completedJobs: Int?,
-        unfinishedJobs: Int?,
-        viewCount: List<String>?,
-        isUrgent: Boolean?,
-        freelancerId: String?,
-        rating: Double?
+        postId: String? = null,
+        title: String? = null,
+        description: String? = null,
+        images: List<String>? = null,
+        skillsRequired: List<String>? = null,
+        budget: Double? = null,
+        deadline: String? = null,
+        location: String? = null,
+        datePosted: String? = null,
+        applicants: List<String>? = null,
+        status: JobStatus? = null,
+        additionalDetails: String? = null,
+        savedUsers: List<String>? = null,
+        viewCount: List<String>? = null,
+        isUrgent: Boolean? = null,
+        freelancerId: String? = null,
+        rating: Double? = null,
+        likes: List<String>? = null
     ) : super(
         postId,
         title,
@@ -41,12 +41,12 @@ class FreelancerJobPost: BaseJobPost {
         applicants,
         status,
         additionalDetails,
-        completedJobs,
+        savedUsers,
         viewCount,
         isUrgent
     ) {
         this.freelancerId = freelancerId
         this.rating = rating
-        this.unfinishedJobs = unfinishedJobs
+        this.likes = likes
     }
 }

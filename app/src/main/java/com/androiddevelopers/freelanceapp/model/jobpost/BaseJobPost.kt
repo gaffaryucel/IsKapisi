@@ -15,8 +15,8 @@ open class BaseJobPost {
     var applicants: List<String>? = null // Başvuranların listesi
     var status: JobStatus? = null // İlanın durumu (Açık, Kapalı, Tamamlanan)
     var additionalDetails: String? = null // İş ilanıyla ilgili ek detaylar
-    var completedJobs: Int? = null // Tamamlanan iş sayısı
-    var viewCount: List<String>? = null // İlanın kaç kez görüntülendiği
+    var savedUsers: List<String>? = null // ilanı kaydeden kişiler
+    var viewCount: List<String>? = null // İlanı görüntüleyen kişiler
     var isUrgent: Boolean? = null // İşin acil olduğunu belirtmek için
 
     constructor()
@@ -33,7 +33,7 @@ open class BaseJobPost {
         applicants: List<String>?,
         status: JobStatus?,
         additionalDetails: String?,
-        completedJobs: Int?,
+        savedUsers: List<String>?,
         viewCount: List<String>?,
         isUrgent: Boolean?
     ) {
@@ -49,7 +49,7 @@ open class BaseJobPost {
         this.applicants = applicants
         this.status = status
         this.additionalDetails = additionalDetails
-        this.completedJobs = completedJobs
+        this.savedUsers = savedUsers
         this.viewCount = viewCount
         this.isUrgent = isUrgent
     }

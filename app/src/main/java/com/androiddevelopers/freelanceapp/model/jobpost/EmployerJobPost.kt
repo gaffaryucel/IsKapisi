@@ -4,28 +4,26 @@ import com.androiddevelopers.freelanceapp.util.JobStatus
 
 class EmployerJobPost : BaseJobPost {
     var employerId: String? = null // İlanı oluşturan işverenin kimliği
-    var canceledJobs: Int? = null // İptal edilen iş sayısı
 
     constructor() : super()
 
     constructor(
-        postId: String?,
-        title: String?,
-        description: String?,
-        images: List<String>?,
-        skillsRequired: List<String>?,
-        budget: Double?,
-        deadline: String?,
-        location: String?,
-        datePosted: String?,
-        applicants: List<String>?,
-        status: JobStatus?,
-        additionalDetails: String?,
-        completedJobs: Int?,
-        canceledJobs: Int?,
-        viewCount: List<String>?,
-        isUrgent: Boolean?,
-        employerId: String?
+        postId: String? = null,
+        title: String? = null,
+        description: String? = null,
+        images: List<String>? = null,
+        skillsRequired: List<String>? = null,
+        budget: Double? = null,
+        deadline: String? = null,
+        location: String? = null,
+        datePosted: String? = null,
+        applicants: List<String>? = null,
+        status: JobStatus? = null,
+        additionalDetails: String? = null,
+        savedUsers: List<String>? = null,
+        viewCount: List<String>? = null,
+        isUrgent: Boolean? = null,
+        employerId: String? = null
     ) : super(
         postId,
         title,
@@ -39,11 +37,10 @@ class EmployerJobPost : BaseJobPost {
         applicants,
         status,
         additionalDetails,
-        completedJobs,
+        savedUsers,
         viewCount,
         isUrgent
     ) {
         this.employerId = employerId
-        this.canceledJobs = canceledJobs
     }
 }
