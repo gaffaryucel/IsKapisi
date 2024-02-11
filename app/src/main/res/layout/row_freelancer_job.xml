@@ -81,6 +81,8 @@
                             app:layout_constraintTop_toBottomOf="@id/viewPagerHome" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -196,6 +198,33 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     app:layout_constraintGuide_percent="0.7" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imageViewFavorite"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_margin="8dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_favorite" />
+
+                <TextView
+                    android:id="@+id/textCountFavorite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/imageViewFavorite"
+                    app:layout_constraintStart_toStartOf="@id/imageViewFavorite"
+                    app:layout_constraintEnd_toEndOf="@id/imageViewFavorite"
+                    tools:text="30" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imageViewSaved"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_margin="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/baseline_bookmark_border_24" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.card.MaterialCardView>
