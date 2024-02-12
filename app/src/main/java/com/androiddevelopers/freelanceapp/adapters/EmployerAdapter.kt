@@ -5,11 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.RowEmployerJobBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
-import com.androiddevelopers.freelanceapp.util.AppDiffUtil
 import com.androiddevelopers.freelanceapp.util.downloadImage
 import com.androiddevelopers.freelanceapp.util.snackbar
 
@@ -18,7 +18,21 @@ class EmployerAdapter(private val userId: String) :
     lateinit var clickListener: ((EmployerJobPost, View) -> Unit)
     lateinit var savedListener: ((String, Boolean, List<String>) -> Unit)
 
-    private val diffUtil = AppDiffUtil<EmployerJobPost>()
+    private val diffUtil = object : DiffUtil.ItemCallback<EmployerJobPost>() {
+        override fun areItemsTheSame(
+            oldItem: EmployerJobPost,
+            newItem: EmployerJobPost
+        ): Boolean {
+            return oldItem.postId == newItem.postId
+        }
+
+        override fun areContentsTheSame(
+            oldItem: EmployerJobPost,
+            newItem: EmployerJobPost
+        ): Boolean {
+            return oldItem == newItem
+        }
+    }
     private val asyncListDiffer = AsyncListDiffer(this, diffUtil)
     var employerList: List<EmployerJobPost>
         get() = asyncListDiffer.currentList

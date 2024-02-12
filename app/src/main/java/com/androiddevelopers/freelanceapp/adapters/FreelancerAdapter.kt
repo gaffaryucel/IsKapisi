@@ -1,6 +1,5 @@
 package com.androiddevelopers.freelanceapp.adapters
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,8 +19,6 @@ class FreelancerAdapter(private val userId: String) :
     lateinit var likedListener: ((String, Boolean, List<String>) -> Unit)
     lateinit var savedListener: ((String, Boolean, List<String>) -> Unit)
 
-    //private val diffUtil = AppDiffUtil<FreelancerJobPost>()
-
     private val diffUtil = object : DiffUtil.ItemCallback<FreelancerJobPost>() {
         override fun areItemsTheSame(
             oldItem: FreelancerJobPost,
@@ -30,7 +27,6 @@ class FreelancerAdapter(private val userId: String) :
             return oldItem.postId == newItem.postId
         }
 
-        @SuppressLint("DiffUtilEquals")
         override fun areContentsTheSame(
             oldItem: FreelancerJobPost,
             newItem: FreelancerJobPost

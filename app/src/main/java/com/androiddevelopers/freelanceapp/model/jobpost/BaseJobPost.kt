@@ -53,4 +53,29 @@ open class BaseJobPost {
         this.viewCount = viewCount
         this.isUrgent = isUrgent
     }
+
+    override fun equals(other: Any?): Boolean {
+        val newItem = other as BaseJobPost
+        return if (this === newItem) {
+            true
+        } else if (this.title == newItem.title) {
+            true
+        } else if (this.description == newItem.description) {
+            true
+        } else if (this.images != null) {
+            var state = true
+            for (image in this.images!!) {
+                state = newItem.images?.contains(image) ?: false
+            }
+            return state
+        } else if (this.skillsRequired != null) {
+            var state = true
+            for (skill in this.skillsRequired!!) {
+                state = newItem.skillsRequired?.contains(skill) ?: false
+            }
+            return state
+        } else {
+            false
+        }
+    }
 }
