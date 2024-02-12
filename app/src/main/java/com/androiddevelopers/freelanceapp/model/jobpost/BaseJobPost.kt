@@ -62,10 +62,16 @@ open class BaseJobPost {
             true
         } else if (this.description == newItem.description) {
             true
-        } else if (this.images?.toTypedArray().contentEquals(other.images?.toTypedArray())) {
+        } else if (
+            this.images?.toTypedArray().contentEquals(
+                other.images?.toTypedArray()
+            )
+        ) {
             true
-        } else if (this.skillsRequired?.toTypedArray()
-                .contentEquals(other.skillsRequired?.toTypedArray())
+        } else if (
+            this.skillsRequired?.toTypedArray().contentEquals(
+                other.skillsRequired?.toTypedArray()
+            )
         ) {
             true
         } else {
