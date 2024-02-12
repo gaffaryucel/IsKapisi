@@ -24,6 +24,7 @@ import androidx.navigation.fragment.findNavController
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.FragmentHomeCreatePostBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
+import com.androiddevelopers.freelanceapp.util.JobStatus
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.viewmodel.freelancer.CreatePostViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -73,7 +74,8 @@ class CreatePostFragment : Fragment() {
             if (allPermissionsGranted) {
                 openCamera()
             } else {
-                Toast.makeText(requireContext(), "Permission not granted", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Permission not granted", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
         binding.shareButton.setOnClickListener {
@@ -105,30 +107,34 @@ class CreatePostFragment : Fragment() {
                 Status.SUCCESS -> {
                     Toast.makeText(requireContext(), "Upload Success", Toast.LENGTH_SHORT).show()
                 }
+
                 Status.ERROR -> {
                     Toast.makeText(requireContext(), "Upload Faild", Toast.LENGTH_SHORT).show()
                 }
+
                 Status.LOADING -> {
                     Toast.makeText(requireContext(), "Uploading", Toast.LENGTH_SHORT).show()
                 }
             }
         })
-        _tagList.observe(viewLifecycleOwner,Observer{
+        _tagList.observe(viewLifecycleOwner, Observer {
             binding.tvAllTags.text = it.toString()
         })
     }
 
 
-    private fun getPostDataAndCreateFreelancerPostModel() : FreelancerJobPost {
+    private fun getPostDataAndCreateFreelancerPostModel(): FreelancerJobPost {
         val title = binding.etTitle.text.toString()
         val description = binding.etDescription.text.toString()
         return FreelancerJobPost(
             postId = UUID.randomUUID().toString(),
             title = title,
             description = description,
-            skillsRequired = _tagList.value
+            skillsRequired = _tagList.value,
+            status = JobStatus.OPEN
         )
     }
+
     @SuppressLint("QueryPermissionsNeeded")
     private fun openCamera() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -260,7 +266,6 @@ class CreatePostFragment : Fragment() {
         myBitmap?.compress(Bitmap.CompressFormat.JPEG, i, stream)
         return stream.toByteArray()
     }
-
 
 
     override fun onResume() {
