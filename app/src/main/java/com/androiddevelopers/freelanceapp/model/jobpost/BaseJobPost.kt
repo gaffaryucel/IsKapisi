@@ -62,18 +62,12 @@ open class BaseJobPost {
             true
         } else if (this.description == newItem.description) {
             true
-        } else if (this.images != null) {
-            var state = true
-            for (image in this.images!!) {
-                state = newItem.images?.contains(image) ?: false
-            }
-            return state
-        } else if (this.skillsRequired != null) {
-            var state = true
-            for (skill in this.skillsRequired!!) {
-                state = newItem.skillsRequired?.contains(skill) ?: false
-            }
-            return state
+        } else if (this.images?.toTypedArray().contentEquals(other.images?.toTypedArray())) {
+            true
+        } else if (this.skillsRequired?.toTypedArray()
+                .contentEquals(other.skillsRequired?.toTypedArray())
+        ) {
+            true
         } else {
             false
         }
