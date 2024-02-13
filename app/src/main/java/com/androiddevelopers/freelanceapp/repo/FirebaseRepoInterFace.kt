@@ -5,6 +5,7 @@ import android.net.Uri
 import com.androiddevelopers.freelanceapp.model.ChatModel
 import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
 import com.androiddevelopers.freelanceapp.model.MessageModel
+import com.androiddevelopers.freelanceapp.model.PreChatModel
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
@@ -73,7 +74,21 @@ interface FirebaseRepoInterFace {
     fun createChatRoomForChatMate(userId: String, chat: ChatModel): Task<Void>
     fun getAllChatRooms(currentUserId: String): DatabaseReference
 
-    // Firebase Storage işlemleri
+//PreChatRoom
+    fun getAllPreChatRooms(currentUserId: String): DatabaseReference
+    fun createPreChatRoom(receiver: String, sender : String,chat: PreChatModel): Task<Void>
+
+//PreMessaging
+    fun getAllMessagesFromPreChatRoom(currentUserId: String, chatId: String): DatabaseReference
+
+    fun sendMessageToPreChatRoom(
+        userId: String,
+        receiver : String,
+        chatId: String,
+        message: MessageModel
+    ): Task<Void>
+
+// Firebase Storage işlemleri
     fun addImageToStorageForJobPosting(
         uri: Uri,
         uId: String,

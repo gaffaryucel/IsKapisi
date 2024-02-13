@@ -25,9 +25,7 @@ class ChatsViewModel  @Inject constructor(
     val chatRooms : LiveData<List<ChatModel>>
         get() = _chatRooms
 
-    private var _userIdList = MutableLiveData<List<String>>()
-    val userIdList : LiveData<List<String>>
-        get() = _userIdList
+
 
     private var _messageStatus = MutableLiveData<Resource<Boolean>>()
     val messageStatus : LiveData<Resource<Boolean>>
@@ -51,19 +49,11 @@ class ChatsViewModel  @Inject constructor(
                         }
                     }
                     _chatRooms.value = messageList
-                    getUsersIdFromList(messageList)
                 }
 
                 override fun onCancelled(error: DatabaseError) {
                     _messageStatus.value =  Resource.error(error.message,null) }
             }
         )
-    }
-    private fun getUsersIdFromList(chatList : List<ChatModel>){
-        val userList = ArrayList<String>()
-        for (i in chatList){
-            userList.add(i.receiverId.toString())
-        }
-        _userIdList.value =userList
     }
 }

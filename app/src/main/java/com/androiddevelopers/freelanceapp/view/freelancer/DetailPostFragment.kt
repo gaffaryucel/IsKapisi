@@ -9,14 +9,18 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.ViewPagerAdapterForImages
 import com.androiddevelopers.freelanceapp.databinding.FragmentHomeDetailPostBinding
+import com.androiddevelopers.freelanceapp.model.UserModel
+import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.util.downloadImage
 import com.androiddevelopers.freelanceapp.viewmodel.freelancer.DetailPostViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.UUID
 
 @AndroidEntryPoint
 class DetailPostFragment : Fragment() {
@@ -26,6 +30,8 @@ class DetailPostFragment : Fragment() {
 
     private lateinit var errorDialog: AlertDialog
     private lateinit var viewPagerAdapter: ViewPagerAdapterForImages
+    private var post : FreelancerJobPost? = null
+    private var user : UserModel? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,6 +55,15 @@ class DetailPostFragment : Fragment() {
         setupDialogs()
         setProgressBar(false)
         observeLiveData(viewLifecycleOwner)
+
+        binding.buttonBuy.setOnClickListener {
+            viewModel.createPreChatModel(
+                post?.postId ?: "",
+                post?.freelancerId ?: "",
+                user?.username ?: "",
+                user?.profileImageUrl ?: "",
+            )
+        }
     }
 
     override fun onDestroyView() {
@@ -60,7 +75,7 @@ class DetailPostFragment : Fragment() {
         with(viewModel) {
             firebaseLiveData.observe(owner) {
                 it.freelancerId?.let { id -> getUserDataByDocumentId(id) }
-
+                post = it
                 binding.freelancer = it
 
                 it.images?.let { images ->
@@ -88,6 +103,7 @@ class DetailPostFragment : Fragment() {
                     user = it
                     downloadImage(ivUserProfile, it.profileImageUrl)
                 }
+                user = it
             }
 
             firebaseMessage.observe(owner) {
@@ -97,6 +113,23 @@ class DetailPostFragment : Fragment() {
                         Log.i("info", "SUCCESS")
                     }
 
+                    Status.ERROR -> {
+                        errorDialog.setMessage("${context?.getString(R.string.login_dialog_error_message)}\n${it.message}")
+                        errorDialog.show()
+                    }
+                }
+            }
+
+            preChatRoomAction.observe(owner){
+                when (it.status) {
+                    Status.LOADING -> {}
+                    Status.SUCCESS -> {
+                        val action = DetailPostFragmentDirections.actionDetailPostFragmentToPreMessagingFragment(
+                            it.data?.postId ?: "",it.data?.receiver ?: ""
+                        )
+                        Navigation.findNavController(requireView()).navigate(action)
+                        viewModel.setMessageValue(true)
+                    }
                     Status.ERROR -> {
                         errorDialog.setMessage("${context?.getString(R.string.login_dialog_error_message)}\n${it.message}")
                         errorDialog.show()

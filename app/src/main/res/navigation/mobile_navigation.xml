@@ -234,6 +234,9 @@
         <argument
             android:name="freelancer_job_post_id"
             app:argType="string" />
+        <action
+            android:id="@+id/action_detailPostFragment_to_preMessagingFragment"
+            app:destination="@id/preMessagingFragment" />
     </fragment>
     <fragment
         android:id="@+id/userProfileFragment"
@@ -358,6 +361,18 @@
         <action
             android:id="@+id/action_standardUserInfoFragment_to_freelancerInfoFragment2"
             app:destination="@id/freelancerInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/preMessagingFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.chat.PreMessagingFragment"
+        android:label="fragment_pre_messaging"
+        tools:layout="@layout/fragment_pre_messaging" >
+        <argument
+            android:name="post_id"
+            app:argType="string" />
+        <argument
+            android:name="receiver"
+            app:argType="string" />
     </fragment>
 
 </navigation>

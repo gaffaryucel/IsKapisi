@@ -6,6 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
+import androidx.lifecycle.Observer
+import androidx.navigation.Navigation
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.ChatAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentChatsBinding
@@ -13,6 +17,7 @@ import com.androiddevelopers.freelanceapp.databinding.FragmentPreChatBinding
 import com.androiddevelopers.freelanceapp.model.ChatModel
 import com.androiddevelopers.freelanceapp.viewmodel.chat.ChatsViewModel
 import com.androiddevelopers.freelanceapp.viewmodel.chat.PreChatViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class PreChatFragment : Fragment() {
 
@@ -20,6 +25,7 @@ class PreChatFragment : Fragment() {
 
     private var _binding: FragmentPreChatBinding? = null
     private val binding get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -31,7 +37,65 @@ class PreChatFragment : Fragment() {
         return root
     }
 
+    private val adapter = ChatAdapter()
+
+    private var userList = ArrayList<ChatModel>()
+    private var searchResult = ArrayList<ChatModel>()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        observeLiveData()
+
+        binding.svPreChat.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+            androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                searchUser(query.toString())
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                searchUser(newText.toString())
+                return true
+            }
+        })
+    }
+    private fun searchUser(name : String){
+        searchResult = ArrayList()
+        userList.forEach{
+            if (it.receiverUserName!!.contains(name)){
+                searchResult.add(it)
+            }
+        }
+        adapter.chatsList = searchResult
+    }
+
+    private fun observeLiveData(){
+        viewModel.preChats.observe(viewLifecycleOwner, Observer {
+            binding.rvPreChat.layoutManager = LinearLayoutManager(requireContext())
+            binding.rvPreChat.adapter = adapter
+            //adapter.chatsList = it
+            adapter.notifyDataSetChanged()
+            userList = it as ArrayList<ChatModel>
+        })
+    }
+    override fun onResume() {
+        super.onResume()
+        hideBottomNavigation()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        showBottomNavigation()
+    }
+
+    private fun hideBottomNavigation() {
+        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
+        bottomNavigationView?.visibility = View.GONE
+    }
+
+    private fun showBottomNavigation() {
+        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
+        bottomNavigationView?.visibility = View.VISIBLE
     }
 }

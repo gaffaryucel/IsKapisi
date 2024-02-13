@@ -5,6 +5,7 @@ import android.net.Uri
 import com.androiddevelopers.freelanceapp.model.ChatModel
 import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
 import com.androiddevelopers.freelanceapp.model.MessageModel
+import com.androiddevelopers.freelanceapp.model.PreChatModel
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
@@ -40,6 +41,7 @@ class FirebaseRepoImpl @Inject constructor(
 
     //RealtimeRef
     private val messagesReference = database.getReference("users")
+    private val preChatReference = database.getReference("preChat").child("users")
     private val userFollowRef = database.getReference("users_follow")
 
 
@@ -178,6 +180,35 @@ class FirebaseRepoImpl @Inject constructor(
         return messagesReference.child(currentUserId)
     }
 
+//PreChatRoom
+    override fun getAllPreChatRooms(currentUserId: String): DatabaseReference {
+        return preChatReference.child(currentUserId)
+    }
+    override fun createPreChatRoom(receiver : String,sender: String, chat: PreChatModel): Task<Void> {
+        preChatReference.child(receiver).child(chat.postId.toString()).setValue(chat)
+        return preChatReference.child(sender).child(chat.postId.toString()).setValue(chat)
+    }
+
+//PreMessaging
+    override fun getAllMessagesFromPreChatRoom(
+        currentUserId: String,
+        chatId: String
+    ): DatabaseReference {
+        return preChatReference.child(currentUserId).child(chatId).child("messages")
+    }
+
+    override fun sendMessageToPreChatRoom(
+        userId: String,
+        receiver : String,
+        chatId: String,
+        message: MessageModel
+    ): Task<Void> {
+        messagesReference.child(receiver).child(chatId).child("messages")
+            .child(message.messageId.toString()).setValue(message)
+        return preChatReference.child(userId).child(chatId).child("messages")
+            .child(message.messageId.toString()).setValue(message)
+    }
+//
     override fun getUsersFromFirestore(): Task<QuerySnapshot> {
         return userCollection.get()
     }
