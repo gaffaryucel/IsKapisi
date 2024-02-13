@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".view.profile.FreelancerInfoFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/photoLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_marginVertical="14dp"
+                    android:textAlignment="center"
+                    app:layout_constraintTop_toBottomOf="@+id/ivUserProfilePhoto"
+                    android:text="Yüzünüzün net bir şekilde göründüğü bir portre fotoğraf kullanmanız gereklidir"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:src="@drawable/placeholder"
+                    android:id="@+id/ivUserProfilePhoto"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <!-- Personal Information Section -->
+            <TextView
+                android:id="@+id/text_personal_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Kişisel bilgiler"
+                android:textSize="18sp"
+                android:layout_below="@id/photoLayout"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:id="@+id/edit_full_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ad Soyad"
+                android:layout_below="@id/text_personal_info"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:id="@+id/edit_bio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Kendinden Bahset"
+                android:layout_below="@id/edit_full_name"
+                android:layout_marginBottom="8dp"/>
+
+
+            <EditText
+                android:id="@+id/edit_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Telefon numarası"
+                android:inputType="phone"
+                android:layout_below="@id/edit_bio"
+                android:layout_marginBottom="8dp"/>
+
+
+            <!-- Professional Details Section -->
+            <TextView
+                android:id="@+id/text_professional_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="İş Detayları"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_below="@id/edit_phone"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:id="@+id/edit_job_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="İşin"
+                android:layout_below="@id/text_professional_details"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:id="@+id/etJobDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="İşinden biraz bahset"
+                android:layout_below="@id/edit_job_title"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:id="@+id/edit_skills"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Yeteneklerin"
+                android:layout_below="@id/etJobDescription"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:id="@+id/edit_portfolio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Portfolio"
+                android:layout_below="@id/edit_skills"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Pricing and Availability Section -->
+            <TextView
+                android:id="@+id/text_pricing_availability"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ücretlendirme ve Müsaitlik(Zorunlu değil)"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_below="@id/edit_portfolio"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:id="@+id/edit_hourly_rate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Saatlik Ücret"
+                android:inputType="numberDecimal"
+                android:layout_below="@id/text_pricing_availability"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:id="@+id/edit_availability"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Müsait olduğun zaman aralığı"
+                android:layout_below="@id/edit_hourly_rate"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Additional Information Section -->
+            <TextView
+                android:id="@+id/text_additional_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Eğitim Bilgilerin"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_below="@id/edit_availability"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:id="@+id/edit_education"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Eğitimin"
+                android:layout_below="@id/text_additional_info"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Legal/Contractual Agreements Section -->
+            <TextView
+                android:id="@+id/text_legal_agreements"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Legal/Contractual Agreements"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_below="@id/edit_education"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Checkboxes for Terms of Service and Privacy Policy Agreements -->
+            <CheckBox
+                android:id="@+id/checkbox_terms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="I agree to the Terms of Service"
+                android:layout_below="@id/text_legal_agreements"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_privacy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="I agree to the Privacy Policy"
+                android:layout_below="@id/checkbox_terms"/>
+
+            <!-- Sign Up Button -->
+            <Button
+                android:id="@+id/button_signup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sign Up"
+                android:layout_below="@id/checkbox_privacy"
+                android:layout_marginTop="16dp"/>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</FrameLayout>

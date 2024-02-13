@@ -1,5 +1,6 @@
 package com.androiddevelopers.freelanceapp.repo
 
+import android.graphics.Bitmap
 import android.net.Uri
 import com.androiddevelopers.freelanceapp.model.ChatModel
 import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
@@ -17,6 +18,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
+import kotlinx.coroutines.tasks.await
+import java.io.ByteArrayOutputStream
+import java.util.UUID
 import javax.inject.Inject
 
 class FirebaseRepoImpl @Inject constructor(
@@ -32,6 +36,8 @@ class FirebaseRepoImpl @Inject constructor(
     private val discoverPostCollection = firestore.collection("discover_posts")
     //StorageRef
     private val imagesParentRef = storage.reference.child("user_images")
+    private val profilePhotoRef  = storage.reference
+
     //RealtimeRef
     private val messagesReference = database.getReference("users")
     private val userFollowRef = database.getReference("users_follow")
@@ -223,6 +229,7 @@ class FirebaseRepoImpl @Inject constructor(
     override fun getFollowers(userId: String): DatabaseReference {
         return userFollowRef.child(userId).child("followers")
     }
+
     override fun likePost(postId: String, updateData:  HashMap<String, Any?>): Task<Void> {
         return  discoverPostCollection.document(postId).update(updateData)
     }
@@ -233,4 +240,27 @@ class FirebaseRepoImpl @Inject constructor(
     override fun commentToDiscoverPost(postId: String, updateData:  HashMap<String, Any?>): Task<Void> {
         return  discoverPostCollection.document(postId).update(updateData)
     }
+    override suspend fun uploadUserProfileImageImage(bitmap: Bitmap,uid : String): String? {
+        val imagesRef = profilePhotoRef.child("$uid/profileImage/${UUID.randomUUID()}.jpg")
+
+        return try {
+            val baos = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+            val imageData = baos.toByteArray()
+
+            val uploadTask = imagesRef.putBytes(imageData)
+            uploadTask.await() // Wait for the upload to finish
+
+            if (uploadTask.isSuccessful) {
+                val downloadUrl = imagesRef.downloadUrl.await()
+                downloadUrl.toString()
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            null
+        }
+
+    }
+
 }

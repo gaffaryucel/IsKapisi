@@ -12,14 +12,14 @@ import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.FragmentEditProfilePersonalInfoBinding
 import com.androiddevelopers.freelanceapp.model.Location
 import com.androiddevelopers.freelanceapp.util.Status
-import com.androiddevelopers.freelanceapp.viewmodel.profile.EditProfilePersonalInfoViewModel
+import com.androiddevelopers.freelanceapp.viewmodel.profile.BaseProfileViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class EditProfilePersonalInfoFragment : Fragment() {
 
-    private lateinit var viewModel: EditProfilePersonalInfoViewModel
+    private lateinit var viewModel: BaseProfileViewModel
 
     private var _binding: FragmentEditProfilePersonalInfoBinding? = null
     private val binding get() = _binding!!
@@ -33,7 +33,7 @@ class EditProfilePersonalInfoFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewModel = ViewModelProvider(this).get(EditProfilePersonalInfoViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(BaseProfileViewModel::class.java)
         _binding = FragmentEditProfilePersonalInfoBinding.inflate(inflater, container, false)
         val root: View = binding.root
         _fullName = arguments?.let { it.getString("name") ?: "" }

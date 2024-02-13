@@ -5,3 +5,7 @@ enum class JobStatus {
     CLOSED,
     COMPLETED
 }
+enum class UserStatus {
+    FREELANCER,
+    STANDARD
+}

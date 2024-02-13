@@ -12,14 +12,14 @@ import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.FragmentEditProfileServiceInfoBinding
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.util.Status
-import com.androiddevelopers.freelanceapp.viewmodel.profile.EditProfileServiceInfoViewModel
+import com.androiddevelopers.freelanceapp.viewmodel.profile.BaseProfileViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class EditProfileServiceInfoFragment : Fragment() {
 
-    private lateinit var viewModel: EditProfileServiceInfoViewModel
+    private lateinit var viewModel: BaseProfileViewModel
 
     private var skillsList = ArrayList<String>()
     private var user = UserModel()
@@ -31,7 +31,7 @@ class EditProfileServiceInfoFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel = ViewModelProvider(this).get(EditProfileServiceInfoViewModel::class.java)
+        viewModel = ViewModelProvider(this)[BaseProfileViewModel::class.java]
         _binding = FragmentEditProfileServiceInfoBinding.inflate(inflater, container, false)
         val root: View = binding.root
         return root
@@ -72,7 +72,9 @@ class EditProfileServiceInfoFragment : Fragment() {
                 Status.SUCCESS->{
                     Toast.makeText(requireContext(),"Profil Resmi Güncellendi", Toast.LENGTH_SHORT).show()
                 }
-                Status.LOADING->{}
+                Status.LOADING->{
+
+                }
                 Status.ERROR->{
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
                 }

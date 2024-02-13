@@ -1,5 +1,7 @@
 package com.androiddevelopers.freelanceapp.model
 
+import com.androiddevelopers.freelanceapp.util.UserStatus
+
 class UserModel{
 
     var userId: String? = null
@@ -23,6 +25,7 @@ class UserModel{
     var socialMediaLinks: List<SocialMediaLink>? = null
     var contactInformation: ContactInformation? = null
     var paymentMethods: List<PaymentMethod>? = null
+    var userType: UserStatus? = null
 
     constructor()
 
@@ -48,6 +51,7 @@ class UserModel{
         socialMediaLinks: List<SocialMediaLink>? = null,
         contactInformation: ContactInformation? = null,
         paymentMethods: List<PaymentMethod>? = null,
+        userType: UserStatus? = null,
     ) {
         this.userId = userId
         this.username = username
@@ -70,6 +74,7 @@ class UserModel{
         this.socialMediaLinks = socialMediaLinks
         this.contactInformation = contactInformation
         this.paymentMethods = paymentMethods
+        this.userType = userType
     }
 }
 data class PortfolioItem(

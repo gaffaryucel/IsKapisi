@@ -65,6 +65,12 @@
         <action
             android:id="@+id/action_navigation_profile_to_detailPostFragment"
             app:destination="@id/detailPostFragment" />
+        <action
+            android:id="@+id/action_navigation_profile_to_freelancerInfoFragment"
+            app:destination="@id/freelancerInfoFragment" />
+        <action
+            android:id="@+id/action_navigation_profile_to_standardUserInfoFragment"
+            app:destination="@id/standardUserInfoFragment" />
     </fragment>
 
     <fragment
@@ -334,6 +340,24 @@
         <argument
             android:name="postId"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/freelancerInfoFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.profile.FreelancerInfoFragment"
+        android:label="fragment_freelancer_info"
+        tools:layout="@layout/fragment_freelancer_info" >
+        <action
+            android:id="@+id/action_freelancerInfoFragment_to_standardUserInfoFragment"
+            app:destination="@id/standardUserInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/standardUserInfoFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.profile.StandardUserInfoFragment"
+        android:label="fragment_standard_user_info"
+        tools:layout="@layout/fragment_standard_user_info" >
+        <action
+            android:id="@+id/action_standardUserInfoFragment_to_freelancerInfoFragment2"
+            app:destination="@id/freelancerInfoFragment" />
     </fragment>
 
 </navigation>

@@ -14,7 +14,7 @@ import com.androiddevelopers.freelanceapp.adapters.ProfileDiscoverAdapter
 import com.androiddevelopers.freelanceapp.adapters.ProfileEmployerAdapter
 import com.androiddevelopers.freelanceapp.adapters.ProfileFreelancerAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentProfileBinding
-import com.androiddevelopers.freelanceapp.util.Status
+import com.androiddevelopers.freelanceapp.util.UserStatus
 import com.androiddevelopers.freelanceapp.viewmodel.profile.ProfileViewModel
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
@@ -60,6 +60,14 @@ class ProfileFragment : Fragment() {
         setupTabLayout()
         binding.btnEditProfile.setOnClickListener {
             val action = ProfileFragmentDirections.actionNavigationProfileToEditUserProfileInfoFragment()
+            Navigation.findNavController(it).navigate(action)
+        }
+        binding.btnFreelancerEntry.setOnClickListener {
+            val action = ProfileFragmentDirections.actionNavigationProfileToFreelancerInfoFragment()
+            Navigation.findNavController(it).navigate(action)
+        }
+        binding.btnEmployerEntry.setOnClickListener {
+            val action = ProfileFragmentDirections.actionNavigationProfileToStandardUserInfoFragment()
             Navigation.findNavController(it).navigate(action)
         }
     }
@@ -143,16 +151,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun observeLiveData(){
-        viewModel.savedUserData.observe(viewLifecycleOwner, Observer {userData ->
-            if (userData == null){
-                viewModel.getUserDataFromFirebase()
-            }else{
-                binding.apply {
-                    user = userData
-                }
-            }
-        })
-        viewModel.allUserData.observe(viewLifecycleOwner, Observer {userData ->
+        viewModel.userData.observe(viewLifecycleOwner, Observer {userData ->
             binding.apply {
                 userInfo = userData
             }
@@ -164,8 +163,35 @@ class ProfileFragment : Fragment() {
                     Glide.with(requireContext()).load(userData.profileImageUrl.toString()).into(binding.ivUserProfile)
                 }
             }
+            println("before : "+userData.userType)
+            if (userData.userType != null){
+                println("not null")
+                when(userData.userType){
+                    UserStatus.FREELANCER->{
+                        println("FREELANCER")
+                        binding.layoutProfileType.visibility = View.GONE
+                        binding.flexbox.visibility = View.VISIBLE
+                        binding.profileFragmentSwipeRefreshLayout.visibility = View.VISIBLE
+                    }
+                    UserStatus.STANDARD->{
+                        println("STANDARD")
+                        binding.flexbox.visibility = View.GONE
+                        binding.layoutProfileType.visibility = View.GONE
+                        binding.profileFragmentSwipeRefreshLayout.visibility = View.VISIBLE
+                    }
+                    else->{
+                        println("else")
+                        binding.layoutProfileType.visibility = View.VISIBLE
+                        binding.profileFragmentSwipeRefreshLayout.visibility = View.GONE
+                    }
+                }
+            }else{
+                println("else 2 ")
+                binding.layoutProfileType.visibility = View.VISIBLE
+                binding.profileFragmentSwipeRefreshLayout.visibility = View.GONE
+            }
         })
-        viewModel.message.observe(viewLifecycleOwner, Observer {
+        viewModel.profileMessage.observe(viewLifecycleOwner, Observer {
             /*
               when (it.status) {
                 Status.SUCCESS -> {

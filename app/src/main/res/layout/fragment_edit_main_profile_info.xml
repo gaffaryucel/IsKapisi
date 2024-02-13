@@ -4,14 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
-            name="username"
-            type="String" />
-        <variable
-            name="email"
-            type="String" />
-        <variable
-            name="bio"
-            type="String" />
+            name="user"
+            type="com.androiddevelopers.freelanceapp.model.UserModel" />
+
     </data>
     <ScrollView
         android:id="@+id/svEditMainProfile"
@@ -66,7 +61,7 @@
 
             <EditText
                 android:id="@+id/etUserName"
-                android:text="@{username}"
+                android:text="@{user.username}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="kullanıcı adı" />
@@ -74,14 +69,14 @@
 
             <EditText
                 android:id="@+id/etEmail"
-                android:text="@{email}"
+                android:text="@{user.email}"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/edittextHeight"
                 android:hint="E-posta adresiniz" />
 
             <EditText
                 android:id="@+id/etUserBio"
-                android:text="@{bio}"
+                android:text="@{user.bio}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="7"

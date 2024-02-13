@@ -5,230 +5,230 @@
 
     <data>
         <variable
-            name="user"
-            type="com.androiddevelopers.freelanceapp.model.UserProfileModel"/>
-
-        <variable
             name="userInfo"
             type="com.androiddevelopers.freelanceapp.model.UserModel" />
     </data>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/profileFragmentSwipeRefreshLayout"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <androidx.core.widget.NestedScrollView
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/profileFragmentSwipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <LinearLayout
-                android:orientation="vertical"
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context=".view.profile.ProfileFragment">
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <ImageView
-                        android:src="@color/g_blue"
-                        android:id="@+id/ivProfileBanner"
-                        android:layout_width="match_parent"
-                        android:layout_height="150dp"
-                        tools:ignore="MissingConstraints" />
+                android:layout_height="match_parent">
 
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginTop="100dp"
-                        android:id="@+id/ivUserProfile"
-                        android:src="@drawable/placeholder"
-                        app:civ_border_color="@color/black"
-                        app:civ_border_width="4dp"
-                        android:layout_width="120dp"
-                        android:layout_height="120dp"/>
-
-                    <ImageView
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:layout_margin="8dp"
-                        android:id="@+id/ivMore"
-                        android:src="@drawable/baseline_more_horiz_24"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"/>
-                </androidx.constraintlayout.widget.ConstraintLayout>
                 <LinearLayout
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
+                    android:layout_height="match_parent"
+                    tools:context=".view.profile.ProfileFragment">
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="@{user.username}"
-                        android:textAlignment="center"
-                        android:textSize="24sp"
-                        android:textStyle="bold" />
-                    <TextView
-                        android:textSize="18sp"
-                        android:textStyle="normal"
-                        android:text="@{userInfo.jobTitle}"
-                        android:id="@+id/tvUserTitle"
-                        android:textAlignment="center"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
-                </LinearLayout>
-                <com.google.android.flexbox.FlexboxLayout
-                    android:layout_gravity="center"
-                    android:id="@+id/flexbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:flexWrap="wrap"
-                    app:alignItems="stretch"
-                    app:alignContent="stretch">
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:src="@color/g_blue"
+                            android:id="@+id/ivProfileBanner"
+                            android:layout_width="match_parent"
+                            android:layout_height="150dp"
+                            tools:ignore="MissingConstraints" />
 
-                    <TextView
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            android:layout_marginTop="100dp"
+                            android:id="@+id/ivUserProfile"
+                            android:src="@drawable/placeholder"
+                            app:civ_border_color="@color/black"
+                            app:civ_border_width="4dp"
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"/>
 
-                        android:gravity="center"
-                        android:id="@+id/tvSkill1"
-                        android:textSize="16sp"
-                        android:layout_margin="8dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        />
-
-                    <TextView
-                        android:gravity="center"
-                        android:id="@+id/tvSkill2"
-                        android:textSize="16sp"
-                        android:layout_margin="8dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        />
-
-                    <TextView
-                        android:gravity="center"
-                        android:id="@+id/tvSkill3"
-                        android:layout_width="wrap_content"
-                        android:layout_margin="8dp"
-                        android:textSize="16sp"
-                        android:layout_height="wrap_content"
-                        />
-                    <TextView
-                        android:gravity="center"
-                        android:id="@+id/tvSkill4"
-                        android:textSize="16sp"
-                        android:layout_margin="8dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        />
-
-                    <TextView
-                        android:gravity="center"
-                        android:id="@+id/tvSkill5"
-                        android:layout_width="wrap_content"
-                        android:layout_margin="8dp"
-                        android:textSize="16sp"
-                        android:layout_height="wrap_content"
-                        />
-                </com.google.android.flexbox.FlexboxLayout>
-                <TextView
-                    android:textAlignment="center"
-                    android:layout_marginTop="10dp"
-                    android:text="@{userInfo.bio}"
-                    android:id="@+id/tvUserBio"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:maxLines="5"/>
-                <LinearLayout
-                    android:layout_marginTop="8dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="80sp"
-                    android:orientation="horizontal"
-                    >
-
+                        <ImageView
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:layout_margin="8dp"
+                            android:id="@+id/ivMore"
+                            android:src="@drawable/baseline_more_horiz_24"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
                     <LinearLayout
-                        android:layout_gravity="center"
-                        android:orientation="horizontal"
-                        android:layout_marginStart="8dp"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <LinearLayout
-                            android:layout_weight="1"
-                            android:layout_gravity="center"
-                            android:orientation="vertical"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent">
-                            <TextView
-                                android:textStyle="bold"
-                                android:layout_gravity="center"
-                                android:textAlignment="center"
-                                android:id="@+id/tvCompletedTasksCount"
-                                android:text="250"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="23sp"/>
-                            <TextView
-                                android:text="Completed"
-                                android:textAlignment="center"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:textSize="16sp"/>
-                        </LinearLayout>
-                        <LinearLayout
-                            android:layout_weight="1"
-                            android:layout_gravity="center"
-                            android:orientation="vertical"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent">
-                            <TextView
-                                android:textStyle="bold"
-                                android:layout_gravity="center"
-                                android:textAlignment="center"
-                                android:id="@+id/tvFollowersCount"
-                                android:text="8.000"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="23sp"/>
-                            <TextView
-                                android:text="Followers"
-                                android:layout_gravity="center"
-                                android:textAlignment="center"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="16sp"/>
-                        </LinearLayout>
-                        <LinearLayout
-                            android:layout_weight="1"
-                            android:layout_gravity="center"
-                            android:orientation="vertical"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent">
-                            <TextView
-                                android:textStyle="bold"
-                                android:layout_gravity="center"
-                                android:textAlignment="center"
-                                android:id="@+id/tvPostCount"
-                                android:text="250"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="23sp"/>
-                            <TextView
-                                android:text="Posts"
-                                android:layout_gravity="center"
-                                android:textAlignment="center"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="16sp"/>
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                        </LinearLayout>
-
-
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="@{userInfo.fullName}"
+                            android:textAlignment="center"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:textSize="18sp"
+                            android:textStyle="normal"
+                            android:text="@{userInfo.jobTitle}"
+                            android:id="@+id/tvUserTitle"
+                            android:textAlignment="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
                     </LinearLayout>
-                </LinearLayout>
+                    <com.google.android.flexbox.FlexboxLayout
+                        android:layout_gravity="center"
+                        android:id="@+id/flexbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:flexWrap="wrap"
+                        app:alignItems="stretch"
+                        app:alignContent="stretch">
+
+                        <TextView
+
+                            android:gravity="center"
+                            android:id="@+id/tvSkill1"
+                            android:textSize="16sp"
+                            android:layout_margin="8dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            />
+
+                        <TextView
+                            android:gravity="center"
+                            android:id="@+id/tvSkill2"
+                            android:textSize="16sp"
+                            android:layout_margin="8dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            />
+
+                        <TextView
+                            android:gravity="center"
+                            android:id="@+id/tvSkill3"
+                            android:layout_width="wrap_content"
+                            android:layout_margin="8dp"
+                            android:textSize="16sp"
+                            android:layout_height="wrap_content"
+                            />
+                        <TextView
+                            android:gravity="center"
+                            android:id="@+id/tvSkill4"
+                            android:textSize="16sp"
+                            android:layout_margin="8dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            />
+
+                        <TextView
+                            android:gravity="center"
+                            android:id="@+id/tvSkill5"
+                            android:layout_width="wrap_content"
+                            android:layout_margin="8dp"
+                            android:textSize="16sp"
+                            android:layout_height="wrap_content"
+                            />
+                    </com.google.android.flexbox.FlexboxLayout>
+                    <TextView
+                        android:textAlignment="center"
+                        android:layout_marginTop="10dp"
+                        android:text="@{userInfo.bio}"
+                        android:id="@+id/tvUserBio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="5"/>
+                    <LinearLayout
+                        android:layout_marginTop="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="80sp"
+                        android:orientation="horizontal"
+                        >
+
+                        <LinearLayout
+                            android:layout_gravity="center"
+                            android:orientation="horizontal"
+                            android:layout_marginStart="8dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <LinearLayout
+                                android:layout_weight="1"
+                                android:layout_gravity="center"
+                                android:orientation="vertical"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent">
+                                <TextView
+                                    android:textStyle="bold"
+                                    android:layout_gravity="center"
+                                    android:textAlignment="center"
+                                    android:id="@+id/tvCompletedTasksCount"
+                                    android:text="250"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="23sp"/>
+                                <TextView
+                                    android:text="Completed"
+                                    android:textAlignment="center"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="16sp"/>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_weight="1"
+                                android:layout_gravity="center"
+                                android:orientation="vertical"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent">
+                                <TextView
+                                    android:textStyle="bold"
+                                    android:layout_gravity="center"
+                                    android:textAlignment="center"
+                                    android:id="@+id/tvFollowersCount"
+                                    android:text="8.000"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="23sp"/>
+                                <TextView
+                                    android:text="Followers"
+                                    android:layout_gravity="center"
+                                    android:textAlignment="center"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="16sp"/>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_weight="1"
+                                android:layout_gravity="center"
+                                android:orientation="vertical"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent">
+                                <TextView
+                                    android:textStyle="bold"
+                                    android:layout_gravity="center"
+                                    android:textAlignment="center"
+                                    android:id="@+id/tvPostCount"
+                                    android:text="250"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="23sp"/>
+                                <TextView
+                                    android:text="Posts"
+                                    android:layout_gravity="center"
+                                    android:textAlignment="center"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="16sp"/>
+
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+                    </LinearLayout>
 
                     <LinearLayout
                         android:orientation="horizontal"
@@ -253,40 +253,84 @@
                             android:layout_height="30dp"/>
                     </LinearLayout>
 
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tabLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    />
+                    <com.google.android.material.tabs.TabLayout
+                        android:id="@+id/tabLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
 
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvProfile"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvProfile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
 
-                <TextView
-                    android:visibility="gone"
-                    android:id="@+id/tvEmptyList"
-                    android:textSize="30sp"
-                    android:layout_marginTop="50dp"
-                    android:layout_marginBottom="50dp"
-                    android:text="Gönderi Yok"
-                    android:textAlignment="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-                <ProgressBar
-                    android:visibility="gone"
-                    android:id="@+id/pbPostLoading"
-                    android:layout_marginTop="50dp"
-                    android:layout_marginBottom="50dp"
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    <TextView
+                        android:visibility="gone"
+                        android:id="@+id/tvEmptyList"
+                        android:textSize="30sp"
+                        android:layout_marginTop="50dp"
+                        android:layout_marginBottom="50dp"
+                        android:text="Gönderi Yok"
+                        android:textAlignment="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                    <ProgressBar
+                        android:visibility="gone"
+                        android:id="@+id/pbPostLoading"
+                        android:layout_marginTop="50dp"
+                        android:layout_marginBottom="50dp"
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
 
-            </LinearLayout>
+                </LinearLayout>
 
-        </androidx.core.widget.NestedScrollView>
+            </androidx.core.widget.NestedScrollView>
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutProfileType"
+            android:visibility="gone"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:text="Ne Tür Bir Kullanıcı Olmak İstiyorsunuz?"
+                android:textAlignment="center"/>
+
+            <Button
+                android:id="@+id/btnFreelancerEntry"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_width="300dp"
+                android:text="Freelancer Olmak İstiyorum"
+                android:layout_height="wrap_content"
+                tools:ignore="HardcodedText" />
+
+            <Button
+                android:id="@+id/btnEmployerEntry"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_width="300dp"
+                android:text="Bir Freelancer işe almak istiyorum"
+                android:layout_height="wrap_content"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,5 +1,6 @@
 package com.androiddevelopers.freelanceapp.repo
 
+import android.graphics.Bitmap
 import android.net.Uri
 import com.androiddevelopers.freelanceapp.model.ChatModel
 import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
@@ -50,6 +51,9 @@ interface FirebaseRepoInterFace {
     // Firestore Discover Post işlemleri
     fun uploadDiscoverPostToFirestore(post: DiscoverPostModel): Task<Void>
     fun getAllDiscoverPostsFromFirestore(): Task<QuerySnapshot>
+    fun likePost(postId: String, updateData:  HashMap<String, Any?>): Task<Void>
+    fun getDiscoverPostDataFromFirebase(postId: String, ): Task<DocumentSnapshot>
+    fun commentToDiscoverPost(postId: String, updateData:  HashMap<String, Any?>): Task<Void>
 
     // Realtime Database Chat işlemleri
     fun sendMessageToRealtimeDatabase(
@@ -91,9 +95,7 @@ interface FirebaseRepoInterFace {
     fun unFollow(currentUserId: String, followingId: String): Task<Void>
     fun updateUserData(userId: String, updateData:  HashMap<String, Any?>): Task<Void>
     fun getFollowers(userId: String): DatabaseReference
-    fun likePost(postId: String, updateData:  HashMap<String, Any?>): Task<Void>
-    fun getDiscoverPostDataFromFirebase(postId: String, ): Task<DocumentSnapshot>
-    fun commentToDiscoverPost(postId: String, updateData:  HashMap<String, Any?>): Task<Void>
+    suspend fun uploadUserProfileImageImage(bitmap: Bitmap, uid : String): String?
 
 }
 

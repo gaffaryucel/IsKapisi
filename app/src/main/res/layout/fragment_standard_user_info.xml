@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".view.profile.StandardUserInfoFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/photoLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_marginVertical="14dp"
+                    android:textAlignment="center"
+                    app:layout_constraintTop_toBottomOf="@+id/ivUserProfilePhoto"
+                    android:text="Yüzünüzün net bir şekilde göründüğü bir portre fotoğraf kullanmanız gereklidir"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:src="@drawable/placeholder"
+                    android:id="@+id/ivUserProfilePhoto"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <!-- Personal Information Section -->
+            <TextView
+                android:id="@+id/text_personal_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Kişisel bilgiler"
+                android:textSize="18sp"
+                android:layout_below="@id/photoLayout"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:id="@+id/edit_full_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ad Soyad"
+                android:layout_below="@id/text_personal_info"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:id="@+id/edit_bio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Kendinden Bahset(Zorunlu değil)"
+                android:layout_below="@id/edit_full_name"
+                android:layout_marginBottom="8dp"/>
+
+
+            <EditText
+                android:id="@+id/edit_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Telefon numarası"
+                android:inputType="phone"
+                android:layout_below="@id/edit_bio"
+                android:layout_marginBottom="8dp"/>
+
+
+
+            <!-- Checkboxes for Terms of Service and Privacy Policy Agreements -->
+            <CheckBox
+                android:id="@+id/checkbox_terms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hizmet koşullarını okudum ve onaylıyorum"
+                android:layout_below="@id/edit_phone"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_privacy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gizlilik politikasını okudum ve onaylıyorum"
+                android:layout_below="@id/checkbox_terms"/>
+
+            <!-- Sign Up Button -->
+            <Button
+                android:id="@+id/button_signup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Onayla"
+                android:layout_below="@id/checkbox_privacy"
+                android:layout_marginTop="16dp"/>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</FrameLayout>
