@@ -23,6 +23,9 @@ class UserModel{
     var socialMediaLinks: List<SocialMediaLink>? = null
     var contactInformation: ContactInformation? = null
     var paymentMethods: List<PaymentMethod>? = null
+    var completedJobs: Int? = null // Tamamlanan iş sayısı
+    var canceledJobs: Int? = null // İptal edilen iş sayısı
+    var unfinishedJobs: Int? = null // Zamanında bitmeyen iş sayısı
 
     constructor()
 
@@ -48,6 +51,9 @@ class UserModel{
         socialMediaLinks: List<SocialMediaLink>? = null,
         contactInformation: ContactInformation? = null,
         paymentMethods: List<PaymentMethod>? = null,
+        completedJobs: Int? = null,
+        canceledJobs: Int? = null,
+        unfinishedJobs: Int? = null
     ) {
         this.userId = userId
         this.username = username
@@ -70,6 +76,9 @@ class UserModel{
         this.socialMediaLinks = socialMediaLinks
         this.contactInformation = contactInformation
         this.paymentMethods = paymentMethods
+        this.completedJobs = completedJobs
+        this.canceledJobs = canceledJobs
+        this.unfinishedJobs = unfinishedJobs
     }
 }
 data class PortfolioItem(
