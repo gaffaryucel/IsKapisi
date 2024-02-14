@@ -10,6 +10,9 @@ import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.Resource
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -35,6 +38,10 @@ constructor(
     private var _firebaseUserData = MutableLiveData<UserModel>()
     val firebaseUserData: LiveData<UserModel>
         get() = _firebaseUserData
+
+    private var _preChatList = MutableLiveData<Resource<Boolean>>()
+    val preChatList: LiveData<Resource<Boolean>>
+        get() = _preChatList
 
     private var _preChatRoomAction = MutableLiveData<Resource<PreChatModel>>()
     val preChatRoomAction = _preChatRoomAction
@@ -121,5 +128,24 @@ constructor(
         if (value){
             _preChatRoomAction.value = Resource.error("",null)
         }
+    }
+
+    fun getCreatedPreChats(postId: String){
+        firebaseRepo.getAllPreChatRooms(currentUserId).addListenerForSingleValueEvent(object :
+            ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (childSnapshot in snapshot.children) {
+                    val key = childSnapshot.key
+                    if (key.equals(postId)){
+                        _preChatList.value = Resource.success(true)
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                _preChatList.value = Resource.error(error.toString(),true)
+            }
+
+        })
     }
 }

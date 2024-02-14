@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
@@ -33,6 +34,7 @@ class DetailPostFragment : Fragment() {
     private var post : FreelancerJobPost? = null
     private var user : UserModel? = null
 
+    private var isExists = false
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -57,12 +59,19 @@ class DetailPostFragment : Fragment() {
         observeLiveData(viewLifecycleOwner)
 
         binding.buttonBuy.setOnClickListener {
-            viewModel.createPreChatModel(
-                post?.postId ?: "",
-                post?.freelancerId ?: "",
-                user?.username ?: "",
-                user?.profileImageUrl ?: "",
-            )
+            if (isExists){
+                val action = DetailPostFragmentDirections.actionDetailPostFragmentToPreMessagingFragment(
+                    post?.postId ?: "",post?.freelancerId ?: ""
+                )
+                Navigation.findNavController(requireView()).navigate(action)
+            }else{
+                viewModel.createPreChatModel(
+                    post?.postId ?: "",
+                    post?.freelancerId ?: "",
+                    user?.username ?: "",
+                    user?.profileImageUrl ?: "",
+                )
+            }
         }
     }
 
@@ -76,6 +85,7 @@ class DetailPostFragment : Fragment() {
             firebaseLiveData.observe(owner) {
                 it.freelancerId?.let { id -> getUserDataByDocumentId(id) }
                 post = it
+                viewModel.getCreatedPreChats(post?.postId.toString())
                 binding.freelancer = it
 
                 it.images?.let { images ->
@@ -104,6 +114,20 @@ class DetailPostFragment : Fragment() {
                     downloadImage(ivUserProfile, it.profileImageUrl)
                 }
                 user = it
+            }
+
+            preChatList.observe(owner) {
+                when(it.status){
+                    Status.LOADING -> it.data?.let { state -> setProgressBar(state) }
+                    Status.SUCCESS -> {
+                        isExists = true
+                    }
+
+                    Status.ERROR -> {
+                        isExists = false
+                    }
+
+                }
             }
 
             firebaseMessage.observe(owner) {

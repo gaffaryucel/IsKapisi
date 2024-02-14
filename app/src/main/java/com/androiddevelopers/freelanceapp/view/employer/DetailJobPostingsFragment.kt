@@ -9,11 +9,16 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.ViewPagerAdapterForImages
 import com.androiddevelopers.freelanceapp.databinding.FragmentJobPostingsDetailBinding
+import com.androiddevelopers.freelanceapp.model.UserModel
+import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
+import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.util.downloadImage
+import com.androiddevelopers.freelanceapp.view.freelancer.DetailPostFragmentDirections
 import com.androiddevelopers.freelanceapp.viewmodel.employer.DetailJobPostingsViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,6 +31,11 @@ class DetailJobPostingsFragment : Fragment() {
 
     private lateinit var errorDialog: AlertDialog
     private lateinit var viewPagerAdapter: ViewPagerAdapterForImages
+
+    private var post : EmployerJobPost? = null
+    private var user : UserModel? = null
+
+    private var isExists = false
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -48,6 +58,18 @@ class DetailJobPostingsFragment : Fragment() {
         setupDialogs()
         setProgressBar(false)
         observeLiveData(viewLifecycleOwner)
+
+        binding.buttonGiveOffer.setOnClickListener {
+            if (!isExists){
+                viewModel.createPreChatModel(
+                    post?.postId ?: "",
+                    post?.employerId ?: "",
+                    user?.username ?: "",
+                    user?.profileImageUrl ?: "",
+                )
+            }
+            goToPreMessaging()
+        }
     }
 
     override fun onDestroyView() {
@@ -55,10 +77,20 @@ class DetailJobPostingsFragment : Fragment() {
         _binding = null
     }
 
+    private fun goToPreMessaging(){
+        val action = DetailJobPostingsFragmentDirections.actionDetailJobPostingsFragmentToPreMessagingFragment(
+            post?.postId ?: "",post?.employerId ?: ""
+        )
+        Navigation.findNavController(requireView()).navigate(action)
+    }
+
     private fun observeLiveData(owner: LifecycleOwner) {
         with(viewModel) {
             firebaseLiveData.observe(owner) {
                 it.employerId?.let { id -> getUserDataByDocumentId(id) }
+
+                post = it
+                viewModel.getCreatedPreChats(post?.postId.toString())
 
                 binding.employer = it
 
@@ -89,6 +121,19 @@ class DetailJobPostingsFragment : Fragment() {
                 }
             }
 
+            preChatList.observe(owner) {
+                when(it.status){
+                    Status.LOADING -> it.data?.let { state -> setProgressBar(state) }
+                    Status.SUCCESS -> {
+                        isExists = true
+                    }
+
+                    Status.ERROR -> {
+                        isExists = false
+                    }
+
+                }
+            }
             firebaseMessage.observe(owner) {
                 when (it.status) {
                     Status.LOADING -> it.data?.let { state -> setProgressBar(state) }
