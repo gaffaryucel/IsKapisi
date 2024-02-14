@@ -51,12 +51,14 @@ class PreMessagingFragment : Fragment() {
             }
         }
         val chatId = arguments?.let {
-            it.getString("chat_id")
+            it.getString("post_id")
         }
         val receiver = arguments?.let {
             it.getString("receiver")
         }
-
+        if (receiver != null){
+            viewModel.getUserDataFromFirebase(receiver)
+        }
         viewModel.getMessages(chatId ?: "")
 
         binding.tvUserName.text = "receiverName"
@@ -85,10 +87,6 @@ class PreMessagingFragment : Fragment() {
         observeLiveData()
     }
 
-
-
-
-
     private fun observeLiveData(){
         viewModel.messages.observe(viewLifecycleOwner, Observer {
             adapter.messageList = it
@@ -97,6 +95,20 @@ class PreMessagingFragment : Fragment() {
             if (lastItemPosition >= 0) {
                 binding.messageRecyclerView.smoothScrollToPosition(lastItemPosition)
             }
+        })
+        viewModel.userData.observe(viewLifecycleOwner, Observer {userData ->
+
+            binding.apply {
+                user = userData
+            }
+            if (userData.profileImageUrl != null){
+                if (userData.profileImageUrl!!.isNotEmpty()){
+                    Glide.with(requireContext())
+                        .load(userData.profileImageUrl.toString())
+                        .into(binding.ivUser)
+                }
+            }
+
         })
     }
     override fun onResume() {

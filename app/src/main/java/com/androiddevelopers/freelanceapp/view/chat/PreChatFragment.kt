@@ -8,17 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import androidx.lifecycle.Observer
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.androiddevelopers.freelanceapp.R
-import com.androiddevelopers.freelanceapp.adapters.ChatAdapter
-import com.androiddevelopers.freelanceapp.databinding.FragmentChatsBinding
+import com.androiddevelopers.freelanceapp.adapters.PreChatAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentPreChatBinding
 import com.androiddevelopers.freelanceapp.model.ChatModel
-import com.androiddevelopers.freelanceapp.viewmodel.chat.ChatsViewModel
 import com.androiddevelopers.freelanceapp.viewmodel.chat.PreChatViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class PreChatFragment : Fragment() {
 
     private lateinit var viewModel: PreChatViewModel
@@ -37,7 +36,7 @@ class PreChatFragment : Fragment() {
         return root
     }
 
-    private val adapter = ChatAdapter()
+    private val adapter = PreChatAdapter()
 
     private var userList = ArrayList<ChatModel>()
     private var searchResult = ArrayList<ChatModel>()
@@ -67,16 +66,14 @@ class PreChatFragment : Fragment() {
                 searchResult.add(it)
             }
         }
-        adapter.chatsList = searchResult
     }
 
     private fun observeLiveData(){
         viewModel.preChats.observe(viewLifecycleOwner, Observer {
             binding.rvPreChat.layoutManager = LinearLayoutManager(requireContext())
             binding.rvPreChat.adapter = adapter
-            //adapter.chatsList = it
+            adapter.chatsList = it
             adapter.notifyDataSetChanged()
-            userList = it as ArrayList<ChatModel>
         })
     }
     override fun onResume() {

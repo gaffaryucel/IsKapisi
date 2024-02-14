@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.androiddevelopers.freelanceapp.model.MessageModel
+import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.Resource
 import com.google.firebase.auth.FirebaseAuth
@@ -35,6 +36,13 @@ class PreMessagingViewModel  @Inject constructor(
     val messageStatus: LiveData<Resource<Boolean>>
         get() = _messageStatus
 
+    private val _userData = MutableLiveData<UserModel>()
+    val userData : LiveData<UserModel>
+        get() = _userData
+
+    private var _receiverMessage = MutableLiveData<Resource<UserModel>>()
+    val receiverMessage : LiveData<Resource<UserModel>>
+        get() = _receiverMessage
 
     fun sendMessage(
         chatId: String,
@@ -75,7 +83,7 @@ class PreMessagingViewModel  @Inject constructor(
 
     fun getMessages(chatId: String) {
         _messageStatus.value = Resource.loading(null)
-        repo.getAllMessagesFromRealtimeDatabase(currentUserId ?: "", chatId).addValueEventListener(
+        repo.getAllMessagesFromPreChatRoom(currentUserId ?: "", chatId).addValueEventListener(
             object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val messageList = mutableListOf<MessageModel>()
@@ -109,4 +117,25 @@ class PreMessagingViewModel  @Inject constructor(
     }
 
 
+    fun getUserDataFromFirebase(userId : String){
+        repo.getUserDataByDocumentId(userId)
+            .addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    val user = documentSnapshot.toObject(UserModel::class.java)
+                    if (user != null) {
+                        _userData.value = user ?: UserModel()
+                        _receiverMessage.value = Resource.success(null)
+                    }else{
+                        _receiverMessage.value = Resource.error("Belirtilen belge bulunamadı",null)
+                    }
+                } else {
+                    // Belge yoksa işlemleri buraya ekleyebilirsiniz
+                    _receiverMessage.value = Resource.error("kullanıcı kaydedilmemiş",null)
+                }
+            }
+            .addOnFailureListener { exception ->
+                // Hata durzumunda işlemleri buraya ekleyebilirsiniz
+                _receiverMessage.value = Resource.error("Belge alınamadı. Hata: $exception",null)
+            }
+    }
 }

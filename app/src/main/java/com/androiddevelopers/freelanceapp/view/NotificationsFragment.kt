@@ -11,9 +11,7 @@ import com.androiddevelopers.freelanceapp.viewmodel.NotificationsViewModel
 
 class NotificationsFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = NotificationsFragment()
-    }
+
 
     private lateinit var viewModel: NotificationsViewModel
 
@@ -21,13 +19,12 @@ class NotificationsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        viewModel = ViewModelProvider(this)[NotificationsViewModel::class.java]
         return inflater.inflate(R.layout.fragment_notifications, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(NotificationsViewModel::class.java)
-        // TODO: Use the ViewModel
-    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+    }
 }

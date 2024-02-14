@@ -11,8 +11,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+@HiltViewModel
 class PreChatViewModel @Inject constructor(
     private val repo  : FirebaseRepoInterFace,
     private val auth  : FirebaseAuth
@@ -38,13 +40,16 @@ class PreChatViewModel @Inject constructor(
     }
     private fun getPreChats () {
         _message.value = Resource.loading(null)
-        repo.getAllChatRooms(userId ?: "").addValueEventListener(
+        repo.getAllPreChatRooms(userId ?: "").addValueEventListener(
             object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val chatList = mutableListOf<PreChatModel>()
-                    _message.value = Resource.success(null)
+                    println("snapshot : "+snapshot)
                     for (messageSnapshot in snapshot.children) {
+                        println("messageSnapshot : "+messageSnapshot)
+
                         val preChat = messageSnapshot.getValue(PreChatModel::class.java)
+                        println("preChat : "+preChat)
                         preChat?.let {
                             chatList.add(it)
                         }

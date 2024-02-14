@@ -16,6 +16,12 @@
         <action
             android:id="@+id/action_navigation_home_to_detailPostFragment"
             app:destination="@id/detailPostFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_notificationsFragment"
+            app:destination="@id/notificationsFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_preChatFragment"
+            app:destination="@id/preChatFragment" />
     </fragment>
 
     <fragment
@@ -373,6 +379,20 @@
         <argument
             android:name="receiver"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.NotificationsFragment"
+        android:label="fragment_notifications"
+        tools:layout="@layout/fragment_notifications" />
+    <fragment
+        android:id="@+id/preChatFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.chat.PreChatFragment"
+        android:label="fragment_pre_chat"
+        tools:layout="@layout/fragment_pre_chat" >
+        <action
+            android:id="@+id/action_preChatFragment_to_preMessagingFragment"
+            app:destination="@id/preMessagingFragment" />
     </fragment>
 
 </navigation>

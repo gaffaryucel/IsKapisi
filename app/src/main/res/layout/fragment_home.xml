@@ -33,7 +33,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     android:textStyle="italic"
                     android:textSize="22sp"
-                    android:text="Merhabe, kullanıcı"
+                    android:text="Merhabe"
                     android:layout_marginStart="8dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
@@ -44,13 +44,24 @@
                     android:padding="6dp"
                     android:src="@drawable/tab"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/pre_chat_icon"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription" />
+
+                <ImageView
+                    android:id="@+id/pre_chat_icon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="6dp"
+                    android:src="@drawable/comment_black"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/ivNotifications"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:ignore="ContentDescription" />
 
                 <ImageView
                     android:id="@+id/ivMessage"
-                    android:src="@drawable/comment_black"
+                    android:src="@drawable/message_black"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:padding="6dp"

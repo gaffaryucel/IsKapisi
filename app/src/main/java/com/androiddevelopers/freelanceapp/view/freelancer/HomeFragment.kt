@@ -85,6 +85,18 @@ class HomeFragment : Fragment() {
             homeAddIcon.setOnClickListener {
                 popupMenu.show()
             }
+            ivNotifications.setOnClickListener {
+                val action = HomeFragmentDirections.actionNavigationHomeToNotificationsFragment()
+                Navigation.findNavController(it).navigate(action)
+            }
+            ivMessage.setOnClickListener {
+                val action = HomeFragmentDirections.actionNavigationHomeToChatsFragment()
+                Navigation.findNavController(it).navigate(action)
+            }
+            preChatIcon.setOnClickListener {
+                val action = HomeFragmentDirections.actionNavigationHomeToPreChatFragment()
+                Navigation.findNavController(it).navigate(action)
+            }
         }
     }
 
@@ -123,11 +135,6 @@ class HomeFragment : Fragment() {
             liveDataFirebaseUser.observe(owner) {
                 firebaseUser = it
             }
-        }
-
-        binding.ivMessage.setOnClickListener {
-            val action = HomeFragmentDirections.actionNavigationHomeToChatsFragment()
-            Navigation.findNavController(it).navigate(action)
         }
     }
 

@@ -9,6 +9,8 @@ class PreChatModel {
     var lastMessage: String? = null
     var timestamp: Long? = null
 
+    constructor()
+
     constructor(
         postId: String? = null,
         sender: String? = null,

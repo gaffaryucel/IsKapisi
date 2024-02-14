@@ -113,7 +113,7 @@ constructor(
     ){
         val preChat = PreChatModel(
             postId ,currentUserId, receiver, receiverName,
-            receiverImage, "", 0L
+            receiverImage, ""
         )
         createPreChatRoom(preChat)
     }
