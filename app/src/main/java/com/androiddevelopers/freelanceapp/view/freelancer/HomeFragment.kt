@@ -18,51 +18,36 @@ import com.androiddevelopers.freelanceapp.databinding.FragmentHomeBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.viewmodel.freelancer.HomeViewModel
-import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
-    private lateinit var viewModel: HomeViewModel
     private var _binding: FragmentHomeBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
-    private lateinit var freelancerAdapter: FreelancerAdapter
+    private val userId = FirebaseAuth.getInstance().currentUser?.uid.toString()
+    private val freelancerAdapter: FreelancerAdapter = FreelancerAdapter(userId)
+    private lateinit var viewModel: HomeViewModel
     private lateinit var listFreelancerJobPost: ArrayList<FreelancerJobPost>
     private lateinit var errorDialog: AlertDialog
     private lateinit var popupMenu: PopupMenu
-    private lateinit var firebaseUser: FirebaseUser
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        freelancerAdapter = FreelancerAdapter { freelancerJobPost, v ->
-            freelancerJobPost.postId?.let { id ->
-                //firebase den gelen görüntüleme sayısını alıyoruz
-                //karta tıklandığında 1 arttırıp firebase üzerinde ilgili değeri güncelliyoruz
-                val count = mutableSetOf<String>()
-                freelancerJobPost.viewCount?.let { count.addAll(it) }
-                count.add(firebaseUser.uid)
-                viewModel.updateViewCountFreelancerJobPostWithDocumentById(id, count)
-
-                //ilan id numarası ile detay sayfasına yönlendirme yapıyoruz
-                val directions =
-                    HomeFragmentDirections
-                        .actionNavigationHomeToDetailPostFragment(id)
-                Navigation.findNavController(v).navigate(directions)
-            }
-        }
         listFreelancerJobPost = arrayListOf()
-
         binding.adapter = freelancerAdapter
 
         return view
@@ -79,7 +64,46 @@ class HomeFragment : Fragment() {
         setupPopupMenu(view)
         observeLiveData(viewLifecycleOwner)
 
+        with(freelancerAdapter) {
+            clickListener = { freelancerJobPost, v ->
+                freelancerJobPost.postId?.let { id ->
+                    //firebase den gelen görüntüleme sayısını alıyoruz
+                    //karta tıklandığında 1 arttırıp firebase üzerinde ilgili değeri güncelliyoruz
+                    val count = mutableSetOf<String>()
+                    freelancerJobPost.viewCount?.let { count.addAll(it) }
+                    count.add(userId)
+                    viewModel.updateViewCountFreelancerJobPostWithDocumentById(id, count)
+
+                    //ilan id numarası ile detay sayfasına yönlendirme yapıyoruz
+                    val directions =
+                        HomeFragmentDirections
+                            .actionNavigationHomeToDetailPostFragment(id)
+                    Navigation.findNavController(v).navigate(directions)
+                }
+            }
+
+            likedListener = { postId, state, list ->
+                viewModel.updateLikeFreelancerJobPostFromFirestore(
+                    userId,
+                    postId,
+                    state,
+                    list
+                )
+            }
+
+            savedListener = { postId, state, list ->
+                viewModel.updateSavedUsersFreelancerJobPostFromFirestore(
+                    userId,
+                    postId,
+                    state,
+                    list
+                )
+            }
+        }
+
         with(binding) {
+            //adapter = freelancerAdapter
+
             search(searchView)
 
             homeAddIcon.setOnClickListener {
@@ -99,7 +123,6 @@ class HomeFragment : Fragment() {
             }
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -123,17 +146,13 @@ class HomeFragment : Fragment() {
             }
 
             firebaseLiveData.observe(owner) { list ->
-                freelancerAdapter.freelancerList =
-                    list // firebase 'den gelen veriler ile adapter'i yeniliyoruz
+                // firebase 'den gelen veriler ile adapter'i yeniliyoruz
+                freelancerAdapter.freelancerList = list
 
                 listFreelancerJobPost.clear()
                 // firebase 'den gelen son verilerin kopyasını saklıyoruz
                 // search iptal edildiğinde bu verileri tekrar adapter'e set edeceğiz
                 listFreelancerJobPost.addAll(list)
-            }
-
-            liveDataFirebaseUser.observe(owner) {
-                firebaseUser = it
             }
         }
     }

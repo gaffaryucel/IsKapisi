@@ -26,6 +26,7 @@ import com.androiddevelopers.freelanceapp.adapters.SkillAdapter
 import com.androiddevelopers.freelanceapp.adapters.ViewPagerAdapterForCreateJobPost
 import com.androiddevelopers.freelanceapp.databinding.FragmentJobPostingsCreateBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
+import com.androiddevelopers.freelanceapp.util.JobStatus
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.viewmodel.employer.CreateJobPostingViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -37,22 +38,24 @@ import java.util.*
 
 @AndroidEntryPoint
 class CreateJobPostingFragment : Fragment() {
+    private val dateFormatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
     private lateinit var viewModel: CreateJobPostingViewModel
     private lateinit var datePicker: MaterialDatePicker<Long>
     private lateinit var selectedImages: ArrayList<Uri>
     private var selectedImagesSize = 0
-    private lateinit var imageLauncher: ActivityResultLauncher<Intent>
 
+    private lateinit var imageLauncher: ActivityResultLauncher<Intent>
     private var _binding: FragmentJobPostingsCreateBinding? = null
+
     private val binding get() = _binding!!
 
     private lateinit var errorDialog: AlertDialog
-
     private lateinit var skillAdapter: SkillAdapter
-    private lateinit var skillList: ArrayList<String>
 
+    private lateinit var skillList: ArrayList<String>
     private lateinit var viewPagerAdapter: ViewPagerAdapterForCreateJobPost
-    private var employerPostId: String? = null
+
+    private var employerJobPost: EmployerJobPost? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -119,14 +122,20 @@ class CreateJobPostingFragment : Fragment() {
                 with(viewModel) {
                     addImageAndJobPostToFirebase( //resim ve işveren ilanı bilgilerini view modele gönderiyoruz
                         selectedImages, // yüklenecek resimlerin cihazdaki konumu
-                        createEmployerJobPost( // işveren ilanı için formda doldurulan yerler ile birlikte gönderi oluşturuyoruz
+                        EmployerJobPost( // işveren ilanı için formda doldurulan yerler ile birlikte gönderi oluşturuyoruz
+                            postId = employerJobPost?.postId,
                             title = titleTextInputEditText.text.toString(),
                             description = descriptionTextInputEditText.text.toString(),
                             skillsRequired = skillList,
-                            location = locationsTextInputEditText.text.toString(),
-                            deadline = deadlineTextInputEditText.text.toString(),
                             budget = budgetTextInputEditText.text.toString().toDouble(),
-                            postId = employerPostId,
+                            deadline = deadlineTextInputEditText.text.toString(),
+                            location = locationsTextInputEditText.text.toString(),
+                            datePosted = dateFormatter.format(Date(Date().time)),
+                            applicants = employerJobPost?.applicants,
+                            status = employerJobPost?.status ?: JobStatus.OPEN,
+                            additionalDetails = employerJobPost?.additionalDetails,
+                            savedUsers = employerJobPost?.savedUsers,
+                            viewCount = employerJobPost?.viewCount,
                             isUrgent = switchUrgentCreateJobPost.isChecked
                         )
                     )
@@ -140,7 +149,6 @@ class CreateJobPostingFragment : Fragment() {
                     val currentDate = Date().time
 
                     if (selection > currentDate) {
-                        val dateFormatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
                         val date = dateFormatter.format(Date(selection))
 
                         binding.deadlineTextInputEditText.setText(date)
@@ -171,7 +179,6 @@ class CreateJobPostingFragment : Fragment() {
             fabLoadImage.setOnClickListener {
                 chooseImage()
             }
-
         }
 
         imageLauncher =
@@ -237,12 +244,8 @@ class CreateJobPostingFragment : Fragment() {
             }
 
             firebaseLiveData.observe(owner) {
-
+                employerJobPost = it
                 setView(it)
-
-                it.postId?.let { id ->
-                    employerPostId = id
-                }
             }
         }
     }
@@ -270,7 +273,7 @@ class CreateJobPostingFragment : Fragment() {
 
             createJobPostDeleteButton.setOnClickListener { v ->
                 post.postId?.let { id ->
-                    Snackbar.make(v,"İlan silinsin mi?",Snackbar.LENGTH_LONG).setAction("Evet") {
+                    Snackbar.make(v, "İlan silinsin mi?", Snackbar.LENGTH_LONG).setAction("Evet") {
                         viewModel.deleteEmployerJobPostFromFirestore(id, post.title, v)
                     }.show()
 

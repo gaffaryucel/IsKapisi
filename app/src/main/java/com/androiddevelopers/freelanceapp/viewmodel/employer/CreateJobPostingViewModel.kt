@@ -2,16 +2,14 @@ package com.androiddevelopers.freelanceapp.viewmodel.employer
 
 import android.net.Uri
 import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
-import com.androiddevelopers.freelanceapp.util.JobStatus
 import com.androiddevelopers.freelanceapp.util.Resource
-import com.google.android.material.snackbar.Snackbar
+import com.androiddevelopers.freelanceapp.util.snackbar
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -51,32 +49,42 @@ constructor(
         jobPost: EmployerJobPost,
         downloadUriList: ArrayList<String> = arrayListOf()
     ) {
-        val uId = firebaseAuth.currentUser?.uid ?: "null_uid"
+        val uId = firebaseAuth.currentUser?.uid.toString()
         if (newUriList.size > 0) {
             val uri = newUriList[0]
-            _firebaseMessage.value = Resource.loading(true)
-            uri.lastPathSegment?.let { file ->
-                firebaseRepo.addImageToStorageForJobPosting(uri, uId, jobPost.postId!!, file)
-                    .addOnSuccessListener { task ->
-                        task.storage.downloadUrl
-                            .addOnSuccessListener {
-                                newUriList.removeAt(0)
-                                downloadUriList.add(it.toString())
-                                addImageAndJobPostToFirebase(newUriList, jobPost, downloadUriList)
-                            }.addOnFailureListener {
-                                _firebaseMessage.value =
-                                    it.localizedMessage?.let { message ->
-                                        _firebaseMessage.value = Resource.loading(false)
-                                        Resource.error(message, false)
-                                    }
-                            }
-                    }.addOnFailureListener {
-                        _firebaseMessage.value =
-                            it.localizedMessage?.let { message ->
-                                _firebaseMessage.value = Resource.loading(false)
-                                Resource.error(message, false)
-                            }
-                    }
+            if (uri.toString().contains("firebasestorage")) {
+                newUriList.removeAt(0)
+                downloadUriList.add(uri.toString())
+                addImageAndJobPostToFirebase(newUriList, jobPost, downloadUriList)
+            } else {
+                _firebaseMessage.value = Resource.loading(true)
+                uri.lastPathSegment?.let { file ->
+                    firebaseRepo.addImageToStorageForJobPosting(uri, uId, jobPost.postId!!, file)
+                        .addOnSuccessListener { task ->
+                            task.storage.downloadUrl
+                                .addOnSuccessListener {
+                                    newUriList.removeAt(0)
+                                    downloadUriList.add(it.toString())
+                                    addImageAndJobPostToFirebase(
+                                        newUriList,
+                                        jobPost,
+                                        downloadUriList
+                                    )
+                                }.addOnFailureListener {
+                                    _firebaseMessage.value =
+                                        it.localizedMessage?.let { message ->
+                                            _firebaseMessage.value = Resource.loading(false)
+                                            Resource.error(message, false)
+                                        }
+                                }
+                        }.addOnFailureListener {
+                            _firebaseMessage.value =
+                                it.localizedMessage?.let { message ->
+                                    _firebaseMessage.value = Resource.loading(false)
+                                    Resource.error(message, false)
+                                }
+                        }
+                }
             }
         } else {
             if (jobPost.postId == null) {
@@ -104,21 +112,22 @@ constructor(
         //updateUserData(jobPost)
     }
 
-    fun deleteEmployerJobPostFromFirestore(postId: String, title: String?, view: View) = viewModelScope.launch {
-        _firebaseMessage.value = Resource.loading(true)
-        firebaseRepo.deleteEmployerJobPostFromFirestore(postId).addOnCompleteListener {task ->
-            _firebaseMessage.value = Resource.loading(false)
-            if (task.isSuccessful) {
-                _firebaseMessage.value = Resource.success(true)
-                Snackbar.make(view,"$title İlanınınz silindi.",Toast.LENGTH_SHORT).show()
-            } else {
-                _firebaseMessage.value =
-                    task.exception?.localizedMessage?.let { message ->
-                        Resource.error(message, false)
-                    }
+    fun deleteEmployerJobPostFromFirestore(postId: String, title: String?, view: View) =
+        viewModelScope.launch {
+            _firebaseMessage.value = Resource.loading(true)
+            firebaseRepo.deleteEmployerJobPostFromFirestore(postId).addOnCompleteListener { task ->
+                _firebaseMessage.value = Resource.loading(false)
+                if (task.isSuccessful) {
+                    _firebaseMessage.value = Resource.success(true)
+                    "$title İlanınınz silindi.".snackbar(view)
+                } else {
+                    _firebaseMessage.value =
+                        task.exception?.localizedMessage?.let { message ->
+                            Resource.error(message, false)
+                        }
+                }
             }
         }
-    }
 
     fun setImageUriList(newList: ArrayList<Uri>) = viewModelScope.launch {
         _imageUriList.value = newList
@@ -146,7 +155,7 @@ constructor(
                     }
 
                     _firebaseMessage.value = Resource.loading(false)
-                    //_firebaseMessage.value = Resource.success(true)
+                    // _firebaseMessage.value = Resource.success(true) // observe deki geri gitme özelliği çalıştırıyor
 
                 }.addOnFailureListener {
                     _firebaseMessage.value = Resource.loading(false)
@@ -170,43 +179,4 @@ constructor(
 //        }
 //    }
 
-    fun createEmployerJobPost(
-        postId: String? = null,
-        title: String? = null,
-        description: String? = null,
-        images: List<String>? = null,
-        skillsRequired: List<String>? = null,
-        budget: Double? = null,
-        deadline: String? = null,
-        location: String? = null,
-        datePosted: String? = null,
-        applicants: List<String>? = null,
-        status: JobStatus? = JobStatus.OPEN,
-        additionalDetails: String? = null,
-        completedJobs: Int? = null,
-        canceledJobs: Int? = null,
-        viewCount: List<String>? = null,
-        isUrgent: Boolean? = null,
-        employerId: String? = null
-    ): EmployerJobPost {
-        return EmployerJobPost(
-            postId = postId,
-            title = title,
-            description = description,
-            images = images,
-            skillsRequired = skillsRequired,
-            budget = budget,
-            deadline = deadline,
-            location = location,
-            datePosted = datePosted,
-            applicants = applicants,
-            status = status,
-            additionalDetails = additionalDetails,
-            completedJobs = completedJobs,
-            canceledJobs = canceledJobs,
-            viewCount = viewCount,
-            isUrgent = isUrgent,
-            employerId = employerId,
-        )
-    }
 }

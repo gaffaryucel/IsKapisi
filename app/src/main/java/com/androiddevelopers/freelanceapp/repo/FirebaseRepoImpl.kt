@@ -38,7 +38,7 @@ class FirebaseRepoImpl @Inject constructor(
     //StorageRef
     private val imagesParentRef = storage.reference.child("user_images")
     private val profilePhotoRef  = storage.reference
-
+    
     //RealtimeRef
     private val messagesReference = database.getReference("users")
     private val preChatReference = database.getReference("preChat").child("users")
@@ -88,8 +88,22 @@ class FirebaseRepoImpl @Inject constructor(
         return freelancerPostCollection.document(postId).update("viewCount", newCount)
     }
 
-    override fun deleteFreelancerJobPostFromFirestore(postId: String):Task<Void>{
+    override fun deleteFreelancerJobPostFromFirestore(postId: String): Task<Void> {
         return freelancerPostCollection.document(postId).delete()
+    }
+
+    override fun updateLikeFreelancerJobPostFromFirestore(
+        postId: String,
+        likes: List<String>
+    ): Task<Void> {
+        return freelancerPostCollection.document(postId).update("likes", likes)
+    }
+
+    override fun updateSavedUsersFreelancerJobPostFromFirestore(
+        postId: String,
+        savedUsers: List<String>
+    ): Task<Void> {
+        return freelancerPostCollection.document(postId).update("savedUsers", savedUsers)
     }
 
     override fun addEmployerJobPostToFirestore(job: EmployerJobPost): Task<Void> {
@@ -111,8 +125,15 @@ class FirebaseRepoImpl @Inject constructor(
         return employerPostCollection.document(postId).update("viewCount", newCount)
     }
 
-    override fun deleteEmployerJobPostFromFirestore(postId: String):Task<Void> {
+    override fun deleteEmployerJobPostFromFirestore(postId: String): Task<Void> {
         return employerPostCollection.document(postId).delete()
+    }
+
+    override fun updateSavedUsersEmployerJobPostFromFirestore(
+        postId: String,
+        likes: List<String>
+    ): Task<Void> {
+        return employerPostCollection.document(postId).update("savedUsers", likes)
     }
 
     override fun addImageToStorageForJobPosting(
@@ -260,7 +281,6 @@ class FirebaseRepoImpl @Inject constructor(
     override fun getFollowers(userId: String): DatabaseReference {
         return userFollowRef.child(userId).child("followers")
     }
-
     override fun likePost(postId: String, updateData:  HashMap<String, Any?>): Task<Void> {
         return  discoverPostCollection.document(postId).update(updateData)
     }

@@ -18,7 +18,7 @@ import com.androiddevelopers.freelanceapp.databinding.FragmentJobPostingsBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.viewmodel.employer.JobPostingsViewModel
-import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,37 +27,24 @@ class JobPostingsFragment : Fragment() {
     private var _binding: FragmentJobPostingsBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var employerAdapter: EmployerAdapter
+    private val userId = FirebaseAuth.getInstance().currentUser?.uid.toString()
+    private val employerAdapter: EmployerAdapter = EmployerAdapter(userId)
     private lateinit var listEmployerJobPost: ArrayList<EmployerJobPost>
     private lateinit var errorDialog: AlertDialog
-    private lateinit var firebaseUser: FirebaseUser
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this)[JobPostingsViewModel::class.java]
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel = ViewModelProvider(this)[JobPostingsViewModel::class.java]
+
         _binding = FragmentJobPostingsBinding.inflate(inflater, container, false)
         val view = binding.root
-
-        employerAdapter = EmployerAdapter { employerJobPost, v ->
-            employerJobPost.postId?.let { id ->
-                //firebase den gelen görüntüleme sayısını alıyoruz
-                //karta tıklandığında 1 arttırıp firebase üzerinde ilgili değeri güncelliyoruz
-                val count = mutableSetOf<String>()
-                employerJobPost.viewCount?.let { count.addAll(it) }
-                count.add(firebaseUser.uid)
-
-                viewModel.updateViewCountEmployerJobPostWithDocumentById(id, count)
-
-                //ilan id numarası ile detay sayfasına yönlendirme yapıyoruz
-                val directions =
-                    JobPostingsFragmentDirections
-                        .actionJobPostingFragmentToDetailJobPostingsFragment(id)
-                Navigation.findNavController(v).navigate(directions)
-            }
-        }
 
         listEmployerJobPost = arrayListOf()
 
@@ -73,6 +60,35 @@ class JobPostingsFragment : Fragment() {
 
         setupDialogs(requireContext())
         observeLiveData(viewLifecycleOwner)
+
+        with(employerAdapter) {
+            clickListener = { employerJobPost, v ->
+                employerJobPost.postId?.let { id ->
+                    //firebase den gelen görüntüleme sayısını alıyoruz
+                    //karta tıklandığında 1 arttırıp firebase üzerinde ilgili değeri güncelliyoruz
+                    val count = mutableSetOf<String>()
+                    employerJobPost.viewCount?.let { count.addAll(it) }
+                    count.add(userId)
+
+                    viewModel.updateViewCountEmployerJobPostWithDocumentById(id, count)
+
+                    //ilan id numarası ile detay sayfasına yönlendirme yapıyoruz
+                    val directions =
+                        JobPostingsFragmentDirections
+                            .actionJobPostingFragmentToDetailJobPostingsFragment(id)
+                    Navigation.findNavController(v).navigate(directions)
+                }
+            }
+
+            savedListener = { postId, state, list ->
+                viewModel.updateSavedUsersEmployerJobPostFromFirestore(
+                    userId,
+                    postId,
+                    state,
+                    list
+                )
+            }
+        }
 
         with(binding) {
             adapter = employerAdapter
@@ -110,10 +126,6 @@ class JobPostingsFragment : Fragment() {
                 // firebase 'den gelen son verilerin kopyasını saklıyoruz
                 // search iptal edildiğinde bu verileri tekrar adapter'e set edeceğiz
                 listEmployerJobPost.addAll(list)
-            }
-
-            liveDataFirebaseUser.observe(owner) {
-                firebaseUser = it
             }
         }
     }
