@@ -27,6 +27,7 @@ TextInputLayout içinde isEmptyCheck="@{bu alana TextInputLayout altında buluna
                 android:id="@+id/edittext"/>
         </com.google.android.material.textfield.TextInputLayout>
 */
+
 @BindingAdapter("isEmptyCheck")
 fun isEmptyCheck(viewLayout: TextInputLayout, viewText: TextInputEditText) {
     viewText.addTextChangedListener(object : TextWatcher {
