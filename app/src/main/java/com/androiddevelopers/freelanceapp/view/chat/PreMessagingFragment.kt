@@ -1,21 +1,36 @@
 package com.androiddevelopers.freelanceapp.view.chat
 
-import androidx.lifecycle.ViewModelProvider
+import android.annotation.SuppressLint
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnTouchListener
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.view.animation.AnimationUtils
+import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
+import android.widget.PopupWindow
+import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.MessageAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentPreMessagingBinding
+import com.androiddevelopers.freelanceapp.model.jobpost.BaseJobPost
+import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.viewmodel.chat.PreMessagingViewModel
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class PreMessagingFragment : Fragment() {
@@ -27,7 +42,8 @@ class PreMessagingFragment : Fragment() {
 
     private lateinit var adapter : MessageAdapter
 
-    private var isNew : Boolean? = null
+    private var post : BaseJobPost? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -36,18 +52,13 @@ class PreMessagingFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(PreMessagingViewModel::class.java)
         _binding = FragmentPreMessagingBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        isNew = arguments?.getBoolean("new")
         return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (isNew != null){
-            if (isNew!!){
-                viewModel
-            }
-        }
+
         val chatId = arguments?.let {
             it.getString("post_id")
         }
@@ -61,12 +72,12 @@ class PreMessagingFragment : Fragment() {
             "frl"-> viewModel.getFreelancerJobPostWithDocumentByIdFromFirestore(chatId.toString())
             "emp"-> viewModel.getEmployerJobPostWithDocumentByIdFromFirestore(chatId.toString())
         }
+
         if (receiver != null){
             viewModel.getUserDataFromFirebase(receiver)
         }
         viewModel.getMessages(chatId ?: "")
 
-        binding.tvUserName.text = "receiverName"
 
         binding.btnSend.setOnClickListener{
             val message = binding.messageInput.text.toString()
@@ -76,7 +87,6 @@ class PreMessagingFragment : Fragment() {
                 receiver.toString()
             )
             binding.messageInput.setText("")
-
             val lastItemPosition = adapter.itemCount - 1
             if (lastItemPosition >= 0) {
                 binding.messageRecyclerView.smoothScrollToPosition(lastItemPosition)
@@ -90,8 +100,14 @@ class PreMessagingFragment : Fragment() {
         binding.messageRecyclerView.adapter = adapter
 
         observeLiveData()
+
+        binding.ivDot.setOnClickListener {
+            showpopup(post)
+        }
+
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun observeLiveData(){
         viewModel.messages.observe(viewLifecycleOwner, Observer {
             adapter.messageList = it
@@ -101,31 +117,25 @@ class PreMessagingFragment : Fragment() {
                 binding.messageRecyclerView.smoothScrollToPosition(lastItemPosition)
             }
         })
+        viewModel.messageStatus.observe(viewLifecycleOwner, Observer {
+            when(it.status){
+                Status.SUCCESS->{
+
+                }
+                else->{
+                    //
+                }
+            }
+        })
         viewModel.freelancerPost.observe(viewLifecycleOwner, Observer {
-            try {
-                Glide.with(requireContext()).load(it.images?.get(0)).into(binding.ivPost)
-            }catch (e : Exception){
-                Toast.makeText(requireContext(), "Gönderi resmi yok", Toast.LENGTH_SHORT).show()
-            }
-            binding.apply {
-                post = it
-            }
+            post = it
         })
         viewModel.employerPost.observe(viewLifecycleOwner, Observer {
-            try {
-                Glide.with(requireContext()).load(it.images?.get(0)).into(binding.ivPost)
-            }catch (e : Exception){
-                Toast.makeText(requireContext(), "Gönderi resmi yok", Toast.LENGTH_SHORT).show()
-            }
-            binding.apply {
-                post = it
-            }
+            post = it
         })
         viewModel.userData.observe(viewLifecycleOwner, Observer {userData ->
-
             binding.apply {
                 user = userData
-                post = post
             }
             if (userData.profileImageUrl != null){
                 if (userData.profileImageUrl!!.isNotEmpty()){
@@ -135,6 +145,65 @@ class PreMessagingFragment : Fragment() {
                 }
             }
         })
+
+    }
+    @SuppressLint("InflateParams")
+    fun showpopup(post : BaseJobPost?){
+
+        //inlater kısmı
+        val inflater = LayoutInflater.from(requireContext())
+        val popupView = inflater.inflate(R.layout.pre_chat_popup, null)
+        val popupWindow = PopupWindow(
+            popupView,
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            true
+        )
+
+        popupWindow.setBackgroundDrawable(ColorDrawable(Color.BLACK))
+        val animation = AnimationUtils.loadAnimation(requireContext(), R.anim.popup_anim)
+        popupWindow.animationStyle = android.R.style.Animation_Dialog
+        popupWindow.contentView.startAnimation(animation)
+
+        popupWindow.showAtLocation(
+            requireActivity().findViewById(R.id.layoutPreMessaging),
+            Gravity.TOP or Gravity.CENTER_HORIZONTAL,
+            0,
+            0
+        )
+        val option1 = popupView.findViewById<TextView>(R.id.tvPostTitle)
+        val option2 = popupView.findViewById<TextView>(R.id.tvPostDescription)
+        val option3 = popupView.findViewById<ImageView>(R.id.ivPostPopup)
+        if (post != null){
+            try {
+                option1.text = post.title
+                option2.text = post.description
+                Glide.with(requireContext()).load(post.images?.get(0)).into(option3)
+            }catch (e : Exception){
+                option3.setImageResource(R.drawable.placeholder)
+            }
+        }else{
+            print("Null")
+        }
+        option1.setOnClickListener {
+            Toast.makeText(
+                requireContext(),
+                "click1",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+        option2.setOnClickListener {
+            Toast.makeText(
+                requireContext(),
+                "CLİCK2",
+                Toast.LENGTH_SHORT).show()
+        }
+        option3.setOnClickListener {
+            Toast.makeText(
+                requireContext(),
+                "CLİCK3",
+                Toast.LENGTH_SHORT).show()
+        }
     }
     override fun onResume() {
         super.onResume()

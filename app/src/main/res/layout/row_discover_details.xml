@@ -99,9 +99,9 @@
                     app:layout_constraintTop_toTopOf="@id/ivLike"
                     app:layout_constraintBottom_toBottomOf="@id/ivLike"
                     android:id="@+id/tvLike"
+                    android:text="13 beğeni"
                     android:textAlignment="center"
-                    android:text="123"
-                    android:layout_width="50dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
 
@@ -121,7 +121,7 @@
                     android:id="@+id/tvComment"
                     android:textAlignment="textStart"
                     android:text="13 yorum"
-                    android:layout_width="150dp"
+                    android:layout_width="wrap_content"
                     android:gravity="center"
                     android:layout_height="0dp"
                     tools:ignore="RtlCompat" />

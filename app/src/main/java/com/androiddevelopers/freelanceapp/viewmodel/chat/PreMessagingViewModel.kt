@@ -110,6 +110,7 @@ class PreMessagingViewModel  @Inject constructor(
                             messageList.add(it)
                         }
                     }
+                    _messageStatus.value = Resource.success(null)
                     val sortedList = sortListByDate(messageList)
                     _messages.value = sortedList
                 }
@@ -188,6 +189,7 @@ class PreMessagingViewModel  @Inject constructor(
 
                     freelancerJobPost?.let {
                         _freelancerPost.value = it
+
                     } ?: run {
                         _firebaseMessage.value =
                             Resource.error("İlan alınırken hata oluştu.", null)

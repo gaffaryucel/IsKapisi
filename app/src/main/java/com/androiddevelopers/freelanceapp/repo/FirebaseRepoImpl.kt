@@ -224,7 +224,7 @@ class FirebaseRepoImpl @Inject constructor(
         chatId: String,
         message: MessageModel
     ): Task<Void> {
-        messagesReference.child(receiver).child(chatId).child("messages")
+        preChatReference.child(receiver).child(chatId).child("messages")
             .child(message.messageId.toString()).setValue(message)
         return preChatReference.child(userId).child(chatId).child("messages")
             .child(message.messageId.toString()).setValue(message)

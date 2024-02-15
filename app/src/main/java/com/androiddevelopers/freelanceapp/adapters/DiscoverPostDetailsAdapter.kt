@@ -53,14 +53,21 @@ class DiscoverPostDetailsAdapter : RecyclerView.Adapter<DiscoverPostDetailsAdapt
         return postList.size
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: DiscoverPostDetailsViewHolder, position: Int) {
         val post = postList[position]
         var liked : Boolean? = null
+        var postLikeCount : Int?
+
         if (post.likeCount != null){
             liked = post.likeCount?.contains(userId)
+            postLikeCount = post.likeCount!!.size
+        }else{
+            postLikeCount = 0
         }
+        holder.binding.tvLike.text = "${postLikeCount.toString()} beğeni"
         if (post.comments != null){
-            holder.binding.tvComment.text = post.comments?.size.toString()
+            holder.binding.tvComment.text = "${post.comments?.size.toString()} yorum"
         }else{
             holder.binding.tvComment.text = "Henüz Yorum Yok"
         }
@@ -78,9 +85,13 @@ class DiscoverPostDetailsAdapter : RecyclerView.Adapter<DiscoverPostDetailsAdapt
             }
             if (liked!!){
                 holder.dislikePost(post.postId.toString(),post.likeCount ?: emptyList())
+                postLikeCount -= 1
+                holder.binding.tvLike.text ="${postLikeCount.toString()} beğeni"
                 liked = false
             }else{
                 holder.likePost(post.postId.toString(),post.likeCount ?: emptyList())
+                postLikeCount += 1
+                holder.binding.tvLike.text ="${postLikeCount.toString()} beğeni"
                 liked = true
             }
         }

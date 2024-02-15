@@ -39,7 +39,7 @@
             <TextView
                 android:id="@+id/chatName"
                 android:layout_width="match_parent"
-                android:text="@{preChatItem.receiverName}"
+                android:text="@{preChatItem.receiverName.toString()}"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLength="25"

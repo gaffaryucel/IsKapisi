@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.androiddevelopers.freelanceapp.model.MessageModel
 import com.androiddevelopers.freelanceapp.model.PreChatModel
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
@@ -15,6 +16,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,7 +30,6 @@ constructor(
 ) : ViewModel() {
 
     private val currentUserId = auth.currentUser?.uid.toString()
-
 
     private var _firebaseMessage = MutableLiveData<Resource<Boolean>>()
     val firebaseMessage: LiveData<Resource<Boolean>>
@@ -43,7 +46,6 @@ constructor(
     private var _preChatList = MutableLiveData<Resource<Boolean>>()
     val preChatList: LiveData<Resource<Boolean>>
         get() = _preChatList
-
 
     private var _preChatRoomAction = MutableLiveData<Resource<PreChatModel>>()
     val preChatRoomAction = _preChatRoomAction
@@ -115,6 +117,7 @@ constructor(
             }
         }
     }
+
     fun createPreChatModel(
         postId: String,
         receiver: String,
@@ -122,11 +125,12 @@ constructor(
         receiverImage: String,
     ){
         val preChat = PreChatModel(
-            postId ,currentUserId, receiver, receiverName,
-            receiverImage, ""
+            postId ,"emp",currentUserId, receiver, receiverName,
+            receiverImage, "",getCurrentTime()
         )
         createPreChatRoom(preChat)
     }
+
     fun setMessageValue(value : Boolean){
         if (value){
             _preChatRoomAction.value = Resource.error("",null)
@@ -150,5 +154,12 @@ constructor(
             }
 
         })
+    }
+
+    private fun getCurrentTime(): String {
+        val currentTime = System.currentTimeMillis()
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        val date = Date(currentTime)
+        return dateFormat.format(date)
     }
 }

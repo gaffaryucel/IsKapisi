@@ -8,7 +8,7 @@ class PreChatModel {
     var receiverName: String? = null
     var receiverImage: String? = null
     var lastMessage: String? = null
-    var timestamp: Long? = null
+    var timestamp: String? = null
 
     constructor()
 
@@ -20,7 +20,7 @@ class PreChatModel {
         receiverName: String? = null,
         receiverImage: String? = null,
         lastMessage: String? = null,
-        timestamp: Long? = null
+        timestamp: String? = null
     ) {
         this.postId = postId
         this.postType = postType

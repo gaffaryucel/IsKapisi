@@ -63,6 +63,7 @@ class DetailPostFragment : Fragment() {
                 goToPreMessaging()
             }else{
                 viewModel.createPreChatModel(
+                    "frl",
                     post?.postId ?: "",
                     post?.freelancerId ?: "",
                     user?.username ?: "",

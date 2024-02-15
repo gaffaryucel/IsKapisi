@@ -113,14 +113,20 @@ constructor(
         }
     }
     fun createPreChatModel(
+        type: String,
         postId: String,
         receiver: String,
         receiverName: String,
         receiverImage: String,
     ){
         val preChat = PreChatModel(
-            postId ,currentUserId, receiver, receiverName,
-            receiverImage, ""
+            postId,
+            type,
+            currentUserId,
+            receiver,
+            receiverName,
+            receiverImage,
+            ""
         )
         createPreChatRoom(preChat)
     }
