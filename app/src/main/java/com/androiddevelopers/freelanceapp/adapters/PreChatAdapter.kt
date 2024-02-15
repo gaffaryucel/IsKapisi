@@ -50,6 +50,7 @@ class PreChatAdapter :  RecyclerView.Adapter<PreChatAdapter.PreChatViewHolder>()
             val action = PreChatFragmentDirections.actionPreChatFragmentToPreMessagingFragment(
                 chat.postId.toString(),
                 chat.receiver.toString(),
+                chat.postType.toString()
             )
             Navigation.findNavController(it).navigate(action)
         }

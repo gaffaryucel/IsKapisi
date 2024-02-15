@@ -3,8 +3,11 @@ package com.androiddevelopers.freelanceapp.viewmodel.chat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.androiddevelopers.freelanceapp.model.ChatModel
 import com.androiddevelopers.freelanceapp.model.PreChatModel
+import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
+import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.Resource
 import com.google.firebase.auth.FirebaseAuth
@@ -12,6 +15,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,13 +30,11 @@ class PreChatViewModel @Inject constructor(
     val preChats : LiveData<List<PreChatModel>>
         get() = _preChats
 
-    private var _userIdList = MutableLiveData<List<String>>()
-    val userIdList : LiveData<List<String>>
-        get() = _userIdList
-
     private var _message = MutableLiveData<Resource<Boolean>>()
     val message : LiveData<Resource<Boolean>>
         get() = _message
+
+
 
 
     init {
@@ -44,12 +46,8 @@ class PreChatViewModel @Inject constructor(
             object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val chatList = mutableListOf<PreChatModel>()
-                    println("snapshot : "+snapshot)
                     for (messageSnapshot in snapshot.children) {
-                        println("messageSnapshot : "+messageSnapshot)
-
                         val preChat = messageSnapshot.getValue(PreChatModel::class.java)
-                        println("preChat : "+preChat)
                         preChat?.let {
                             chatList.add(it)
                         }
@@ -62,4 +60,6 @@ class PreChatViewModel @Inject constructor(
             }
         )
     }
+
+
 }

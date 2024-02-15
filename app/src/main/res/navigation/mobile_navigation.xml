@@ -382,6 +382,9 @@
         <argument
             android:name="receiver"
             app:argType="string" />
+        <argument
+            android:name="type"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/notificationsFragment"

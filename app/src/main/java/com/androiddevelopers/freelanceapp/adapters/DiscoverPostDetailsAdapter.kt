@@ -59,6 +59,11 @@ class DiscoverPostDetailsAdapter : RecyclerView.Adapter<DiscoverPostDetailsAdapt
         if (post.likeCount != null){
             liked = post.likeCount?.contains(userId)
         }
+        if (post.comments != null){
+            holder.binding.tvComment.text = post.comments?.size.toString()
+        }else{
+            holder.binding.tvComment.text = "Henüz Yorum Yok"
+        }
         Glide.with(holder.itemView.context).load(post.images?.get(0)).into(holder.binding.ivPost)
         Glide.with(holder.itemView.context).load(post.ownerImage.toString()).into(holder.binding.ivUserProfile)
         holder.binding.apply {

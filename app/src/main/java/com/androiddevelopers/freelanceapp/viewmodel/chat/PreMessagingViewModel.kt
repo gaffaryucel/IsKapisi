@@ -3,8 +3,11 @@ package com.androiddevelopers.freelanceapp.viewmodel.chat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.androiddevelopers.freelanceapp.model.MessageModel
 import com.androiddevelopers.freelanceapp.model.UserModel
+import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
+import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.Resource
 import com.google.firebase.auth.FirebaseAuth
@@ -12,6 +15,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -43,6 +47,18 @@ class PreMessagingViewModel  @Inject constructor(
     private var _receiverMessage = MutableLiveData<Resource<UserModel>>()
     val receiverMessage : LiveData<Resource<UserModel>>
         get() = _receiverMessage
+
+    private var _firebaseMessage = MutableLiveData<Resource<String>>()
+    val firebaseMessage : LiveData<Resource<String>>
+        get() = _firebaseMessage
+
+    private var _freelancerPost = MutableLiveData<FreelancerJobPost>()
+    val freelancerPost: LiveData<FreelancerJobPost>
+        get() = _freelancerPost
+
+    private var _employerPost = MutableLiveData<EmployerJobPost>()
+    val employerPost: LiveData<EmployerJobPost>
+        get() = _employerPost
 
     fun sendMessage(
         chatId: String,
@@ -138,4 +154,51 @@ class PreMessagingViewModel  @Inject constructor(
                 _receiverMessage.value = Resource.error("Belge alınamadı. Hata: $exception",null)
             }
     }
+
+    fun getEmployerJobPostWithDocumentByIdFromFirestore(documentId: String) =
+        viewModelScope.launch {
+            _firebaseMessage.value = Resource.loading(null)
+
+            repo.getEmployerJobPostWithDocumentByIdFromFirestore(documentId)
+                .addOnSuccessListener { document ->
+                    val employerJobPost = document.toObject(EmployerJobPost::class.java)
+
+                    employerJobPost?.let {
+                        _employerPost.value = it
+                    } ?: run {
+                        _firebaseMessage.value =
+                            Resource.error("İlan alınırken hata oluştu.", null)
+                    }
+
+                    _firebaseMessage.value = Resource.success(null)
+
+                }.addOnFailureListener {
+                    it.localizedMessage?.let { message ->
+                        _firebaseMessage.value = Resource.error(message, null)
+                    }
+                }
+        }
+    fun getFreelancerJobPostWithDocumentByIdFromFirestore(documentId: String) =
+        viewModelScope.launch {
+            _firebaseMessage.value = Resource.loading(null)
+
+            repo.getFreelancerJobPostWithDocumentByIdFromFirestore(documentId)
+                .addOnSuccessListener { document ->
+                    val freelancerJobPost = document.toObject(FreelancerJobPost::class.java)
+
+                    freelancerJobPost?.let {
+                        _freelancerPost.value = it
+                    } ?: run {
+                        _firebaseMessage.value =
+                            Resource.error("İlan alınırken hata oluştu.", null)
+                    }
+                    _firebaseMessage.value = Resource.success(null)
+
+                }.addOnFailureListener {
+                    it.localizedMessage?.let { message ->
+                        _firebaseMessage.value =  Resource.error(message, null)
+                    }
+                }
+        }
+
 }

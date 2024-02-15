@@ -48,8 +48,8 @@ class CommentsFragment : Fragment() {
 
         observeLiveData()
 
-        binding.messageRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.messageRecyclerView.adapter = adapter
+        binding.rvComments.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvComments.adapter = adapter
 
         binding.btnSendComment.setOnClickListener{
             val comment = binding.etCommentInput.text.toString()

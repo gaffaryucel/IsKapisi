@@ -60,10 +60,7 @@ class DetailPostFragment : Fragment() {
 
         binding.buttonBuy.setOnClickListener {
             if (isExists){
-                val action = DetailPostFragmentDirections.actionDetailPostFragmentToPreMessagingFragment(
-                    post?.postId ?: "",post?.freelancerId ?: ""
-                )
-                Navigation.findNavController(requireView()).navigate(action)
+                goToPreMessaging()
             }else{
                 viewModel.createPreChatModel(
                     post?.postId ?: "",
@@ -73,6 +70,14 @@ class DetailPostFragment : Fragment() {
                 )
             }
         }
+    }
+    private fun goToPreMessaging(){
+        val action = DetailPostFragmentDirections.actionDetailPostFragmentToPreMessagingFragment(
+            post?.postId ?: "",
+            post?.freelancerId ?: "",
+            "frl"
+        )
+        Navigation.findNavController(requireView()).navigate(action)
     }
 
     override fun onDestroyView() {
@@ -148,10 +153,7 @@ class DetailPostFragment : Fragment() {
                 when (it.status) {
                     Status.LOADING -> {}
                     Status.SUCCESS -> {
-                        val action = DetailPostFragmentDirections.actionDetailPostFragmentToPreMessagingFragment(
-                            it.data?.postId ?: "",it.data?.receiver ?: ""
-                        )
-                        Navigation.findNavController(requireView()).navigate(action)
+                        goToPreMessaging()
                         viewModel.setMessageValue(true)
                     }
                     Status.ERROR -> {

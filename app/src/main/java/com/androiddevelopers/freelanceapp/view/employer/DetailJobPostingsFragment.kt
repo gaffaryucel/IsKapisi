@@ -60,7 +60,9 @@ class DetailJobPostingsFragment : Fragment() {
         observeLiveData(viewLifecycleOwner)
 
         binding.buttonGiveOffer.setOnClickListener {
-            if (!isExists){
+            if (isExists){
+                goToPreMessaging()
+            }else{
                 viewModel.createPreChatModel(
                     post?.postId ?: "",
                     post?.employerId ?: "",
@@ -68,7 +70,6 @@ class DetailJobPostingsFragment : Fragment() {
                     user?.profileImageUrl ?: "",
                 )
             }
-            goToPreMessaging()
         }
     }
 
@@ -79,7 +80,9 @@ class DetailJobPostingsFragment : Fragment() {
 
     private fun goToPreMessaging(){
         val action = DetailJobPostingsFragmentDirections.actionDetailJobPostingsFragmentToPreMessagingFragment(
-            post?.postId ?: "",post?.employerId ?: ""
+            post?.postId ?: "",
+            post?.employerId ?: "",
+            "emp"
         )
         Navigation.findNavController(requireView()).navigate(action)
     }
@@ -141,6 +144,19 @@ class DetailJobPostingsFragment : Fragment() {
                         Log.i("info", "SUCCESS")
                     }
 
+                    Status.ERROR -> {
+                        errorDialog.setMessage("${context?.getString(R.string.login_dialog_error_message)}\n${it.message}")
+                        errorDialog.show()
+                    }
+                }
+            }
+            preChatRoomAction.observe(owner){
+                when (it.status) {
+                    Status.LOADING -> {}
+                    Status.SUCCESS -> {
+                        goToPreMessaging()
+                        viewModel.setMessageValue(true)
+                    }
                     Status.ERROR -> {
                         errorDialog.setMessage("${context?.getString(R.string.login_dialog_error_message)}\n${it.message}")
                         errorDialog.show()

@@ -2,6 +2,7 @@ package com.androiddevelopers.freelanceapp.model
 
 class PreChatModel {
     var postId: String? = null
+    var postType: String? = null
     var sender: String? = null
     var receiver: String? = null
     var receiverName: String? = null
@@ -13,6 +14,7 @@ class PreChatModel {
 
     constructor(
         postId: String? = null,
+        postType: String? = null,
         sender: String? = null,
         receiver: String? = null,
         receiverName: String? = null,
@@ -21,6 +23,7 @@ class PreChatModel {
         timestamp: Long? = null
     ) {
         this.postId = postId
+        this.postType = postType
         this.sender = sender
         this.receiver = receiver
         this.receiverName = receiverName

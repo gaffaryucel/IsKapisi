@@ -11,9 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.MessageAdapter
-import com.androiddevelopers.freelanceapp.databinding.FragmentPreChatBinding
 import com.androiddevelopers.freelanceapp.databinding.FragmentPreMessagingBinding
-import com.androiddevelopers.freelanceapp.viewmodel.chat.PreChatViewModel
 import com.androiddevelopers.freelanceapp.viewmodel.chat.PreMessagingViewModel
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -56,6 +54,13 @@ class PreMessagingFragment : Fragment() {
         val receiver = arguments?.let {
             it.getString("receiver")
         }
+        val type = arguments?.let {
+            it.getString("type")
+        }
+        when(type){
+            "frl"-> viewModel.getFreelancerJobPostWithDocumentByIdFromFirestore(chatId.toString())
+            "emp"-> viewModel.getEmployerJobPostWithDocumentByIdFromFirestore(chatId.toString())
+        }
         if (receiver != null){
             viewModel.getUserDataFromFirebase(receiver)
         }
@@ -96,10 +101,31 @@ class PreMessagingFragment : Fragment() {
                 binding.messageRecyclerView.smoothScrollToPosition(lastItemPosition)
             }
         })
+        viewModel.freelancerPost.observe(viewLifecycleOwner, Observer {
+            try {
+                Glide.with(requireContext()).load(it.images?.get(0)).into(binding.ivPost)
+            }catch (e : Exception){
+                Toast.makeText(requireContext(), "Gönderi resmi yok", Toast.LENGTH_SHORT).show()
+            }
+            binding.apply {
+                post = it
+            }
+        })
+        viewModel.employerPost.observe(viewLifecycleOwner, Observer {
+            try {
+                Glide.with(requireContext()).load(it.images?.get(0)).into(binding.ivPost)
+            }catch (e : Exception){
+                Toast.makeText(requireContext(), "Gönderi resmi yok", Toast.LENGTH_SHORT).show()
+            }
+            binding.apply {
+                post = it
+            }
+        })
         viewModel.userData.observe(viewLifecycleOwner, Observer {userData ->
 
             binding.apply {
                 user = userData
+                post = post
             }
             if (userData.profileImageUrl != null){
                 if (userData.profileImageUrl!!.isNotEmpty()){
@@ -108,7 +134,6 @@ class PreMessagingFragment : Fragment() {
                         .into(binding.ivUser)
                 }
             }
-
         })
     }
     override fun onResume() {
