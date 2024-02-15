@@ -1,6 +1,7 @@
 package com.androiddevelopers.freelanceapp.view.freelancer
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -39,16 +40,14 @@ class HomeFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val view = binding.root
 
         listFreelancerJobPost = arrayListOf()
-        binding.adapter = freelancerAdapter
+        //binding.adapter = freelancerAdapter
 
         return view
     }
@@ -60,9 +59,10 @@ class HomeFragment : Fragment() {
         popupMenu = PopupMenu(requireActivity(), binding.homeAddIcon)
 
         setProgressBar(false)
-        setupDialogs()
+        setupDialogs(requireContext())
         setupPopupMenu(view)
-        observeLiveData(viewLifecycleOwner)
+        //observeLiveData(viewLifecycleOwner)
+
 
         with(freelancerAdapter) {
             clickListener = { freelancerJobPost, v ->
@@ -76,33 +76,27 @@ class HomeFragment : Fragment() {
 
                     //ilan id numarası ile detay sayfasına yönlendirme yapıyoruz
                     val directions =
-                        HomeFragmentDirections
-                            .actionNavigationHomeToDetailPostFragment(id)
+                        HomeFragmentDirections.actionNavigationHomeToDetailPostFragment(id)
                     Navigation.findNavController(v).navigate(directions)
                 }
             }
 
             likedListener = { postId, state, list ->
                 viewModel.updateLikeFreelancerJobPostFromFirestore(
-                    userId,
-                    postId,
-                    state,
-                    list
+                    userId, postId, state, list
                 )
             }
 
             savedListener = { postId, state, list ->
                 viewModel.updateSavedUsersFreelancerJobPostFromFirestore(
-                    userId,
-                    postId,
-                    state,
-                    list
+                    userId, postId, state, list
                 )
             }
         }
 
+
         with(binding) {
-            //adapter = freelancerAdapter
+            adapter = freelancerAdapter
 
             search(searchView)
 
@@ -123,6 +117,12 @@ class HomeFragment : Fragment() {
             }
         }
     }
+
+    override fun onStart() {
+        super.onStart()
+        observeLiveData(viewLifecycleOwner)
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -157,13 +157,12 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun setupDialogs() {
+    private fun setupDialogs(context: Context) {
         with(errorDialog) {
             setTitle(context.getString(R.string.login_dialog_error))
             setCancelable(false)
             setButton(
-                AlertDialog.BUTTON_POSITIVE,
-                context.getString(R.string.ok)
+                AlertDialog.BUTTON_POSITIVE, context.getString(R.string.ok)
             ) { dialog, _ ->
                 dialog.cancel()
             }
@@ -175,22 +174,19 @@ class HomeFragment : Fragment() {
         popupMenu.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.itemCreateFreelancePost -> {
-                    Navigation
-                        .findNavController(view)
+                    Navigation.findNavController(view)
                         .navigate(R.id.action_global_createPostFragment)
                     true
                 }
 
                 R.id.itemCreateEmployerPost -> {
-                    Navigation
-                        .findNavController(view)
+                    Navigation.findNavController(view)
                         .navigate(R.id.action_global_createJobPostingFragment)
                     true
                 }
 
                 R.id.itemCreateDiscoverPost -> {
-                    Navigation
-                        .findNavController(view)
+                    Navigation.findNavController(view)
                         .navigate(R.id.action_global_createDiscoverPostFragment)
                     true
                 }
