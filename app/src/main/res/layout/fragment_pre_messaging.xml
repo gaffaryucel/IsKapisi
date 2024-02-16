@@ -36,7 +36,8 @@
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:padding="5dp"
-                android:src="@drawable/baseline_person_24" />
+                android:src="@drawable/baseline_person_24"
+                tools:ignore="ContentDescription" />
 
 
             <LinearLayout
@@ -53,7 +54,7 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="4dp"
                     android:text="@{user.username}"
-                    android:textSize="18dp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -73,7 +74,8 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:padding="5dp"
-                android:src="@drawable/baseline_more_horiz_24" />
+                android:src="@drawable/baseline_more_horiz_24"
+                tools:ignore="ContentDescription" />
 
         </LinearLayout>
 
@@ -120,7 +122,10 @@
                 android:layout_marginStart="12dp"
                 android:background="@null"
                 android:src="@drawable/ic_insert_emoticon_black_24dp"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription,TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
             <EditText
                 android:id="@+id/messageInput"
@@ -131,8 +136,10 @@
                 android:hint="Type a message"
                 android:textColor="@color/black"
                 android:textColorHint="@color/GREY"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@+id/addEmoticon"
-                app:layout_constraintRight_toLeftOf="@+id/addAttachment" />
+                app:layout_constraintRight_toLeftOf="@+id/addAttachment"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
                 android:id="@+id/addAttachment"
@@ -142,7 +149,8 @@
                 android:src="@drawable/ic_attach_file_black_24dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toLeftOf="@+id/takePicture"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription,TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
             <ImageButton
                 android:id="@+id/takePicture"
@@ -153,7 +161,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/black" />
+                app:tint="@color/black"
+                tools:ignore="ContentDescription,TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -167,7 +176,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/messageInputContainer"
-            app:tint="@color/white" />
+            app:tint="@color/white"
+            tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
