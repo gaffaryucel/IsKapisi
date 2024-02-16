@@ -4,6 +4,7 @@ import com.androiddevelopers.freelanceapp.util.JobStatus
 
 class EmployerJobPost : BaseJobPost {
     var employerId: String? = null // İlanı oluşturan işverenin kimliği
+    var aboutYou: List<String>? = null // Freelancerde istenen özellikler
 
     constructor() : super()
 
@@ -23,7 +24,9 @@ class EmployerJobPost : BaseJobPost {
         savedUsers: List<String>? = null,
         viewCount: List<String>? = null,
         isUrgent: Boolean? = null,
-        employerId: String? = null
+        employerId: String? = null,
+        worksToBeDone: List<String>? = null,
+        aboutYou: List<String>? = null
     ) : super(
         postId,
         title,
@@ -39,8 +42,10 @@ class EmployerJobPost : BaseJobPost {
         additionalDetails,
         savedUsers,
         viewCount,
-        isUrgent
+        isUrgent,
+        worksToBeDone
     ) {
         this.employerId = employerId
+        this.aboutYou = aboutYou
     }
 }

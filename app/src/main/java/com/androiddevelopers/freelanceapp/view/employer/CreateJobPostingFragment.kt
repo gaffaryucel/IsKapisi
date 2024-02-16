@@ -136,7 +136,9 @@ class CreateJobPostingFragment : Fragment() {
                             additionalDetails = employerJobPost?.additionalDetails,
                             savedUsers = employerJobPost?.savedUsers,
                             viewCount = employerJobPost?.viewCount,
-                            isUrgent = switchUrgentCreateJobPost.isChecked
+                            isUrgent = switchUrgentCreateJobPost.isChecked,
+                            worksToBeDone = employerJobPost?.worksToBeDone,
+                            aboutYou = employerJobPost?.aboutYou
                         )
                     )
                 }

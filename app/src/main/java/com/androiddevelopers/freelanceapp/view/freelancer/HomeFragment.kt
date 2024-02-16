@@ -94,7 +94,6 @@ class HomeFragment : Fragment() {
             }
         }
 
-
         with(binding) {
             adapter = freelancerAdapter
 
@@ -122,7 +121,6 @@ class HomeFragment : Fragment() {
         super.onStart()
         observeLiveData(viewLifecycleOwner)
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
