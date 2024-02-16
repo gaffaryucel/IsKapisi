@@ -48,6 +48,7 @@ class BottomNavigationActivity : AppCompatActivity() {
                 when (it.itemId) {
                     R.id.navigation_home -> navControl.navigate(R.id.action_global_navigation_home)
                     R.id.navigation_discover -> navControl.navigate(R.id.action_global_navigation_discover)
+                    R.id.navigation_create -> navControl.navigate(R.id.action_global_create_navigation)
                     R.id.navigation_job_postings -> navControl.navigate(R.id.action_global_navigation_job_postings)
                     R.id.navigation_profile -> navControl.navigate(R.id.action_global_navigation_profile)
                 }

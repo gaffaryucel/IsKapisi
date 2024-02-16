@@ -54,5 +54,9 @@ class DiscoverFragment : Fragment() {
             adapter.notifyDataSetChanged()
         })
     }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
 }

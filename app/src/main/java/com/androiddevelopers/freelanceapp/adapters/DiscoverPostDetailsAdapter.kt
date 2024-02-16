@@ -78,6 +78,8 @@ class DiscoverPostDetailsAdapter : RecyclerView.Adapter<DiscoverPostDetailsAdapt
         }
         if (liked == true){
             holder.binding.ivLike.setImageResource(R.drawable.ic_fill_favorite)
+        }else{
+            holder.binding.ivLike.setImageResource(R.drawable.ic_favorite)
         }
         holder.binding.ivLike.setOnClickListener {
             if (liked == null){

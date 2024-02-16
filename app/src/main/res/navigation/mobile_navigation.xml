@@ -302,6 +302,15 @@
         app:popUpToInclusive="true"
         app:popEnterAnim="@anim/nav_default_pop_enter_anim"
         app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+  <action
+        android:id="@+id/action_global_create_navigation"
+        app:destination="@id/navigation_create"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popUpTo="@id/navigation_create"
+        app:popUpToInclusive="true"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim" />
 
     <action
         android:id="@+id/action_global_navigation_job_postings"
@@ -399,6 +408,21 @@
         <action
             android:id="@+id/action_preChatFragment_to_preMessagingFragment"
             app:destination="@id/preMessagingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_create"
+        android:name="com.androiddevelopers.freelanceapp.view.BaseCreateFragment"
+        android:label="fragment_base_create"
+        tools:layout="@layout/fragment_base_create" >
+        <action
+            android:id="@+id/action_baseCreateFragment_to_createJobPostingFragment"
+            app:destination="@id/createJobPostingFragment" />
+        <action
+            android:id="@+id/action_baseCreateFragment_to_createPostFragment"
+            app:destination="@id/createPostFragment" />
+        <action
+            android:id="@+id/action_baseCreateFragment_to_createDiscoverPostFragment"
+            app:destination="@id/createDiscoverPostFragment" />
     </fragment>
 
 </navigation>

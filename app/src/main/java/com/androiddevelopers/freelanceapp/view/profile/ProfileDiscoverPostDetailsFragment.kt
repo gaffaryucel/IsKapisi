@@ -73,5 +73,8 @@ class ProfileDiscoverPostDetailsFragment : Fragment() {
         val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
         bottomNavigationView?.visibility = View.VISIBLE
     }
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }
