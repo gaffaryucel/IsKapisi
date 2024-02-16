@@ -42,7 +42,7 @@ constructor(
                 it?.let { querySnapshot ->
                     val list = ArrayList<FreelancerJobPost>()
 
-                    querySnapshot.forEach { document ->
+                    for (document in querySnapshot) {
                         val freelancerJobPost = document.toObject(FreelancerJobPost::class.java)
                         if (freelancerJobPost.status == JobStatus.OPEN) {
                             list.add(freelancerJobPost)
