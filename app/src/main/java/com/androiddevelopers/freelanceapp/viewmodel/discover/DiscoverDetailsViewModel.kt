@@ -10,6 +10,9 @@ import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.Resource
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -49,21 +52,26 @@ class DiscoverDetailsViewModel @Inject constructor(
             }
     }
 
-    fun likePost(postId : String,likeList: List<String>) = viewModelScope.launch{
-        val mutableList = mutableListOf<String>()
-        mutableList.addAll(likeList)
-        mutableList.add(userId)
-        val likeData = hashMapOf<String,Any?>(
-            "likeCount" to mutableList
-        )
-        firebaseRepo.likePost(postId,likeData)
+    fun likePost(postId : String,likeList: List<String>) = GlobalScope.launch(Dispatchers.IO){
+            delay(1000)
+            println("likePost")
+            val mutableList = mutableSetOf<String>()
+            mutableList.addAll(likeList)
+            mutableList.add(userId)
+            val likeData = hashMapOf<String,Any?>(
+                "likeCount" to mutableList.toList()
+            )
+            firebaseRepo.likePost(postId,likeData)
+
     }
-    fun dislikePost(postId : String,likeList: List<String>) = viewModelScope.launch{
-        val mutableList = mutableListOf<String>()
+    fun dislikePost(postId : String,likeList: List<String>) = GlobalScope.launch(Dispatchers.IO){
+        delay(1000)
+        println("dislikePost")
+        val mutableList = mutableSetOf<String>()
         mutableList.addAll(likeList)
         mutableList.remove(userId)
         val likeData = hashMapOf<String,Any?>(
-            "likeCount" to mutableList
+            "likeCount" to mutableList.toList()
         )
         firebaseRepo.likePost(postId,likeData)
     }

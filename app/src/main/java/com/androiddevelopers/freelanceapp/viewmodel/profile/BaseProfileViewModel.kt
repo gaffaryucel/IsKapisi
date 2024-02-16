@@ -14,7 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
+@HiltViewModel  
 open class BaseProfileViewModel @Inject constructor(
     private val firebaseRepo: FirebaseRepoInterFace,
     private val firebaseAuth: FirebaseAuth,
@@ -74,16 +74,13 @@ open class BaseProfileViewModel @Inject constructor(
     }
 
     internal fun updateUserInfo(key : String,userPhoto: Any) {
-        println("yes 2")
         viewModelScope.launch(Dispatchers.IO) {
             val photoMap = hashMapOf<String,Any?>(
                 key to userPhoto
             )
             firebaseRepo.updateUserData(userId,photoMap).addOnSuccessListener {
-                println("yes 3")
                 _message.value = Resource.success(null)
             }.addOnFailureListener{
-                println("no")
                 _message.value = Resource.error(it.localizedMessage ?: "error",null)
             }
         }

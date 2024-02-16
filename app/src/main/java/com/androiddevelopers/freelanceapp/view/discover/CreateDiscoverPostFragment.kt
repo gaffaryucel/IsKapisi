@@ -88,10 +88,15 @@ class CreateDiscoverPostFragment : Fragment() {
             _tagList.value = tagList
             binding.etTags.setText("")
             if (!isClicked){
-                binding.svCreateDiscoverPost.postDelayed({
-                    binding.svCreateDiscoverPost.smoothScrollTo(0, 800) // Y ekseninde yumuşak bir şekilde 500 piksel aşağı kaydır
-                }, 50) // 1000 milisaniye (1 saniye) sonra kaydırma işlemi başlatılır
-                isClicked = true
+
+            }
+        }
+
+        binding.ivAddImage.setOnClickListener {
+            if (allPermissionsGranted) {
+                openCamera()
+            } else {
+                Toast.makeText(requireContext(), "Permission not granted", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -148,6 +153,8 @@ class CreateDiscoverPostFragment : Fragment() {
                     val imageBitmap = data?.extras?.get("data") as Bitmap
                     binding.ivPost.setImageBitmap(imageBitmap)
                     compressedForCam(imageBitmap)
+                    binding.ivAddImage.visibility = View.GONE
+                    binding.layoutCreatePost.visibility = View.VISIBLE
                 }
 
                 REQUEST_IMAGE_PICK -> {
@@ -156,6 +163,8 @@ class CreateDiscoverPostFragment : Fragment() {
                     if (selectedImageUri != null) {
                         compressedForGalery(selectedImageUri)
                     }
+                    binding.ivAddImage.visibility = View.GONE
+                    binding.layoutCreatePost.visibility = View.VISIBLE
                 }
             }
         }
@@ -272,5 +281,9 @@ class CreateDiscoverPostFragment : Fragment() {
     private fun showBottomNavigation() {
         val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
         bottomNavigationView?.visibility = View.VISIBLE
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

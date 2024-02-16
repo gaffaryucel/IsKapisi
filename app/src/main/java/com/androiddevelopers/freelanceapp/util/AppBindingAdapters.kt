@@ -24,7 +24,7 @@ TextInputLayout içinde isEmptyCheck="@{bu alana TextInputLayout altında buluna
             isEmptyCheck="@{edittext}">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edittext"/>
+                android:id="@+id/edittext"/>v
         </com.google.android.material.textfield.TextInputLayout>
 */
 
