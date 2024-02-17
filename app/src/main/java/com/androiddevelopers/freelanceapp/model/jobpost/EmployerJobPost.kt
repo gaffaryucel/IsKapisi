@@ -4,7 +4,7 @@ import com.androiddevelopers.freelanceapp.util.JobStatus
 
 class EmployerJobPost : BaseJobPost {
     var employerId: String? = null // İlanı oluşturan işverenin kimliği
-    var aboutYou: List<String>? = null // Freelancerde istenen özellikler
+    var aboutYou: List<String>? = null // Freelancerden istenen özellikler
 
     constructor() : super()
 
