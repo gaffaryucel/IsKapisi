@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:text="-"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/textViewForJobDetailList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="TextView" />
+</LinearLayout>
