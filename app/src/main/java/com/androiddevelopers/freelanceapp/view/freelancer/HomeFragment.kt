@@ -28,7 +28,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val userId = FirebaseAuth.getInstance().currentUser?.uid.toString()
-    private val freelancerAdapter: FreelancerAdapter = FreelancerAdapter(userId)
+    private val freelancerAdapter = FreelancerAdapter(userId)
     private lateinit var viewModel: HomeViewModel
     private lateinit var listFreelancerJobPost: ArrayList<FreelancerJobPost>
     private lateinit var errorDialog: AlertDialog

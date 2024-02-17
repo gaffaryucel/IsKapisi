@@ -28,7 +28,7 @@ class JobPostingsFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val userId = FirebaseAuth.getInstance().currentUser?.uid.toString()
-    private val employerAdapter: EmployerAdapter = EmployerAdapter(userId)
+    private val employerAdapter = EmployerAdapter(userId)
     private lateinit var listEmployerJobPost: ArrayList<EmployerJobPost>
     private lateinit var errorDialog: AlertDialog
 
