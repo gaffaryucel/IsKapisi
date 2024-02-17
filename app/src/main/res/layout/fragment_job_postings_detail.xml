@@ -22,15 +22,15 @@
             type="String" />
 
         <variable
-            name="adapterOverview"
+            name="rvAdapterOverview"
             type="com.androiddevelopers.freelanceapp.adapters.JobOverviewAdapter" />
 
         <variable
-            name="adapterWorksToBeDone"
+            name="rvAdapterWorksToBeDone"
             type="com.androiddevelopers.freelanceapp.adapters.TextListAdapterForJobDetail" />
 
         <variable
-            name="adapterAboutYou"
+            name="rvAdapterSkill"
             type="com.androiddevelopers.freelanceapp.adapters.TextListAdapterForJobDetail" />
     </data>
 
@@ -282,7 +282,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/job_post_detail_top_margin"
-                                android:adapter="@{adapterOverview}"
+                                android:adapter="@{rvAdapterOverview}"
                                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
@@ -345,10 +345,10 @@
 
                                 <androidx.recyclerview.widget.RecyclerView
                                     setHasFixedSize="@{true}"
-                                    android:layout_width="0dp"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="@dimen/job_post_detail_top_margin"
-                                    android:adapter="@{adapterWorksToBeDone}"
+                                    android:adapter="@{rvAdapterWorksToBeDone}"
                                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintStart_toStartOf="parent"
@@ -357,7 +357,7 @@
                             </androidx.constraintlayout.widget.ConstraintLayout>
 
                             <androidx.constraintlayout.widget.ConstraintLayout
-                                android:id="@+id/layoutJobPostAboutYou"
+                                android:id="@+id/layoutJobPostSkills"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/JobPostLinearLayoutMarginTop"
@@ -366,7 +366,7 @@
                                 app:layout_constraintTop_toBottomOf="@id/layoutJobPostWorksToBeDone">
 
                                 <TextView
-                                    android:id="@+id/textAboutYouJobPostDetail"
+                                    android:id="@+id/textSkillsJobPostDetail"
                                     style="@style/JopPostDetailTextTags"
                                     android:layout_width="wrap_content"
                                     android:text="@string/aboutYou"
@@ -378,23 +378,23 @@
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="@dimen/job_post_detail_top_margin"
-                                    android:adapter="@{adapterAboutYou}"
+                                    android:adapter="@{rvAdapterSkill}"
                                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toBottomOf="@id/textAboutYouJobPostDetail" />
+                                    app:layout_constraintTop_toBottomOf="@id/textSkillsJobPostDetail" />
 
                             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
                             <com.google.android.material.divider.MaterialDivider
-                                android:id="@+id/dividerAboutYouWithOffer"
+                                android:id="@+id/dividerSkillsWithOffer"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/job_post_detail_top_margin"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/layoutJobPostAboutYou" />
+                                app:layout_constraintTop_toBottomOf="@id/layoutJobPostSkills" />
 
                             <androidx.constraintlayout.widget.ConstraintLayout
                                 android:id="@+id/layoutJobPostAdditionalDetails"
@@ -405,7 +405,7 @@
                                 android:orientation="vertical"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/dividerAboutYouWithOffer">
+                                app:layout_constraintTop_toBottomOf="@id/dividerSkillsWithOffer">
 
                                 <TextView
                                     android:id="@+id/textYouOfferJobPostDetail"

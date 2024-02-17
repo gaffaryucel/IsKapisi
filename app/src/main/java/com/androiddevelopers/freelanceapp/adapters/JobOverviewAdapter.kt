@@ -14,7 +14,7 @@ class JobOverviewAdapter : RecyclerView.Adapter<JobOverviewAdapter.ViewHolder>()
             oldItem: String,
             newItem: String
         ): Boolean {
-            return oldItem.length == newItem.length
+            return oldItem == newItem
         }
 
         override fun areContentsTheSame(

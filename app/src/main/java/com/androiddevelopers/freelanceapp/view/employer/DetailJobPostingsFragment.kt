@@ -11,14 +11,14 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.androiddevelopers.freelanceapp.R
+import com.androiddevelopers.freelanceapp.adapters.JobOverviewAdapter
+import com.androiddevelopers.freelanceapp.adapters.TextListAdapterForJobDetail
 import com.androiddevelopers.freelanceapp.adapters.ViewPagerAdapterForImages
 import com.androiddevelopers.freelanceapp.databinding.FragmentJobPostingsDetailBinding
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
-import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.util.downloadImage
-import com.androiddevelopers.freelanceapp.view.freelancer.DetailPostFragmentDirections
 import com.androiddevelopers.freelanceapp.viewmodel.employer.DetailJobPostingsViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,13 +32,16 @@ class DetailJobPostingsFragment : Fragment() {
     private lateinit var errorDialog: AlertDialog
     private lateinit var viewPagerAdapter: ViewPagerAdapterForImages
 
-    private var post : EmployerJobPost? = null
-    private var user : UserModel? = null
+    private var adapterOverview = JobOverviewAdapter()
+    private var adapterWorksToBeDone = TextListAdapterForJobDetail()
+    private var adapterSkill = TextListAdapterForJobDetail()
+
+    private var post: EmployerJobPost? = null
+    private var user: UserModel? = null
 
     private var isExists = false
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         viewModel = ViewModelProvider(this)[DetailJobPostingsViewModel::class.java]
         _binding = FragmentJobPostingsDetailBinding.inflate(inflater, container, false)
@@ -60,9 +63,9 @@ class DetailJobPostingsFragment : Fragment() {
         observeLiveData(viewLifecycleOwner)
 
         binding.buttonGiveOffer.setOnClickListener {
-            if (isExists){
+            if (isExists) {
                 goToPreMessaging()
-            }else{
+            } else {
                 viewModel.createPreChatModel(
                     post?.postId ?: "",
                     post?.employerId ?: "",
@@ -78,12 +81,11 @@ class DetailJobPostingsFragment : Fragment() {
         _binding = null
     }
 
-    private fun goToPreMessaging(){
-        val action = DetailJobPostingsFragmentDirections.actionDetailJobPostingsFragmentToPreMessagingFragment(
-            post?.postId ?: "",
-            post?.employerId ?: "",
-            "emp"
-        )
+    private fun goToPreMessaging() {
+        val action =
+            DetailJobPostingsFragmentDirections.actionDetailJobPostingsFragmentToPreMessagingFragment(
+                post?.postId ?: "", post?.employerId ?: "", "emp"
+            )
         Navigation.findNavController(requireView()).navigate(action)
     }
 
@@ -91,6 +93,55 @@ class DetailJobPostingsFragment : Fragment() {
         with(viewModel) {
             firebaseLiveData.observe(owner) {
                 it.employerId?.let { id -> getUserDataByDocumentId(id) }
+
+                val jobOverviewList = arrayListOf<String>()
+
+                it.budget?.let { double ->
+                    jobOverviewList.add("₺ $double")
+                }
+
+                it.location?.let { string ->
+                    jobOverviewList.add(string)
+                }
+
+                it.deadline?.let { string ->
+                    jobOverviewList.add(string)
+                }
+
+                it.isUrgent?.let { boolean ->
+                    if (boolean) {
+                        jobOverviewList.add("İş Acil !!!")
+                    }
+                }
+
+                binding.rvAdapterOverview = adapterOverview
+                adapterOverview.jobOverviewList = jobOverviewList
+
+                it.worksToBeDone?.let { list ->
+                    if (list.isNotEmpty()) {
+                        setViewWorksToBeDone(true)
+                        binding.rvAdapterWorksToBeDone = adapterWorksToBeDone
+                        adapterWorksToBeDone.textList = list
+                    } else {
+                        setViewWorksToBeDone(false)
+                    }
+
+                } ?: run {
+                    setViewWorksToBeDone(false)
+                }
+
+                it.skillsRequired?.let { list ->
+                    if (list.isNotEmpty()) {
+                        setViewSkills(true)
+                        binding.rvAdapterSkill = adapterSkill
+                        adapterSkill.textList = list
+                    } else {
+                        setViewSkills(false)
+                    }
+
+                } ?: run {
+                    setViewSkills(false)
+                }
 
                 post = it
                 viewModel.getCreatedPreChats(post?.postId.toString())
@@ -125,7 +176,7 @@ class DetailJobPostingsFragment : Fragment() {
             }
 
             preChatList.observe(owner) {
-                when(it.status){
+                when (it.status) {
                     Status.LOADING -> it.data?.let { state -> setProgressBar(state) }
                     Status.SUCCESS -> {
                         isExists = true
@@ -150,13 +201,14 @@ class DetailJobPostingsFragment : Fragment() {
                     }
                 }
             }
-            preChatRoomAction.observe(owner){
+            preChatRoomAction.observe(owner) {
                 when (it.status) {
                     Status.LOADING -> {}
                     Status.SUCCESS -> {
                         goToPreMessaging()
                         viewModel.setMessageValue(true)
                     }
+
                     Status.ERROR -> {
                         errorDialog.setMessage("${context?.getString(R.string.login_dialog_error_message)}\n${it.message}")
                         errorDialog.show()
@@ -171,11 +223,26 @@ class DetailJobPostingsFragment : Fragment() {
             setTitle(context.getString(R.string.login_dialog_error))
             setCancelable(false)
             setButton(
-                AlertDialog.BUTTON_POSITIVE,
-                context.getString(R.string.ok)
+                AlertDialog.BUTTON_POSITIVE, context.getString(R.string.ok)
             ) { dialog, _ ->
                 dialog.cancel()
             }
+        }
+    }
+
+    private fun setViewWorksToBeDone(state: Boolean) {
+        if (state) {
+            binding.layoutJobPostWorksToBeDone.visibility = View.VISIBLE
+        } else {
+            binding.layoutJobPostWorksToBeDone.visibility = View.GONE
+        }
+    }
+
+    private fun setViewSkills(state: Boolean) {
+        if (state) {
+            binding.layoutJobPostSkills.visibility = View.VISIBLE
+        } else {
+            binding.layoutJobPostSkills.visibility = View.GONE
         }
     }
 

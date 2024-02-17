@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.databinding.RowTextListForJobDetailBinding
 
+
 class TextListAdapterForJobDetail : RecyclerView.Adapter<TextListAdapterForJobDetail.ViewHolder>() {
 
     private val diffUtil = object : DiffUtil.ItemCallback<String>() {
@@ -14,7 +15,7 @@ class TextListAdapterForJobDetail : RecyclerView.Adapter<TextListAdapterForJobDe
             oldItem: String,
             newItem: String
         ): Boolean {
-            return oldItem.length == newItem.length
+            return oldItem == newItem
         }
 
         override fun areContentsTheSame(
@@ -31,9 +32,7 @@ class TextListAdapterForJobDetail : RecyclerView.Adapter<TextListAdapterForJobDe
         set(value) = asyncListDiffer.submitList(value)
 
     inner class ViewHolder(val binding: RowTextListForJobDetailBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-    }
+        RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = RowTextListForJobDetailBinding.inflate(
