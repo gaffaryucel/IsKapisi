@@ -29,6 +29,7 @@ class HomeFragment : Fragment() {
 
     private val userId = FirebaseAuth.getInstance().currentUser?.uid.toString()
     private val freelancerAdapter = FreelancerAdapter(userId)
+
     private lateinit var viewModel: HomeViewModel
     private lateinit var listFreelancerJobPost: ArrayList<FreelancerJobPost>
     private lateinit var errorDialog: AlertDialog
@@ -58,6 +59,7 @@ class HomeFragment : Fragment() {
         errorDialog = AlertDialog.Builder(context).create()
         popupMenu = PopupMenu(requireActivity(), binding.homeAddIcon)
 
+        viewModel.getUserDataByDocumentId(userId)
         setProgressBar(false)
         setupDialogs(requireContext())
         setupPopupMenu(view)
@@ -151,6 +153,10 @@ class HomeFragment : Fragment() {
                 // firebase 'den gelen son verilerin kopyasını saklıyoruz
                 // search iptal edildiğinde bu verileri tekrar adapter'e set edeceğiz
                 listFreelancerJobPost.addAll(list)
+            }
+
+            firebaseUserLiveData.observe(owner) {
+                binding.userName = it.fullName
             }
         }
     }
