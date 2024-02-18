@@ -11,6 +11,7 @@ import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
+import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
@@ -67,9 +68,9 @@ interface FirebaseRepoInterFace {
     // Firestore Discover Post işlemleri
     fun uploadDiscoverPostToFirestore(post: DiscoverPostModel): Task<Void>
     fun getAllDiscoverPostsFromFirestore(): Task<QuerySnapshot>
-    fun likePost(postId: String, updateData:  HashMap<String, Any?>): Task<Void>
-    fun getDiscoverPostDataFromFirebase(postId: String, ): Task<DocumentSnapshot>
-    fun commentToDiscoverPost(postId: String, updateData:  HashMap<String, Any?>): Task<Void>
+    fun likePost(postId: String, updateData: HashMap<String, Any?>): Task<Void>
+    fun getDiscoverPostDataFromFirebase(postId: String): Task<DocumentSnapshot>
+    fun commentToDiscoverPost(postId: String, updateData: HashMap<String, Any?>): Task<Void>
 
     // Realtime Database Chat işlemleri
     fun sendMessageToRealtimeDatabase(
@@ -89,27 +90,28 @@ interface FirebaseRepoInterFace {
     fun createChatRoomForChatMate(userId: String, chat: ChatModel): Task<Void>
     fun getAllChatRooms(currentUserId: String): DatabaseReference
 
-//PreChatRoom
+    //PreChatRoom
     fun getAllPreChatRooms(currentUserId: String): DatabaseReference
-    fun createPreChatRoom(receiver: String, sender : String,chat: PreChatModel): Task<Void>
+    fun createPreChatRoom(receiver: String, sender: String, chat: PreChatModel): Task<Void>
 
-//PreMessaging
+    //PreMessaging
     fun getAllMessagesFromPreChatRoom(currentUserId: String, chatId: String): DatabaseReference
 
     fun sendMessageToPreChatRoom(
         userId: String,
-        receiver : String,
+        receiver: String,
         chatId: String,
         message: MessageModel
     ): Task<Void>
 
-// Firebase Storage işlemleri
+    // Firebase Storage işlemleri
     fun addImageToStorageForJobPosting(
         uri: Uri,
         uId: String,
         postId: String,
         file: String
     ): UploadTask
+
     fun addDiscoverPostImage(
         uri: Uri,
         uId: String,
@@ -118,14 +120,18 @@ interface FirebaseRepoInterFace {
     ): UploadTask
 
     //User Profile Data İşlemleri
-    fun getAllDiscoverPostsFromUser(userId : String): Task<QuerySnapshot>
-    fun getAllEmployerJobPostsFromUser(userId : String): Task<QuerySnapshot>
-    fun getAllFreelancerJobPostsFromUser(userId : String): Task<QuerySnapshot>
+    fun getAllDiscoverPostsFromUser(userId: String): Task<QuerySnapshot>
+    fun getAllEmployerJobPostsFromUser(userId: String): Task<QuerySnapshot>
+    fun getAllFreelancerJobPostsFromUser(userId: String): Task<QuerySnapshot>
     fun follow(currentUserId: String, followingId: String): Task<Void>
     fun unFollow(currentUserId: String, followingId: String): Task<Void>
-    fun updateUserData(userId: String, updateData:  HashMap<String, Any?>): Task<Void>
+    fun updateUserData(userId: String, updateData: HashMap<String, Any?>): Task<Void>
     fun getFollowers(userId: String): DatabaseReference
-    suspend fun uploadUserProfileImageImage(bitmap: Bitmap, uid : String): String?
+    suspend fun uploadUserProfileImageImage(bitmap: Bitmap, uid: String): String?
+
+    //Realtime değişiklik izleyici
+    fun getListenerForChange(): Task<DataSnapshot>
+    fun setListenerForChange(isSavedPost: Boolean): Task<Void>
 
 }
 

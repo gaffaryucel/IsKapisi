@@ -35,6 +35,8 @@ class JobPostingsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this)[JobPostingsViewModel::class.java]
+
+
     }
 
     override fun onCreateView(
@@ -47,6 +49,8 @@ class JobPostingsFragment : Fragment() {
         val view = binding.root
 
         listEmployerJobPost = arrayListOf()
+
+        viewModel.getListenerForChange()
 
         return view
     }
@@ -87,6 +91,7 @@ class JobPostingsFragment : Fragment() {
                     state,
                     list
                 )
+                viewModel.setListenerForChange(true)
             }
         }
 
@@ -126,6 +131,14 @@ class JobPostingsFragment : Fragment() {
                 // firebase 'den gelen son verilerin kopyasını saklıyoruz
                 // search iptal edildiğinde bu verileri tekrar adapter'e set edeceğiz
                 listEmployerJobPost.addAll(list)
+            }
+
+
+            firebaseListenerForChange.observe(owner) {
+                if (it) {
+                    viewModel.getAllEmployerJobPost()
+                    viewModel.setListenerForChange(false)
+                }
             }
         }
     }

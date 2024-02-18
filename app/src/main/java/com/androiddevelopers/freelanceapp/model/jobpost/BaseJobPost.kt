@@ -60,23 +60,39 @@ open class BaseJobPost {
     override fun equals(other: Any?): Boolean {
         val newItem = other as BaseJobPost
         return if (this === newItem) {
-            true
-        } else if (this.title == newItem.title) {
-            true
-        } else if (this.description == newItem.description) {
-            true
-        } else if (
-            this.images?.toTypedArray().contentEquals(
-                other.images?.toTypedArray()
-            )
-        ) {
-            true
-        } else if (
-            this.skillsRequired?.toTypedArray().contentEquals(
-                other.skillsRequired?.toTypedArray()
-            )
-        ) {
-            true
+            if (this.title != newItem.title) {
+                if (this.description == newItem.description) {
+                    if (
+                        this.images?.toTypedArray().contentEquals(
+                            other.images?.toTypedArray()
+                        )
+                    ) {
+                        if (
+                            this.skillsRequired?.toTypedArray().contentEquals(
+                                other.skillsRequired?.toTypedArray()
+                            )
+                        ) {
+                            if (
+                                this.savedUsers?.toTypedArray().contentEquals(
+                                    other.savedUsers?.toTypedArray()
+                                )
+                            ) {
+                                true
+                            } else {
+                                false
+                            }
+                        } else {
+                            false
+                        }
+                    } else {
+                        false
+                    }
+                } else {
+                    false
+                }
+            } else {
+                false
+            }
         } else {
             false
         }

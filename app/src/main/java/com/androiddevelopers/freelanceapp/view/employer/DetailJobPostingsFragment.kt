@@ -19,8 +19,10 @@ import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.util.downloadImage
+import com.androiddevelopers.freelanceapp.util.snackbar
 import com.androiddevelopers.freelanceapp.viewmodel.employer.DetailJobPostingsViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -32,14 +34,21 @@ class DetailJobPostingsFragment : Fragment() {
     private lateinit var errorDialog: AlertDialog
     private lateinit var viewPagerAdapter: ViewPagerAdapterForImages
 
+    private val userId = FirebaseAuth.getInstance().currentUser?.uid.toString()
+
     private var adapterOverview = JobOverviewAdapter()
     private var adapterWorksToBeDone = TextListAdapterForJobDetail()
     private var adapterSkill = TextListAdapterForJobDetail()
 
     private var post: EmployerJobPost? = null
+    private var postId: String? = null
+    private var savedUsers: List<String>? = null
+    private var isSavedPost = false
     private var user: UserModel? = null
 
     private var isExists = false
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -50,6 +59,7 @@ class DetailJobPostingsFragment : Fragment() {
         val args = DetailJobPostingsFragmentArgs.fromBundle(requireArguments())
 
         viewModel.getEmployerJobPostWithDocumentByIdFromFirestore(args.employerJobPostId)
+
 
         return view
     }
@@ -62,16 +72,51 @@ class DetailJobPostingsFragment : Fragment() {
         setProgressBar(false)
         observeLiveData(viewLifecycleOwner)
 
-        binding.buttonGiveOffer.setOnClickListener {
-            if (isExists) {
-                goToPreMessaging()
-            } else {
-                viewModel.createPreChatModel(
-                    post?.postId ?: "",
-                    post?.employerId ?: "",
-                    user?.username ?: "",
-                    user?.profileImageUrl ?: "",
-                )
+
+        with(binding) {
+            buttonGiveOffer.setOnClickListener {
+                if (isExists) {
+                    goToPreMessaging()
+                } else {
+                    viewModel.createPreChatModel(
+                        post?.postId ?: "",
+                        post?.employerId ?: "",
+                        user?.username ?: "",
+                        user?.profileImageUrl ?: "",
+                    )
+                }
+            }
+
+            ivBookmarkJobPostDetail.setOnClickListener {
+                viewModel.setListenerForChange(true)
+                postId?.let { id ->
+                    isSavedPost = !isSavedPost
+                    if (savedUsers.isNullOrEmpty()) {
+                        viewModel.updateSavedUsersEmployerJobPostFromFirestore(
+                            userId,
+                            id,
+                            isSavedPost,
+                            listOf()
+                        )
+                        setSavedPost(binding, isSavedPost)
+                    } else {
+                        viewModel.updateSavedUsersEmployerJobPostFromFirestore(
+                            userId,
+                            id,
+                            isSavedPost,
+                            savedUsers!!
+                        )
+                        setSavedPost(binding, isSavedPost)
+                    }
+
+                    if (isSavedPost) {
+                        "İlan kaydedilenler listenize eklendi".snackbar(binding.root)
+                    } else {
+                        "İlan kaydedilenler listenizden çıkarıldı".snackbar(binding.root)
+                    }
+                }
+
+
             }
         }
     }
@@ -82,16 +127,26 @@ class DetailJobPostingsFragment : Fragment() {
     }
 
     private fun goToPreMessaging() {
+        val offer = binding.edittextYouOfferJobPostDetail.text?.toString()?.trim()
+        val offerDescription = binding.edittextYouOfferDescriptionJobPostDetail.text?.toString()
         val action =
             DetailJobPostingsFragmentDirections.actionDetailJobPostingsFragmentToPreMessagingFragment(
-                post?.postId ?: "", post?.employerId ?: "", "emp"
+                post?.postId ?: "", post?.employerId ?: "", "emp", offer, offerDescription
             )
         Navigation.findNavController(requireView()).navigate(action)
     }
 
     private fun observeLiveData(owner: LifecycleOwner) {
         with(viewModel) {
-            firebaseLiveData.observe(owner) {
+            firebaseLiveDataEmployerJobPost.observe(owner) {
+                post = it
+                binding.employer = it
+                postId = it.postId
+
+                savedUsers = it.savedUsers
+                isSavedPost = savedUsers?.contains(userId) ?: false
+                setSavedPost(binding, isSavedPost)
+
                 it.employerId?.let { id -> getUserDataByDocumentId(id) }
 
                 val jobOverviewList = arrayListOf<String>()
@@ -143,10 +198,7 @@ class DetailJobPostingsFragment : Fragment() {
                     setViewSkills(false)
                 }
 
-                post = it
                 viewModel.getCreatedPreChats(post?.postId.toString())
-
-                binding.employer = it
 
                 it.images?.let { images ->
                     with(binding) {
@@ -251,6 +303,16 @@ class DetailJobPostingsFragment : Fragment() {
             binding.detailJobPostProgressBar.visibility = View.VISIBLE
         } else {
             binding.detailJobPostProgressBar.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun setSavedPost(binding: FragmentJobPostingsDetailBinding, isSavedPost: Boolean) {
+        with(binding) {
+            if (isSavedPost) {
+                ivBookmarkJobPostDetail.setImageResource(R.drawable.baseline_bookmark_24)
+            } else {
+                ivBookmarkJobPostDetail.setImageResource(R.drawable.baseline_bookmark_border_24)
+            }
         }
     }
 
