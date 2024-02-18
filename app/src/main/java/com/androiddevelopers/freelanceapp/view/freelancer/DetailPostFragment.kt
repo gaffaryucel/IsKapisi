@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
@@ -21,7 +20,6 @@ import com.androiddevelopers.freelanceapp.util.downloadImage
 import com.androiddevelopers.freelanceapp.viewmodel.freelancer.DetailPostViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.UUID
 
 @AndroidEntryPoint
 class DetailPostFragment : Fragment() {
@@ -31,8 +29,8 @@ class DetailPostFragment : Fragment() {
 
     private lateinit var errorDialog: AlertDialog
     private lateinit var viewPagerAdapter: ViewPagerAdapterForImages
-    private var post : FreelancerJobPost? = null
-    private var user : UserModel? = null
+    private var post: FreelancerJobPost? = null
+    private var user: UserModel? = null
 
     private var isExists = false
     override fun onCreateView(
@@ -59,9 +57,9 @@ class DetailPostFragment : Fragment() {
         observeLiveData(viewLifecycleOwner)
 
         binding.buttonBuy.setOnClickListener {
-            if (isExists){
+            if (isExists) {
                 goToPreMessaging()
-            }else{
+            } else {
                 viewModel.createPreChatModel(
                     "frl",
                     post?.postId ?: "",
@@ -72,11 +70,16 @@ class DetailPostFragment : Fragment() {
             }
         }
     }
-    private fun goToPreMessaging(){
+
+    private fun goToPreMessaging() {
+        val offer: String? = null //TODO: Fragmentten veri gönder
+        val offerDescription: String? = null //TODO: Fragmentten veri gönder
         val action = DetailPostFragmentDirections.actionDetailPostFragmentToPreMessagingFragment(
             post?.postId ?: "",
             post?.freelancerId ?: "",
-            "frl"
+            "frl",
+            offer,
+            offerDescription
         )
         Navigation.findNavController(requireView()).navigate(action)
     }
@@ -123,7 +126,7 @@ class DetailPostFragment : Fragment() {
             }
 
             preChatList.observe(owner) {
-                when(it.status){
+                when (it.status) {
                     Status.LOADING -> it.data?.let { state -> setProgressBar(state) }
                     Status.SUCCESS -> {
                         isExists = true
@@ -150,13 +153,14 @@ class DetailPostFragment : Fragment() {
                 }
             }
 
-            preChatRoomAction.observe(owner){
+            preChatRoomAction.observe(owner) {
                 when (it.status) {
                     Status.LOADING -> {}
                     Status.SUCCESS -> {
                         goToPreMessaging()
                         viewModel.setMessageValue(true)
                     }
+
                     Status.ERROR -> {
                         errorDialog.setMessage("${context?.getString(R.string.login_dialog_error_message)}\n${it.message}")
                         errorDialog.show()

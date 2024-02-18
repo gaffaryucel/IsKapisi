@@ -7,15 +7,12 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.androiddevelopers.freelanceapp.databinding.RowChatBinding
 import com.androiddevelopers.freelanceapp.databinding.RowPreChatBinding
-import com.androiddevelopers.freelanceapp.model.ChatModel
 import com.androiddevelopers.freelanceapp.model.PreChatModel
-import com.androiddevelopers.freelanceapp.view.chat.ChatsFragmentDirections
 import com.androiddevelopers.freelanceapp.view.chat.PreChatFragmentDirections
 import com.bumptech.glide.Glide
 
-class PreChatAdapter :  RecyclerView.Adapter<PreChatAdapter.PreChatViewHolder>() {
+class PreChatAdapter : RecyclerView.Adapter<PreChatAdapter.PreChatViewHolder>() {
 
     private val diffUtil = object : DiffUtil.ItemCallback<PreChatModel>() {
         override fun areItemsTheSame(oldItem: PreChatModel, newItem: PreChatModel): Boolean {
@@ -33,7 +30,8 @@ class PreChatAdapter :  RecyclerView.Adapter<PreChatAdapter.PreChatViewHolder>()
         get() = recyclerListDiffer.currentList
         set(value) = recyclerListDiffer.submitList(value)
 
-    inner class PreChatViewHolder(val binding: RowPreChatBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class PreChatViewHolder(val binding: RowPreChatBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PreChatViewHolder {
         val binding = RowPreChatBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -50,7 +48,9 @@ class PreChatAdapter :  RecyclerView.Adapter<PreChatAdapter.PreChatViewHolder>()
             val action = PreChatFragmentDirections.actionPreChatFragmentToPreMessagingFragment(
                 chat.postId.toString(),
                 chat.receiver.toString(),
-                chat.postType.toString()
+                chat.postType.toString(),
+                null,
+                null
             )
             Navigation.findNavController(it).navigate(action)
         }

@@ -18,7 +18,7 @@
     <color name="md_theme_light_errorContainer">#FFDAD6</color>
     <color name="md_theme_light_onError">#FFFFFF</color>
     <color name="md_theme_light_onErrorContainer">#410002</color>
-    <color name="md_theme_light_background">#FCFCFF</color>
+    <color name="md_theme_light_background">#EFEFEF</color>
     <color name="md_theme_light_onBackground">#1A1C1E</color>
     <color name="md_theme_light_surface">#B2C7E8FD</color>
     <color name="md_theme_light_onSurface">#1A1C1E</color>
@@ -79,7 +79,7 @@
     <color name="g_blue100">#B8D9FA</color>
     <color name="g_red">#FF0000</color>
     <color name="g_gray500">#969899</color>
-    <color name="g_orange_yellow">#F8BA00   </color>
+    <color name="g_orange_yellow">#F8BA00</color>
 
     <color name="night_bottom_nav_bg">#051923</color>
     <color name="light_bottom_nav_bg">#00a6fb</color>
@@ -112,4 +112,6 @@
     <color name="indicator_background">@color/md_theme_light_surface</color>
     <color name="indicator_drawable_color">@color/md_theme_light_onSurface</color>
     <color name="icons_favorite_bookmark_border">@color/md_theme_light_onSurface</color>
+    <color name="card_job_overview">@color/md_theme_light_background</color>
+    <color name="bookmark_filled">@color/md_theme_light_primary</color>
 </resources>

@@ -159,12 +159,15 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">16sp</item>
+        <item name="android:layout_marginBottom">8dp</item>
     </style>
 
     <style name="JopPostDetailTextTags">
         <item name="android:layout_width">120dp</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:textSize">16sp</item>
+        <item name="android:layout_marginBottom">8dp</item>
     </style>
 
     <style name="JopPostDetailTextColon">
@@ -172,6 +175,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">16sp</item>
         <item name="android:layout_marginEnd">4dp</item>
+
     </style>
 
     <style name="MaterialToolbarStyle">
@@ -189,5 +193,6 @@
         <item name="ci_drawable">@drawable/indicator_drawable</item>
         <item name="ci_drawable_unselected">@drawable/indicator_drawable</item>
     </style>
+
 
 </resources>

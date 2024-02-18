@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.JobStatus
@@ -26,6 +27,10 @@ constructor(
     private val _firebaseLiveData = MutableLiveData<List<FreelancerJobPost>>()
     val firebaseLiveData: LiveData<List<FreelancerJobPost>>
         get() = _firebaseLiveData
+
+    private val _firebaseUserLiveData = MutableLiveData<UserModel>()
+    val firebaseUserLiveData: LiveData<UserModel>
+        get() = _firebaseUserLiveData
 
 
     init {
@@ -141,5 +146,23 @@ constructor(
                     }
                 }
             }
+    }
+
+    fun getUserDataByDocumentId(userId: String) = viewModelScope.launch {
+        _firebaseMessage.value = Resource.loading(true)
+        firebaseRepo.getUserDataByDocumentId(userId).addOnSuccessListener {
+            val userModel = it.toObject(UserModel::class.java)
+            userModel?.let { user ->
+                _firebaseUserLiveData.value = user
+            }
+            _firebaseMessage.value = Resource.loading(false)
+            _firebaseMessage.value = Resource.success(true)
+
+        }.addOnFailureListener { e ->
+            _firebaseMessage.value = Resource.loading(false)
+            e.localizedMessage?.let { message ->
+                _firebaseMessage.value = Resource.error(message, false)
+            }
+        }
     }
 }

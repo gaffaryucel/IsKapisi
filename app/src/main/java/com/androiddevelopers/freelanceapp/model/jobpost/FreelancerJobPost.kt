@@ -2,7 +2,7 @@ package com.androiddevelopers.freelanceapp.model.jobpost
 
 import com.androiddevelopers.freelanceapp.util.JobStatus
 
-class FreelancerJobPost: BaseJobPost {
+class FreelancerJobPost : BaseJobPost {
     var freelancerId: String? = null // İlanı oluşturan freelancer'ın kimliği
     var rating: Double? = null // İşveren tarafından işin başarı derecesini belirtmek için
     var likes: List<String>? = null //gönderiyi beğenen kişiler
@@ -27,7 +27,8 @@ class FreelancerJobPost: BaseJobPost {
         isUrgent: Boolean? = null,
         freelancerId: String? = null,
         rating: Double? = null,
-        likes: List<String>? = null
+        likes: List<String>? = null,
+        worksToBeDone: List<String>? = null
     ) : super(
         postId,
         title,
@@ -43,7 +44,8 @@ class FreelancerJobPost: BaseJobPost {
         additionalDetails,
         savedUsers,
         viewCount,
-        isUrgent
+        isUrgent,
+        worksToBeDone
     ) {
         this.freelancerId = freelancerId
         this.rating = rating
