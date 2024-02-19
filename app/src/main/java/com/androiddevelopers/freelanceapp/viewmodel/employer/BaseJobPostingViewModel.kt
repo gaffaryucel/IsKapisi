@@ -1,5 +1,6 @@
 package com.androiddevelopers.freelanceapp.viewmodel.employer
 
+import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,7 +13,8 @@ import com.androiddevelopers.freelanceapp.util.Resource
 import kotlinx.coroutines.launch
 
 open class BaseJobPostingViewModel(
-    val firebaseRepo: FirebaseRepoInterFace
+    val firebaseRepo: FirebaseRepoInterFace,
+    val sharedPreferences: SharedPreferences
 ) : ViewModel() {
 
     var _firebaseMessage = MutableLiveData<Resource<Boolean>>()
@@ -151,14 +153,10 @@ open class BaseJobPostingViewModel(
     }
 
     fun getListenerForChange() = viewModelScope.launch {
-        firebaseRepo.getListenerForChange().addOnSuccessListener {
-            _firebaseListenerForChange.value = it.value as Boolean
-        }
+        _firebaseListenerForChange.value = sharedPreferences.getBoolean("employer_job_post_is_change",false)
     }
 
-    fun setListenerForChange(isSavedPost: Boolean) = viewModelScope.launch {
-        firebaseRepo.setListenerForChange(isSavedPost).addOnCompleteListener {
-
-        }
+    fun setListenerForChange(isChangeSavedPost: Boolean) = viewModelScope.launch {
+        sharedPreferences.edit().putBoolean("employer_job_post_is_change",isChangeSavedPost).apply()
     }
 }

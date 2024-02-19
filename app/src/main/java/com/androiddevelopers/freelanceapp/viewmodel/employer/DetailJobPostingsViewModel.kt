@@ -1,5 +1,6 @@
 package com.androiddevelopers.freelanceapp.viewmodel.employer
 
+import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.androiddevelopers.freelanceapp.model.PreChatModel
@@ -19,8 +20,9 @@ class DetailJobPostingsViewModel
 @Inject
 constructor(
     firebaseRepo: FirebaseRepoInterFace,
+    sharedPreferences: SharedPreferences,
     auth: FirebaseAuth
-) : BaseJobPostingViewModel(firebaseRepo) {
+) : BaseJobPostingViewModel(firebaseRepo,sharedPreferences) {
 
     private val currentUserId = auth.currentUser?.uid.toString()
 
