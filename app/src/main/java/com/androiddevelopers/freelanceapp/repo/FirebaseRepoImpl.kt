@@ -45,8 +45,6 @@ class FirebaseRepoImpl @Inject constructor(
     private val messagesReference = database.getReference("users")
     private val preChatReference = database.getReference("preChat").child("users")
     private val userFollowRef = database.getReference("users_follow")
-    private val listenerForChangeReference = database.getReference("listener_for_change")
-
 
     override fun login(email: String, password: String): Task<AuthResult> {
         return auth.signInWithEmailAndPassword(email, password)
