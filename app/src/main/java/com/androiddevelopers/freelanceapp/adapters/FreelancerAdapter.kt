@@ -86,7 +86,7 @@ class FreelancerAdapter(private val userId: String) :
                 setSavedPost(binding, isSavedPost)
                 setImageView(binding, freelancerJobPost.images)
 
-                cardFreelancer.setOnClickListener { v ->
+                itemView.setOnClickListener { v ->
                     onClickCard(freelancerJobPost, v)
                 }
 

@@ -66,4 +66,10 @@
     <string name="create_employer_post">Create Employer Post</string>
     <string name="create_discover_post">Create Discover Post</string>
     <string name="wage">Ücret</string>
+    <string name="job_overview">İşin Özeti</string>
+    <string name="aboutYou">Aranan Özellikler</string>
+    <string name="works_to_be_done">Yapılması istenen işler</string>
+    <string name="you_offer">Teklifin</string>
+    <string name="enter_offer">Teklif ettiğiniz ücret.</string>
+    <string name="enter_offer_description">Teklif açıklamanızı girin.</string>
 </resources>

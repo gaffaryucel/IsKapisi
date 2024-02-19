@@ -9,6 +9,10 @@
             name="adapter"
             type="com.androiddevelopers.freelanceapp.adapters.FreelancerAdapter" />
 
+        <variable
+            name="userName"
+            type="String" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,12 +33,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="Merhabe"
+                android:text="@{userName == null ? `Merhaba` : `Merhaba, ` + userName}"
                 android:textSize="22sp"
                 android:textStyle="italic"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Merhaba, ________" />
 
             <ImageView
                 android:id="@+id/pre_chat_icon"

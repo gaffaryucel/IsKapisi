@@ -11,16 +11,18 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.androiddevelopers.freelanceapp.R
+import com.androiddevelopers.freelanceapp.adapters.JobOverviewAdapter
+import com.androiddevelopers.freelanceapp.adapters.TextListAdapterForJobDetail
 import com.androiddevelopers.freelanceapp.adapters.ViewPagerAdapterForImages
 import com.androiddevelopers.freelanceapp.databinding.FragmentJobPostingsDetailBinding
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
-import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.util.downloadImage
-import com.androiddevelopers.freelanceapp.view.freelancer.DetailPostFragmentDirections
+import com.androiddevelopers.freelanceapp.util.snackbar
 import com.androiddevelopers.freelanceapp.viewmodel.employer.DetailJobPostingsViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -32,13 +34,23 @@ class DetailJobPostingsFragment : Fragment() {
     private lateinit var errorDialog: AlertDialog
     private lateinit var viewPagerAdapter: ViewPagerAdapterForImages
 
-    private var post : EmployerJobPost? = null
-    private var user : UserModel? = null
+    private val userId = FirebaseAuth.getInstance().currentUser?.uid.toString()
+
+    private var adapterOverview = JobOverviewAdapter()
+    private var adapterWorksToBeDone = TextListAdapterForJobDetail()
+    private var adapterSkill = TextListAdapterForJobDetail()
+
+    private var post: EmployerJobPost? = null
+    private var postId: String? = null
+    private var savedUsers: List<String>? = null
+    private var isSavedPost = false
+    private var user: UserModel? = null
 
     private var isExists = false
+
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         viewModel = ViewModelProvider(this)[DetailJobPostingsViewModel::class.java]
         _binding = FragmentJobPostingsDetailBinding.inflate(inflater, container, false)
@@ -47,6 +59,7 @@ class DetailJobPostingsFragment : Fragment() {
         val args = DetailJobPostingsFragmentArgs.fromBundle(requireArguments())
 
         viewModel.getEmployerJobPostWithDocumentByIdFromFirestore(args.employerJobPostId)
+
 
         return view
     }
@@ -59,16 +72,51 @@ class DetailJobPostingsFragment : Fragment() {
         setProgressBar(false)
         observeLiveData(viewLifecycleOwner)
 
-        binding.buttonGiveOffer.setOnClickListener {
-            if (isExists){
-                goToPreMessaging()
-            }else{
-                viewModel.createPreChatModel(
-                    post?.postId ?: "",
-                    post?.employerId ?: "",
-                    user?.username ?: "",
-                    user?.profileImageUrl ?: "",
-                )
+
+        with(binding) {
+            buttonGiveOffer.setOnClickListener {
+                if (isExists) {
+                    goToPreMessaging()
+                } else {
+                    viewModel.createPreChatModel(
+                        post?.postId ?: "",
+                        post?.employerId ?: "",
+                        user?.username ?: "",
+                        user?.profileImageUrl ?: "",
+                    )
+                }
+            }
+
+            ivBookmarkJobPostDetail.setOnClickListener {
+                viewModel.setListenerForChange(true)
+                postId?.let { id ->
+                    isSavedPost = !isSavedPost
+                    if (savedUsers.isNullOrEmpty()) {
+                        viewModel.updateSavedUsersEmployerJobPostFromFirestore(
+                            userId,
+                            id,
+                            isSavedPost,
+                            listOf()
+                        )
+                        setSavedPost(binding, isSavedPost)
+                    } else {
+                        viewModel.updateSavedUsersEmployerJobPostFromFirestore(
+                            userId,
+                            id,
+                            isSavedPost,
+                            savedUsers!!
+                        )
+                        setSavedPost(binding, isSavedPost)
+                    }
+
+                    if (isSavedPost) {
+                        "İlan kaydedilenler listenize eklendi".snackbar(binding.root)
+                    } else {
+                        "İlan kaydedilenler listenizden çıkarıldı".snackbar(binding.root)
+                    }
+                }
+
+
             }
         }
     }
@@ -78,24 +126,79 @@ class DetailJobPostingsFragment : Fragment() {
         _binding = null
     }
 
-    private fun goToPreMessaging(){
-        val action = DetailJobPostingsFragmentDirections.actionDetailJobPostingsFragmentToPreMessagingFragment(
-            post?.postId ?: "",
-            post?.employerId ?: "",
-            "emp"
-        )
+    private fun goToPreMessaging() {
+        val offer = binding.edittextYouOfferJobPostDetail.text?.toString()?.trim()
+        val offerDescription = binding.edittextYouOfferDescriptionJobPostDetail.text?.toString()
+        val action =
+            DetailJobPostingsFragmentDirections.actionDetailJobPostingsFragmentToPreMessagingFragment(
+                post?.postId ?: "", post?.employerId ?: "", "emp", offer, offerDescription
+            )
         Navigation.findNavController(requireView()).navigate(action)
     }
 
     private fun observeLiveData(owner: LifecycleOwner) {
         with(viewModel) {
-            firebaseLiveData.observe(owner) {
+            firebaseLiveDataEmployerJobPost.observe(owner) {
+                post = it
+                binding.employer = it
+                postId = it.postId
+
+                savedUsers = it.savedUsers
+                isSavedPost = savedUsers?.contains(userId) ?: false
+                setSavedPost(binding, isSavedPost)
+
                 it.employerId?.let { id -> getUserDataByDocumentId(id) }
 
-                post = it
-                viewModel.getCreatedPreChats(post?.postId.toString())
+                val jobOverviewList = arrayListOf<String>()
 
-                binding.employer = it
+                it.budget?.let { double ->
+                    jobOverviewList.add("₺ $double")
+                }
+
+                it.location?.let { string ->
+                    jobOverviewList.add(string)
+                }
+
+                it.deadline?.let { string ->
+                    jobOverviewList.add(string)
+                }
+
+                it.isUrgent?.let { boolean ->
+                    if (boolean) {
+                        jobOverviewList.add("İş Acil !!!")
+                    }
+                }
+
+                binding.rvAdapterOverview = adapterOverview
+                adapterOverview.jobOverviewList = jobOverviewList
+
+                it.worksToBeDone?.let { list ->
+                    if (list.isNotEmpty()) {
+                        setViewWorksToBeDone(true)
+                        binding.rvAdapterWorksToBeDone = adapterWorksToBeDone
+                        adapterWorksToBeDone.textList = list
+                    } else {
+                        setViewWorksToBeDone(false)
+                    }
+
+                } ?: run {
+                    setViewWorksToBeDone(false)
+                }
+
+                it.skillsRequired?.let { list ->
+                    if (list.isNotEmpty()) {
+                        setViewSkills(true)
+                        binding.rvAdapterSkill = adapterSkill
+                        adapterSkill.textList = list
+                    } else {
+                        setViewSkills(false)
+                    }
+
+                } ?: run {
+                    setViewSkills(false)
+                }
+
+                viewModel.getCreatedPreChats(post?.postId.toString())
 
                 it.images?.let { images ->
                     with(binding) {
@@ -125,7 +228,7 @@ class DetailJobPostingsFragment : Fragment() {
             }
 
             preChatList.observe(owner) {
-                when(it.status){
+                when (it.status) {
                     Status.LOADING -> it.data?.let { state -> setProgressBar(state) }
                     Status.SUCCESS -> {
                         isExists = true
@@ -150,13 +253,14 @@ class DetailJobPostingsFragment : Fragment() {
                     }
                 }
             }
-            preChatRoomAction.observe(owner){
+            preChatRoomAction.observe(owner) {
                 when (it.status) {
                     Status.LOADING -> {}
                     Status.SUCCESS -> {
                         goToPreMessaging()
                         viewModel.setMessageValue(true)
                     }
+
                     Status.ERROR -> {
                         errorDialog.setMessage("${context?.getString(R.string.login_dialog_error_message)}\n${it.message}")
                         errorDialog.show()
@@ -171,11 +275,26 @@ class DetailJobPostingsFragment : Fragment() {
             setTitle(context.getString(R.string.login_dialog_error))
             setCancelable(false)
             setButton(
-                AlertDialog.BUTTON_POSITIVE,
-                context.getString(R.string.ok)
+                AlertDialog.BUTTON_POSITIVE, context.getString(R.string.ok)
             ) { dialog, _ ->
                 dialog.cancel()
             }
+        }
+    }
+
+    private fun setViewWorksToBeDone(state: Boolean) {
+        if (state) {
+            binding.layoutJobPostWorksToBeDone.visibility = View.VISIBLE
+        } else {
+            binding.layoutJobPostWorksToBeDone.visibility = View.GONE
+        }
+    }
+
+    private fun setViewSkills(state: Boolean) {
+        if (state) {
+            binding.layoutJobPostSkills.visibility = View.VISIBLE
+        } else {
+            binding.layoutJobPostSkills.visibility = View.GONE
         }
     }
 
@@ -184,6 +303,16 @@ class DetailJobPostingsFragment : Fragment() {
             binding.detailJobPostProgressBar.visibility = View.VISIBLE
         } else {
             binding.detailJobPostProgressBar.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun setSavedPost(binding: FragmentJobPostingsDetailBinding, isSavedPost: Boolean) {
+        with(binding) {
+            if (isSavedPost) {
+                ivBookmarkJobPostDetail.setImageResource(R.drawable.baseline_bookmark_24)
+            } else {
+                ivBookmarkJobPostDetail.setImageResource(R.drawable.baseline_bookmark_border_24)
+            }
         }
     }
 

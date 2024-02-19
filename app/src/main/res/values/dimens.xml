@@ -19,4 +19,6 @@
     <dimen name="JobPostTag1Weight">100</dimen>
     <dimen name="JobPostTag2Weight">43</dimen>
     <dimen name="JobPostLinearLayoutMarginTop">8dp</dimen>
+    <dimen name="job_post_detail_top_margin">8dp</dimen>
+    <dimen name="job_post_detail_margin_horizontal">10dp</dimen>
 </resources>

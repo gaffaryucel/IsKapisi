@@ -134,7 +134,6 @@ constructor(
         _imageSize.value = newList.size
     }
 
-
     fun setSkills(newSkills: ArrayList<String>) {
         _skills.value = newSkills
     }

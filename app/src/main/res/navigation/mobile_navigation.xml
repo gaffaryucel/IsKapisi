@@ -302,7 +302,7 @@
         app:popUpToInclusive="true"
         app:popEnterAnim="@anim/nav_default_pop_enter_anim"
         app:popExitAnim="@anim/nav_default_pop_exit_anim" />
-  <action
+    <action
         android:id="@+id/action_global_create_navigation"
         app:destination="@id/navigation_create"
         app:enterAnim="@anim/nav_default_enter_anim"
@@ -336,7 +336,7 @@
         android:id="@+id/profileDiscoverPostDetailsFragment"
         android:name="com.androiddevelopers.freelanceapp.view.profile.ProfileDiscoverPostDetailsFragment"
         android:label="fragment_profile_discover_post_details"
-        tools:layout="@layout/fragment_profile_discover_post_details" >
+        tools:layout="@layout/fragment_profile_discover_post_details">
         <argument
             android:name="p"
             app:argType="string" />
@@ -369,7 +369,7 @@
         android:id="@+id/freelancerInfoFragment"
         android:name="com.androiddevelopers.freelanceapp.view.profile.FreelancerInfoFragment"
         android:label="fragment_freelancer_info"
-        tools:layout="@layout/fragment_freelancer_info" >
+        tools:layout="@layout/fragment_freelancer_info">
         <action
             android:id="@+id/action_freelancerInfoFragment_to_standardUserInfoFragment"
             app:destination="@id/standardUserInfoFragment" />
@@ -378,7 +378,7 @@
         android:id="@+id/standardUserInfoFragment"
         android:name="com.androiddevelopers.freelanceapp.view.profile.StandardUserInfoFragment"
         android:label="fragment_standard_user_info"
-        tools:layout="@layout/fragment_standard_user_info" >
+        tools:layout="@layout/fragment_standard_user_info">
         <action
             android:id="@+id/action_standardUserInfoFragment_to_freelancerInfoFragment2"
             app:destination="@id/freelancerInfoFragment" />
@@ -387,7 +387,7 @@
         android:id="@+id/preMessagingFragment"
         android:name="com.androiddevelopers.freelanceapp.view.chat.PreMessagingFragment"
         android:label="fragment_pre_messaging"
-        tools:layout="@layout/fragment_pre_messaging" >
+        tools:layout="@layout/fragment_pre_messaging">
         <argument
             android:name="post_id"
             app:argType="string" />
@@ -397,6 +397,14 @@
         <argument
             android:name="type"
             app:argType="string" />
+        <argument
+            android:name="offer"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="offerDescription"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/notificationsFragment"
@@ -407,7 +415,7 @@
         android:id="@+id/preChatFragment"
         android:name="com.androiddevelopers.freelanceapp.view.chat.PreChatFragment"
         android:label="fragment_pre_chat"
-        tools:layout="@layout/fragment_pre_chat" >
+        tools:layout="@layout/fragment_pre_chat">
         <action
             android:id="@+id/action_preChatFragment_to_preMessagingFragment"
             app:destination="@id/preMessagingFragment" />
@@ -416,7 +424,7 @@
         android:id="@+id/navigation_create"
         android:name="com.androiddevelopers.freelanceapp.view.BaseCreateFragment"
         android:label="fragment_base_create"
-        tools:layout="@layout/fragment_base_create" >
+        tools:layout="@layout/fragment_base_create">
         <action
             android:id="@+id/action_baseCreateFragment_to_createJobPostingFragment"
             app:destination="@id/createJobPostingFragment" />

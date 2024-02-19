@@ -9,4 +9,6 @@
     <color name="indicator_background">@color/md_theme_dark_surface</color>
     <color name="indicator_drawable_color">@color/md_theme_dark_onSurface</color>
     <color name="icons_favorite_bookmark_border">@color/md_theme_dark_onSurface</color>
+    <color name="card_job_overview">@color/md_theme_dark_background</color>
+    <color name="bookmark_filled">@color/md_theme_dark_primary</color>
 </resources>

@@ -1,6 +1,7 @@
 package com.androiddevelopers.freelanceapp.di
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.androiddevelopers.freelanceapp.R
@@ -33,10 +34,15 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+    @Singleton
+    @Provides
+    fun provideContext(@ApplicationContext context: Context): Context {
+        return context
+    }
 
     @Singleton
     @Provides
-    fun provideAppDatabase(@ApplicationContext context: Context): UserDatabase {
+    fun provideAppDatabase(context: Context): UserDatabase {
         return Room.databaseBuilder(
             context,
             UserDatabase::class.java,
@@ -52,7 +58,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideGlide(@ApplicationContext context: Context): RequestManager {
+    fun provideGlide(context: Context): RequestManager {
         val circularProgressDrawable = CircularProgressDrawable(context)
         circularProgressDrawable.strokeWidth = 5f
         circularProgressDrawable.centerRadius = 30f
@@ -96,5 +102,10 @@ object AppModule {
     @Provides
     fun provideRoomUserDatabaseRepo(dao: UserDao): RoomUserDatabaseRepoInterface {
         return RoomUserDatabaseRepoImpl(dao)
+    }
+    @Singleton
+    @Provides
+    fun provideSharedPreferences(context: Context): SharedPreferences {
+        return context.getSharedPreferences("app_shared_preferences",Context.MODE_PRIVATE)
     }
 }

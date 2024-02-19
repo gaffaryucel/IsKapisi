@@ -75,7 +75,7 @@ class EmployerAdapter(private val userId: String) :
                 //setImageView(binding, employerJobPost.images)
                 setSavedPost(binding, isSavedPost)
 
-                cardEmployer.setOnClickListener { v ->
+                itemView.setOnClickListener { v ->
                     employerJobPost.postId?.let {
                         //görüntüleme sayısı arttırma ve navigasyon işlemlerini
                         //adapter dışında fragment içinde yapıyoruz

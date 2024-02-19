@@ -12,6 +12,7 @@ import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.DocumentSnapshot
@@ -21,7 +22,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import kotlinx.coroutines.tasks.await
 import java.io.ByteArrayOutputStream
-import java.util.UUID
+import java.util.*
 import javax.inject.Inject
 
 class FirebaseRepoImpl @Inject constructor(
@@ -35,15 +36,15 @@ class FirebaseRepoImpl @Inject constructor(
     private val freelancerPostCollection = firestore.collection("posts")
     private val employerPostCollection = firestore.collection("job_posting")
     private val discoverPostCollection = firestore.collection("discover_posts")
+
     //StorageRef
     private val imagesParentRef = storage.reference.child("user_images")
-    private val profilePhotoRef  = storage.reference
-    
+    private val profilePhotoRef = storage.reference
+
     //RealtimeRef
     private val messagesReference = database.getReference("users")
     private val preChatReference = database.getReference("preChat").child("users")
     private val userFollowRef = database.getReference("users_follow")
-
 
     override fun login(email: String, password: String): Task<AuthResult> {
         return auth.signInWithEmailAndPassword(email, password)
@@ -201,16 +202,21 @@ class FirebaseRepoImpl @Inject constructor(
         return messagesReference.child(currentUserId)
     }
 
-//PreChatRoom
+    //PreChatRoom
     override fun getAllPreChatRooms(currentUserId: String): DatabaseReference {
         return preChatReference.child(currentUserId)
     }
-    override fun createPreChatRoom(receiver : String,sender: String, chat: PreChatModel): Task<Void> {
+
+    override fun createPreChatRoom(
+        receiver: String,
+        sender: String,
+        chat: PreChatModel
+    ): Task<Void> {
         preChatReference.child(receiver).child(chat.postId.toString()).setValue(chat)
         return preChatReference.child(sender).child(chat.postId.toString()).setValue(chat)
     }
 
-//PreMessaging
+    //PreMessaging
     override fun getAllMessagesFromPreChatRoom(
         currentUserId: String,
         chatId: String
@@ -220,7 +226,7 @@ class FirebaseRepoImpl @Inject constructor(
 
     override fun sendMessageToPreChatRoom(
         userId: String,
-        receiver : String,
+        receiver: String,
         chatId: String,
         message: MessageModel
     ): Task<Void> {
@@ -229,7 +235,8 @@ class FirebaseRepoImpl @Inject constructor(
         return preChatReference.child(userId).child(chatId).child("messages")
             .child(message.messageId.toString()).setValue(message)
     }
-//
+
+    //
     override fun getUsersFromFirestore(): Task<QuerySnapshot> {
         return userCollection.get()
     }
@@ -254,43 +261,55 @@ class FirebaseRepoImpl @Inject constructor(
             .set(data)
     }
 
-   
-   override fun getAllDiscoverPostsFromUser(userId : String): Task<QuerySnapshot> {
+
+    override fun getAllDiscoverPostsFromUser(userId: String): Task<QuerySnapshot> {
         return discoverPostCollection.whereEqualTo("postOwner", userId).get()
     }
 
-    override fun getAllEmployerJobPostsFromUser(userId : String): Task<QuerySnapshot> {
+    override fun getAllEmployerJobPostsFromUser(userId: String): Task<QuerySnapshot> {
         return employerPostCollection.whereEqualTo("employerId", userId).get()
     }
 
-    override fun getAllFreelancerJobPostsFromUser(userId : String): Task<QuerySnapshot> {
+    override fun getAllFreelancerJobPostsFromUser(userId: String): Task<QuerySnapshot> {
         return freelancerPostCollection.whereEqualTo("freelancerId", userId).get()
     }
 
-    override fun follow(currentUserId : String,followingId : String): Task<Void> {
-        userFollowRef.child(followingId).child("followers").child(currentUserId).setValue(currentUserId)
-        return userFollowRef.child(currentUserId).child("following").child(followingId).setValue(followingId)
+    override fun follow(currentUserId: String, followingId: String): Task<Void> {
+        userFollowRef.child(followingId).child("followers").child(currentUserId)
+            .setValue(currentUserId)
+        return userFollowRef.child(currentUserId).child("following").child(followingId)
+            .setValue(followingId)
     }
+
     override fun unFollow(currentUserId: String, followingId: String): Task<Void> {
         userFollowRef.child(followingId).child("followers").child(currentUserId).removeValue()
-        return userFollowRef.child(currentUserId).child("following").child(followingId).removeValue()
+        return userFollowRef.child(currentUserId).child("following").child(followingId)
+            .removeValue()
     }
-    override fun updateUserData(userId: String, updateData:  HashMap<String, Any?>): Task<Void> {
-        return  userCollection.document(userId).update(updateData)
+
+    override fun updateUserData(userId: String, updateData: HashMap<String, Any?>): Task<Void> {
+        return userCollection.document(userId).update(updateData)
     }
+
     override fun getFollowers(userId: String): DatabaseReference {
         return userFollowRef.child(userId).child("followers")
     }
-    override fun likePost(postId: String, updateData:  HashMap<String, Any?>): Task<Void> {
-        return  discoverPostCollection.document(postId).update(updateData)
+
+    override fun likePost(postId: String, updateData: HashMap<String, Any?>): Task<Void> {
+        return discoverPostCollection.document(postId).update(updateData)
     }
 
-    override fun getDiscoverPostDataFromFirebase(postId: String, ):Task<DocumentSnapshot> {
+    override fun getDiscoverPostDataFromFirebase(postId: String): Task<DocumentSnapshot> {
         return discoverPostCollection.document(postId).get()
     }
-    override fun commentToDiscoverPost(postId: String, updateData:  HashMap<String, Any?>): Task<Void> {
-        return  discoverPostCollection.document(postId).update(updateData)
+
+    override fun commentToDiscoverPost(
+        postId: String,
+        updateData: HashMap<String, Any?>
+    ): Task<Void> {
+        return discoverPostCollection.document(postId).update(updateData)
     }
+    
     override suspend fun uploadUserProfileImage(bitmap: Bitmap,uid : String): String? {
         val imagesRef = profilePhotoRef.child("$uid/profileImage/${UUID.randomUUID()}.jpg")
 
@@ -313,5 +332,4 @@ class FirebaseRepoImpl @Inject constructor(
         }
 
     }
-
 }
