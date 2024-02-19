@@ -42,7 +42,8 @@ class ChatsFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        observeLiveData()
+        binding.rvChat.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvChat.adapter = adapter
 
         binding.fabCreateChatRoom.setOnClickListener{
             val action = ChatsFragmentDirections.actionChatsFragmentToCreateChatRoomFragment()
@@ -52,41 +53,32 @@ class ChatsFragment : Fragment() {
         binding.svChat.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                if (!query.isNullOrEmpty()){
-                    searchUser(query.toString())
+                query?.let {
+                    viewModel.searchByUsername(it)
                 }
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                if (!newText.isNullOrEmpty()){
-                    searchUser(newText.toString())
+                newText?.let {
+                    viewModel.searchByUsername(it)
                 }
                 return true
             }
         })
-    }
-    private fun searchUser(name : String){
-        try {
-            searchResult = ArrayList()
-            searchResult.addAll(userList.filter {
-                it.receiverUserName!!.contains(name, ignoreCase = true)
-            })
-            adapter.chatsList = searchResult
-            adapter.notifyDataSetChanged()
-        }catch (e : Exception){
-            println("error : "+e.localizedMessage)
-        }
-       
+        observeLiveData()
     }
 
     private fun observeLiveData(){
         viewModel.chatRooms.observe(viewLifecycleOwner, Observer {
-            binding.rvChat.layoutManager = LinearLayoutManager(requireContext())
-            binding.rvChat.adapter = adapter
             adapter.chatsList = it
             adapter.notifyDataSetChanged()
-            userList.addAll(it)
+        })
+        viewModel.chatSearchResult.observe(viewLifecycleOwner, Observer {searchResult ->
+            if (searchResult != null){
+                adapter.chatsList = searchResult
+                adapter.notifyDataSetChanged()
+            }
         })
     }
     override fun onResume() {
