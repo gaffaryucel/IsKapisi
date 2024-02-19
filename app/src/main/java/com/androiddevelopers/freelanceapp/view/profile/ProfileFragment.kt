@@ -52,7 +52,7 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.rvProfile.layoutManager = GridLayoutManager(requireContext(),3)
+        binding.rvProfile.layoutManager = LinearLayoutManager(requireContext())
         binding.profileFragmentSwipeRefreshLayout.setOnRefreshListener {
             refreshData()
         }
@@ -110,7 +110,6 @@ class ProfileFragment : Fragment() {
     }
     private fun showDiscoverItems() {
         binding.rvProfile.adapter = discoverAdapter
-        binding.rvProfile.layoutManager = GridLayoutManager(requireContext(),3)
         try {
             discoverAdapter.postList[0]
             binding.rvProfile.visibility = View.VISIBLE
@@ -123,7 +122,6 @@ class ProfileFragment : Fragment() {
     }
     private fun showFreelancerItems() {
         binding.rvProfile.adapter = freelancerAdapter
-        binding.rvProfile.layoutManager = LinearLayoutManager(requireContext())
         try {
             freelancerAdapter.postList[0]
             binding.rvProfile.visibility = View.VISIBLE
@@ -135,7 +133,6 @@ class ProfileFragment : Fragment() {
     }
     private fun showEmployerItems() {
         binding.rvProfile.adapter = employerAdapter
-        binding.rvProfile.layoutManager = LinearLayoutManager(requireContext())
         try {
             employerAdapter.postList[0]
             binding.rvProfile.visibility = View.VISIBLE
@@ -163,30 +160,24 @@ class ProfileFragment : Fragment() {
                     Glide.with(requireContext()).load(userData.profileImageUrl.toString()).into(binding.ivUserProfile)
                 }
             }
-            println("before : "+userData.userType)
             if (userData.userType != null){
-                println("not null")
                 when(userData.userType){
                     UserStatus.FREELANCER->{
-                        println("FREELANCER")
                         binding.layoutProfileType.visibility = View.GONE
                         binding.flexbox.visibility = View.VISIBLE
                         binding.profileFragmentSwipeRefreshLayout.visibility = View.VISIBLE
                     }
                     UserStatus.STANDARD->{
-                        println("STANDARD")
                         binding.flexbox.visibility = View.GONE
                         binding.layoutProfileType.visibility = View.GONE
                         binding.profileFragmentSwipeRefreshLayout.visibility = View.VISIBLE
                     }
                     else->{
-                        println("else")
                         binding.layoutProfileType.visibility = View.VISIBLE
                         binding.profileFragmentSwipeRefreshLayout.visibility = View.GONE
                     }
                 }
             }else{
-                println("else 2 ")
                 binding.layoutProfileType.visibility = View.VISIBLE
                 binding.profileFragmentSwipeRefreshLayout.visibility = View.GONE
             }

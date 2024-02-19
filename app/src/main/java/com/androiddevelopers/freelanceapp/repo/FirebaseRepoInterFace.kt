@@ -127,6 +127,8 @@ interface FirebaseRepoInterFace {
     fun unFollow(currentUserId: String, followingId: String): Task<Void>
     fun updateUserData(userId: String, updateData: HashMap<String, Any?>): Task<Void>
     fun getFollowers(userId: String): DatabaseReference
-    suspend fun uploadUserProfileImageImage(bitmap: Bitmap, uid: String): String?
-    }
+    suspend fun uploadUserProfileImage(bitmap: Bitmap, uid : String): String?
+
+}
+
 

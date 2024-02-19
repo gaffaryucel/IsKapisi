@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -11,6 +12,7 @@ import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.RowDiscoverDetailsBinding
 import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
 import com.androiddevelopers.freelanceapp.view.discover.DiscoverDetailsFragmentDirections
+import com.androiddevelopers.freelanceapp.view.profile.ProfileDiscoverPostDetailsFragmentDirections
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 
@@ -29,6 +31,7 @@ class DiscoverPostDetailsAdapter : RecyclerView.Adapter<DiscoverPostDetailsAdapt
     }
     private val recyclerListDiffer = AsyncListDiffer(this, diffUtil)
 
+    var inProfile = false
     var postList: List<DiscoverPostModel>
         get() = recyclerListDiffer.currentList
         set(value) = recyclerListDiffer.submitList(value)
@@ -98,12 +101,21 @@ class DiscoverPostDetailsAdapter : RecyclerView.Adapter<DiscoverPostDetailsAdapt
             }
         }
         holder.binding.ivComment.setOnClickListener {
-            val action = DiscoverDetailsFragmentDirections.actionDiscoverDetailsFragmentToCommentsFragment(post.postId.toString())
-            Navigation.findNavController(it).navigate(action)
+            if (inProfile){
+                val action = ProfileDiscoverPostDetailsFragmentDirections.actionProfileDiscoverPostDetailsFragmentToCommentsFragment(post.postId.toString())
+                Navigation.findNavController(it).navigate(action)
+            }else{
+                val action = DiscoverDetailsFragmentDirections.actionDiscoverDetailsFragmentToCommentsFragment(post.postId.toString())
+                Navigation.findNavController(it).navigate(action)
+            }
         }
         holder.binding.userInfoBar.setOnClickListener {
-            val action = DiscoverDetailsFragmentDirections.actionDiscoverDetailsFragmentToUserProfileFragment(post.postOwner.toString())
-            Navigation.findNavController(it).navigate(action)
+            if (inProfile){
+                holder.itemView.findNavController().popBackStack()
+            }else{
+                val action = DiscoverDetailsFragmentDirections.actionDiscoverDetailsFragmentToUserProfileFragment(post.postOwner.toString())
+                Navigation.findNavController(it).navigate(action)
+            }
         }
     }
 

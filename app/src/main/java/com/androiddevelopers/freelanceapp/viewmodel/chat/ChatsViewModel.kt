@@ -3,7 +3,9 @@ package com.androiddevelopers.freelanceapp.viewmodel.chat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.androiddevelopers.freelanceapp.model.ChatModel
+import com.androiddevelopers.freelanceapp.model.PreChatModel
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.Resource
 import com.google.firebase.auth.FirebaseAuth
@@ -11,6 +13,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,6 +28,9 @@ class ChatsViewModel  @Inject constructor(
     val chatRooms : LiveData<List<ChatModel>>
         get() = _chatRooms
 
+    private var _chatSearchResult = MutableLiveData<List<ChatModel>>()
+    val chatSearchResult : LiveData<List<ChatModel>>
+        get() = _chatSearchResult
 
 
     private var _messageStatus = MutableLiveData<Resource<Boolean>>()
@@ -55,5 +61,9 @@ class ChatsViewModel  @Inject constructor(
                     _messageStatus.value =  Resource.error(error.message,null) }
             }
         )
+    }
+    fun searchByUsername(query: String) = viewModelScope.launch{
+        val list = chatRooms.value
+        _chatSearchResult.value = list?.filter { it.receiverUserName!!.contains(query, ignoreCase = true) }
     }
 }

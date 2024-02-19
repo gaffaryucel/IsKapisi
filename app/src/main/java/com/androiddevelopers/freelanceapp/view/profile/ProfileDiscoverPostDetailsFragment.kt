@@ -38,17 +38,15 @@ class ProfileDiscoverPostDetailsFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        binding.rvDiscoverPostDetails.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvDiscoverPostDetails.adapter = adapter
+        adapter.inProfile = true
         observeLiveData()
-
-
     }
     private fun observeLiveData(){
         viewModel.discoverPosts.observe(viewLifecycleOwner, Observer {
             adapter.postList = it
             adapter.notifyDataSetChanged()
-            binding.rvDiscoverPostDetails.layoutManager = LinearLayoutManager(requireContext())
-            binding.rvDiscoverPostDetails.adapter = adapter
             binding.rvDiscoverPostDetails.scrollToPosition(position!!)
         })
     }

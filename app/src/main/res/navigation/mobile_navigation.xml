@@ -340,6 +340,9 @@
         <argument
             android:name="p"
             app:argType="string" />
+        <action
+            android:id="@+id/action_profileDiscoverPostDetailsFragment_to_commentsFragment"
+            app:destination="@id/commentsFragment" />
     </fragment>
 
     <fragment

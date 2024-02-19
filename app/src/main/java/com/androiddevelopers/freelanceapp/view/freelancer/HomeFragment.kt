@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
@@ -33,7 +32,6 @@ class HomeFragment : Fragment() {
     private lateinit var viewModel: HomeViewModel
     private lateinit var listFreelancerJobPost: ArrayList<FreelancerJobPost>
     private lateinit var errorDialog: AlertDialog
-    private lateinit var popupMenu: PopupMenu
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,12 +55,10 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         errorDialog = AlertDialog.Builder(context).create()
-        popupMenu = PopupMenu(requireActivity(), binding.homeAddIcon)
 
         viewModel.getUserDataByDocumentId(userId)
         setProgressBar(false)
         setupDialogs(requireContext())
-        setupPopupMenu(view)
         //observeLiveData(viewLifecycleOwner)
 
 
@@ -101,9 +97,6 @@ class HomeFragment : Fragment() {
 
             search(searchView)
 
-            homeAddIcon.setOnClickListener {
-                popupMenu.show()
-            }
             ivNotifications.setOnClickListener {
                 val action = HomeFragmentDirections.actionNavigationHomeToNotificationsFragment()
                 Navigation.findNavController(it).navigate(action)
@@ -169,35 +162,6 @@ class HomeFragment : Fragment() {
                 AlertDialog.BUTTON_POSITIVE, context.getString(R.string.ok)
             ) { dialog, _ ->
                 dialog.cancel()
-            }
-        }
-    }
-
-    private fun setupPopupMenu(view: View) {
-        popupMenu.inflate(R.menu.add_popup_menu)
-        popupMenu.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.itemCreateFreelancePost -> {
-                    Navigation.findNavController(view)
-                        .navigate(R.id.action_global_createPostFragment)
-                    true
-                }
-
-                R.id.itemCreateEmployerPost -> {
-                    Navigation.findNavController(view)
-                        .navigate(R.id.action_global_createJobPostingFragment)
-                    true
-                }
-
-                R.id.itemCreateDiscoverPost -> {
-                    Navigation.findNavController(view)
-                        .navigate(R.id.action_global_createDiscoverPostFragment)
-                    true
-                }
-
-                else -> {
-                    false
-                }
             }
         }
     }

@@ -15,6 +15,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,6 +30,10 @@ class PreChatViewModel @Inject constructor(
     private var _preChats = MutableLiveData<List<PreChatModel>>()
     val preChats : LiveData<List<PreChatModel>>
         get() = _preChats
+
+    private var _chatSearchResult = MutableLiveData<List<PreChatModel>>()
+    val chatSearchResult : LiveData<List<PreChatModel>>
+        get() = _chatSearchResult
 
     private var _message = MutableLiveData<Resource<Boolean>>()
     val message : LiveData<Resource<Boolean>>
@@ -59,6 +64,10 @@ class PreChatViewModel @Inject constructor(
                     _message.value =  Resource.error(error.message,null) }
             }
         )
+    }
+    fun searchByUsername(query: String) = viewModelScope.launch{
+        val list = preChats.value
+        _chatSearchResult.value = list?.filter { it.receiverName!!.contains(query, ignoreCase = true) }
     }
 
 

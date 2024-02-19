@@ -13,6 +13,7 @@ import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.PreChatAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentPreChatBinding
 import com.androiddevelopers.freelanceapp.model.ChatModel
+import com.androiddevelopers.freelanceapp.model.PreChatModel
 import com.androiddevelopers.freelanceapp.viewmodel.chat.PreChatViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,42 +39,43 @@ class PreChatFragment : Fragment() {
 
     private val adapter = PreChatAdapter()
 
-    private var userList = ArrayList<ChatModel>()
-    private var searchResult = ArrayList<ChatModel>()
+    private var userList = ArrayList<PreChatModel>()
+    private var searchResult = ArrayList<PreChatModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.rvPreChat.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvPreChat.adapter = adapter
 
-        observeLiveData()
-
-        binding.svPreChat.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
-            androidx.appcompat.widget.SearchView.OnQueryTextListener {
+        binding.svPreChat.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                searchUser(query.toString())
+                query?.let {
+                    viewModel.searchByUsername(it)
+                }
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                searchUser(newText.toString())
+                // Kullanıcı adına göre arama yap
+                newText?.let {
+                    viewModel.searchByUsername(it)
+                }
                 return true
             }
         })
-    }
-    private fun searchUser(name : String){
-        searchResult = ArrayList()
-        userList.forEach{
-            if (it.receiverUserName!!.contains(name)){
-                searchResult.add(it)
-            }
-        }
+        observeLiveData()
     }
 
     private fun observeLiveData(){
         viewModel.preChats.observe(viewLifecycleOwner, Observer {
-            binding.rvPreChat.layoutManager = LinearLayoutManager(requireContext())
-            binding.rvPreChat.adapter = adapter
             adapter.chatsList = it
             adapter.notifyDataSetChanged()
+        })
+        viewModel.chatSearchResult.observe(viewLifecycleOwner, Observer {searchResult ->
+            if (searchResult != null){
+                adapter.chatsList = searchResult
+                adapter.notifyDataSetChanged()
+            }
         })
     }
     override fun onResume() {

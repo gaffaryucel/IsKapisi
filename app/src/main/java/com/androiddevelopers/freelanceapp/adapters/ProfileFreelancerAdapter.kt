@@ -11,9 +11,9 @@ import com.androiddevelopers.freelanceapp.databinding.RowFreelancerPostsProfileB
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.view.profile.ProfileFragmentDirections
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
 
-class ProfileFreelancerAdapter :
-    RecyclerView.Adapter<ProfileFreelancerAdapter.ProfileFreelancerViewHolder>() {
+class ProfileFreelancerAdapter : RecyclerView.Adapter<ProfileFreelancerAdapter.ProfileFreelancerViewHolder>() {
 
     private val diffUtil = object : DiffUtil.ItemCallback<FreelancerJobPost>() {
         override fun areItemsTheSame(
@@ -55,6 +55,10 @@ class ProfileFreelancerAdapter :
 
     override fun onBindViewHolder(holder: ProfileFreelancerViewHolder, position: Int) {
         val post = postList[position]
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+        if (!post.freelancerId.equals(currentUserId)){
+            holder.binding.ivEditFreelancerJobPost.visibility = ViewGroup.GONE
+        }
         post.images?.let { list ->
             if (list.isNotEmpty()) {
                 Glide.with(holder.itemView.context).load(list[0])
