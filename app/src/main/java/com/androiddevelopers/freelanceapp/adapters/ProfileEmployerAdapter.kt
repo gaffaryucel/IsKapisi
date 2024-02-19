@@ -11,6 +11,7 @@ import com.androiddevelopers.freelanceapp.databinding.RowEmployerPostsProfileBin
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.view.profile.ProfileFragmentDirections
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
 
 class ProfileEmployerAdapter : RecyclerView.Adapter<ProfileEmployerAdapter.ProfileEmployerViewHolder>() {
 
@@ -43,6 +44,10 @@ class ProfileEmployerAdapter : RecyclerView.Adapter<ProfileEmployerAdapter.Profi
 
     override fun onBindViewHolder(holder: ProfileEmployerViewHolder, position: Int) {
         val post = postList[position]
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+        if (!post.employerId.equals(currentUserId)){
+            holder.binding.ivEditEmployerJobPost.visibility = ViewGroup.GONE
+        }
         try {
             Glide.with(holder.itemView.context).load(post.images?.get(0))
                 .into(holder.binding.ivEmployerPost)

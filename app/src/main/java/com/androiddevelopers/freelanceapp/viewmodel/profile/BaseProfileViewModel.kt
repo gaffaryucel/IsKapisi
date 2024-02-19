@@ -65,9 +65,10 @@ open class BaseProfileViewModel @Inject constructor(
 
     internal fun saveImageToStorage(bitmap : Bitmap) = viewModelScope.launch {
         _uploadMessage.value = Resource.loading(null)
-        val imageUrl = firebaseRepo.uploadUserProfileImageImage(bitmap,userId)
+        val imageUrl = firebaseRepo.uploadUserProfileImage(bitmap,userId)
         if (imageUrl != null) {
             _uploadMessage.value = Resource.success(null)
+            updateUserInfo("profileImageUrl",imageUrl)
         } else {
             _uploadMessage.value = Resource.error("Hata",null)
         }

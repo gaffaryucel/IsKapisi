@@ -28,7 +28,6 @@
         android:padding="16dp"/>
 
     <LinearLayout
-        android:id="@id/user_info_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/edittextHeight"
         android:layout_marginHorizontal="8dp"

@@ -17,7 +17,20 @@
         android:layout_height="wrap_content"
 
         />
-
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/tvEmptyList"
+        android:text="Sonuç Bulunamadı"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tlSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSearch"
         android:layout_width="match_parent"

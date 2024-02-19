@@ -57,7 +57,6 @@ class EditMainProfileInfoFragment : Fragment() {
 
 
         binding.btnSave.setOnClickListener {
-            println("click 1")
             updateInfo()
         }
         binding.ivUserProfilePhoto.setOnClickListener{
@@ -79,9 +78,7 @@ class EditMainProfileInfoFragment : Fragment() {
     }
     private fun updateInfo(){
         val newUserName = binding.etUserName.text.toString()
-        println("click 2")
         if (!userData.username.equals(newUserName) && newUserName.isNotEmpty()){
-            println("yes1")
             viewModel.updateUserInfo("username",newUserName)
         }
 
@@ -100,9 +97,13 @@ class EditMainProfileInfoFragment : Fragment() {
             when(it.status){
                 Status.SUCCESS->{
                     Toast.makeText(requireContext(),"Profil Resmi Güncellendi", Toast.LENGTH_SHORT).show()
+                    binding.pbPostLoading.visibility = View.GONE
                 }
-                Status.LOADING->{}
+                Status.LOADING->{
+                    binding.pbPostLoading.visibility = View.VISIBLE
+                }
                 Status.ERROR->{
+                    binding.pbPostLoading.visibility = View.GONE
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
                 }
             }

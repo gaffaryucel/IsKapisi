@@ -11,6 +11,7 @@ import com.androiddevelopers.freelanceapp.databinding.RowDiscoverPostsProfileBin
 import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
 import com.androiddevelopers.freelanceapp.view.profile.ProfileFragmentDirections
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
 
 class ProfileDiscoverAdapter : RecyclerView.Adapter<ProfileDiscoverAdapter.ProfileDiscoverViewHolder>() {
 
@@ -43,6 +44,13 @@ class ProfileDiscoverAdapter : RecyclerView.Adapter<ProfileDiscoverAdapter.Profi
 
     override fun onBindViewHolder(holder: ProfileDiscoverViewHolder, position: Int) {
         val post = postList[position]
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+        if (!post.postOwner.equals(currentUserId)){
+            holder.binding.layoutEdit.visibility = ViewGroup.GONE
+        }
+        holder.binding.apply {
+            postData = post
+        }
         Glide.with(holder.itemView.context).load(post.images?.get(0)).into(holder.binding.ivDiscoverVPostProfile)
         holder.itemView.setOnClickListener {
             val action = ProfileFragmentDirections.actionNavigationProfileToProfileDiscoverPostDetailsFragment(position.toString())

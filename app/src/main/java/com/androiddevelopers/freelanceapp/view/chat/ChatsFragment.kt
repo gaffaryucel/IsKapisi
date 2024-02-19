@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -41,8 +42,8 @@ class ChatsFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         observeLiveData()
+
         binding.fabCreateChatRoom.setOnClickListener{
             val action = ChatsFragmentDirections.actionChatsFragmentToCreateChatRoomFragment()
             Navigation.findNavController(it).navigate(action)
@@ -51,24 +52,32 @@ class ChatsFragment : Fragment() {
         binding.svChat.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                searchUser(query.toString())
+                if (!query.isNullOrEmpty()){
+                    searchUser(query.toString())
+                }
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                searchUser(newText.toString())
+                if (!newText.isNullOrEmpty()){
+                    searchUser(newText.toString())
+                }
                 return true
             }
         })
     }
     private fun searchUser(name : String){
-        searchResult = ArrayList()
-        userList.forEach{
-            if (it.receiverUserName!!.contains(name)){
-                searchResult.add(it)
-            }
+        try {
+            searchResult = ArrayList()
+            searchResult.addAll(userList.filter {
+                it.receiverUserName!!.contains(name, ignoreCase = true)
+            })
+            adapter.chatsList = searchResult
+            adapter.notifyDataSetChanged()
+        }catch (e : Exception){
+            println("error : "+e.localizedMessage)
         }
-        adapter.chatsList = searchResult
+       
     }
 
     private fun observeLiveData(){
@@ -77,7 +86,7 @@ class ChatsFragment : Fragment() {
             binding.rvChat.adapter = adapter
             adapter.chatsList = it
             adapter.notifyDataSetChanged()
-            userList = it as ArrayList<ChatModel>
+            userList.addAll(it)
         })
     }
     override fun onResume() {

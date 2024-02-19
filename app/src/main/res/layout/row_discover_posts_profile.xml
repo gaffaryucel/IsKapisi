@@ -1,17 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="110dp"
-    android:layout_height="110dp"
-    android:layout_margin="1dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="postData"
+            type="com.androiddevelopers.freelanceapp.model.DiscoverPostModel" />
+    </data>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="1dp">
 
-    <ImageView
-        android:id="@+id/ivDiscoverVPostProfile"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
-        android:src="@drawable/image_placeholder"
-        android:scaleType="centerCrop"
-        tools:ignore="ContentDescription" />
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp">
 
-</FrameLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <LinearLayout
+                    android:layout_margin="10dp"
+                    android:id="@+id/layoutEdit"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toBottomOf="@+id/ivDiscoverVPostProfile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tvEditPost"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:textAlignment="center"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:text="Düzenle"/>
+
+                    <TextView
+                        android:id="@+id/tvPostData"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:textAlignment="center"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:text="İstatistikler"/>
+                </LinearLayout>
+                <ImageView
+                    android:id="@+id/ivDiscoverVPostProfile"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
+                    android:src="@drawable/image_placeholder"
+                    android:scaleType="centerCrop"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:layout_margin="8dp"
+                    android:text="@{postData.description}"
+                    android:id="@+id/tvDiscoverPostDescription"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/ivDiscoverVPostProfile"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/layoutEdit"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </FrameLayout>
+
+</layout>
