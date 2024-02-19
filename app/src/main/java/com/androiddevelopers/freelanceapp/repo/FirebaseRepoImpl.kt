@@ -334,12 +334,4 @@ class FirebaseRepoImpl @Inject constructor(
         }
 
     }
-
-    override fun getListenerForChange(): Task<DataSnapshot> {
-        return listenerForChangeReference.child("has_change").get()
-    }
-
-    override fun setListenerForChange(isSavedPost: Boolean): Task<Void> {
-        return listenerForChangeReference.child("has_change").setValue(isSavedPost)
-    }
 }
