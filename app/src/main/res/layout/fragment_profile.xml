@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="userInfo"
             type="com.androiddevelopers.freelanceapp.model.UserModel" />
@@ -17,48 +18,52 @@
             android:id="@+id/profileFragmentSwipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
                 <LinearLayout
-                    android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:orientation="vertical"
                     tools:context=".view.profile.ProfileFragment">
+
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
+
                         <ImageView
-                            android:src="@color/g_blue"
                             android:id="@+id/ivProfileBanner"
                             android:layout_width="match_parent"
                             android:layout_height="150dp"
+                            android:src="@color/g_blue"
                             tools:ignore="MissingConstraints" />
 
                         <de.hdodenhof.circleimageview.CircleImageView
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            android:layout_marginTop="100dp"
                             android:id="@+id/ivUserProfile"
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"
+                            android:layout_marginTop="100dp"
                             android:src="@drawable/placeholder"
                             app:civ_border_color="@color/black"
                             app:civ_border_width="4dp"
-                            android:layout_width="120dp"
-                            android:layout_height="120dp"/>
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
                         <ImageView
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:layout_margin="8dp"
                             android:id="@+id/ivMore"
-                            android:src="@drawable/baseline_more_horiz_24"
                             android:layout_width="30dp"
-                            android:layout_height="30dp"/>
+                            android:layout_height="30dp"
+                            android:layout_margin="8dp"
+                            android:src="@drawable/baseline_more_horiz_24"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -72,157 +77,165 @@
                             android:textAlignment="center"
                             android:textSize="24sp"
                             android:textStyle="bold" />
+
                         <TextView
-                            android:textSize="18sp"
-                            android:textStyle="normal"
-                            android:text="@{userInfo.jobTitle}"
                             android:id="@+id/tvUserTitle"
-                            android:textAlignment="center"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:text="@{userInfo.jobTitle}"
+                            android:textAlignment="center"
+                            android:textSize="18sp"
+                            android:textStyle="normal" />
                     </LinearLayout>
+
                     <com.google.android.flexbox.FlexboxLayout
-                        android:layout_gravity="center"
                         android:id="@+id/flexbox"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:flexWrap="wrap"
+                        android:layout_gravity="center"
+                        app:alignContent="stretch"
                         app:alignItems="stretch"
-                        app:alignContent="stretch">
+                        app:flexWrap="wrap">
 
                         <TextView
 
-                            android:gravity="center"
                             android:id="@+id/tvSkill1"
-                            android:textSize="16sp"
-                            android:layout_margin="8dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            />
+                            android:layout_margin="8dp"
+                            android:gravity="center"
+                            android:textSize="16sp" />
 
                         <TextView
-                            android:gravity="center"
                             android:id="@+id/tvSkill2"
-                            android:textSize="16sp"
-                            android:layout_margin="8dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            />
+                            android:layout_margin="8dp"
+                            android:gravity="center"
+                            android:textSize="16sp" />
 
                         <TextView
-                            android:gravity="center"
                             android:id="@+id/tvSkill3"
                             android:layout_width="wrap_content"
-                            android:layout_margin="8dp"
-                            android:textSize="16sp"
                             android:layout_height="wrap_content"
-                            />
-                        <TextView
+                            android:layout_margin="8dp"
                             android:gravity="center"
-                            android:id="@+id/tvSkill4"
-                            android:textSize="16sp"
-                            android:layout_margin="8dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            />
+                            android:textSize="16sp" />
 
                         <TextView
+                            android:id="@+id/tvSkill4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
                             android:gravity="center"
+                            android:textSize="16sp" />
+
+                        <TextView
                             android:id="@+id/tvSkill5"
                             android:layout_width="wrap_content"
-                            android:layout_margin="8dp"
-                            android:textSize="16sp"
                             android:layout_height="wrap_content"
-                            />
+                            android:layout_margin="8dp"
+                            android:gravity="center"
+                            android:textSize="16sp" />
                     </com.google.android.flexbox.FlexboxLayout>
+
                     <TextView
-                        android:textAlignment="center"
-                        android:layout_marginTop="10dp"
-                        android:text="@{userInfo.bio}"
                         android:id="@+id/tvUserBio"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:maxLines="5"/>
+                        android:layout_marginTop="10dp"
+                        android:maxLines="5"
+                        android:text="@{userInfo.bio}"
+                        android:textAlignment="center" />
+
                     <LinearLayout
-                        android:layout_marginTop="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="80sp"
-                        android:orientation="horizontal"
-                        >
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
 
                         <LinearLayout
-                            android:layout_gravity="center"
-                            android:orientation="horizontal"
-                            android:layout_marginStart="8dp"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="8dp"
+                            android:orientation="horizontal">
+
                             <LinearLayout
-                                android:layout_weight="1"
-                                android:layout_gravity="center"
-                                android:orientation="vertical"
                                 android:layout_width="wrap_content"
-                                android:layout_height="match_parent">
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
                                 <TextView
-                                    android:textStyle="bold"
-                                    android:layout_gravity="center"
-                                    android:textAlignment="center"
                                     android:id="@+id/tvCompletedTasksCount"
-                                    android:text="250"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:textSize="23sp"/>
-                                <TextView
-                                    android:text="Completed"
+                                    android:layout_gravity="center"
                                     android:textAlignment="center"
+                                    android:textSize="23sp"
+                                    android:textStyle="bold"
+                                    tools:text="250" />
+
+                                <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:textSize="16sp"/>
-                            </LinearLayout>
-                            <LinearLayout
-                                android:layout_weight="1"
-                                android:layout_gravity="center"
-                                android:orientation="vertical"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent">
-                                <TextView
-                                    android:textStyle="bold"
-                                    android:layout_gravity="center"
+                                    android:text="Completed"
                                     android:textAlignment="center"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
                                     android:id="@+id/tvFollowersCount"
-                                    android:text="8.000"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:textSize="23sp"/>
-                                <TextView
-                                    android:text="Followers"
                                     android:layout_gravity="center"
                                     android:textAlignment="center"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textSize="16sp"/>
-                            </LinearLayout>
-                            <LinearLayout
-                                android:layout_weight="1"
-                                android:layout_gravity="center"
-                                android:orientation="vertical"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent">
-                                <TextView
+                                    android:textSize="23sp"
                                     android:textStyle="bold"
-                                    android:layout_gravity="center"
-                                    android:textAlignment="center"
-                                    android:id="@+id/tvPostCount"
-                                    android:text="250"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textSize="23sp"/>
+                                    tools:text="8.000" />
+
                                 <TextView
-                                    android:text="Posts"
-                                    android:layout_gravity="center"
-                                    android:textAlignment="center"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:textSize="16sp"/>
+                                    android:layout_gravity="center"
+                                    android:text="Followers"
+                                    android:textAlignment="center"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tvPostCount"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:textAlignment="center"
+                                    android:textSize="23sp"
+                                    android:textStyle="bold"
+                                    tools:text="250" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:text="Posts"
+                                    android:textAlignment="center"
+                                    android:textSize="16sp" />
 
                             </LinearLayout>
 
@@ -231,58 +244,58 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:orientation="horizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
                         <Button
-                            android:layout_margin="6dp"
                             android:id="@+id/btnEditProfile"
-                            android:layout_weight="1"
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
+                            android:layout_margin="6dp"
+                            android:layout_weight="1"
                             android:background="@drawable/btn_job_offer_bg"
                             android:text="Profili düzenle"
                             tools:ignore="HardcodedText" />
 
                         <ImageView
                             android:id="@+id/ivMoreInFollow"
-                            android:src="@drawable/ic_more"
-                            android:layout_gravity="center"
                             android:layout_width="30dp"
-                            android:layout_height="30dp"/>
+                            android:layout_height="30dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_more" />
                     </LinearLayout>
 
                     <com.google.android.material.tabs.TabLayout
                         android:id="@+id/tabLayout"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        />
+                        android:layout_height="wrap_content" />
 
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvProfile"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content" />
 
                     <TextView
-                        android:visibility="gone"
                         android:id="@+id/tvEmptyList"
-                        android:textSize="30sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="50dp"
                         android:layout_marginBottom="50dp"
                         android:text="Gönderi Yok"
                         android:textAlignment="center"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:textSize="30sp"
+                        android:visibility="gone" />
+
                     <ProgressBar
-                        android:visibility="gone"
                         android:id="@+id/pbPostLoading"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:layout_marginTop="50dp"
                         android:layout_marginBottom="50dp"
-                        android:layout_gravity="center"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:visibility="gone" />
 
                 </LinearLayout>
 
@@ -292,43 +305,43 @@
 
         <LinearLayout
             android:id="@+id/layoutProfileType"
-            android:visibility="gone"
-            android:orientation="vertical"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="24sp"
-                android:textStyle="bold"
                 android:text="Ne Tür Bir Kullanıcı Olmak İstiyorsunuz?"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btnFreelancerEntry"
-                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:text="Freelancer Olmak İstiyorum"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:layout_width="300dp"
-                android:text="Freelancer Olmak İstiyorum"
-                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="HardcodedText" />
 
             <Button
                 android:id="@+id/btnEmployerEntry"
-                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:text="Bir Freelancer işe almak istiyorum"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:layout_width="300dp"
-                android:text="Bir Freelancer işe almak istiyorum"
-                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="HardcodedText" />
         </LinearLayout>
 
