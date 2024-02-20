@@ -22,7 +22,7 @@ constructor(
     firebaseRepo: FirebaseRepoInterFace,
     sharedPreferences: SharedPreferences,
     auth: FirebaseAuth
-) : BaseJobPostingViewModel(firebaseRepo,sharedPreferences) {
+) : BaseJobPostingViewModel(firebaseRepo, sharedPreferences) {
 
     private val currentUserId = auth.currentUser?.uid.toString()
 
@@ -61,11 +61,11 @@ constructor(
         createPreChatRoom(preChat)
     }
 
-    fun setMessageValue(value: Boolean) {
-        if (value) {
-            _preChatRoomAction.value = Resource.error("", null)
-        }
-    }
+//    fun setMessageValue(value: Boolean) {
+//        if (value) {
+//            _preChatRoomAction.value = Resource.error("", null)
+//        }
+//    }
 
     fun getCreatedPreChats(postId: String) {
         firebaseRepo.getAllPreChatRooms(currentUserId).addListenerForSingleValueEvent(object :

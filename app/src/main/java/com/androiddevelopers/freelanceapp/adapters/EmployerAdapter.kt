@@ -3,14 +3,12 @@ package com.androiddevelopers.freelanceapp.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.RowEmployerJobBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
-import com.androiddevelopers.freelanceapp.util.downloadImage
 import com.androiddevelopers.freelanceapp.util.snackbar
 
 class EmployerAdapter(private val userId: String) :
@@ -112,32 +110,4 @@ class EmployerAdapter(private val userId: String) :
             }
         }
     }
-
-    private fun setImageView(binding: RowEmployerJobBinding, images: List<String>?) {
-        with(binding) {
-            if (images?.size == 0) {
-                layoutImageViewsJobPost.visibility = View.GONE
-                cardImagePlaceHolderJobPost.visibility = View.VISIBLE
-                downloadImage(
-                    imagePlaceHolderJobPost,
-                    ContextCompat.getString(root.context, R.drawable.placeholder)
-                )
-            } else {
-                images?.let { list ->
-                    if (list.size == 1) {
-                        layoutImageViewsJobPost.visibility = View.GONE
-                        cardImagePlaceHolderJobPost.visibility = View.VISIBLE
-                        downloadImage(imagePlaceHolderJobPost, list[0])
-                    } else {
-                        layoutImageViewsJobPost.visibility = View.VISIBLE
-                        cardImagePlaceHolderJobPost.visibility = View.GONE
-                        val viewPagerAdapter = ViewPagerAdapterForImages(list)
-                        viewPagerJobPost.adapter = viewPagerAdapter
-                        indicatorJobPost.setViewPager(viewPagerJobPost)
-                    }
-                }
-            }
-        }
-    }
-
 }
