@@ -36,7 +36,7 @@ class BaseCreateFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
-            cardCreateDiscoverPost.setOnClickListener{
+            cardDiscoverPost.setOnClickListener{
                 val action = BaseCreateFragmentDirections.actionBaseCreateFragmentToCreateDiscoverPostFragment()
                 Navigation.findNavController(it).navigate(action)
             }
@@ -44,7 +44,7 @@ class BaseCreateFragment : Fragment() {
                 val action = BaseCreateFragmentDirections.actionBaseCreateFragmentToCreatePostFragment(null)
                 Navigation.findNavController(it).navigate(action)
             }
-            cardCreateEmployerPost.setOnClickListener{
+            cardEmployerPost.setOnClickListener{
                 val action = BaseCreateFragmentDirections.actionBaseCreateFragmentToCreateJobPostingFragment(null)
                 Navigation.findNavController(it).navigate(action)
             }

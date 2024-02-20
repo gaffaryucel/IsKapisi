@@ -26,6 +26,8 @@ class MessagesFragment : Fragment() {
 
     private lateinit var adapter : MessageAdapter
 
+    private var isFirst = true
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -84,18 +86,18 @@ class MessagesFragment : Fragment() {
         binding.messageRecyclerView.adapter = adapter
 
         observeLiveData()
-
-
     }
-
-
-
-
 
     private fun observeLiveData(){
         viewModel.messages.observe(viewLifecycleOwner, Observer {
-            adapter.messageList = it
-            adapter.notifyDataSetChanged()
+            if (isFirst){
+                adapter.messageList = it
+                adapter.notifyItemInserted(0)
+                isFirst = false
+            }else{
+                adapter.messageList = it
+                adapter.notifyItemInserted(adapter.itemCount)
+            }
             val lastItemPosition = adapter.itemCount - 1
             if (lastItemPosition >= 0) {
                 binding.messageRecyclerView.smoothScrollToPosition(lastItemPosition)
