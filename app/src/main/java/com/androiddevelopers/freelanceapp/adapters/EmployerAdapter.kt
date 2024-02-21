@@ -1,5 +1,6 @@
 package com.androiddevelopers.freelanceapp.adapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,13 +9,38 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.RowEmployerJobBinding
+import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
+import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.snackbar
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
 
-class EmployerAdapter(private val userId: String) :
+class EmployerAdapter(context: Context, private val userId: String) :
     RecyclerView.Adapter<EmployerAdapter.EmployerViewHolder>() {
     lateinit var clickListener: ((EmployerJobPost, View) -> Unit)
     lateinit var savedListener: ((String, Boolean, List<String>) -> Unit)
+
+    //Repoya erişim için değişkeni tanımlıyoruz
+    //Sonrasında init yaptığımız için değer atamaya gerek yok
+    val repo: FirebaseRepoInterFace
+
+    //Hilt ile repoya erişmek için giriş notkası oluşturuyoruz
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface RepoEntryPoint {
+        fun getRepo(): FirebaseRepoInterFace
+    }
+
+    //Oluşturduğumuz giriş noktası sayesinde değişkenimize hilt ile interface sınıfımızı bağlıyoruz
+    init {
+        val repoEntryPoint =
+            EntryPointAccessors.fromApplication(context, RepoEntryPoint::class.java)
+        repo = repoEntryPoint.getRepo()
+    }
+
 
     private val diffUtil = object : DiffUtil.ItemCallback<EmployerJobPost>() {
         override fun areItemsTheSame(
@@ -97,6 +123,13 @@ class EmployerAdapter(private val userId: String) :
                     }
                 }
 
+            }
+        }
+
+        //İlanı oluşturan kullanıcı id ile firebase den her kart için istek yapıp databinding ile görsel öğelerimize aktarıyoruz
+        employerJobPost.employerId?.let { id ->
+            repo.getUserDataByDocumentId(id).addOnSuccessListener {
+                holder.binding.user = it.toObject(UserModel::class.java)
             }
         }
     }
