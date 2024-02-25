@@ -156,9 +156,10 @@
                     android:text="@string/urgent_text"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/card_employer_guideline_vertical_right"
+                    app:layout_constraintEnd_toEndOf="@id/cardEmployerTextViewPrice"
                     app:layout_constraintStart_toStartOf="@id/cardEmployerTextViewPrice"
-                    app:layout_constraintTop_toBottomOf="@+id/cardEmployerTextViewPrice" />
+                    app:layout_constraintTop_toBottomOf="@+id/cardEmployerTextViewPrice"
+                    app:layout_constraintWidth_max="@dimen/job_post_overviews_max_width" />
 
                 <TextView
                     android:id="@+id/cardEmployerTextViewDeadline"
@@ -176,6 +177,7 @@
                     app:layout_constraintEnd_toStartOf="@+id/cardEmployerTextViewLocation"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/cardEmployerTextViewPrice"
+                    app:layout_constraintWidth_max="@dimen/job_post_overviews_max_width"
                     tools:text="30-02-2024" />
 
                 <TextView
@@ -195,6 +197,7 @@
                     app:layout_constraintEnd_toStartOf="@+id/cardEmployerTextViewPrice"
                     app:layout_constraintStart_toEndOf="@id/cardEmployerTextViewDeadline"
                     app:layout_constraintTop_toTopOf="@id/cardEmployerTextViewPrice"
+                    app:layout_constraintWidth_max="@dimen/job_post_overviews_max_width"
                     tools:text="Remote" />
 
                 <TextView
@@ -215,6 +218,7 @@
                     app:layout_constraintEnd_toStartOf="@+id/card_employer_guideline_vertical_right"
                     app:layout_constraintStart_toEndOf="@id/cardEmployerTextViewLocation"
                     app:layout_constraintTop_toBottomOf="@+id/layoutEmployerCardJobPost"
+                    app:layout_constraintWidth_max="@dimen/job_post_overviews_max_width"
                     tools:text="₺5000" />
 
                 <androidx.constraintlayout.widget.Guideline
