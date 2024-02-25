@@ -3,7 +3,9 @@ package com.androiddevelopers.freelanceapp.util
 import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
@@ -123,5 +125,63 @@ fun createPlaceholder(context: Context): CircularProgressDrawable {
         strokeWidth = 8f
         centerRadius = 40f
         start()
+    }
+}
+
+@BindingAdapter("setVisibility")
+fun setVisibility(textView: TextView, text: String?) {
+    text?.let {
+        if (text.isNotEmpty()) {
+            textView.visibility = View.VISIBLE
+        } else {
+            textView.visibility = View.GONE
+        }
+    } ?: run {
+        textView.visibility = View.GONE
+    }
+
+}
+
+@BindingAdapter("setVisibility")
+fun setVisibility(textView: TextView, number: Double?) {
+    number?.let {
+        textView.visibility = View.VISIBLE
+    } ?: run {
+        textView.visibility = View.GONE
+    }
+}
+
+@BindingAdapter("setVisibility")
+fun setVisibility(textView: TextView, check: Boolean?) {
+    check?.let {
+        if (check) {
+            textView.visibility = View.VISIBLE
+        } else {
+            textView.visibility = View.GONE
+        }
+    } ?: run {
+        textView.visibility = View.GONE
+    }
+
+}
+
+@BindingAdapter("setRatingImage")
+fun setRatingImage(imageView: ImageView, rating: Double?) {
+    rating?.let {
+        when (rating) {
+            5.0 -> {
+                imageView.setImageResource(R.drawable.rating_star_full)
+            }
+
+            0.0 -> {
+                imageView.setImageResource(R.drawable.rating_star_empty)
+            }
+
+            else -> {
+                imageView.setImageResource(R.drawable.rating_star_half)
+            }
+        }
+    } ?: run {
+        imageView.setImageResource(R.drawable.rating_star_empty)
     }
 }
