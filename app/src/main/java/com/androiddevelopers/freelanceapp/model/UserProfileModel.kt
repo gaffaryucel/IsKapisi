@@ -11,6 +11,6 @@ data class UserProfileModel(
     @ColumnInfo(name = "user_name")
     val username: String,
 
-    @ColumnInfo(name = "user_email")
-    val email: String?
+    @ColumnInfo(name = "user_photo")
+    val userPhoto: String
 )

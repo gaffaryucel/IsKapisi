@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import com.androiddevelopers.freelanceapp.dao.UserDao
 import com.androiddevelopers.freelanceapp.model.UserProfileModel
 
-@Database(entities = [UserProfileModel::class], version = 1, exportSchema = false)
+@Database(entities = [UserProfileModel::class], version = 2, exportSchema = false)
 abstract class UserDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
 }

@@ -21,7 +21,7 @@ class ProfileViewModel @Inject constructor(
     private val firebaseRepo: FirebaseRepoInterFace,
     private val firebaseAuth: FirebaseAuth,
     private val roomRepo: RoomUserDatabaseRepoInterface,
-): BaseProfileViewModel(firebaseRepo,firebaseAuth) {
+): BaseProfileViewModel(firebaseRepo,roomRepo,firebaseAuth) {
     private val userId = firebaseAuth.currentUser!!.uid
 
     val isProfileVerified = MutableLiveData<String>()

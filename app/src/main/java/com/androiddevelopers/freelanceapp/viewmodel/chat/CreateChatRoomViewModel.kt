@@ -78,7 +78,7 @@ class CreateChatRoomViewModel  @Inject constructor(
     }
 
     @OptIn(DelicateCoroutinesApi::class)
-    private fun getAllUsers (created : List<String>) {
+    private fun getAllUsers(created : List<String>) {
         _dataStatus.value = Resource.loading(null)
         GlobalScope.launch(Dispatchers.IO) {
             repo.getAllFollowingUsers(currentUserId.toString())

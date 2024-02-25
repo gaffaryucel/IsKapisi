@@ -14,7 +14,7 @@ import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.FragmentEditUserProfileInfoBinding
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.view.MainActivity
-import com.androiddevelopers.freelanceapp.viewmodel.profile.EditUserProfileInfoViewModel
+import com.androiddevelopers.freelanceapp.viewmodel.profile.BaseProfileViewModel
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,7 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class EditUserProfileInfoFragment : Fragment() {
 
-    private lateinit var viewModel: EditUserProfileInfoViewModel
+    private lateinit var viewModel: BaseProfileViewModel
     private val userData = MutableLiveData<UserModel>()
 
     private var _binding: FragmentEditUserProfileInfoBinding? = null
@@ -32,7 +32,7 @@ class EditUserProfileInfoFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel = ViewModelProvider(this)[EditUserProfileInfoViewModel::class.java]
+        viewModel = ViewModelProvider(this)[BaseProfileViewModel::class.java]
         _binding = FragmentEditUserProfileInfoBinding.inflate(inflater, container, false)
         val root: View = binding.root
         return root

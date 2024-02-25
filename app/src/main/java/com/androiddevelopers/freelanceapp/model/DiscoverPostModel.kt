@@ -11,6 +11,7 @@ class DiscoverPostModel {
     var datePosted: String? = null // Gönderinin yayımlandığı tarih
     var ownerName: String? = null
     var ownerImage: String? = null
+    var ownerToken: String? = null
     var likeCount: List<String>? = null
     var comments: List<CommentModel>? = null
 
@@ -24,6 +25,7 @@ class DiscoverPostModel {
         datePosted: String? = null,
         ownerName: String? = null,
         ownerImage: String? = null,
+        ownerToken: String? = null,
         likeCount: List<String>? = null,
         comments: List<CommentModel>? = null,
     ) {
@@ -35,6 +37,7 @@ class DiscoverPostModel {
         this.datePosted = datePosted
         this.ownerName = ownerName
         this.ownerImage = ownerImage
+        this.ownerToken = ownerToken
         this.likeCount = likeCount
         this.comments = comments
     }

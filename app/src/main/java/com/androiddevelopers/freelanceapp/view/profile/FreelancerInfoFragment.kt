@@ -15,6 +15,7 @@ import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.FragmentFreelancerInfoBinding
 import com.androiddevelopers.freelanceapp.model.Education
 import com.androiddevelopers.freelanceapp.model.PortfolioItem
+import com.androiddevelopers.freelanceapp.model.UserProfileModel
 import com.androiddevelopers.freelanceapp.util.PermissionUtils
 import com.androiddevelopers.freelanceapp.util.UserStatus
 import com.androiddevelopers.freelanceapp.viewmodel.profile.BaseProfileViewModel
@@ -85,7 +86,7 @@ class FreelancerInfoFragment : Fragment() {
             viewModel.updateUserInfo("portfolio", listOf(PortfolioItem(portfolio,portfolio,portfolio)))
             viewModel.updateUserInfo("education", listOf(Education(education,education,2024)))
             viewModel.updateUserInfo("userType", UserStatus.FREELANCER)
-            viewModel.saveImageToStorage(selectedImage!!)
+            viewModel.saveUserInLocalAndSaveImageToStorage(fullName,selectedImage!!)
         }
         // All fields are filled, proceed with registration
         // Perform registration logic here

@@ -28,7 +28,8 @@ class FreelancerJobPost : BaseJobPost {
         freelancerId: String? = null,
         rating: Double? = null,
         likes: List<String>? = null,
-        worksToBeDone: List<String>? = null
+        worksToBeDone: List<String>? = null,
+        ownerToken: String? = null
     ) : super(
         postId,
         title,
@@ -45,7 +46,8 @@ class FreelancerJobPost : BaseJobPost {
         savedUsers,
         viewCount,
         isUrgent,
-        worksToBeDone
+        worksToBeDone,
+        ownerToken
     ) {
         this.freelancerId = freelancerId
         this.rating = rating
