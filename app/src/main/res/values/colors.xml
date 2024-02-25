@@ -114,4 +114,5 @@
     <color name="icons_favorite_bookmark_border">@color/md_theme_light_onSurface</color>
     <color name="card_job_overview">@color/md_theme_light_background</color>
     <color name="bookmark_filled">@color/md_theme_light_primary</color>
+    <color name="rating_star">#FFD600</color>
 </resources>
