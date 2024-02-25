@@ -45,7 +45,7 @@ class UserProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentUserProfileBinding.inflate(inflater, container, false)
-        viewModel = ViewModelProvider(this).get(UserProfileViewModel::class.java)
+        viewModel = ViewModelProvider(this)[UserProfileViewModel::class.java]
         val view = binding.root
 
         employerAdapter = ProfileEmployerAdapter()
@@ -152,7 +152,7 @@ class UserProfileFragment : Fragment() {
         binding.profileFragmentSwipeRefreshLayout.isRefreshing = false
     }
     private fun observeLiveData(){
-        viewModel.userData.observe(viewLifecycleOwner, Observer {userData ->
+        viewModel.userInfo.observe(viewLifecycleOwner, Observer {userData ->
             binding.apply {
                 userInfo = userData
             }

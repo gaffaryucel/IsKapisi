@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.androiddevelopers.freelanceapp.model.ChatModel
+import com.androiddevelopers.freelanceapp.model.FollowModel
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.Resource
@@ -12,6 +13,10 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
 
@@ -33,24 +38,21 @@ class CreateChatRoomViewModel  @Inject constructor(
 
     private var currentUserData = MutableLiveData<UserModel>()
 
-    private var _userIdList = MutableLiveData<List<String>>()
-    val userIdList : LiveData<List<String>>
-        get() = _userIdList
+    private var _followingUsers = MutableLiveData<List<FollowModel>>()
+    val followingUsers : LiveData<List<FollowModel>>
+        get() = _followingUsers
+
     init {
-        getAllUsers()
         getExistedIds()
     }
-    fun createChatRoom(userIdList : List<String>,userModel: UserModel) {
+    fun createChatRoom(user: FollowModel) {
         _dataStatus.value = Resource.loading(null)
-        if (roomIsExists(userIdList,userModel.userId.toString())){
-            return
-        }
         val chatId = UUID.randomUUID().toString()
         val chat = ChatModel(
             chatId,
-            userModel.userId,
-            userModel.username,
-            userModel.profileImageUrl,
+            user.userId,
+            user.userName,
+            user.userImage,
             "",
             ""
         )
@@ -64,16 +66,6 @@ class CreateChatRoomViewModel  @Inject constructor(
         val newChat = createChatForChatMate(chatId)
         repo.createChatRoomForChatMate(chat.receiverId.toString(),newChat)
     }
-
-    private fun roomIsExists(users : List<String>,selectedId : String) : Boolean {
-        return if (users.contains(selectedId)){
-            _dataStatus.value = Resource.error("Bu sohbet odası zaten mevcut",null)
-            true
-        }else{
-            false
-        }
-    }
-
     private fun createChatForChatMate(chatId: String) : ChatModel {
         return ChatModel(
             chatId,
@@ -85,46 +77,48 @@ class CreateChatRoomViewModel  @Inject constructor(
         )
     }
 
-    private fun getAllUsers () {
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun getAllUsers (created : List<String>) {
         _dataStatus.value = Resource.loading(null)
-        repo.getUsersFromFirestore().addOnSuccessListener {
-            _dataStatus.value = Resource.loading(false)
-
-            it?.let { querySnapshot ->
-                val list: ArrayList<UserModel> = ArrayList()
-
-                querySnapshot.forEach { queryDocumentSnapshot ->
-                    val user = queryDocumentSnapshot.toObject(UserModel::class.java)
-                    if (user.userId == currentUserId){
-                        currentUserData.value = user
-                    }else{
-                        list.add(user)
+        GlobalScope.launch(Dispatchers.IO) {
+            repo.getAllFollowingUsers(currentUserId.toString())
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val users = ArrayList<FollowModel>()
+                        for (messageSnapshot in snapshot.children) {
+                            val user = messageSnapshot.getValue(FollowModel::class.java)
+                            if (user!= null){
+                                if (user.userId != currentUserId){
+                                    users.add(user)
+                                }
+                            }
+                        }
+                        val filteredList = users.filter { model ->
+                            created.none { it == model.userId }
+                        }
+                        _followingUsers.value = filteredList
                     }
-                }
-                _userProfiles.value = list
-            }
-        }.addOnFailureListener {
-            _dataStatus.value = it.localizedMessage?.let { message ->
-                Resource.error(message, false)
-            }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        _dataStatus.value = Resource.error(error.message, null)
+                    }
+                })
         }
+
     }
     private fun getExistedIds() {
         repo.getAllChatRooms(currentUserId ?: "").addListenerForSingleValueEvent(
             object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val keyList = mutableListOf<String>()
-
-
                     for (messageSnapshot in snapshot.children) {
-                        // Diğer verileri almak için
-                        // Diğer verileri almak için
                         val id = messageSnapshot.getValue(ChatModel::class.java)
                         id?.let {
                             keyList.add(it.receiverId.toString())
                         }
+                        println("id : "+id)
                     }
-                    _userIdList.value = keyList
+                    getAllUsers(keyList)
                 }
 
                 override fun onCancelled(error: DatabaseError) {

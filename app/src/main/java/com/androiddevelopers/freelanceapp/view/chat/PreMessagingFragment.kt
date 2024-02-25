@@ -7,16 +7,13 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
-import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -24,11 +21,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.MessageAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentPreMessagingBinding
+import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.BaseJobPost
+import com.androiddevelopers.freelanceapp.model.notification.NotificationData
+import com.androiddevelopers.freelanceapp.model.notification.PushNotification
 import com.androiddevelopers.freelanceapp.util.Status
+import com.androiddevelopers.freelanceapp.util.Util
 import com.androiddevelopers.freelanceapp.viewmodel.chat.PreMessagingViewModel
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -43,6 +45,9 @@ class PreMessagingFragment : Fragment() {
     private lateinit var adapter : MessageAdapter
 
     private var post : BaseJobPost? = null
+
+    private var currentUser : UserModel? = null
+    private var receiverToken : String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -74,23 +79,44 @@ class PreMessagingFragment : Fragment() {
         }
 
         if (receiver != null){
-            viewModel.getUserDataFromFirebase(receiver)
+            viewModel.getUserData(receiver)
         }
         viewModel.getMessages(chatId ?: "")
 
 
         binding.btnSend.setOnClickListener{
             val message = binding.messageInput.text.toString()
-            viewModel.sendMessage(
-                chatId.toString(),
-                message,
-                receiver.toString()
-            )
-            binding.messageInput.setText("")
-            val lastItemPosition = adapter.itemCount - 1
-            if (lastItemPosition >= 0) {
-                binding.messageRecyclerView.smoothScrollToPosition(lastItemPosition)
+            if (message.isNotEmpty()){
+                viewModel.sendMessage(
+                    chatId.toString(),
+                    message,
+                    receiver.toString()
+                )
+                binding.messageInput.setText("")
+                val lastItemPosition = adapter.itemCount - 1
+                if (lastItemPosition >= 0) {
+                    binding.messageRecyclerView.smoothScrollToPosition(lastItemPosition)
+                }
+
+                FirebaseMessaging.getInstance().subscribeToTopic(Util.TOPIC)
+
+                val title = "İlan sohbetleri"
+                try {
+                    PushNotification(
+                        NotificationData(title, message,
+                            post?.images?.get(0).toString(),
+                            currentUser?.profileImageUrl.toString()
+                        ),
+                        receiverToken.toString()
+                    ).also {
+                        viewModel.sendNotification(it)
+                    }
+                }catch (e: Exception){
+
+                }
+
             }
+
         }
 
         adapter = MessageAdapter()
@@ -137,6 +163,7 @@ class PreMessagingFragment : Fragment() {
             binding.apply {
                 user = userData
             }
+            receiverToken = userData.token
             if (userData.profileImageUrl != null){
                 if (userData.profileImageUrl!!.isNotEmpty()){
                     Glide.with(requireContext())
@@ -145,8 +172,11 @@ class PreMessagingFragment : Fragment() {
                 }
             }
         })
-
+        viewModel.currentUserData.observe(viewLifecycleOwner, Observer {userData ->
+            currentUser = userData
+        })
     }
+
     @SuppressLint("InflateParams")
     fun showpopup(post : BaseJobPost?){
 
@@ -205,6 +235,7 @@ class PreMessagingFragment : Fragment() {
                 Toast.LENGTH_SHORT).show()
         }
     }
+
     override fun onResume() {
         super.onResume()
         hideBottomNavigation()

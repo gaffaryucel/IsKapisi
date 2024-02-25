@@ -2,7 +2,6 @@ package com.androiddevelopers.freelanceapp.viewmodel.chat
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.androiddevelopers.freelanceapp.model.MessageModel
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.Resource
@@ -11,23 +10,20 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
 class MessagesViewModel @Inject constructor(
     private val repo  : FirebaseRepoInterFace,
-    private val auth  : FirebaseAuth
-): ViewModel() {
+    auth  : FirebaseAuth
+): BaseChatViewModel(repo,auth) {
 
-    val currentUserId = auth.currentUser?.let { it.uid }
 
     private var _messages = MutableLiveData<List<MessageModel>>()
     val messages : LiveData<List<MessageModel>>
         get() = _messages
+
 
     private var _messageStatus = MutableLiveData<Resource<Boolean>>()
     val messageStatus : LiveData<Resource<Boolean>>
@@ -56,8 +52,6 @@ class MessagesViewModel @Inject constructor(
             }
         repo.addMessageInChatMatesRoom(messageReceiver,chatId,usersMessage)
     }
-
-
 
     private fun createChatModelForCurrentUser(
         messageData: String,
@@ -96,13 +90,9 @@ class MessagesViewModel @Inject constructor(
             }
         )
     }
-    private fun getCurrentTime(): String {
-        val currentTime = System.currentTimeMillis()
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-        val date = Date(currentTime)
-        return dateFormat.format(date)
-    }
-    fun sortListByDate(yourList: List<MessageModel>): List<MessageModel> {
-        return yourList.sortedBy { it.timestamp }
-    }
+
+
+
+
+
 }

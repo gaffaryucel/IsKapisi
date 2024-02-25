@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.androiddevelopers.freelanceapp.R
@@ -42,12 +43,24 @@ class CreateChatRoomFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         observeLiveData()
+
+        adapter.onClick = {
+            viewModel.createChatRoom(it)
+        }
+        binding.tvNoFollowing.setOnClickListener {
+            val action = CreateChatRoomFragmentDirections.actionCreateChatRoomFragmentToSearchFragment()
+            Navigation.findNavController(it).navigate(action)
+        }
     }
     private fun observeLiveData(){
-        viewModel.userProfiles.observe(viewLifecycleOwner, Observer {
+        viewModel.followingUsers.observe(viewLifecycleOwner, Observer {
             binding.rvUsers.layoutManager = LinearLayoutManager(requireContext())
             binding.rvUsers.adapter = adapter
             adapter.userList = it
+            if (it.isEmpty()){
+                binding.rvUsers.visibility = View.INVISIBLE
+                binding.tvNoFollowing.visibility = View.VISIBLE
+            }
         })
         viewModel.dataStatus.observe(viewLifecycleOwner, Observer {
             when(it.status){
@@ -58,11 +71,6 @@ class CreateChatRoomFragment : Fragment() {
                 Status.ERROR->{
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
                 }
-            }
-        })
-        viewModel.userIdList.observe(viewLifecycleOwner, Observer {idList->
-            adapter.onClick = {
-                viewModel.createChatRoom(idList,it)
             }
         })
     }

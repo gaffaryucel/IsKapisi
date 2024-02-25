@@ -20,7 +20,7 @@ open class BaseProfileViewModel @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
 ) : ViewModel() {
 
-    private val userId = firebaseAuth.currentUser!!.uid
+    val currentUserId = firebaseAuth.currentUser!!.uid
 
     private var _message = MutableLiveData<Resource<UserModel>>()
     val message: LiveData<Resource<UserModel>>
@@ -41,7 +41,7 @@ open class BaseProfileViewModel @Inject constructor(
 
     internal fun getUserDataFromFirebase(){
         viewModelScope.launch(Dispatchers.IO) {
-            firebaseRepo.getUserDataByDocumentId(userId)
+            firebaseRepo.getUserDataByDocumentId(currentUserId)
                 .addOnSuccessListener { documentSnapshot ->
                     if (documentSnapshot.exists()) {
                         val user = documentSnapshot.toObject(UserModel::class.java)
@@ -65,7 +65,7 @@ open class BaseProfileViewModel @Inject constructor(
 
     internal fun saveImageToStorage(bitmap : Bitmap) = viewModelScope.launch {
         _uploadMessage.value = Resource.loading(null)
-        val imageUrl = firebaseRepo.uploadUserProfileImage(bitmap,userId)
+        val imageUrl = firebaseRepo.uploadUserProfileImage(bitmap,currentUserId)
         if (imageUrl != null) {
             _uploadMessage.value = Resource.success(null)
             updateUserInfo("profileImageUrl",imageUrl)
@@ -79,7 +79,7 @@ open class BaseProfileViewModel @Inject constructor(
             val photoMap = hashMapOf<String,Any?>(
                 key to userPhoto
             )
-            firebaseRepo.updateUserData(userId,photoMap).addOnSuccessListener {
+            firebaseRepo.updateUserData(currentUserId,photoMap).addOnSuccessListener {
                 _message.value = Resource.success(null)
             }.addOnFailureListener{
                 _message.value = Resource.error(it.localizedMessage ?: "error",null)

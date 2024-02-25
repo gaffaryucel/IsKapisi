@@ -29,6 +29,7 @@ class UserModel{
     var completedJobs: Int? = null // Tamamlanan iş sayısı
     var canceledJobs: Int? = null // İptal edilen iş sayısı
     var unfinishedJobs: Int? = null // Zamanında bitmeyen iş sayısı
+    var token: String? = null // Zamanında bitmeyen iş sayısı
 
     constructor()
 
@@ -57,7 +58,8 @@ class UserModel{
         userType: UserStatus? = null,
         completedJobs: Int? = null,
         canceledJobs: Int? = null,
-        unfinishedJobs: Int? = null
+        unfinishedJobs: Int? = null,
+        token: String? = null
     ) {
         this.userId = userId
         this.username = username
@@ -84,6 +86,7 @@ class UserModel{
         this.completedJobs = completedJobs
         this.canceledJobs = canceledJobs
         this.unfinishedJobs = unfinishedJobs
+        this.token = token
     }
 }
 data class PortfolioItem(

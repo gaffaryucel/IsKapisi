@@ -7,7 +7,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.androiddevelopers.freelanceapp.databinding.RowUserBinding
+import com.androiddevelopers.freelanceapp.databinding.RowSearchUserBinding
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.view.discover.SearchFragmentDirections
 import com.bumptech.glide.Glide
@@ -30,10 +30,10 @@ class SearchAdapter :  RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
         get() = recyclerListDiffer.currentList
         set(value) = recyclerListDiffer.submitList(value)
 
-    inner class SearchViewHolder( val binding : RowUserBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class SearchViewHolder( val binding : RowSearchUserBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
-        val binding = RowUserBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        val binding = RowSearchUserBinding.inflate(LayoutInflater.from(parent.context),parent,false)
         return SearchViewHolder(binding)
     }
 

@@ -2,7 +2,6 @@ package com.androiddevelopers.freelanceapp.viewmodel.chat
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.androiddevelopers.freelanceapp.model.MessageModel
 import com.androiddevelopers.freelanceapp.model.UserModel
@@ -16,21 +15,17 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
 class PreMessagingViewModel  @Inject constructor(
     private val repo  : FirebaseRepoInterFace,
-    private val auth  : FirebaseAuth
-): ViewModel() {
+    auth  : FirebaseAuth
+): BaseChatViewModel(repo,auth) {
 
     //ön sohbet odasının oluşturulması ve kullanılması gerekli
 
-    private val currentUserId = auth.currentUser?.let { it.uid }
 
     private var _messages = MutableLiveData<List<MessageModel>>()
     val messages: LiveData<List<MessageModel>>
@@ -39,10 +34,6 @@ class PreMessagingViewModel  @Inject constructor(
     private var _messageStatus = MutableLiveData<Resource<Boolean>>()
     val messageStatus: LiveData<Resource<Boolean>>
         get() = _messageStatus
-
-    private val _userData = MutableLiveData<UserModel>()
-    val userData : LiveData<UserModel>
-        get() = _userData
 
     private var _receiverMessage = MutableLiveData<Resource<UserModel>>()
     val receiverMessage : LiveData<Resource<UserModel>>
@@ -80,7 +71,6 @@ class PreMessagingViewModel  @Inject constructor(
                 _messageStatus.value = error.localizedMessage?.let { Resource.error(it, null) }
             }
     }
-
 
     private fun createChatModelForCurrentUser(
         messageData: String,
@@ -122,39 +112,9 @@ class PreMessagingViewModel  @Inject constructor(
         )
     }
 
-    private fun getCurrentTime(): String {
-        val currentTime = System.currentTimeMillis()
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-        val date = Date(currentTime)
-        return dateFormat.format(date)
-    }
-
-    fun sortListByDate(yourList: List<MessageModel>): List<MessageModel> {
-        return yourList.sortedBy { it.timestamp }
-    }
 
 
-    fun getUserDataFromFirebase(userId : String){
-        repo.getUserDataByDocumentId(userId)
-            .addOnSuccessListener { documentSnapshot ->
-                if (documentSnapshot.exists()) {
-                    val user = documentSnapshot.toObject(UserModel::class.java)
-                    if (user != null) {
-                        _userData.value = user ?: UserModel()
-                        _receiverMessage.value = Resource.success(null)
-                    }else{
-                        _receiverMessage.value = Resource.error("Belirtilen belge bulunamadı",null)
-                    }
-                } else {
-                    // Belge yoksa işlemleri buraya ekleyebilirsiniz
-                    _receiverMessage.value = Resource.error("kullanıcı kaydedilmemiş",null)
-                }
-            }
-            .addOnFailureListener { exception ->
-                // Hata durzumunda işlemleri buraya ekleyebilirsiniz
-                _receiverMessage.value = Resource.error("Belge alınamadı. Hata: $exception",null)
-            }
-    }
+
 
     fun getEmployerJobPostWithDocumentByIdFromFirestore(documentId: String) =
         viewModelScope.launch {
@@ -179,6 +139,7 @@ class PreMessagingViewModel  @Inject constructor(
                     }
                 }
         }
+
     fun getFreelancerJobPostWithDocumentByIdFromFirestore(documentId: String) =
         viewModelScope.launch {
             _firebaseMessage.value = Resource.loading(null)

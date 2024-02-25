@@ -19,6 +19,7 @@ import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.viewmodel.freelancer.HomeViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -54,6 +55,13 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        FirebaseMessaging.getInstance().token.addOnCompleteListener {
+            if (!it.isSuccessful) {
+                return@addOnCompleteListener
+            }
+            val token = it.result //this is the token retrieved
+            println(token)
+        }
         errorDialog = AlertDialog.Builder(context).create()
 
         viewModel.getUserDataByDocumentId(userId)
@@ -98,8 +106,7 @@ class HomeFragment : Fragment() {
             search(searchView)
 
             ivNotifications.setOnClickListener {
-                val action = HomeFragmentDirections.actionNavigationHomeToNotificationsFragment()
-                Navigation.findNavController(it).navigate(action)
+
             }
             ivMessage.setOnClickListener {
                 val action = HomeFragmentDirections.actionNavigationHomeToChatsFragment()
@@ -202,4 +209,7 @@ class HomeFragment : Fragment() {
 
         })
     }
+
+
+
 }

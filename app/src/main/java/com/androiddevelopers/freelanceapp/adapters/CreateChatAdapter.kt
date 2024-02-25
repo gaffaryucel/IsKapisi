@@ -7,23 +7,24 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.databinding.RowUserBinding
-import com.androiddevelopers.freelanceapp.model.UserModel
+import com.androiddevelopers.freelanceapp.model.FollowModel
+import com.bumptech.glide.Glide
 
 class CreateChatAdapter :  RecyclerView.Adapter<CreateChatAdapter.CreateChatViewHolder>() {
 
-    private val diffUtil = object : DiffUtil.ItemCallback<UserModel>() {
-        override fun areItemsTheSame(oldItem: UserModel, newItem: UserModel): Boolean {
+    private val diffUtil = object : DiffUtil.ItemCallback<FollowModel>() {
+        override fun areItemsTheSame(oldItem: FollowModel, newItem: FollowModel): Boolean {
             return oldItem == newItem
         }
 
         @SuppressLint("DiffUtilEquals")
-        override fun areContentsTheSame(oldItem: UserModel, newItem: UserModel): Boolean {
+        override fun areContentsTheSame(oldItem: FollowModel, newItem: FollowModel): Boolean {
             return oldItem == newItem
         }
     }
     private val recyclerListDiffer = AsyncListDiffer(this, diffUtil)
 
-    var userList: List<UserModel>
+    var userList: List<FollowModel>
         get() = recyclerListDiffer.currentList
         set(value) = recyclerListDiffer.submitList(value)
 
@@ -40,6 +41,7 @@ class CreateChatAdapter :  RecyclerView.Adapter<CreateChatAdapter.CreateChatView
         holder.binding.apply {
             userItem = user
         }
+        Glide.with(holder.itemView.context).load(user.userImage).into(holder.binding.chatImage)
         holder.itemView.setOnClickListener {
             onClick?.invoke(user)
         }
@@ -47,5 +49,5 @@ class CreateChatAdapter :  RecyclerView.Adapter<CreateChatAdapter.CreateChatView
     override fun getItemCount(): Int {
         return userList.size
     }
-    var onClick: ((UserModel) -> Unit)? = null
+    var onClick: ((FollowModel) -> Unit)? = null
 }
