@@ -17,6 +17,8 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class EmployerAdapter(context: Context, private val userId: String) :
     RecyclerView.Adapter<EmployerAdapter.EmployerViewHolder>() {
@@ -44,15 +46,13 @@ class EmployerAdapter(context: Context, private val userId: String) :
 
     private val diffUtil = object : DiffUtil.ItemCallback<EmployerJobPost>() {
         override fun areItemsTheSame(
-            oldItem: EmployerJobPost,
-            newItem: EmployerJobPost
+            oldItem: EmployerJobPost, newItem: EmployerJobPost
         ): Boolean {
             return oldItem.postId == newItem.postId
         }
 
         override fun areContentsTheSame(
-            oldItem: EmployerJobPost,
-            newItem: EmployerJobPost
+            oldItem: EmployerJobPost, newItem: EmployerJobPost
         ): Boolean {
             return oldItem == newItem
         }
@@ -85,6 +85,8 @@ class EmployerAdapter(context: Context, private val userId: String) :
     }
 
     override fun onBindViewHolder(holder: EmployerViewHolder, position: Int) {
+        // val adapterOverview = JobOverviewAdapter()
+
         val employerJobPost = employerList[position]
 
         val savedUsers = employerJobPost.savedUsers
@@ -96,7 +98,6 @@ class EmployerAdapter(context: Context, private val userId: String) :
             with(binding) {
                 employer = employerJobPost
 
-                //setImageView(binding, employerJobPost.images)
                 setSavedPost(binding, isSavedPost)
 
                 itemView.setOnClickListener { v ->
@@ -127,9 +128,13 @@ class EmployerAdapter(context: Context, private val userId: String) :
         }
 
         //İlanı oluşturan kullanıcı id ile firebase den her kart için istek yapıp databinding ile görsel öğelerimize aktarıyoruz
-        employerJobPost.employerId?.let { id ->
-            repo.getUserDataByDocumentId(id).addOnSuccessListener {
-                holder.binding.user = it.toObject(UserModel::class.java)
+        runBlocking {
+            launch {
+                employerJobPost.employerId?.let { id ->
+                    repo.getUserDataByDocumentId(id).addOnSuccessListener {
+                        holder.binding.user = it.toObject(UserModel::class.java)
+                    }
+                }
             }
         }
     }
