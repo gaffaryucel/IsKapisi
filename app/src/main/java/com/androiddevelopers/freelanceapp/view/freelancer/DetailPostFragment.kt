@@ -22,6 +22,7 @@ import com.androiddevelopers.freelanceapp.util.downloadImage
 import com.androiddevelopers.freelanceapp.viewmodel.freelancer.DetailPostViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.UUID
 
 @AndroidEntryPoint
 class DetailPostFragment : Fragment() {
@@ -65,11 +66,13 @@ class DetailPostFragment : Fragment() {
             } else {
                 try {
                     InAppNotificationModel(
-                        "Yeni Hizmet Talebi!",
-                        "${currentUser?.fullName} adlı kullanıcı sizden hizmet talep etti! Talep detaylarını görmek lütfen uygulamayı kontrol edin.",
-                        currentUser?.profileImageUrl.toString(),
-                        post?.images?.get(0).toString(),
-                        user?.token
+                        userId = user?.userId.toString(),
+                        notificationId = UUID.randomUUID().toString(),
+                        title = "Yeni Hizmet Talebi!",
+                        message = "${currentUser?.fullName} adlı kullanıcı sizden hizmet talep etti! Talep detaylarını görmek lütfen uygulamayı kontrol edin.",
+                        userImage = currentUser?.profileImageUrl.toString(),
+                        imageUrl = post?.images?.get(0).toString(),
+                        userToken = user?.token.toString()
                     ).also { notification->
                         viewModel.createPreChatModel(
                             "frl",

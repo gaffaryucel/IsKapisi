@@ -31,6 +31,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.UUID
 
 
 @AndroidEntryPoint
@@ -101,11 +102,13 @@ class PreMessagingFragment : Fragment() {
                 val title = "İlan sohbetleri"
                 try {
                     InAppNotificationModel(
-                        title,
-                        "${currentUser?.fullName}: $message",
-                        currentUser?.profileImageUrl.toString(),
-                        "",
-                        receiverData?.token.toString()
+                        userId = receiver,
+                        notificationId = UUID.randomUUID().toString(),
+                        title = title,
+                        message = "${currentUser?.fullName}: $message",
+                        userImage = currentUser?.profileImageUrl.toString(),
+                        imageUrl =  "",
+                        userToken = receiverData?.token.toString()
                     ).also { notification->
                         viewModel.sendNotification(notification)
                     }

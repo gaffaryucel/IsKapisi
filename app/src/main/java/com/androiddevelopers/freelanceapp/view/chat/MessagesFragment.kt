@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.UUID
 
 @AndroidEntryPoint
 class MessagesFragment : Fragment() {
@@ -96,11 +97,13 @@ class MessagesFragment : Fragment() {
 
                 try {
                     InAppNotificationModel(
-                        title,
-                        "${currentUserData?.fullName} adlı kullanıcı sizden hizmet talep etti! Talep detaylarını görmek lütfen uygulamayı kontrol edin.",
-                        currentUserData?.profileImageUrl.toString(),
-                        "",
-                        receiverData?.token.toString()
+                        userId = messageReceiver,
+                        notificationId = UUID.randomUUID().toString(),
+                        title =  title,
+                        message = "${currentUserData?.fullName} adlı kullanıcı sizden hizmet talep etti! Talep detaylarını görmek lütfen uygulamayı kontrol edin.",
+                        userImage = currentUserData?.profileImageUrl.toString(),
+                        imageUrl = "",
+                        userToken = receiverData?.token.toString()
                     ).also { notification->
                         viewModel.sendNotification(notification)
                     }

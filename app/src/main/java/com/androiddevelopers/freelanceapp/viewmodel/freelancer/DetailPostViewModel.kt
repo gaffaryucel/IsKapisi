@@ -113,6 +113,7 @@ class DetailPostViewModel @Inject constructor(
         ).addOnCompleteListener{
             if (it.isSuccessful){
                 sendNotification(notification)
+                firebaseRepo.saveNotification(notification)
                 _preChatRoomAction.value = Resource.success(preChatModel)
             }else{
                 _preChatRoomAction.value = Resource.error(it.exception?.localizedMessage.toString(),null)

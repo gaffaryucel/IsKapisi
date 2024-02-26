@@ -10,6 +10,7 @@ import com.androiddevelopers.freelanceapp.model.PreChatModel
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
+import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
 import com.androiddevelopers.freelanceapp.model.notification.PushNotification
 import com.androiddevelopers.freelanceapp.service.NotificationAPI
 import com.google.android.gms.tasks.Task
@@ -38,6 +39,7 @@ class FirebaseRepoImpl @Inject constructor(
 ) : FirebaseRepoInterFace {
     //FirestoreRef
     private val userCollection = firestore.collection("users")
+    private val notificationCollection = firestore.collection("notifications")
     private val freelancerPostCollection = firestore.collection("posts")
     private val employerPostCollection = firestore.collection("job_posting")
     private val discoverPostCollection = firestore.collection("discover_posts")
@@ -348,8 +350,14 @@ class FirebaseRepoImpl @Inject constructor(
         return userCollection.document(userId).update(updateData)
     }
 
-    //Retrofit
+    //Notification
     override suspend fun postNotification(notification: PushNotification): Response<ResponseBody> {
         return notificationAPI.postNotification(notification)
+    }
+    override fun saveNotification(notification: InAppNotificationModel): Task<Void> {
+        return notificationCollection.document(notification.notificationId.toString()).set(notification)
+    }
+    override fun getNotifications(userId: String): Task<QuerySnapshot> {
+        return notificationCollection.whereEqualTo("userId", userId).get()
     }
 }

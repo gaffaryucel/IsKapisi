@@ -22,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -58,7 +59,7 @@ class DiscoverDetailsViewModel @Inject constructor(
             }
     }
 
-    fun likePost(postOwnersToken : String,imageUrl : String,postId : String,likeList: List<String>) = GlobalScope.launch(Dispatchers.IO){
+    fun likePost(postOwnersToken : String,imageUrl : String,postId : String,likeList: List<String>,userId : String) = GlobalScope.launch(Dispatchers.IO){
             delay(1000)
             val mutableList = mutableSetOf<String>()
             mutableList.addAll(likeList)
@@ -69,12 +70,16 @@ class DiscoverDetailsViewModel @Inject constructor(
             firebaseRepo.likePost(postId,likeData).addOnSuccessListener {
                 sendNotification(
                     InAppNotificationModel(
+                        userId = userId,
+                        notificationId = UUID.randomUUID().toString(),
                         title = "Yeni Bir Beğeni",
                         message = "${currentUserData.value?.fullName}, gönderinizi beğendi.",
                         userImage = "${currentUserData.value?.profileImageUrl}",
                         imageUrl = imageUrl,
                         userToken = postOwnersToken
-                    )
+                    ).also {
+                        firebaseRepo.saveNotification(it)
+                    }
                 )
             }
     }

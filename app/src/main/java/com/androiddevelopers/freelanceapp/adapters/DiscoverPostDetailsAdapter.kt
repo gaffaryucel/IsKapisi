@@ -38,8 +38,8 @@ class DiscoverPostDetailsAdapter : RecyclerView.Adapter<DiscoverPostDetailsAdapt
         set(value) = recyclerListDiffer.submitList(value)
 
     inner class DiscoverPostDetailsViewHolder(val binding: RowDiscoverDetailsBinding) : RecyclerView.ViewHolder(binding.root){
-        fun likePost(ownerToken : String,imageUrl : String,postId : String,likeCount : List<String>){
-            like?.invoke(ownerToken,imageUrl,postId,likeCount)
+        fun likePost(ownerToken : String,imageUrl : String,postId : String,userId : String,likeCount : List<String>){
+            like?.invoke(ownerToken,imageUrl,postId,userId,likeCount)
             binding.ivLike.setImageResource(R.drawable.ic_fill_favorite)
         }
         fun dislikePost(postId : String,likeCount : List<String>){
@@ -96,7 +96,7 @@ class DiscoverPostDetailsAdapter : RecyclerView.Adapter<DiscoverPostDetailsAdapt
                 liked = false
             }else{
                 try {
-                    holder.likePost(post.ownerToken.toString(),post.images?.get(0).toString(),post.postId.toString(),post.likeCount ?: emptyList())
+                    holder.likePost(post.ownerToken.toString(),post.images?.get(0).toString(),post.postId.toString(),post.postOwner.toString(),post.likeCount ?: emptyList())
                 }catch (e: Exception){
                     Toast.makeText(holder.itemView.context, "Beğenilemedi", Toast.LENGTH_SHORT).show()
                 }
@@ -124,6 +124,6 @@ class DiscoverPostDetailsAdapter : RecyclerView.Adapter<DiscoverPostDetailsAdapt
         }
     }
 
-    var like: ((String,String,String,List<String>) -> Unit)? = null
+    var like: ((String,String,String,String,List<String>) -> Unit)? = null
     var dislike: ((String,List<String>) -> Unit)? = null
 }

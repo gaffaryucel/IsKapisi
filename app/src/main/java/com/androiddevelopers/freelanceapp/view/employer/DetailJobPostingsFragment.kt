@@ -29,6 +29,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.UUID
 
 @AndroidEntryPoint
 class DetailJobPostingsFragment : Fragment() {
@@ -88,11 +89,13 @@ class DetailJobPostingsFragment : Fragment() {
 
                     try {
                         InAppNotificationModel(
-                            "Yeni Hizmet Talebi!",
-                            "${currentUser?.fullName} ilanınıza başvurdu! Başvuru detaylarını görmek ve incelemek için lütfen uygulamayı kontrol edin..",
-                            currentUser?.profileImageUrl.toString(),
-                            null,
-                            user?.token
+                            userId = user?.userId,
+                            notificationId = UUID.randomUUID().toString(),
+                            title = "Yeni Hizmet Talebi!",
+                            message = "${currentUser?.fullName} ilanınıza başvurdu! Başvuru detaylarını görmek ve incelemek için lütfen uygulamayı kontrol edin..",
+                            userImage = currentUser?.profileImageUrl.toString(),
+                            imageUrl = null,
+                            userToken = user?.token
                         ).also { notification->
                             viewModel.createPreChatModel(
                                 "emp",

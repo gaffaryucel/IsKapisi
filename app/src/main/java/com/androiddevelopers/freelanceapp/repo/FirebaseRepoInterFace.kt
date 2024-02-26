@@ -10,6 +10,7 @@ import com.androiddevelopers.freelanceapp.model.PreChatModel
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
+import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
 import com.androiddevelopers.freelanceapp.model.notification.PushNotification
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
@@ -133,8 +134,10 @@ interface FirebaseRepoInterFace {
     fun getFollowers(userId: String): DatabaseReference
     suspend fun uploadUserProfileImage(bitmap: Bitmap, uid : String): String?
 
-    //Retrofit
+    //Notification
     suspend fun postNotification(notification: PushNotification): Response<ResponseBody>
+    fun saveNotification(notification: InAppNotificationModel): Task<Void>
+    fun getNotifications(userId: String): Task<QuerySnapshot>
 
 }
 
