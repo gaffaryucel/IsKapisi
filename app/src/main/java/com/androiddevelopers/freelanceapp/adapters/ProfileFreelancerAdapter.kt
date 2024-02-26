@@ -1,6 +1,5 @@
 package com.androiddevelopers.freelanceapp.adapters
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.Navigation
@@ -13,17 +12,17 @@ import com.androiddevelopers.freelanceapp.view.profile.ProfileFragmentDirections
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 
-class ProfileFreelancerAdapter : RecyclerView.Adapter<ProfileFreelancerAdapter.ProfileFreelancerViewHolder>() {
+class ProfileFreelancerAdapter :
+    RecyclerView.Adapter<ProfileFreelancerAdapter.ProfileFreelancerViewHolder>() {
 
     private val diffUtil = object : DiffUtil.ItemCallback<FreelancerJobPost>() {
         override fun areItemsTheSame(
             oldItem: FreelancerJobPost,
             newItem: FreelancerJobPost
         ): Boolean {
-            return oldItem == newItem
+            return oldItem.postId == newItem.postId
         }
 
-        @SuppressLint("DiffUtilEquals")
         override fun areContentsTheSame(
             oldItem: FreelancerJobPost,
             newItem: FreelancerJobPost
@@ -56,7 +55,7 @@ class ProfileFreelancerAdapter : RecyclerView.Adapter<ProfileFreelancerAdapter.P
     override fun onBindViewHolder(holder: ProfileFreelancerViewHolder, position: Int) {
         val post = postList[position]
         val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
-        if (!post.freelancerId.equals(currentUserId)){
+        if (!post.freelancerId.equals(currentUserId)) {
             holder.binding.ivEditFreelancerJobPost.visibility = ViewGroup.GONE
         }
         post.images?.let { list ->
@@ -72,11 +71,12 @@ class ProfileFreelancerAdapter : RecyclerView.Adapter<ProfileFreelancerAdapter.P
 
         holder.itemView.setOnClickListener { v ->
             post.postId?.let {
-                val action = ProfileFragmentDirections.actionNavigationProfileToDetailPostFragment(it)
+                val action =
+                    ProfileFragmentDirections.actionNavigationProfileToDetailPostFragment(it)
                 Navigation.findNavController(v).navigate(action)
             }
         }
-        holder.binding.ivEditFreelancerJobPost.setOnClickListener {v->
+        holder.binding.ivEditFreelancerJobPost.setOnClickListener { v ->
             post.postId?.let {
                 val direction = ProfileFragmentDirections.actionGlobalCreatePostFragment(it)
                 Navigation.findNavController(v).navigate(direction)

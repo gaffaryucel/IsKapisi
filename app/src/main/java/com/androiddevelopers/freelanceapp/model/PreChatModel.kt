@@ -31,4 +31,27 @@ class PreChatModel {
         this.lastMessage = lastMessage
         this.timestamp = timestamp
     }
+
+    override fun equals(other: Any?): Boolean {
+        return this === other &&
+                this.postType == other.postType &&
+                this.sender == other.sender &&
+                this.receiver == other.receiver &&
+                this.receiverName == other.receiverName &&
+                this.receiverImage == other.receiverImage &&
+                this.lastMessage == other.lastMessage &&
+                this.timestamp == other.timestamp
+    }
+
+    override fun hashCode(): Int {
+        var result = postId?.hashCode() ?: 0
+        result = 31 * result + (postType?.hashCode() ?: 0)
+        result = 31 * result + (sender?.hashCode() ?: 0)
+        result = 31 * result + (receiver?.hashCode() ?: 0)
+        result = 31 * result + (receiverName?.hashCode() ?: 0)
+        result = 31 * result + (receiverImage?.hashCode() ?: 0)
+        result = 31 * result + (lastMessage?.hashCode() ?: 0)
+        result = 31 * result + (timestamp?.hashCode() ?: 0)
+        return result
+    }
 }

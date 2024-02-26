@@ -61,43 +61,57 @@ open class BaseJobPost {
     }
 
     override fun equals(other: Any?): Boolean {
-        val newItem = other as BaseJobPost
-        return if (this === newItem) {
-            if (this.title != newItem.title) {
-                if (this.description == newItem.description) {
-                    if (
-                        this.images?.toTypedArray().contentEquals(
-                            other.images?.toTypedArray()
-                        )
-                    ) {
-                        if (
-                            this.skillsRequired?.toTypedArray().contentEquals(
-                                other.skillsRequired?.toTypedArray()
-                            )
-                        ) {
-                            if (
-                                this.savedUsers?.toTypedArray().contentEquals(
-                                    other.savedUsers?.toTypedArray()
-                                )
-                            ) {
-                                true
-                            } else {
-                                false
-                            }
-                        } else {
-                            false
-                        }
-                    } else {
-                        false
-                    }
-                } else {
-                    false
-                }
-            } else {
-                false
-            }
-        } else {
-            false
-        }
+        return this === other &&
+                this.title == other.title &&
+                this.description == other.description &&
+                this.images?.toTypedArray().contentEquals(
+                    other.images?.toTypedArray()
+                ) &&
+                this.skillsRequired?.toTypedArray().contentEquals(
+                    other.skillsRequired?.toTypedArray()
+                ) &&
+                this.savedUsers?.toTypedArray().contentEquals(
+                    other.savedUsers?.toTypedArray()
+                ) &&
+                this.budget == other.budget &&
+                this.deadline == other.deadline &&
+                this.location == other.location &&
+                this.datePosted == other.datePosted &&
+                this.applicants?.toTypedArray().contentEquals(
+                    other.applicants?.toTypedArray()
+                ) &&
+                this.status == other.status &&
+                this.additionalDetails == other.additionalDetails &&
+                this.savedUsers?.toTypedArray().contentEquals(
+                    other.savedUsers?.toTypedArray()
+                ) &&
+                this.viewCount?.toTypedArray().contentEquals(
+                    other.viewCount?.toTypedArray()
+                ) &&
+                this.isUrgent == other.isUrgent &&
+                this.worksToBeDone?.toTypedArray().contentEquals(
+                    other.worksToBeDone?.toTypedArray()
+                )
+    }
+
+    override fun hashCode(): Int {
+        var result = postId?.hashCode() ?: 0
+        result = 31 * result + (title?.hashCode() ?: 0)
+        result = 31 * result + (description?.hashCode() ?: 0)
+        result = 31 * result + (images?.hashCode() ?: 0)
+        result = 31 * result + (skillsRequired?.hashCode() ?: 0)
+        result = 31 * result + (budget?.hashCode() ?: 0)
+        result = 31 * result + (deadline?.hashCode() ?: 0)
+        result = 31 * result + (location?.hashCode() ?: 0)
+        result = 31 * result + (datePosted?.hashCode() ?: 0)
+        result = 31 * result + (applicants?.hashCode() ?: 0)
+        result = 31 * result + (status?.hashCode() ?: 0)
+        result = 31 * result + (additionalDetails?.hashCode() ?: 0)
+        result = 31 * result + (savedUsers?.hashCode() ?: 0)
+        result = 31 * result + (viewCount?.hashCode() ?: 0)
+        result = 31 * result + (isUrgent?.hashCode() ?: 0)
+        result = 31 * result + (worksToBeDone?.hashCode() ?: 0)
+        result = 31 * result + (ownerToken?.hashCode() ?: 0)
+        return result
     }
 }
