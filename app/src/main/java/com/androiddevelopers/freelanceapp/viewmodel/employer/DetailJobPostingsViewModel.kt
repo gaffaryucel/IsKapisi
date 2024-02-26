@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.androiddevelopers.freelanceapp.model.PreChatModel
+import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.Resource
 import com.google.firebase.auth.FirebaseAuth
@@ -22,9 +23,8 @@ constructor(
     firebaseRepo: FirebaseRepoInterFace,
     sharedPreferences: SharedPreferences,
     auth: FirebaseAuth
-) : BaseJobPostingViewModel(firebaseRepo, sharedPreferences) {
+) : BaseJobPostingViewModel(firebaseRepo,sharedPreferences,auth) {
 
-    private val currentUserId = auth.currentUser?.uid.toString()
 
     private var _preChatList = MutableLiveData<Resource<Boolean>>()
     val preChatList: LiveData<Resource<Boolean>>
@@ -33,39 +33,46 @@ constructor(
     private var _preChatRoomAction = MutableLiveData<Resource<PreChatModel>>()
     val preChatRoomAction = _preChatRoomAction
 
-    private fun createPreChatRoom(preChatModel: PreChatModel) {
+    private fun createPreChatRoom(preChatModel: PreChatModel,notification : InAppNotificationModel){
         firebaseRepo.createPreChatRoom(
             preChatModel.receiver.toString(),
             preChatModel.sender.toString(),
             preChatModel
-        ).addOnCompleteListener {
-            if (it.isSuccessful) {
+        ).addOnCompleteListener{
+            if (it.isSuccessful){
+                sendNotification(notification)
                 _preChatRoomAction.value = Resource.success(preChatModel)
-            } else {
-                _preChatRoomAction.value =
-                    Resource.error(it.exception?.localizedMessage.toString(), null)
+            }else{
+                _preChatRoomAction.value = Resource.error(it.exception?.localizedMessage.toString(),null)
             }
         }
     }
 
     fun createPreChatModel(
+        type: String,
         postId: String,
         receiver: String,
         receiverName: String,
         receiverImage: String,
-    ) {
+        notification : InAppNotificationModel,
+    ){
         val preChat = PreChatModel(
-            postId, "emp", currentUserId, receiver, receiverName,
-            receiverImage, "", getCurrentTime()
+            postId,
+            type,
+            currentUserId,
+            receiver,
+            receiverName,
+            receiverImage,
+            ""
         )
-        createPreChatRoom(preChat)
+        createPreChatRoom(preChat,notification)
     }
 
-//    fun setMessageValue(value: Boolean) {
-//        if (value) {
-//            _preChatRoomAction.value = Resource.error("", null)
-//        }
-//    }
+    fun setMessageValue(value: Boolean) {
+        if (value) {
+            _preChatRoomAction.value = Resource.error("", null)
+        }
+    }
 
     fun getCreatedPreChats(postId: String) {
         firebaseRepo.getAllPreChatRooms(currentUserId).addListenerForSingleValueEvent(object :

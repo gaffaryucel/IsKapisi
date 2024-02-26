@@ -3,6 +3,7 @@ package com.androiddevelopers.freelanceapp.adapters
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -37,8 +38,8 @@ class DiscoverPostDetailsAdapter : RecyclerView.Adapter<DiscoverPostDetailsAdapt
         set(value) = recyclerListDiffer.submitList(value)
 
     inner class DiscoverPostDetailsViewHolder(val binding: RowDiscoverDetailsBinding) : RecyclerView.ViewHolder(binding.root){
-        fun likePost(postId : String,likeCount : List<String>){
-            like?.invoke(postId,likeCount)
+        fun likePost(ownerToken : String,imageUrl : String,postId : String,likeCount : List<String>){
+            like?.invoke(ownerToken,imageUrl,postId,likeCount)
             binding.ivLike.setImageResource(R.drawable.ic_fill_favorite)
         }
         fun dislikePost(postId : String,likeCount : List<String>){
@@ -94,9 +95,13 @@ class DiscoverPostDetailsAdapter : RecyclerView.Adapter<DiscoverPostDetailsAdapt
                 holder.binding.tvLike.text ="${postLikeCount.toString()} beğeni"
                 liked = false
             }else{
-                holder.likePost(post.postId.toString(),post.likeCount ?: emptyList())
+                try {
+                    holder.likePost(post.ownerToken.toString(),post.images?.get(0).toString(),post.postId.toString(),post.likeCount ?: emptyList())
+                }catch (e: Exception){
+                    Toast.makeText(holder.itemView.context, "Beğenilemedi", Toast.LENGTH_SHORT).show()
+                }
                 postLikeCount += 1
-                holder.binding.tvLike.text ="${postLikeCount.toString()} beğeni"
+                holder.binding.tvLike.text ="$postLikeCount beğeni"
                 liked = true
             }
         }
@@ -119,6 +124,6 @@ class DiscoverPostDetailsAdapter : RecyclerView.Adapter<DiscoverPostDetailsAdapt
         }
     }
 
-    var like: ((String,List<String>) -> Unit)? = null
+    var like: ((String,String,String,List<String>) -> Unit)? = null
     var dislike: ((String,List<String>) -> Unit)? = null
 }

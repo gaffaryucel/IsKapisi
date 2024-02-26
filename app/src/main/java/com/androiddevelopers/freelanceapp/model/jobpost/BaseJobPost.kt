@@ -19,6 +19,7 @@ open class BaseJobPost {
     var viewCount: List<String>? = null // İlanı görüntüleyen kişiler
     var isUrgent: Boolean? = null // İşin acil olduğunu belirtmek için
     var worksToBeDone: List<String>? = null // yapılması gereken işler
+    var ownerToken: String? = null // yapılması gereken işler
 
     constructor()
     constructor(
@@ -37,7 +38,8 @@ open class BaseJobPost {
         savedUsers: List<String>?,
         viewCount: List<String>?,
         isUrgent: Boolean?,
-        worksToBeDone: List<String>?
+        worksToBeDone: List<String>?,
+        ownerToken: String?
     ) {
         this.postId = postId
         this.title = title
@@ -55,6 +57,7 @@ open class BaseJobPost {
         this.viewCount = viewCount
         this.isUrgent = isUrgent
         this.worksToBeDone = worksToBeDone
+        this.ownerToken = ownerToken
     }
 
     override fun equals(other: Any?): Boolean {

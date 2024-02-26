@@ -15,6 +15,7 @@ import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.FragmentFreelancerInfoBinding
 import com.androiddevelopers.freelanceapp.model.Education
 import com.androiddevelopers.freelanceapp.model.PortfolioItem
+import com.androiddevelopers.freelanceapp.model.UserProfileModel
 import com.androiddevelopers.freelanceapp.util.PermissionUtils
 import com.androiddevelopers.freelanceapp.util.UserStatus
 import com.androiddevelopers.freelanceapp.viewmodel.profile.BaseProfileViewModel

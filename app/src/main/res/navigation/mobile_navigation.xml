@@ -114,7 +114,11 @@
         android:id="@+id/createChatRoomFragment"
         android:name="com.androiddevelopers.freelanceapp.view.chat.CreateChatRoomFragment"
         android:label="fragment_create_chat_room"
-        tools:layout="@layout/fragment_create_chat_room"></fragment>
+        tools:layout="@layout/fragment_create_chat_room">
+        <action
+            android:id="@+id/action_createChatRoomFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+    </fragment>
     <fragment
         android:id="@+id/createDiscoverPostFragment"
         android:name="com.androiddevelopers.freelanceapp.view.discover.CreateDiscoverPostFragment"

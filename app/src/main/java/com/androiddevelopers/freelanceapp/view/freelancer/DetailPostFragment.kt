@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
@@ -15,6 +16,7 @@ import com.androiddevelopers.freelanceapp.adapters.ViewPagerAdapterForImages
 import com.androiddevelopers.freelanceapp.databinding.FragmentHomeDetailPostBinding
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
+import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.util.downloadImage
 import com.androiddevelopers.freelanceapp.viewmodel.freelancer.DetailPostViewModel
@@ -31,6 +33,7 @@ class DetailPostFragment : Fragment() {
     private lateinit var viewPagerAdapter: ViewPagerAdapterForImages
     private var post: FreelancerJobPost? = null
     private var user: UserModel? = null
+    private var currentUser: UserModel? = null
 
     private var isExists = false
     override fun onCreateView(
@@ -60,13 +63,27 @@ class DetailPostFragment : Fragment() {
             if (isExists) {
                 goToPreMessaging()
             } else {
-                viewModel.createPreChatModel(
-                    "frl",
-                    post?.postId ?: "",
-                    post?.freelancerId ?: "",
-                    user?.username ?: "",
-                    user?.profileImageUrl ?: "",
-                )
+                try {
+                    InAppNotificationModel(
+                        "Yeni Hizmet Talebi!",
+                        "${currentUser?.fullName} adlı kullanıcı sizden hizmet talep etti! Talep detaylarını görmek lütfen uygulamayı kontrol edin.",
+                        currentUser?.profileImageUrl.toString(),
+                        post?.images?.get(0).toString(),
+                        user?.token
+                    ).also { notification->
+                        viewModel.createPreChatModel(
+                            "frl",
+                            post?.postId ?: "",
+                            post?.freelancerId ?: "",
+                            user?.username ?: "",
+                            user?.profileImageUrl ?: "",
+                            notification,
+                        )
+                    }
+                }catch (e : Exception){
+                    Toast.makeText(requireContext(), "Hata", Toast.LENGTH_SHORT).show()
+                }
+
             }
         }
     }
@@ -123,6 +140,9 @@ class DetailPostFragment : Fragment() {
                     downloadImage(ivUserProfile, it.profileImageUrl)
                 }
                 user = it
+            }
+            currentUserData.observe(owner) {
+                currentUser = it
             }
 
             preChatList.observe(owner) {

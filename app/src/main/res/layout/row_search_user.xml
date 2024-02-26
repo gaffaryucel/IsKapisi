@@ -6,7 +6,7 @@
     <data>
         <variable
             name="userItem"
-            type="com.androiddevelopers.freelanceapp.model.FollowModel" />
+            type="com.androiddevelopers.freelanceapp.model.UserModel" />
     </data>
 
     <RelativeLayout
@@ -40,7 +40,7 @@
                 android:id="@+id/tvuserName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{userItem.userName}"
+                android:text="@{userItem.username}"
                 android:ellipsize="end"
                 android:maxLength="25"
                 android:textColor="@color/black"

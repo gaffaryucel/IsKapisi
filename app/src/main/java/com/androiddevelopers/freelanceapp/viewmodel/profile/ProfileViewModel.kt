@@ -19,12 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val firebaseRepo: FirebaseRepoInterFace,
-    private val firebaseAuth: FirebaseAuth,
-    private val roomRepo: RoomUserDatabaseRepoInterface,
+    firebaseAuth: FirebaseAuth,
 ): BaseProfileViewModel(firebaseRepo,firebaseAuth) {
-    private val userId = firebaseAuth.currentUser!!.uid
-
-    val isProfileVerified = MutableLiveData<String>()
 
     private var _profileMessage = MutableLiveData<Resource<UserModel>>()
     val profileMessage : LiveData<Resource<UserModel>>
@@ -42,9 +38,6 @@ class ProfileViewModel @Inject constructor(
     val discoverPosts : LiveData<List<DiscoverPostModel>>
         get() = _discoverPosts
 
-    private var _savedUserData = roomRepo.observeUserData()
-    val savedUserData = _savedUserData
-
     private var _followerCount = MutableLiveData<Long>()
     val followerCount = _followerCount
 
@@ -58,7 +51,7 @@ class ProfileViewModel @Inject constructor(
 
     private fun getFreelancerJobPostsFromUser(){
         _profileMessage.value = Resource.loading(null)
-        firebaseRepo.getAllFreelancerJobPostsFromUser(userId)
+        firebaseRepo.getAllFreelancerJobPostsFromUser(currentUserId)
             .addOnSuccessListener {
                 val postList = mutableListOf<FreelancerJobPost>()
                 for (document in it.documents) {
@@ -74,7 +67,7 @@ class ProfileViewModel @Inject constructor(
     }
     private fun getEmployerJobPostsFromUser(){
         _profileMessage.value = Resource.loading(null)
-        firebaseRepo.getAllEmployerJobPostsFromUser(userId)
+        firebaseRepo.getAllEmployerJobPostsFromUser(currentUserId)
             .addOnSuccessListener {
                 val postList = mutableListOf<EmployerJobPost>()
                 for (document in it.documents) {
@@ -90,7 +83,7 @@ class ProfileViewModel @Inject constructor(
     }
     private fun getDiscoverPostsFromUser(){
         _profileMessage.value = Resource.loading(null)
-        firebaseRepo.getAllDiscoverPostsFromUser(userId)
+        firebaseRepo.getAllDiscoverPostsFromUser(currentUserId)
             .addOnSuccessListener {
                 val postList = mutableListOf<DiscoverPostModel>()
                 for (document in it.documents) {
@@ -106,7 +99,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun getFollowerCount(){
-        firebaseRepo.getFollowers(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+        firebaseRepo.getFollowers(currentUserId).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 _followerCount.value = snapshot.childrenCount
             }
@@ -117,5 +110,6 @@ class ProfileViewModel @Inject constructor(
 
         })
     }
+
 
 }

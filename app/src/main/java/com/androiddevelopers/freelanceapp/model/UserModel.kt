@@ -2,7 +2,7 @@ package com.androiddevelopers.freelanceapp.model
 
 import com.androiddevelopers.freelanceapp.util.UserStatus
 
-class UserModel {
+class UserModel{
 
     var userId: String? = null
     var username: String? = null
@@ -30,6 +30,7 @@ class UserModel {
     var canceledJobs: Int? = null // İptal edilen iş sayısı
     var unfinishedJobs: Int? = null // Zamanında bitmeyen iş sayısı
     var rating: Double? = null
+    var token: String? = null
 
     constructor()
 
@@ -59,7 +60,8 @@ class UserModel {
         completedJobs: Int? = null,
         canceledJobs: Int? = null,
         unfinishedJobs: Int? = null,
-        rating: Double? = null
+        rating: Double? = null,
+        token: String? = null
     ) {
         this.userId = userId
         this.username = username
@@ -87,6 +89,7 @@ class UserModel {
         this.canceledJobs = canceledJobs
         this.unfinishedJobs = unfinishedJobs
         this.rating = rating
+        this.token = token
     }
 }
 

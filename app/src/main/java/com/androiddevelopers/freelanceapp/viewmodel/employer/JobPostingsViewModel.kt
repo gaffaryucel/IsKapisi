@@ -3,6 +3,7 @@ package com.androiddevelopers.freelanceapp.viewmodel.employer
 import android.content.SharedPreferences
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.Resource
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -11,8 +12,9 @@ class JobPostingsViewModel
 @Inject
 constructor(
     firebaseRepo: FirebaseRepoInterFace,
+    auth: FirebaseAuth,
     sharedPreferences: SharedPreferences,
-) : BaseJobPostingViewModel(firebaseRepo, sharedPreferences) {
+) : BaseJobPostingViewModel(firebaseRepo, sharedPreferences,auth) {
 
     init {
         getAllEmployerJobPost()

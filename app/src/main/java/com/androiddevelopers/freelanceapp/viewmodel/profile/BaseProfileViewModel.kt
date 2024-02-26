@@ -6,11 +6,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.androiddevelopers.freelanceapp.model.UserModel
+import com.androiddevelopers.freelanceapp.model.UserProfileModel
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
+import com.androiddevelopers.freelanceapp.repo.RoomUserDatabaseRepoInterface
 import com.androiddevelopers.freelanceapp.util.Resource
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,7 +23,7 @@ open class BaseProfileViewModel @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
 ) : ViewModel() {
 
-    private val userId = firebaseAuth.currentUser!!.uid
+    val currentUserId = firebaseAuth.currentUser!!.uid
 
     private var _message = MutableLiveData<Resource<UserModel>>()
     val message: LiveData<Resource<UserModel>>
@@ -35,13 +38,14 @@ open class BaseProfileViewModel @Inject constructor(
         get() = _userData
 
 
+
     init {
         getUserDataFromFirebase()
     }
 
     internal fun getUserDataFromFirebase(){
         viewModelScope.launch(Dispatchers.IO) {
-            firebaseRepo.getUserDataByDocumentId(userId)
+            firebaseRepo.getUserDataByDocumentId(currentUserId)
                 .addOnSuccessListener { documentSnapshot ->
                     if (documentSnapshot.exists()) {
                         val user = documentSnapshot.toObject(UserModel::class.java)
@@ -65,25 +69,31 @@ open class BaseProfileViewModel @Inject constructor(
 
     internal fun saveImageToStorage(bitmap : Bitmap) = viewModelScope.launch {
         _uploadMessage.value = Resource.loading(null)
-        val imageUrl = firebaseRepo.uploadUserProfileImage(bitmap,userId)
+        val imageUrl = firebaseRepo.uploadUserProfileImage(bitmap,currentUserId)
         if (imageUrl != null) {
-            _uploadMessage.value = Resource.success(null)
-            updateUserInfo("profileImageUrl",imageUrl)
+            try {
+                updateUserInfo("profileImageUrl",imageUrl)
+                _uploadMessage.value = Resource.success(null)
+            }catch (e : Exception){
+                _uploadMessage.value = e.localizedMessage?.let { Resource.error(it,null) }
+            }
         } else {
             _uploadMessage.value = Resource.error("Hata",null)
         }
     }
 
-    internal fun updateUserInfo(key : String,userPhoto: Any) {
+    internal fun updateUserInfo(key : String,userData: Any) {
         viewModelScope.launch(Dispatchers.IO) {
             val photoMap = hashMapOf<String,Any?>(
-                key to userPhoto
+                key to userData
             )
-            firebaseRepo.updateUserData(userId,photoMap).addOnSuccessListener {
+            firebaseRepo.updateUserData(currentUserId,photoMap).addOnSuccessListener {
                 _message.value = Resource.success(null)
             }.addOnFailureListener{
                 _message.value = Resource.error(it.localizedMessage ?: "error",null)
             }
         }
     }
+    fun signOut() = firebaseAuth.signOut()
+
 }

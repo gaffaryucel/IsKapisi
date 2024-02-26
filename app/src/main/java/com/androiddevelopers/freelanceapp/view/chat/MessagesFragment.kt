@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -11,9 +12,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.MessageAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentMessagesBinding
+import com.androiddevelopers.freelanceapp.model.UserModel
+import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
+import com.androiddevelopers.freelanceapp.util.Util.MESSAGE_TOPIC
 import com.androiddevelopers.freelanceapp.viewmodel.chat.MessagesViewModel
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -28,6 +33,9 @@ class MessagesFragment : Fragment() {
 
     private var isFirst = true
 
+    private var receiverData : UserModel? = null
+    private var currentUserData : UserModel? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -40,6 +48,7 @@ class MessagesFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
         val chatId = arguments?.let {
             it.getString("chat_id")
@@ -54,6 +63,7 @@ class MessagesFragment : Fragment() {
             it.getString("receiver_image")
         }
 
+        viewModel.getUserData(messageReceiver ?: "")
         viewModel.getMessages(chatId ?: "")
 
 
@@ -63,19 +73,41 @@ class MessagesFragment : Fragment() {
             binding.ivUser
         )
         binding.tvUserName.text = receiverName
+        observeLiveData()
 
         binding.btnSend.setOnClickListener{
             val message = binding.messageInput.text.toString()
-            viewModel.sendMessage(
-                chatId.toString(),
-                message,
-                messageReceiver.toString()
-            )
-            binding.messageInput.setText("")
+            if (message.isNotEmpty()){
+                viewModel.sendMessage(
+                    chatId.toString(),
+                    message,
+                    messageReceiver.toString()
+                )
+                binding.messageInput.setText("")
 
-            val lastItemPosition = adapter.itemCount - 1
-            if (lastItemPosition >= 0) {
-                binding.messageRecyclerView.smoothScrollToPosition(lastItemPosition)
+                val lastItemPosition = adapter.itemCount - 1
+                if (lastItemPosition >= 0) {
+                    binding.messageRecyclerView.smoothScrollToPosition(lastItemPosition)
+                }
+
+                FirebaseMessaging.getInstance().subscribeToTopic(MESSAGE_TOPIC)
+
+                val title = "yeni mesajın var"
+
+                try {
+                    InAppNotificationModel(
+                        title,
+                        "${currentUserData?.fullName} adlı kullanıcı sizden hizmet talep etti! Talep detaylarını görmek lütfen uygulamayı kontrol edin.",
+                        currentUserData?.profileImageUrl.toString(),
+                        "",
+                        receiverData?.token.toString()
+                    ).also { notification->
+                        viewModel.sendNotification(notification)
+                    }
+                }catch (e : Exception){
+                    Toast.makeText(requireContext(), "Hata", Toast.LENGTH_SHORT).show()
+                }
+
             }
         }
 
@@ -85,7 +117,7 @@ class MessagesFragment : Fragment() {
         binding.messageRecyclerView.setLayoutManager(layoutManager)
         binding.messageRecyclerView.adapter = adapter
 
-        observeLiveData()
+
     }
 
     private fun observeLiveData(){
@@ -102,6 +134,12 @@ class MessagesFragment : Fragment() {
             if (lastItemPosition >= 0) {
                 binding.messageRecyclerView.smoothScrollToPosition(lastItemPosition)
             }
+        })
+        viewModel.userData.observe(viewLifecycleOwner, Observer {
+            receiverData = it
+        })
+        viewModel.currentUserData.observe(viewLifecycleOwner, Observer {
+            currentUserData = it
         })
     }
     override fun onResume() {
@@ -127,4 +165,5 @@ class MessagesFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
 }

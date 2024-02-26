@@ -23,4 +23,12 @@ class RoomUserDatabaseRepoImpl @Inject constructor(
     override fun deleteUser(user: UserProfileModel) {
         dao.delete(user)
     }
+
+    override fun updateUserName(userId: String, userName: String) {
+        dao.updateUserName(userId, userName)
+    }
+
+    override fun updateUserImage(userId: String, userImage: String) {
+        dao.updateUserImage(userId, userImage)
+    }
 }

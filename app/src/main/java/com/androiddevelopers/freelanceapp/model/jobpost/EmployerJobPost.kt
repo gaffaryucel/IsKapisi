@@ -26,6 +26,7 @@ class EmployerJobPost : BaseJobPost {
         isUrgent: Boolean? = null,
         employerId: String? = null,
         worksToBeDone: List<String>? = null,
+        ownerToken: String? = null,
         aboutYou: List<String>? = null
     ) : super(
         postId,
@@ -43,7 +44,8 @@ class EmployerJobPost : BaseJobPost {
         savedUsers,
         viewCount,
         isUrgent,
-        worksToBeDone
+        worksToBeDone,
+        ownerToken
     ) {
         this.employerId = employerId
         this.aboutYou = aboutYou

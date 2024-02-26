@@ -11,6 +11,8 @@ import com.androiddevelopers.freelanceapp.repo.FirebaseRepoImpl
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.repo.RoomUserDatabaseRepoImpl
 import com.androiddevelopers.freelanceapp.repo.RoomUserDatabaseRepoInterface
+import com.androiddevelopers.freelanceapp.service.NotificationAPI
+import com.androiddevelopers.freelanceapp.util.Util.BASE_URL
 import com.androiddevelopers.freelanceapp.util.Util.DATABASE_URL
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
@@ -29,6 +31,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -46,7 +50,7 @@ object AppModule {
         return Room.databaseBuilder(
             context,
             UserDatabase::class.java,
-            "user_database_version_1" // Veritabanı adını buraya ekleyin
+            "new_user_database" // Veritabanı adını buraya ekleyin
         ).build()
     }
 
@@ -87,15 +91,29 @@ object AppModule {
     @Provides
     fun provideRealtimeDatabase() = Firebase.database(DATABASE_URL)
 
+    @Provides
+    fun provideRetrofit(): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    @Provides
+    fun provideNotificationAPI(retrofit: Retrofit): NotificationAPI {
+        return retrofit.create(NotificationAPI::class.java)
+    }
+
     @Singleton
     @Provides
     fun provideFirebaseRepo(
         auth: FirebaseAuth,
         firestore: FirebaseFirestore,
         database: FirebaseDatabase,
-        storage: FirebaseStorage
+        storage: FirebaseStorage,
+        notificationAPI: NotificationAPI
     ): FirebaseRepoInterFace {
-        return FirebaseRepoImpl(auth, firestore, database, storage)
+        return FirebaseRepoImpl(auth, firestore, database, storage,notificationAPI)
     }
 
     @Singleton

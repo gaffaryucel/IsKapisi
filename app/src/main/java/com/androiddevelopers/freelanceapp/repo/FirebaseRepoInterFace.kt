@@ -4,18 +4,21 @@ import android.graphics.Bitmap
 import android.net.Uri
 import com.androiddevelopers.freelanceapp.model.ChatModel
 import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
+import com.androiddevelopers.freelanceapp.model.FollowModel
 import com.androiddevelopers.freelanceapp.model.MessageModel
 import com.androiddevelopers.freelanceapp.model.PreChatModel
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
+import com.androiddevelopers.freelanceapp.model.notification.PushNotification
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
-import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.UploadTask
+import okhttp3.ResponseBody
+import retrofit2.Response
 
 interface FirebaseRepoInterFace {
     // Auth işlemleri
@@ -86,6 +89,7 @@ interface FirebaseRepoInterFace {
     ): Task<Void>
 
     fun getAllMessagesFromRealtimeDatabase(currentUserId: String, chatId: String): DatabaseReference
+    fun getAllFollowingUsers(currentUserId: String): DatabaseReference
     fun createChatRoomForOwner(currentUserId: String, chat: ChatModel): Task<Void>
     fun createChatRoomForChatMate(userId: String, chat: ChatModel): Task<Void>
     fun getAllChatRooms(currentUserId: String): DatabaseReference
@@ -123,11 +127,14 @@ interface FirebaseRepoInterFace {
     fun getAllDiscoverPostsFromUser(userId: String): Task<QuerySnapshot>
     fun getAllEmployerJobPostsFromUser(userId: String): Task<QuerySnapshot>
     fun getAllFreelancerJobPostsFromUser(userId: String): Task<QuerySnapshot>
-    fun follow(currentUserId: String, followingId: String): Task<Void>
+    fun follow(followerModel: FollowModel, followingModel: FollowModel): Task<Void>
     fun unFollow(currentUserId: String, followingId: String): Task<Void>
     fun updateUserData(userId: String, updateData: HashMap<String, Any?>): Task<Void>
     fun getFollowers(userId: String): DatabaseReference
     suspend fun uploadUserProfileImage(bitmap: Bitmap, uid : String): String?
+
+    //Retrofit
+    suspend fun postNotification(notification: PushNotification): Response<ResponseBody>
 
 }
 

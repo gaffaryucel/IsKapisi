@@ -1,15 +1,23 @@
 package com.androiddevelopers.freelanceapp.viewmodel.discover
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
 import com.androiddevelopers.freelanceapp.model.UserModel
+import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
+import com.androiddevelopers.freelanceapp.model.notification.NotificationData
+import com.androiddevelopers.freelanceapp.model.notification.PushNotification
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
+import com.androiddevelopers.freelanceapp.repo.RoomUserDatabaseRepoInterface
 import com.androiddevelopers.freelanceapp.util.Resource
+import com.androiddevelopers.freelanceapp.viewmodel.BaseNotificationViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -19,8 +27,8 @@ import javax.inject.Inject
 @HiltViewModel
 class DiscoverDetailsViewModel @Inject constructor(
     private val firebaseRepo: FirebaseRepoInterFace,
-    private val auth: FirebaseAuth,
-): ViewModel() {
+    auth: FirebaseAuth
+): BaseNotificationViewModel(firebaseRepo,auth) {
 
     private var _message = MutableLiveData<Resource<UserModel>>()
     val message: LiveData<Resource<UserModel>>
@@ -29,8 +37,6 @@ class DiscoverDetailsViewModel @Inject constructor(
     private val _discoverPosts = MutableLiveData<List<DiscoverPostModel>>()
     val discoverPosts: LiveData<List<DiscoverPostModel>>
         get() = _discoverPosts
-
-    private val userId = auth.currentUser?.uid.toString()
 
     init {
         getPosts()
@@ -52,24 +58,31 @@ class DiscoverDetailsViewModel @Inject constructor(
             }
     }
 
-    fun likePost(postId : String,likeList: List<String>) = GlobalScope.launch(Dispatchers.IO){
+    fun likePost(postOwnersToken : String,imageUrl : String,postId : String,likeList: List<String>) = GlobalScope.launch(Dispatchers.IO){
             delay(1000)
-            println("likePost")
             val mutableList = mutableSetOf<String>()
             mutableList.addAll(likeList)
-            mutableList.add(userId)
+            mutableList.add(currentUserId)
             val likeData = hashMapOf<String,Any?>(
                 "likeCount" to mutableList.toList()
             )
-            firebaseRepo.likePost(postId,likeData)
-
+            firebaseRepo.likePost(postId,likeData).addOnSuccessListener {
+                sendNotification(
+                    InAppNotificationModel(
+                        title = "Yeni Bir Beğeni",
+                        message = "${currentUserData.value?.fullName}, gönderinizi beğendi.",
+                        userImage = "${currentUserData.value?.profileImageUrl}",
+                        imageUrl = imageUrl,
+                        userToken = postOwnersToken
+                    )
+                )
+            }
     }
     fun dislikePost(postId : String,likeList: List<String>) = GlobalScope.launch(Dispatchers.IO){
         delay(1000)
-        println("dislikePost")
         val mutableList = mutableSetOf<String>()
         mutableList.addAll(likeList)
-        mutableList.remove(userId)
+        mutableList.remove(currentUserId)
         val likeData = hashMapOf<String,Any?>(
             "likeCount" to mutableList.toList()
         )

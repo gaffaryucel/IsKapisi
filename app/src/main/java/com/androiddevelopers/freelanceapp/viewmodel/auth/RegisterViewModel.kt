@@ -8,6 +8,7 @@ import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.Resource
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,6 +23,8 @@ class RegisterViewModel @Inject constructor(
     val authState : LiveData<Resource<Boolean>>
         get() = _authState
 
+    private var userToken = MutableLiveData<Resource<String>>()
+
     private var _registrationError = MutableLiveData<Resource<Boolean>>()
     val registrationError : LiveData<Resource<Boolean>>
         get() = _registrationError
@@ -30,6 +33,9 @@ class RegisterViewModel @Inject constructor(
     val isVerificationEmailSent : LiveData<Resource<Boolean>>
         get() = _isVerificationEmailSent
 
+    init {
+        getToken()
+    }
     fun signUp(
         email: String,
         password: String,
@@ -54,10 +60,10 @@ class RegisterViewModel @Inject constructor(
 
     private fun createUser(
         userId : String,
-        email: String
+        email: String,
     ) = viewModelScope.launch{
         val tempUsername = email.substringBefore("@")
-        val user = makeUser(userId,tempUsername,email)
+        val user = makeUser(userId,tempUsername,email,userToken.value?.data.toString())
         firebaseRepo.addUserToFirestore(user)
             .addOnSuccessListener {
                 verify()
@@ -80,8 +86,8 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-    private fun makeUser(userId : String,userName: String,email: String) : UserModel {
-        return UserModel(userId,userName,email,"")
+    private fun makeUser(userId : String,userName: String,email: String,token: String) : UserModel {
+        return UserModel(userId = userId, username = userName,email = email, token =token )
     }
 
     private fun isPasswordConfirmed(password: String,confirmPassword : String): Boolean {
@@ -100,6 +106,16 @@ class RegisterViewModel @Inject constructor(
             false
         } else {
             isPasswordConfirmed(password,confirmPassword)
+        }
+    }
+    private fun getToken(){
+        FirebaseMessaging.getInstance().token.addOnCompleteListener {
+            if (!it.isSuccessful) {
+                userToken.value = Resource.error("",null)
+                return@addOnCompleteListener
+            }
+            val token = it.result //this is the token retrieved
+            userToken.value = Resource.success(token)
         }
     }
 }

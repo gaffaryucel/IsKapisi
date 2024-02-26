@@ -4,15 +4,17 @@ import android.graphics.Bitmap
 import android.net.Uri
 import com.androiddevelopers.freelanceapp.model.ChatModel
 import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
+import com.androiddevelopers.freelanceapp.model.FollowModel
 import com.androiddevelopers.freelanceapp.model.MessageModel
 import com.androiddevelopers.freelanceapp.model.PreChatModel
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
+import com.androiddevelopers.freelanceapp.model.notification.PushNotification
+import com.androiddevelopers.freelanceapp.service.NotificationAPI
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.DocumentSnapshot
@@ -21,6 +23,8 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import kotlinx.coroutines.tasks.await
+import okhttp3.ResponseBody
+import retrofit2.Response
 import java.io.ByteArrayOutputStream
 import java.util.*
 import javax.inject.Inject
@@ -29,7 +33,8 @@ class FirebaseRepoImpl @Inject constructor(
     private val auth: FirebaseAuth,
     firestore: FirebaseFirestore,
     database: FirebaseDatabase,
-    storage: FirebaseStorage
+    storage: FirebaseStorage,
+    private val notificationAPI: NotificationAPI
 ) : FirebaseRepoInterFace {
     //FirestoreRef
     private val userCollection = firestore.collection("users")
@@ -202,6 +207,10 @@ class FirebaseRepoImpl @Inject constructor(
         return messagesReference.child(currentUserId)
     }
 
+    override fun getAllFollowingUsers(currentUserId: String): DatabaseReference {
+        return userFollowRef.child(currentUserId).child("following")
+    }
+
     //PreChatRoom
     override fun getAllPreChatRooms(currentUserId: String): DatabaseReference {
         return preChatReference.child(currentUserId)
@@ -274,21 +283,24 @@ class FirebaseRepoImpl @Inject constructor(
         return freelancerPostCollection.whereEqualTo("freelancerId", userId).get()
     }
 
-    override fun follow(currentUserId: String, followingId: String): Task<Void> {
-        userFollowRef.child(followingId).child("followers").child(currentUserId)
-            .setValue(currentUserId)
-        return userFollowRef.child(currentUserId).child("following").child(followingId)
-            .setValue(followingId)
+    override fun follow(followerModel: FollowModel, followingModel: FollowModel): Task<Void> {
+        //Karşı tarafın takipçilerine ekleme yapılacak kısım
+        userFollowRef.child(followingModel.userId.toString()) // karşı tarafın Id'si altına iniyoruz
+            .child("followers") //Onun takipçilerine ekleme yapmak için followers düğümü altına iniyoruz
+            .child(followerModel.userId.toString()) //Biz takip ettiğimiz için kendi Id'miz ile bir anahtar oluşturuyoruz
+            .setValue(followerModel) // Kendi bilgilerimizi onun takipçileri arasına verdik
+
+        //Ben Takip Ettiğim için takipçilerime ekleme yapılacak kısım
+        return userFollowRef.child(followerModel.userId.toString())//Benim Id altında
+            .child("following") //Benim takip ettiklerimin olduğu kısım
+            .child(followingModel.userId.toString()) //Benim takip ettiğim kişinin Id'sini kullanarak anhtar oluştur
+            .setValue(followingModel) // Takip ettiğim kişinin bilgileri
     }
 
     override fun unFollow(currentUserId: String, followingId: String): Task<Void> {
         userFollowRef.child(followingId).child("followers").child(currentUserId).removeValue()
         return userFollowRef.child(currentUserId).child("following").child(followingId)
             .removeValue()
-    }
-
-    override fun updateUserData(userId: String, updateData: HashMap<String, Any?>): Task<Void> {
-        return userCollection.document(userId).update(updateData)
     }
 
     override fun getFollowers(userId: String): DatabaseReference {
@@ -330,6 +342,14 @@ class FirebaseRepoImpl @Inject constructor(
         } catch (e: Exception) {
             null
         }
+    }
 
+    override fun updateUserData(userId: String, updateData: HashMap<String, Any?>): Task<Void> {
+        return userCollection.document(userId).update(updateData)
+    }
+
+    //Retrofit
+    override suspend fun postNotification(notification: PushNotification): Response<ResponseBody> {
+        return notificationAPI.postNotification(notification)
     }
 }
