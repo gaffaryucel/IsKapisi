@@ -8,6 +8,7 @@ import com.androiddevelopers.freelanceapp.model.MessageModel
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.notification.PushNotification
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
+import com.androiddevelopers.freelanceapp.viewmodel.BaseNotificationViewModel
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -21,35 +22,14 @@ import javax.inject.Inject
 @HiltViewModel
 open class BaseChatViewModel  @Inject constructor(
     private val repo  : FirebaseRepoInterFace,
-    private val auth  : FirebaseAuth
-): ViewModel() {
-    val currentUserId = auth.currentUser?.let { it.uid }
-
-    private val _currentUserData = MutableLiveData<UserModel>()
-    val currentUserData : LiveData<UserModel>
-        get() = _currentUserData
+    auth  : FirebaseAuth
+): BaseNotificationViewModel(repo,auth) {
 
     private var _userData = MutableLiveData<UserModel>()
     val userData : LiveData<UserModel>
         get() = _userData
 
-    init {
-        getCurrentUserData()
-    }
-    fun getCurrentUserData(){
-        repo.getUserDataByDocumentId(currentUserId.toString())
-            .addOnSuccessListener { documentSnapshot ->
-                if (documentSnapshot.exists()) {
-                    val user = documentSnapshot.toObject(UserModel::class.java)
-                    if (user != null) {
-                        _currentUserData.value = user ?: UserModel()
-                    }
-                }
-            }
-            .addOnFailureListener { exception ->
-                // Hata durzumunda işlemleri buraya ekleyebilirsiniz
-            }
-    }
+
     fun getUserData(userId : String){
         repo.getUserDataByDocumentId(userId)
             .addOnSuccessListener { documentSnapshot ->
@@ -57,24 +37,12 @@ open class BaseChatViewModel  @Inject constructor(
                     val user = documentSnapshot.toObject(UserModel::class.java)
                     if (user != null) {
                         _userData.value = user ?: UserModel()
-                    }else{
                     }
-                } else {
-                    // Belge yoksa işlemleri buraya ekleyebilirsiniz
                 }
             }
             .addOnFailureListener { exception ->
                 // Hata durzumunda işlemleri buraya ekleyebilirsiniz
             }
-    }
-
-    fun sendNotification(notification: PushNotification) = CoroutineScope(Dispatchers.IO).launch {
-        val TAG = "Notification"
-        try {
-            repo.postNotification(notification)
-        } catch(e: Exception) {
-            Log.e(TAG, e.toString())
-        }
     }
 
     fun getCurrentTime(): String {

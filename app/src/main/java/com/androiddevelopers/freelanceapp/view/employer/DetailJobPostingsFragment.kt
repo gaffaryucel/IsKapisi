@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
@@ -17,12 +18,16 @@ import com.androiddevelopers.freelanceapp.adapters.ViewPagerAdapterForImages
 import com.androiddevelopers.freelanceapp.databinding.FragmentJobPostingsDetailBinding
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
+import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
 import com.androiddevelopers.freelanceapp.util.Status
+import com.androiddevelopers.freelanceapp.util.Util
+import com.androiddevelopers.freelanceapp.util.Util.EMPLOYER_POST_TOPIC
 import com.androiddevelopers.freelanceapp.util.downloadImage
 import com.androiddevelopers.freelanceapp.util.snackbar
 import com.androiddevelopers.freelanceapp.viewmodel.employer.DetailJobPostingsViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -45,6 +50,7 @@ class DetailJobPostingsFragment : Fragment() {
     private var savedUsers: List<String>? = null
     private var isSavedPost = false
     private var user: UserModel? = null
+    private var currentUser: UserModel? = null
 
     private var isExists = false
 
@@ -78,12 +84,28 @@ class DetailJobPostingsFragment : Fragment() {
                 if (isExists) {
                     goToPreMessaging()
                 } else {
-                    viewModel.createPreChatModel(
-                        post?.postId ?: "",
-                        post?.employerId ?: "",
-                        user?.username ?: "",
-                        user?.profileImageUrl ?: "",
-                    )
+                    FirebaseMessaging.getInstance().subscribeToTopic(EMPLOYER_POST_TOPIC)
+
+                    try {
+                        InAppNotificationModel(
+                            "Yeni Hizmet Talebi!",
+                            "${currentUser?.fullName} ilanınıza başvurdu! Başvuru detaylarını görmek ve incelemek için lütfen uygulamayı kontrol edin..",
+                            currentUser?.profileImageUrl.toString(),
+                            null,
+                            user?.token
+                        ).also { notification->
+                            viewModel.createPreChatModel(
+                                "emp",
+                                post?.postId ?: "",
+                                post?.employerId ?: "",
+                                user?.username ?: "",
+                                user?.profileImageUrl ?: "",
+                                notification,
+                            )
+                        }
+                    }catch (e : Exception){
+                        Toast.makeText(requireContext(), "Hata", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
 
@@ -219,12 +241,16 @@ class DetailJobPostingsFragment : Fragment() {
                 }
                 binding.viewCount = count
             }
+            currentUserData.observe(owner){
+                currentUser = it
+            }
 
             firebaseUserData.observe(owner) {
                 with(binding) {
                     user = it
                     downloadImage(ivUserProfile, it.profileImageUrl)
                 }
+                user = it
             }
 
             preChatList.observe(owner) {

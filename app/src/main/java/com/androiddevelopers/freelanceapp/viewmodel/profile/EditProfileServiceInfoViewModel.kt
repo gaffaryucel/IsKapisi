@@ -7,14 +7,12 @@ import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.Resource
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.storage.FirebaseStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 @HiltViewModel
 class EditProfileServiceInfoViewModel  @Inject constructor(
     private val firebaseRepo: FirebaseRepoInterFace,
-    private val firebaseAuth: FirebaseAuth,
-    private val storage : FirebaseStorage
+    firebaseAuth: FirebaseAuth,
 ) : ViewModel() {
 
     private val userId = firebaseAuth.currentUser!!.uid

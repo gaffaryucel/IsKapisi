@@ -13,13 +13,13 @@ import com.androiddevelopers.freelanceapp.util.Resource
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel  
 open class BaseProfileViewModel @Inject constructor(
     private val firebaseRepo: FirebaseRepoInterFace,
-    private val roomRepo: RoomUserDatabaseRepoInterface,
     private val firebaseAuth: FirebaseAuth,
 ) : ViewModel() {
 
@@ -73,28 +73,10 @@ open class BaseProfileViewModel @Inject constructor(
         if (imageUrl != null) {
             try {
                 updateUserInfo("profileImageUrl",imageUrl)
-                updateUserImage(imageUrl)
                 _uploadMessage.value = Resource.success(null)
             }catch (e : Exception){
                 _uploadMessage.value = e.localizedMessage?.let { Resource.error(it,null) }
             }
-        } else {
-            _uploadMessage.value = Resource.error("Hata",null)
-        }
-    }
-
-    internal fun saveUserInLocalAndSaveImageToStorage(userName: String,bitmap : Bitmap) = viewModelScope.launch {
-        _uploadMessage.value = Resource.loading(null)
-        val imageUrl = firebaseRepo.uploadUserProfileImage(bitmap,currentUserId)
-        if (imageUrl != null) {
-            val userDataToSave = UserProfileModel(currentUserId,userName,imageUrl)
-            try {
-                updateUserInfo("profileImageUrl",imageUrl)
-                saveUserDataInRoom(userDataToSave)
-            }catch (e : Exception){
-                _uploadMessage.value = e.localizedMessage?.let { Resource.error(it,null) }
-            }
-            _uploadMessage.value = Resource.success(null)
         } else {
             _uploadMessage.value = Resource.error("Hata",null)
         }
@@ -106,37 +88,12 @@ open class BaseProfileViewModel @Inject constructor(
                 key to userData
             )
             firebaseRepo.updateUserData(currentUserId,photoMap).addOnSuccessListener {
-               if (key.equals("fullName")){
-                   try {
-                       updateUserName(userData.toString())
-                       _message.value = Resource.success(null)
-                   }catch (e : Exception){
-                       _message.value = e.localizedMessage?.let { it1 -> Resource.error(it1,null) }
-                   }
-               }else{
-                   _message.value = Resource.success(null)
-               }
+                _message.value = Resource.success(null)
             }.addOnFailureListener{
                 _message.value = Resource.error(it.localizedMessage ?: "error",null)
             }
         }
     }
-
-    private fun saveUserDataInRoom(user : UserProfileModel) = viewModelScope.launch{
-        roomRepo.insertUser(user)
-    }
-
-    private fun updateUserName(userName: String){
-        roomRepo.updateUserName(currentUserId,userName)
-    }
-
-    private fun updateUserImage(userImage: String){
-        roomRepo.updateUserImage(currentUserId,userImage)
-    }
-
-
-    fun signOut(){
-        firebaseAuth.signOut()
-    }
+    fun signOut() = firebaseAuth.signOut()
 
 }

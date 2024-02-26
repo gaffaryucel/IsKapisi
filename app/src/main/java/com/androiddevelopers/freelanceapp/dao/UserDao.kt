@@ -7,7 +7,7 @@ import com.androiddevelopers.freelanceapp.model.UserProfileModel
 @Dao
 interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(student: UserProfileModel)
+    fun insert(user: UserProfileModel)
 
     @Update
     fun update(user: UserProfileModel)

@@ -86,7 +86,7 @@ class FreelancerInfoFragment : Fragment() {
             viewModel.updateUserInfo("portfolio", listOf(PortfolioItem(portfolio,portfolio,portfolio)))
             viewModel.updateUserInfo("education", listOf(Education(education,education,2024)))
             viewModel.updateUserInfo("userType", UserStatus.FREELANCER)
-            viewModel.saveUserInLocalAndSaveImageToStorage(fullName,selectedImage!!)
+            viewModel.saveImageToStorage(selectedImage!!)
         }
         // All fields are filled, proceed with registration
         // Perform registration logic here

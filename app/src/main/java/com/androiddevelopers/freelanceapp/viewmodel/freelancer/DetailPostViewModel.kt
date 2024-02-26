@@ -1,5 +1,6 @@
 package com.androiddevelopers.freelanceapp.viewmodel.freelancer
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,25 +8,28 @@ import androidx.lifecycle.viewModelScope
 import com.androiddevelopers.freelanceapp.model.PreChatModel
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
+import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
+import com.androiddevelopers.freelanceapp.model.notification.NotificationData
+import com.androiddevelopers.freelanceapp.model.notification.PushNotification
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.Resource
+import com.androiddevelopers.freelanceapp.viewmodel.BaseNotificationViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DetailPostViewModel
-@Inject
-constructor(
+class DetailPostViewModel @Inject constructor(
     private val firebaseRepo: FirebaseRepoInterFace,
-    private val auth: FirebaseAuth
-) : ViewModel() {
+    auth: FirebaseAuth
+) : BaseNotificationViewModel(firebaseRepo,auth) {
 
-    private val currentUserId = auth.currentUser?.uid.toString()
 
     private var _firebaseMessage = MutableLiveData<Resource<Boolean>>()
     val firebaseMessage: LiveData<Resource<Boolean>>
@@ -45,6 +49,8 @@ constructor(
 
     private var _preChatRoomAction = MutableLiveData<Resource<PreChatModel>>()
     val preChatRoomAction = _preChatRoomAction
+
+
 
     fun getFreelancerJobPostWithDocumentByIdFromFirestore(documentId: String) =
         viewModelScope.launch {
@@ -99,13 +105,14 @@ constructor(
                     }
                 }
         }
-    private fun createPreChatRoom(preChatModel: PreChatModel){
+    private fun createPreChatRoom(preChatModel: PreChatModel,notification : InAppNotificationModel){
         firebaseRepo.createPreChatRoom(
             preChatModel.receiver.toString(),
             preChatModel.sender.toString(),
             preChatModel
         ).addOnCompleteListener{
             if (it.isSuccessful){
+                sendNotification(notification)
                 _preChatRoomAction.value = Resource.success(preChatModel)
             }else{
                 _preChatRoomAction.value = Resource.error(it.exception?.localizedMessage.toString(),null)
@@ -118,6 +125,7 @@ constructor(
         receiver: String,
         receiverName: String,
         receiverImage: String,
+        notification : InAppNotificationModel,
     ){
         val preChat = PreChatModel(
             postId,
@@ -128,7 +136,7 @@ constructor(
             receiverImage,
             ""
         )
-        createPreChatRoom(preChat)
+        createPreChatRoom(preChat,notification)
     }
     fun setMessageValue(value : Boolean){
         if (value){
@@ -154,4 +162,5 @@ constructor(
 
         })
     }
+
 }

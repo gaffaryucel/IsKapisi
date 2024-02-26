@@ -10,12 +10,15 @@ import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.JobStatus
 import com.androiddevelopers.freelanceapp.util.Resource
+import com.androiddevelopers.freelanceapp.viewmodel.BaseNotificationViewModel
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 open class BaseJobPostingViewModel(
     val firebaseRepo: FirebaseRepoInterFace,
-    val sharedPreferences: SharedPreferences
-) : ViewModel() {
+    val sharedPreferences: SharedPreferences,
+    auth: FirebaseAuth
+) : BaseNotificationViewModel(firebaseRepo,auth) {
 
     var _firebaseMessage = MutableLiveData<Resource<Boolean>>()
     val firebaseMessage: LiveData<Resource<Boolean>>

@@ -50,7 +50,7 @@ object AppModule {
         return Room.databaseBuilder(
             context,
             UserDatabase::class.java,
-            "user_database_version_2" // Veritabanı adını buraya ekleyin
+            "new_user_database" // Veritabanı adını buraya ekleyin
         ).build()
     }
 

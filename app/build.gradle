@@ -75,10 +75,11 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:20.7.0'
 
 
-    //ROom
-    //noinspection GradleDependency
-    implementation "androidx.room:room-runtime:$room_version"
-    ksp "androidx.room:room-compiler:$room_version"
+    //Room
+    implementation "androidx.room:room-ktx:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+
+
 
     //Facebook SDK
     implementation 'com.facebook.android:facebook-android-sdk:16.3.0'

@@ -23,10 +23,9 @@ import com.androiddevelopers.freelanceapp.adapters.MessageAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentPreMessagingBinding
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.BaseJobPost
-import com.androiddevelopers.freelanceapp.model.notification.NotificationData
-import com.androiddevelopers.freelanceapp.model.notification.PushNotification
+import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
 import com.androiddevelopers.freelanceapp.util.Status
-import com.androiddevelopers.freelanceapp.util.Util
+import com.androiddevelopers.freelanceapp.util.Util.PRE_MESSAGE_TOPIC
 import com.androiddevelopers.freelanceapp.viewmodel.chat.PreMessagingViewModel
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -47,7 +46,7 @@ class PreMessagingFragment : Fragment() {
     private var post : BaseJobPost? = null
 
     private var currentUser : UserModel? = null
-    private var receiverToken : String? = null
+    private var receiverData : UserModel? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -98,23 +97,21 @@ class PreMessagingFragment : Fragment() {
                     binding.messageRecyclerView.smoothScrollToPosition(lastItemPosition)
                 }
 
-                FirebaseMessaging.getInstance().subscribeToTopic(Util.TOPIC)
-
+                FirebaseMessaging.getInstance().subscribeToTopic(PRE_MESSAGE_TOPIC)
                 val title = "İlan sohbetleri"
                 try {
-                    PushNotification(
-                        NotificationData(title, message,
-                            post?.images?.get(0).toString(),
-                            currentUser?.profileImageUrl.toString()
-                        ),
-                        receiverToken.toString()
-                    ).also {
-                        viewModel.sendNotification(it)
+                    InAppNotificationModel(
+                        title,
+                        "${currentUser?.fullName}: $message",
+                        currentUser?.profileImageUrl.toString(),
+                        "",
+                        receiverData?.token.toString()
+                    ).also { notification->
+                        viewModel.sendNotification(notification)
                     }
-                }catch (e: Exception){
-
+                }catch (e : Exception){
+                    Toast.makeText(requireContext(), "Hata", Toast.LENGTH_SHORT).show()
                 }
-
             }
 
         }
@@ -159,15 +156,15 @@ class PreMessagingFragment : Fragment() {
         viewModel.employerPost.observe(viewLifecycleOwner, Observer {
             post = it
         })
-        viewModel.userData.observe(viewLifecycleOwner, Observer {userData ->
+        viewModel.userData.observe(viewLifecycleOwner, Observer {userInfo ->
             binding.apply {
-                user = userData
+                user = userInfo
             }
-            receiverToken = userData.token
-            if (userData.profileImageUrl != null){
-                if (userData.profileImageUrl!!.isNotEmpty()){
+            receiverData = userInfo
+            if (userInfo.profileImageUrl != null){
+                if (userInfo.profileImageUrl!!.isNotEmpty()){
                     Glide.with(requireContext())
-                        .load(userData.profileImageUrl.toString())
+                        .load(userInfo.profileImageUrl.toString())
                         .into(binding.ivUser)
                 }
             }

@@ -4,13 +4,11 @@ import androidx.room.*
 
 @Entity(tableName = "user")
 data class UserProfileModel(
-    @PrimaryKey
-    @ColumnInfo(name = "user_id")
-    val userId: String,
-
     @ColumnInfo(name = "user_name")
     val username: String,
-
     @ColumnInfo(name = "user_photo")
-    val userPhoto: String
+    val userPhoto: String,
+    @PrimaryKey(autoGenerate = false)
+    @ColumnInfo(name = "user_id")
+    val userId: Int = 0
 )

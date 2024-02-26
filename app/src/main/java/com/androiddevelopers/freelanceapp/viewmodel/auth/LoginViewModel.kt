@@ -7,7 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.Resource
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,8 +27,14 @@ constructor(
     private val _verificationEmailSent = MutableLiveData<Resource<Boolean>>()
     val verificationEmailSent: LiveData<Resource<Boolean>> get() = _verificationEmailSent
 
+    private var userToken = MutableLiveData<Resource<String>>()
+
     fun getUser() = firebaseAuth.currentUser
     fun signOut() = firebaseAuth.signOut()
+
+    init {
+        getToken()
+    }
 
     fun login(email: String, password: String) = viewModelScope.launch {
         _authState.value = Resource.loading(true)
@@ -35,6 +43,7 @@ constructor(
                 _authState.value = Resource.loading(false)
                 if (it.isSuccessful) {
                     _authState.value = Resource.success(true)
+                    updateUserToken(it.result.user?.uid.toString())
                 } else {
                     _authState.value =
                         it.exception?.localizedMessage?.let { message ->
@@ -74,6 +83,24 @@ constructor(
                         }
                 }
             }
+        }
+    }
+    private fun getToken(){
+        FirebaseMessaging.getInstance().token.addOnCompleteListener {
+            if (!it.isSuccessful) {
+                userToken.value = Resource.error("",null)
+                return@addOnCompleteListener
+            }
+            val token = it.result //this is the token retrieved
+            userToken.value = Resource.success(token)
+        }
+    }
+    private fun updateUserToken(currentUserId : String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val tokenMap = hashMapOf<String,Any?>(
+                "token" to userToken
+            )
+            firebaseRepo.updateUserData(currentUserId,tokenMap)
         }
     }
 }

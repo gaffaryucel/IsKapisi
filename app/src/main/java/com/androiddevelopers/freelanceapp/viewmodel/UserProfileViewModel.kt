@@ -10,7 +10,6 @@ import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.model.notification.PushNotification
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
-import com.androiddevelopers.freelanceapp.repo.RoomUserDatabaseRepoInterface
 import com.androiddevelopers.freelanceapp.util.Resource
 import com.androiddevelopers.freelanceapp.viewmodel.profile.BaseProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -26,9 +25,8 @@ import javax.inject.Inject
 @HiltViewModel
 class UserProfileViewModel  @Inject constructor(
     private val firebaseRepo: FirebaseRepoInterFace,
-    private val roomRepo: RoomUserDatabaseRepoInterface,
-    private val auth : FirebaseAuth
-): BaseProfileViewModel(firebaseRepo,roomRepo,auth){
+    auth : FirebaseAuth
+): BaseProfileViewModel(firebaseRepo,auth){
 
     private var _userMessage = MutableLiveData<Resource<UserModel>>()
     val userMessage : LiveData<Resource<UserModel>>

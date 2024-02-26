@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -12,9 +13,8 @@ import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.MessageAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentMessagesBinding
 import com.androiddevelopers.freelanceapp.model.UserModel
-import com.androiddevelopers.freelanceapp.model.notification.NotificationData
-import com.androiddevelopers.freelanceapp.model.notification.PushNotification
-import com.androiddevelopers.freelanceapp.util.Util.TOPIC
+import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
+import com.androiddevelopers.freelanceapp.util.Util.MESSAGE_TOPIC
 import com.androiddevelopers.freelanceapp.viewmodel.chat.MessagesViewModel
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -33,7 +33,8 @@ class MessagesFragment : Fragment() {
 
     private var isFirst = true
 
-    private var userData : UserModel? = null
+    private var receiverData : UserModel? = null
+    private var currentUserData : UserModel? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -89,17 +90,22 @@ class MessagesFragment : Fragment() {
                     binding.messageRecyclerView.smoothScrollToPosition(lastItemPosition)
                 }
 
-                FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
+                FirebaseMessaging.getInstance().subscribeToTopic(MESSAGE_TOPIC)
 
                 val title = "yeni mesajın var"
-                PushNotification(
-                    NotificationData(title,
-                        message,
+
+                try {
+                    InAppNotificationModel(
+                        title,
+                        "${currentUserData?.fullName} adlı kullanıcı sizden hizmet talep etti! Talep detaylarını görmek lütfen uygulamayı kontrol edin.",
+                        currentUserData?.profileImageUrl.toString(),
                         "",
-                        userData?.profileImageUrl.toString()),
-                    userData?.token.toString()
-                ).also {
-                    viewModel.sendNotification(it)
+                        receiverData?.token.toString()
+                    ).also { notification->
+                        viewModel.sendNotification(notification)
+                    }
+                }catch (e : Exception){
+                    Toast.makeText(requireContext(), "Hata", Toast.LENGTH_SHORT).show()
                 }
 
             }
@@ -130,7 +136,10 @@ class MessagesFragment : Fragment() {
             }
         })
         viewModel.userData.observe(viewLifecycleOwner, Observer {
-            userData = it
+            receiverData = it
+        })
+        viewModel.currentUserData.observe(viewLifecycleOwner, Observer {
+            currentUserData = it
         })
     }
     override fun onResume() {
