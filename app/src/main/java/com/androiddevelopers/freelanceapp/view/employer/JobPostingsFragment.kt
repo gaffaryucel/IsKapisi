@@ -29,14 +29,13 @@ class JobPostingsFragment : Fragment() {
 
     private val userId = FirebaseAuth.getInstance().currentUser?.uid.toString()
     private lateinit var employerAdapter: EmployerAdapter
-    private lateinit var listEmployerJobPost: ArrayList<EmployerJobPost>
+    private val listEmployerJobPost = mutableListOf<EmployerJobPost>()
     private lateinit var errorDialog: AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this)[JobPostingsViewModel::class.java]
         employerAdapter = EmployerAdapter(requireActivity().applicationContext, userId)
-
     }
 
     override fun onCreateView(
@@ -48,9 +47,8 @@ class JobPostingsFragment : Fragment() {
         _binding = FragmentJobPostingsBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        listEmployerJobPost = arrayListOf()
-
         viewModel.getListenerForChange()
+        binding.adapter = employerAdapter
 
         return view
     }
@@ -96,7 +94,6 @@ class JobPostingsFragment : Fragment() {
         }
 
         with(binding) {
-            adapter = employerAdapter
             search(jobPostingSearchView)
         }
     }
@@ -184,7 +181,9 @@ class JobPostingsFragment : Fragment() {
                             list.add(it)
                         }
                     }
-                    employerAdapter.employerList = list
+                    if (list.isNotEmpty()) {
+                        employerAdapter.employerList = list
+                    }
                 }
 
                 return true

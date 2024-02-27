@@ -3,7 +3,6 @@ package com.androiddevelopers.freelanceapp.viewmodel.employer
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
@@ -18,7 +17,7 @@ open class BaseJobPostingViewModel(
     val firebaseRepo: FirebaseRepoInterFace,
     val sharedPreferences: SharedPreferences,
     auth: FirebaseAuth
-) : BaseNotificationViewModel(firebaseRepo,auth) {
+) : BaseNotificationViewModel(firebaseRepo, auth) {
 
     var _firebaseMessage = MutableLiveData<Resource<Boolean>>()
     val firebaseMessage: LiveData<Resource<Boolean>>
@@ -40,7 +39,7 @@ open class BaseJobPostingViewModel(
     val firebaseListenerForChange: LiveData<Boolean>
         get() = _firebaseListenerForChange
 
-    fun getAllEmployerJobPost() = viewModelScope.launch {
+    fun getAllEmployerJobPost() {
         _firebaseMessage.value = Resource.loading(true)
 
         firebaseRepo.getAllEmployerJobPostFromFirestore()
@@ -49,7 +48,7 @@ open class BaseJobPostingViewModel(
                 _firebaseMessage.value = Resource.loading(false)
 
                 it?.let { querySnapshot ->
-                    val list = ArrayList<EmployerJobPost>()
+                    val list = mutableListOf<EmployerJobPost>()
 
                     for (document in querySnapshot) {
                         val employerJobPost = document.toObject(EmployerJobPost::class.java)
@@ -60,9 +59,9 @@ open class BaseJobPostingViewModel(
 
                     _firebaseLiveData.value = list
 
-                    _firebaseMessage.value = Resource.success(true)
-
                 }
+                _firebaseMessage.value = Resource.success(true)
+
             }.addOnFailureListener {
                 _firebaseMessage.value = Resource.loading(false)
 
@@ -156,10 +155,12 @@ open class BaseJobPostingViewModel(
     }
 
     fun getListenerForChange() = viewModelScope.launch {
-        _firebaseListenerForChange.value = sharedPreferences.getBoolean("employer_job_post_is_change",false)
+        _firebaseListenerForChange.value =
+            sharedPreferences.getBoolean("employer_job_post_is_change", false)
     }
 
     fun setListenerForChange(isChangeSavedPost: Boolean) = viewModelScope.launch {
-        sharedPreferences.edit().putBoolean("employer_job_post_is_change",isChangeSavedPost).apply()
+        sharedPreferences.edit().putBoolean("employer_job_post_is_change", isChangeSavedPost)
+            .apply()
     }
 }
