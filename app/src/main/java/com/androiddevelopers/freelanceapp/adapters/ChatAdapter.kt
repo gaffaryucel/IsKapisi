@@ -1,6 +1,5 @@
 package com.androiddevelopers.freelanceapp.adapters
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.Navigation
@@ -12,14 +11,13 @@ import com.androiddevelopers.freelanceapp.model.ChatModel
 import com.androiddevelopers.freelanceapp.view.chat.ChatsFragmentDirections
 import com.bumptech.glide.Glide
 
-class ChatAdapter :  RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
+class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
     private val diffUtil = object : DiffUtil.ItemCallback<ChatModel>() {
         override fun areItemsTheSame(oldItem: ChatModel, newItem: ChatModel): Boolean {
-            return oldItem == newItem
+            return oldItem.chatId == newItem.chatId
         }
 
-        @SuppressLint("DiffUtilEquals")
         override fun areContentsTheSame(oldItem: ChatModel, newItem: ChatModel): Boolean {
             return oldItem == newItem
         }
@@ -30,17 +28,18 @@ class ChatAdapter :  RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
         get() = recyclerListDiffer.currentList
         set(value) = recyclerListDiffer.submitList(value)
 
-    inner class ChatViewHolder( val binding : RowChatBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class ChatViewHolder(val binding: RowChatBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder {
-        val binding = RowChatBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        val binding = RowChatBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ChatViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
         val chat = chatsList[position]
 
-        Glide.with(holder.itemView.context).load(chat.receiverUserImage).into(holder.binding.chatImage)
+        Glide.with(holder.itemView.context).load(chat.receiverUserImage)
+            .into(holder.binding.chatImage)
         holder.binding.apply {
             chatItem = chat
         }

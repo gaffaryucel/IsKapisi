@@ -2,7 +2,7 @@ package com.androiddevelopers.freelanceapp.model
 
 import com.androiddevelopers.freelanceapp.util.UserStatus
 
-class UserModel{
+class UserModel {
 
     var userId: String? = null
     var username: String? = null
@@ -29,7 +29,8 @@ class UserModel{
     var completedJobs: Int? = null // Tamamlanan iş sayısı
     var canceledJobs: Int? = null // İptal edilen iş sayısı
     var unfinishedJobs: Int? = null // Zamanında bitmeyen iş sayısı
-    var token: String? = null // Zamanında bitmeyen iş sayısı
+    var rating: Double? = null
+    var token: String? = null
 
     constructor()
 
@@ -59,6 +60,7 @@ class UserModel{
         completedJobs: Int? = null,
         canceledJobs: Int? = null,
         unfinishedJobs: Int? = null,
+        rating: Double? = null,
         token: String? = null
     ) {
         this.userId = userId
@@ -86,9 +88,56 @@ class UserModel{
         this.completedJobs = completedJobs
         this.canceledJobs = canceledJobs
         this.unfinishedJobs = unfinishedJobs
+        this.rating = rating
         this.token = token
     }
+
+    override fun equals(other: Any?): Boolean {
+        return this === other &&
+                this.username == other.username &&
+                this.email == other.email &&
+                this.profileImageUrl == other.profileImageUrl &&
+                this.fullName == other.fullName &&
+                this.bio == other.bio &&
+                this.jobTitle == other.jobTitle &&
+                this.jobDescription == other.jobDescription &&
+                this.skills?.toTypedArray().contentEquals(
+                    other.skills?.toTypedArray()
+                )
+    }
+
+    override fun hashCode(): Int {
+        var result = userId?.hashCode() ?: 0
+        result = 31 * result + (username?.hashCode() ?: 0)
+        result = 31 * result + (email?.hashCode() ?: 0)
+        result = 31 * result + (profileImageUrl?.hashCode() ?: 0)
+        result = 31 * result + (fullName?.hashCode() ?: 0)
+        result = 31 * result + (bio?.hashCode() ?: 0)
+        result = 31 * result + (phone?.hashCode() ?: 0)
+        result = 31 * result + (jobTitle?.hashCode() ?: 0)
+        result = 31 * result + (jobDescription?.hashCode() ?: 0)
+        result = 31 * result + (skills?.hashCode() ?: 0)
+        result = 31 * result + (portfolio?.hashCode() ?: 0)
+        result = 31 * result + (reviews?.hashCode() ?: 0)
+        result = 31 * result + (availability?.hashCode() ?: 0)
+        result = 31 * result + (location?.hashCode() ?: 0)
+        result = 31 * result + (education?.hashCode() ?: 0)
+        result = 31 * result + (certifications?.hashCode() ?: 0)
+        result = 31 * result + (languages?.hashCode() ?: 0)
+        result = 31 * result + (workExperience?.hashCode() ?: 0)
+        result = 31 * result + (socialMediaLinks?.hashCode() ?: 0)
+        result = 31 * result + (contactInformation?.hashCode() ?: 0)
+        result = 31 * result + (paymentMethods?.hashCode() ?: 0)
+        result = 31 * result + (userType?.hashCode() ?: 0)
+        result = 31 * result + (completedJobs ?: 0)
+        result = 31 * result + (canceledJobs ?: 0)
+        result = 31 * result + (unfinishedJobs ?: 0)
+        result = 31 * result + (rating?.hashCode() ?: 0)
+        result = 31 * result + (token?.hashCode() ?: 0)
+        return result
+    }
 }
+
 data class PortfolioItem(
     var title: String? = null,
     var description: String? = null,

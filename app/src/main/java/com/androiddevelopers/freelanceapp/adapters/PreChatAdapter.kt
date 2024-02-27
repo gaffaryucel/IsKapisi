@@ -1,6 +1,5 @@
 package com.androiddevelopers.freelanceapp.adapters
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.Navigation
@@ -16,10 +15,9 @@ class PreChatAdapter : RecyclerView.Adapter<PreChatAdapter.PreChatViewHolder>() 
 
     private val diffUtil = object : DiffUtil.ItemCallback<PreChatModel>() {
         override fun areItemsTheSame(oldItem: PreChatModel, newItem: PreChatModel): Boolean {
-            return oldItem == newItem
+            return oldItem.postId == newItem.postId
         }
 
-        @SuppressLint("DiffUtilEquals")
         override fun areContentsTheSame(oldItem: PreChatModel, newItem: PreChatModel): Boolean {
             return oldItem == newItem
         }

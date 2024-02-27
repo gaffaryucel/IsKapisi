@@ -1,6 +1,5 @@
 package com.androiddevelopers.freelanceapp.adapters
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -10,14 +9,13 @@ import com.androiddevelopers.freelanceapp.databinding.RowCommentBinding
 import com.androiddevelopers.freelanceapp.model.CommentModel
 import com.bumptech.glide.Glide
 
-class CommentsAdapter :  RecyclerView.Adapter<CommentsAdapter.CommentViewHolder>() {
+class CommentsAdapter : RecyclerView.Adapter<CommentsAdapter.CommentViewHolder>() {
 
     private val diffUtil = object : DiffUtil.ItemCallback<CommentModel>() {
         override fun areItemsTheSame(oldItem: CommentModel, newItem: CommentModel): Boolean {
-            return oldItem == newItem
+            return oldItem.commentId == newItem.commentId
         }
 
-        @SuppressLint("DiffUtilEquals")
         override fun areContentsTheSame(oldItem: CommentModel, newItem: CommentModel): Boolean {
             return oldItem == newItem
         }
@@ -28,7 +26,8 @@ class CommentsAdapter :  RecyclerView.Adapter<CommentsAdapter.CommentViewHolder>
         get() = recyclerListDiffer.currentList
         set(value) = recyclerListDiffer.submitList(value)
 
-    inner class CommentViewHolder(val binding: RowCommentBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class CommentViewHolder(val binding: RowCommentBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
         val binding = RowCommentBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -37,7 +36,8 @@ class CommentsAdapter :  RecyclerView.Adapter<CommentsAdapter.CommentViewHolder>
 
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
         val comment = commentList[position]
-        Glide.with(holder.itemView.context).load(comment.ownerPhoto).into(holder.binding.ivUserPhoto)
+        Glide.with(holder.itemView.context).load(comment.ownerPhoto)
+            .into(holder.binding.ivUserPhoto)
         holder.binding.comment = comment
 
         holder.itemView.setOnClickListener {
