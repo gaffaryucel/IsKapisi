@@ -85,22 +85,24 @@ constructor(
             }
         }
     }
-    private fun getToken(){
+
+    private fun getToken() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener {
             if (!it.isSuccessful) {
-                userToken.value = Resource.error("",null)
+                userToken.value = Resource.error("", null)
                 return@addOnCompleteListener
             }
             val token = it.result //this is the token retrieved
             userToken.value = Resource.success(token)
         }
     }
-    private fun updateUserToken(currentUserId : String) {
+
+    private fun updateUserToken(currentUserId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val tokenMap = hashMapOf<String,Any?>(
-                "token" to userToken
+            val tokenMap = hashMapOf<String, Any?>(
+                "token" to userToken.value?.data
             )
-            firebaseRepo.updateUserData(currentUserId,tokenMap)
+            firebaseRepo.updateUserData(currentUserId, tokenMap)
         }
     }
 }
