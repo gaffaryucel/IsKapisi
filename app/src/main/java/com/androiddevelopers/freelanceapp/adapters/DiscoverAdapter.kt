@@ -1,6 +1,5 @@
 package com.androiddevelopers.freelanceapp.adapters
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.Navigation
@@ -15,12 +14,17 @@ import com.bumptech.glide.Glide
 class DiscoverAdapter : RecyclerView.Adapter<DiscoverAdapter.DiscoverViewHolder>() {
 
     private val diffUtil = object : DiffUtil.ItemCallback<DiscoverPostModel>() {
-        override fun areItemsTheSame(oldItem: DiscoverPostModel, newItem: DiscoverPostModel): Boolean {
-            return oldItem == newItem
+        override fun areItemsTheSame(
+            oldItem: DiscoverPostModel,
+            newItem: DiscoverPostModel
+        ): Boolean {
+            return oldItem.postId == newItem.postId
         }
 
-        @SuppressLint("DiffUtilEquals")
-        override fun areContentsTheSame(oldItem: DiscoverPostModel, newItem: DiscoverPostModel): Boolean {
+        override fun areContentsTheSame(
+            oldItem: DiscoverPostModel,
+            newItem: DiscoverPostModel
+        ): Boolean {
             return oldItem == newItem
         }
     }
@@ -30,7 +34,8 @@ class DiscoverAdapter : RecyclerView.Adapter<DiscoverAdapter.DiscoverViewHolder>
         get() = recyclerListDiffer.currentList
         set(value) = recyclerListDiffer.submitList(value)
 
-    inner class DiscoverViewHolder(val binding: RowDiscoverBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class DiscoverViewHolder(val binding: RowDiscoverBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiscoverViewHolder {
         val binding = RowDiscoverBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -43,9 +48,13 @@ class DiscoverAdapter : RecyclerView.Adapter<DiscoverAdapter.DiscoverViewHolder>
 
     override fun onBindViewHolder(holder: DiscoverViewHolder, position: Int) {
         val post = postList[position]
-        Glide.with(holder.itemView.context).load(post.images?.get(0)).into(holder.binding.ivDiscoverVPost)
+        Glide.with(holder.itemView.context).load(post.images?.get(0))
+            .into(holder.binding.ivDiscoverVPost)
         holder.itemView.setOnClickListener {
-            val action = DiscoverFragmentDirections.actionNavigationDiscoverToDiscoverDetailsFragment(position.toString())
+            val action =
+                DiscoverFragmentDirections.actionNavigationDiscoverToDiscoverDetailsFragment(
+                    position.toString()
+                )
             Navigation.findNavController(it).navigate(action)
         }
     }

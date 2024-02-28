@@ -1,6 +1,5 @@
 package com.androiddevelopers.freelanceapp.adapters
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -10,14 +9,13 @@ import com.androiddevelopers.freelanceapp.databinding.RowUserBinding
 import com.androiddevelopers.freelanceapp.model.FollowModel
 import com.bumptech.glide.Glide
 
-class CreateChatAdapter :  RecyclerView.Adapter<CreateChatAdapter.CreateChatViewHolder>() {
+class CreateChatAdapter : RecyclerView.Adapter<CreateChatAdapter.CreateChatViewHolder>() {
 
     private val diffUtil = object : DiffUtil.ItemCallback<FollowModel>() {
         override fun areItemsTheSame(oldItem: FollowModel, newItem: FollowModel): Boolean {
-            return oldItem == newItem
+            return oldItem.userId == newItem.userId
         }
 
-        @SuppressLint("DiffUtilEquals")
         override fun areContentsTheSame(oldItem: FollowModel, newItem: FollowModel): Boolean {
             return oldItem == newItem
         }
@@ -28,10 +26,11 @@ class CreateChatAdapter :  RecyclerView.Adapter<CreateChatAdapter.CreateChatView
         get() = recyclerListDiffer.currentList
         set(value) = recyclerListDiffer.submitList(value)
 
-    inner class CreateChatViewHolder( val binding : RowUserBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class CreateChatViewHolder(val binding: RowUserBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CreateChatViewHolder {
-        val binding = RowUserBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        val binding = RowUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return CreateChatViewHolder(binding)
     }
 
@@ -46,8 +45,10 @@ class CreateChatAdapter :  RecyclerView.Adapter<CreateChatAdapter.CreateChatView
             onClick?.invoke(user)
         }
     }
+
     override fun getItemCount(): Int {
         return userList.size
     }
+
     var onClick: ((FollowModel) -> Unit)? = null
 }

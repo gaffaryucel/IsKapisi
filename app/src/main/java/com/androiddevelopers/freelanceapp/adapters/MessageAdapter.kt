@@ -1,6 +1,5 @@
 package com.androiddevelopers.freelanceapp.adapters
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,21 +8,18 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.databinding.RowMessageReceiverBinding
 import com.androiddevelopers.freelanceapp.databinding.RowMessageSenderBinding
-import com.androiddevelopers.freelanceapp.model.ChatModel
 import com.androiddevelopers.freelanceapp.model.MessageModel
-import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 
-class MessageAdapter : RecyclerView.Adapter<MessageAdapter.ViewHolder>(){
+class MessageAdapter : RecyclerView.Adapter<MessageAdapter.ViewHolder>() {
 
     private val userId = FirebaseAuth.getInstance().currentUser!!.uid
 
     private val diffUtil = object : DiffUtil.ItemCallback<MessageModel>() {
         override fun areItemsTheSame(oldItem: MessageModel, newItem: MessageModel): Boolean {
-            return oldItem == newItem
+            return oldItem.messageId == newItem.messageId
         }
 
-        @SuppressLint("DiffUtilEquals")
         override fun areContentsTheSame(oldItem: MessageModel, newItem: MessageModel): Boolean {
             return oldItem == newItem
         }
@@ -38,8 +34,22 @@ class MessageAdapter : RecyclerView.Adapter<MessageAdapter.ViewHolder>(){
         val inflater = LayoutInflater.from(parent.context)
 
         return when (viewType) {
-            VIEW_TYPE_SENDER -> SenderMessageViewHolder(RowMessageSenderBinding.inflate(inflater, parent, false))
-            VIEW_TYPE_RECEIVER -> ReceiverMessageViewHolder(RowMessageReceiverBinding.inflate(inflater, parent, false))
+            VIEW_TYPE_SENDER -> SenderMessageViewHolder(
+                RowMessageSenderBinding.inflate(
+                    inflater,
+                    parent,
+                    false
+                )
+            )
+
+            VIEW_TYPE_RECEIVER -> ReceiverMessageViewHolder(
+                RowMessageReceiverBinding.inflate(
+                    inflater,
+                    parent,
+                    false
+                )
+            )
+
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }
@@ -77,7 +87,8 @@ class MessageAdapter : RecyclerView.Adapter<MessageAdapter.ViewHolder>(){
         }
     }
 
-    class ReceiverMessageViewHolder(var binding: RowMessageReceiverBinding) : ViewHolder(binding.root) {
+    class ReceiverMessageViewHolder(var binding: RowMessageReceiverBinding) :
+        ViewHolder(binding.root) {
         fun bindView(messageModel: MessageModel) {
             // Burada alınan mesajları göstermek için kullanılan görünüm öğelerini bağla
             binding.textReceiver.text = messageModel.messageData

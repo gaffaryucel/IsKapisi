@@ -1,34 +1,58 @@
 package com.androiddevelopers.freelanceapp.adapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.RowEmployerJobBinding
+import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
-import com.androiddevelopers.freelanceapp.util.downloadImage
+import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.snackbar
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
-class EmployerAdapter(private val userId: String) :
+class EmployerAdapter(context: Context, private val userId: String) :
     RecyclerView.Adapter<EmployerAdapter.EmployerViewHolder>() {
     lateinit var clickListener: ((EmployerJobPost, View) -> Unit)
     lateinit var savedListener: ((String, Boolean, List<String>) -> Unit)
 
+    //Repoya erişim için değişkeni tanımlıyoruz
+    //Sonrasında init yaptığımız için değer atamaya gerek yok
+    val repo: FirebaseRepoInterFace
+
+    //Hilt ile repoya erişmek için giriş notkası oluşturuyoruz
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface RepoEntryPoint {
+        fun getRepo(): FirebaseRepoInterFace
+    }
+
+    //Oluşturduğumuz giriş noktası sayesinde değişkenimize hilt ile interface sınıfımızı bağlıyoruz
+    init {
+        val repoEntryPoint =
+            EntryPointAccessors.fromApplication(context, RepoEntryPoint::class.java)
+        repo = repoEntryPoint.getRepo()
+    }
+
+
     private val diffUtil = object : DiffUtil.ItemCallback<EmployerJobPost>() {
         override fun areItemsTheSame(
-            oldItem: EmployerJobPost,
-            newItem: EmployerJobPost
+            oldItem: EmployerJobPost, newItem: EmployerJobPost
         ): Boolean {
             return oldItem.postId == newItem.postId
         }
 
         override fun areContentsTheSame(
-            oldItem: EmployerJobPost,
-            newItem: EmployerJobPost
+            oldItem: EmployerJobPost, newItem: EmployerJobPost
         ): Boolean {
             return oldItem == newItem
         }
@@ -61,6 +85,8 @@ class EmployerAdapter(private val userId: String) :
     }
 
     override fun onBindViewHolder(holder: EmployerViewHolder, position: Int) {
+        // val adapterOverview = JobOverviewAdapter()
+
         val employerJobPost = employerList[position]
 
         val savedUsers = employerJobPost.savedUsers
@@ -72,7 +98,6 @@ class EmployerAdapter(private val userId: String) :
             with(binding) {
                 employer = employerJobPost
 
-                //setImageView(binding, employerJobPost.images)
                 setSavedPost(binding, isSavedPost)
 
                 itemView.setOnClickListener { v ->
@@ -101,6 +126,17 @@ class EmployerAdapter(private val userId: String) :
 
             }
         }
+
+        //İlanı oluşturan kullanıcı id ile firebase den her kart için istek yapıp databinding ile görsel öğelerimize aktarıyoruz
+        runBlocking {
+            launch {
+                employerJobPost.employerId?.let { id ->
+                    repo.getUserDataByDocumentId(id).addOnSuccessListener {
+                        holder.binding.user = it.toObject(UserModel::class.java)
+                    }
+                }
+            }
+        }
     }
 
     private fun setSavedPost(binding: RowEmployerJobBinding, isSavedPost: Boolean) {
@@ -112,32 +148,4 @@ class EmployerAdapter(private val userId: String) :
             }
         }
     }
-
-    private fun setImageView(binding: RowEmployerJobBinding, images: List<String>?) {
-        with(binding) {
-            if (images?.size == 0) {
-                layoutImageViewsJobPost.visibility = View.GONE
-                cardImagePlaceHolderJobPost.visibility = View.VISIBLE
-                downloadImage(
-                    imagePlaceHolderJobPost,
-                    ContextCompat.getString(root.context, R.drawable.placeholder)
-                )
-            } else {
-                images?.let { list ->
-                    if (list.size == 1) {
-                        layoutImageViewsJobPost.visibility = View.GONE
-                        cardImagePlaceHolderJobPost.visibility = View.VISIBLE
-                        downloadImage(imagePlaceHolderJobPost, list[0])
-                    } else {
-                        layoutImageViewsJobPost.visibility = View.VISIBLE
-                        cardImagePlaceHolderJobPost.visibility = View.GONE
-                        val viewPagerAdapter = ViewPagerAdapterForImages(list)
-                        viewPagerJobPost.adapter = viewPagerAdapter
-                        indicatorJobPost.setViewPager(viewPagerJobPost)
-                    }
-                }
-            }
-        }
-    }
-
 }

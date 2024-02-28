@@ -1,6 +1,5 @@
 package com.androiddevelopers.freelanceapp.adapters
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.Navigation
@@ -13,15 +12,21 @@ import com.androiddevelopers.freelanceapp.view.profile.ProfileFragmentDirections
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 
-class ProfileDiscoverAdapter : RecyclerView.Adapter<ProfileDiscoverAdapter.ProfileDiscoverViewHolder>() {
+class ProfileDiscoverAdapter :
+    RecyclerView.Adapter<ProfileDiscoverAdapter.ProfileDiscoverViewHolder>() {
 
     private val diffUtil = object : DiffUtil.ItemCallback<DiscoverPostModel>() {
-        override fun areItemsTheSame(oldItem: DiscoverPostModel, newItem: DiscoverPostModel): Boolean {
-            return oldItem == newItem
+        override fun areItemsTheSame(
+            oldItem: DiscoverPostModel,
+            newItem: DiscoverPostModel
+        ): Boolean {
+            return oldItem.postId == newItem.postId
         }
 
-        @SuppressLint("DiffUtilEquals")
-        override fun areContentsTheSame(oldItem: DiscoverPostModel, newItem: DiscoverPostModel): Boolean {
+        override fun areContentsTheSame(
+            oldItem: DiscoverPostModel,
+            newItem: DiscoverPostModel
+        ): Boolean {
             return oldItem == newItem
         }
     }
@@ -31,10 +36,15 @@ class ProfileDiscoverAdapter : RecyclerView.Adapter<ProfileDiscoverAdapter.Profi
         get() = recyclerListDiffer.currentList
         set(value) = recyclerListDiffer.submitList(value)
 
-    inner class ProfileDiscoverViewHolder(val binding: RowDiscoverPostsProfileBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class ProfileDiscoverViewHolder(val binding: RowDiscoverPostsProfileBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProfileDiscoverViewHolder {
-        val binding = RowDiscoverPostsProfileBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = RowDiscoverPostsProfileBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
         return ProfileDiscoverViewHolder(binding)
     }
 
@@ -45,15 +55,19 @@ class ProfileDiscoverAdapter : RecyclerView.Adapter<ProfileDiscoverAdapter.Profi
     override fun onBindViewHolder(holder: ProfileDiscoverViewHolder, position: Int) {
         val post = postList[position]
         val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
-        if (!post.postOwner.equals(currentUserId)){
+        if (!post.postOwner.equals(currentUserId)) {
             holder.binding.layoutEdit.visibility = ViewGroup.GONE
         }
         holder.binding.apply {
             postData = post
         }
-        Glide.with(holder.itemView.context).load(post.images?.get(0)).into(holder.binding.ivDiscoverVPostProfile)
+        Glide.with(holder.itemView.context).load(post.images?.get(0))
+            .into(holder.binding.ivDiscoverVPostProfile)
         holder.itemView.setOnClickListener {
-            val action = ProfileFragmentDirections.actionNavigationProfileToProfileDiscoverPostDetailsFragment(position.toString())
+            val action =
+                ProfileFragmentDirections.actionNavigationProfileToProfileDiscoverPostDetailsFragment(
+                    position.toString()
+                )
             Navigation.findNavController(it).navigate(action)
         }
     }

@@ -290,7 +290,7 @@ class DetailJobPostingsFragment : Fragment() {
                     Status.LOADING -> {}
                     Status.SUCCESS -> {
                         goToPreMessaging()
-                        viewModel.setMessageValue(true)
+                        //viewModel.setMessageValue(true)
                     }
 
                     Status.ERROR -> {

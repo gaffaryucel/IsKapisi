@@ -1,7 +1,5 @@
 package com.androiddevelopers.freelanceapp.model
 
-import com.androiddevelopers.freelanceapp.util.JobStatus
-
 class DiscoverPostModel {
     var postId: String? = null // Gönderinin benzersiz kimliği
     var postOwner: String? = null //Gönderi Sahibinin ID'si
@@ -41,29 +39,39 @@ class DiscoverPostModel {
         this.likeCount = likeCount
         this.comments = comments
     }
-}
-class CommentModel {
-    var commentId: String? = null
-    var comment: String? = null
-    var ownerId: String? = null
-    var ownerPhoto: String? = null
-    var ownerName: String? = null
-    var timestamp: String? = null
 
-    constructor()
-    constructor(
-        commentId: String? = null,
-        comment: String? = null,
-        ownerId: String? = null,
-        ownerPhoto: String? = null,
-        ownerName: String? = null,
-        timestamp: String? = null,
-    ) {
-        this.commentId = commentId
-        this.comment = comment
-        this.ownerId = ownerId
-        this.ownerPhoto = ownerPhoto
-        this.ownerName = ownerName
-        this.timestamp = timestamp
+    override fun equals(other: Any?): Boolean {
+        return this === other &&
+                this.postOwner == other.postOwner &&
+                this.description == other.description &&
+                this.tags?.toTypedArray().contentEquals(
+                    other.tags?.toTypedArray()
+                ) &&
+                this.images?.toTypedArray().contentEquals(
+                    other.images?.toTypedArray()
+                ) &&
+                this.datePosted == other.datePosted &&
+                this.ownerName == other.ownerName &&
+                this.ownerImage == other.ownerImage &&
+                this.ownerToken == other.ownerToken &&
+                this.likeCount?.toTypedArray().contentEquals(
+                    other.likeCount?.toTypedArray()
+                ) &&
+                this.postOwner == other.postOwner
+    }
+
+    override fun hashCode(): Int {
+        var result = postId?.hashCode() ?: 0
+        result = 31 * result + (postOwner?.hashCode() ?: 0)
+        result = 31 * result + (description?.hashCode() ?: 0)
+        result = 31 * result + (tags?.hashCode() ?: 0)
+        result = 31 * result + (images?.hashCode() ?: 0)
+        result = 31 * result + (datePosted?.hashCode() ?: 0)
+        result = 31 * result + (ownerName?.hashCode() ?: 0)
+        result = 31 * result + (ownerImage?.hashCode() ?: 0)
+        result = 31 * result + (ownerToken?.hashCode() ?: 0)
+        result = 31 * result + (likeCount?.hashCode() ?: 0)
+        result = 31 * result + (comments?.hashCode() ?: 0)
+        return result
     }
 }

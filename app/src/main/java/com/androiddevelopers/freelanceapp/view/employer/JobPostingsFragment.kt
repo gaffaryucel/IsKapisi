@@ -28,14 +28,14 @@ class JobPostingsFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val userId = FirebaseAuth.getInstance().currentUser?.uid.toString()
-    private val employerAdapter = EmployerAdapter(userId)
+    private lateinit var employerAdapter: EmployerAdapter
     private lateinit var listEmployerJobPost: ArrayList<EmployerJobPost>
     private lateinit var errorDialog: AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this)[JobPostingsViewModel::class.java]
-
+        employerAdapter = EmployerAdapter(requireActivity().applicationContext, userId)
 
     }
 
