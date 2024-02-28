@@ -17,6 +17,7 @@ import com.androiddevelopers.freelanceapp.databinding.FragmentHomeDetailPostBind
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
+import com.androiddevelopers.freelanceapp.util.NotificationType
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.util.downloadImage
 import com.androiddevelopers.freelanceapp.viewmodel.freelancer.DetailPostViewModel
@@ -66,13 +67,15 @@ class DetailPostFragment : Fragment() {
             } else {
                 try {
                     InAppNotificationModel(
-                        userId = user?.userId.toString(),
+                        userId = currentUser?.userId.toString(),
+                        notificationType = NotificationType.JOB_POST,
                         notificationId = UUID.randomUUID().toString(),
                         title = "Yeni Hizmet Talebi!",
-                        message = "${currentUser?.fullName} adlı kullanıcı sizden hizmet talep etti! Talep detaylarını görmek lütfen uygulamayı kontrol edin.",
+                        message = "${currentUser?.fullName} adlı kullanıcı sizden hizmet talep etti!",
                         userImage = currentUser?.profileImageUrl.toString(),
                         imageUrl = post?.images?.get(0).toString(),
-                        userToken = user?.token.toString()
+                        userToken = user?.token.toString(),
+                        time = viewModel.getCurrentTime()
                     ).also { notification->
                         viewModel.createPreChatModel(
                             "frl",

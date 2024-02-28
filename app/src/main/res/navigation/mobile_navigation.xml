@@ -368,6 +368,7 @@
         <argument
             android:name="postId"
             app:argType="string" />
+        <argument android:name="token" />
     </fragment>
     <fragment
         android:id="@+id/freelancerInfoFragment"

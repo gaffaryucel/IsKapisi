@@ -12,6 +12,7 @@ import com.androiddevelopers.freelanceapp.model.notification.NotificationData
 import com.androiddevelopers.freelanceapp.model.notification.PushNotification
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.repo.RoomUserDatabaseRepoInterface
+import com.androiddevelopers.freelanceapp.util.NotificationType
 import com.androiddevelopers.freelanceapp.util.Resource
 import com.androiddevelopers.freelanceapp.viewmodel.BaseNotificationViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -70,13 +71,15 @@ class DiscoverDetailsViewModel @Inject constructor(
             firebaseRepo.likePost(postId,likeData).addOnSuccessListener {
                 sendNotification(
                     InAppNotificationModel(
-                        userId = userId,
+                        userId = currentUserId,
+                        notificationType = NotificationType.POST,
                         notificationId = UUID.randomUUID().toString(),
                         title = "Yeni Bir Beğeni",
                         message = "${currentUserData.value?.fullName}, gönderinizi beğendi.",
                         userImage = "${currentUserData.value?.profileImageUrl}",
                         imageUrl = imageUrl,
-                        userToken = postOwnersToken
+                        userToken = postOwnersToken,
+                        time = getCurrentTime()
                     ).also {
                         firebaseRepo.saveNotification(it)
                     }

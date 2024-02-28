@@ -24,6 +24,7 @@ import com.androiddevelopers.freelanceapp.databinding.FragmentPreMessagingBindin
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.BaseJobPost
 import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
+import com.androiddevelopers.freelanceapp.util.NotificationType
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.util.Util.PRE_MESSAGE_TOPIC
 import com.androiddevelopers.freelanceapp.viewmodel.chat.PreMessagingViewModel
@@ -102,13 +103,15 @@ class PreMessagingFragment : Fragment() {
                 val title = "İlan sohbetleri"
                 try {
                     InAppNotificationModel(
-                        userId = receiver,
+                        userId = currentUser?.userId,
+                        notificationType = NotificationType.MESSAGE,
                         notificationId = UUID.randomUUID().toString(),
                         title = title,
                         message = "${currentUser?.fullName}: $message",
                         userImage = currentUser?.profileImageUrl.toString(),
                         imageUrl =  "",
-                        userToken = receiverData?.token.toString()
+                        userToken = receiverData?.token.toString(),
+                        time = viewModel.getCurrentTime()
                     ).also { notification->
                         viewModel.sendNotification(notification)
                     }

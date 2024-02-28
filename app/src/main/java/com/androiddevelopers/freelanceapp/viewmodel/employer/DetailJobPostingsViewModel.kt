@@ -94,12 +94,7 @@ constructor(
         })
     }
 
-    private fun getCurrentTime(): String {
-        val currentTime = System.currentTimeMillis()
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-        val date = Date(currentTime)
-        return dateFormat.format(date)
-    }
+
 
 
 }

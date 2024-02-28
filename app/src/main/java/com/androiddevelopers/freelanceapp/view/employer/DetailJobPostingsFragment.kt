@@ -19,6 +19,7 @@ import com.androiddevelopers.freelanceapp.databinding.FragmentJobPostingsDetailB
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
+import com.androiddevelopers.freelanceapp.util.NotificationType
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.util.Util
 import com.androiddevelopers.freelanceapp.util.Util.EMPLOYER_POST_TOPIC
@@ -89,13 +90,15 @@ class DetailJobPostingsFragment : Fragment() {
 
                     try {
                         InAppNotificationModel(
-                            userId = user?.userId,
+                            userId = currentUser?.userId,
+                            notificationType = NotificationType.JOB_POST,
                             notificationId = UUID.randomUUID().toString(),
                             title = "Yeni Hizmet Talebi!",
-                            message = "${currentUser?.fullName} ilanınıza başvurdu! Başvuru detaylarını görmek ve incelemek için lütfen uygulamayı kontrol edin..",
+                            message = "${currentUser?.fullName} adlı kullanıcı, ilanınıza başvurdu",
                             userImage = currentUser?.profileImageUrl.toString(),
                             imageUrl = null,
-                            userToken = user?.token
+                            userToken = user?.token,
+                            time = viewModel.getCurrentTime()
                         ).also { notification->
                             viewModel.createPreChatModel(
                                 "emp",

@@ -11,6 +11,7 @@ import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
 import com.androiddevelopers.freelanceapp.model.notification.PushNotification
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
+import com.androiddevelopers.freelanceapp.util.NotificationType
 import com.androiddevelopers.freelanceapp.util.Resource
 import com.androiddevelopers.freelanceapp.viewmodel.profile.BaseProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -138,9 +139,10 @@ class UserProfileViewModel  @Inject constructor(
             sendNotification(
                 InAppNotificationModel(
                     userId = followingModel.userId,
+                    notificationType = NotificationType.FOLLOW,
                     notificationId = UUID.randomUUID().toString(),
                     title = "Yeni bir takipçin var!",
-                    message = "${followerModel.userName}, seni takip etmeye başladı.",
+                    message = "${followerModel.userName} seni takip etmeye başladı.",
                     userImage = followerModel.userImage,
                     imageUrl = null,
                     userToken = token

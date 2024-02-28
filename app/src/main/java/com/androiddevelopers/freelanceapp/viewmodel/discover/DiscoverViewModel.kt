@@ -14,11 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DiscoverViewModel  @Inject constructor(
-    private val firebaseRepo: FirebaseRepoInterFace,
-    private val firebaseAuth: FirebaseAuth,
-    private val roomRepo: RoomUserDatabaseRepoInterface,
+    private val firebaseRepo: FirebaseRepoInterFace
 ): ViewModel() {
-    private val userId = firebaseAuth.currentUser!!.uid
 
     private var _message = MutableLiveData<Resource<UserModel>>()
     val message: LiveData<Resource<UserModel>>

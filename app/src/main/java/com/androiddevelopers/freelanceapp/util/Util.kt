@@ -12,8 +12,6 @@ object Util {
     const val MESSAGE_TOPIC = "/topics/message"
     const val PRE_MESSAGE_TOPIC = "/topics/preMessage"
     const val EMPLOYER_POST_TOPIC = "/topics/employerPost"
-    const val FREELANCER_POST_TOPIC = "/topics/FreelancerPost"
-    const val DISCOVER_POST_TOPIC = "/topics/DıscoverPost"
 }
 
 //String öğelerin sonuna fonksiyon ile snackbar çıkarma özelliği sağlar

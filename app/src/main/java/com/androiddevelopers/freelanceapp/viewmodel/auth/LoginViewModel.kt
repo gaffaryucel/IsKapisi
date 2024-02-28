@@ -98,7 +98,7 @@ constructor(
     private fun updateUserToken(currentUserId : String) {
         viewModelScope.launch(Dispatchers.IO) {
             val tokenMap = hashMapOf<String,Any?>(
-                "token" to userToken
+                "token" to userToken.value?.data
             )
             firebaseRepo.updateUserData(currentUserId,tokenMap)
         }

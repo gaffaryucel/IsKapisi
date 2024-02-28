@@ -100,7 +100,8 @@ class HomeFragment : Fragment() {
             search(searchView)
 
             ivNotifications.setOnClickListener {
-
+                val action = HomeFragmentDirections.actionNavigationHomeToNotificationsFragment()
+                Navigation.findNavController(it).navigate(action)
             }
             ivMessage.setOnClickListener {
                 val action = HomeFragmentDirections.actionNavigationHomeToChatsFragment()

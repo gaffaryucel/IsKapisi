@@ -137,7 +137,9 @@ interface FirebaseRepoInterFace {
     //Notification
     suspend fun postNotification(notification: PushNotification): Response<ResponseBody>
     fun saveNotification(notification: InAppNotificationModel): Task<Void>
-    fun getNotifications(userId: String): Task<QuerySnapshot>
+    fun getFollowNotifications(userId: String,limit : Long): Task<QuerySnapshot>
+    fun getPostNotifications(userId: String,limit : Long): Task<QuerySnapshot>
+    fun getJobPostNotifications(userId: String,limit : Long): Task<QuerySnapshot>
 
 }
 

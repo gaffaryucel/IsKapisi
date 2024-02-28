@@ -14,6 +14,7 @@ import com.androiddevelopers.freelanceapp.adapters.MessageAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentMessagesBinding
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
+import com.androiddevelopers.freelanceapp.util.NotificationType
 import com.androiddevelopers.freelanceapp.util.Util.MESSAGE_TOPIC
 import com.androiddevelopers.freelanceapp.viewmodel.chat.MessagesViewModel
 import com.bumptech.glide.Glide
@@ -97,13 +98,15 @@ class MessagesFragment : Fragment() {
 
                 try {
                     InAppNotificationModel(
-                        userId = messageReceiver,
+                        userId = currentUserData?.userId,
+                        notificationType = NotificationType.MESSAGE,
                         notificationId = UUID.randomUUID().toString(),
                         title =  title,
-                        message = "${currentUserData?.fullName} adlı kullanıcı sizden hizmet talep etti! Talep detaylarını görmek lütfen uygulamayı kontrol edin.",
+                        message = "${currentUserData?.fullName}: $message!",
                         userImage = currentUserData?.profileImageUrl.toString(),
                         imageUrl = "",
-                        userToken = receiverData?.token.toString()
+                        userToken = receiverData?.token.toString(),
+                        time = viewModel.getCurrentTime()
                     ).also { notification->
                         viewModel.sendNotification(notification)
                     }

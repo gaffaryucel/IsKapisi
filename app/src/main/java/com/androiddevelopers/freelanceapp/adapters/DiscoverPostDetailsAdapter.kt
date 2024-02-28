@@ -107,10 +107,10 @@ class DiscoverPostDetailsAdapter : RecyclerView.Adapter<DiscoverPostDetailsAdapt
         }
         holder.binding.ivComment.setOnClickListener {
             if (inProfile){
-                val action = ProfileDiscoverPostDetailsFragmentDirections.actionProfileDiscoverPostDetailsFragmentToCommentsFragment(post.postId.toString())
+                val action = ProfileDiscoverPostDetailsFragmentDirections.actionProfileDiscoverPostDetailsFragmentToCommentsFragment(post.postId.toString(),post.ownerToken.toString())
                 Navigation.findNavController(it).navigate(action)
             }else{
-                val action = DiscoverDetailsFragmentDirections.actionDiscoverDetailsFragmentToCommentsFragment(post.postId.toString())
+                val action = DiscoverDetailsFragmentDirections.actionDiscoverDetailsFragmentToCommentsFragment(post.postId.toString(),post.ownerToken.toString())
                 Navigation.findNavController(it).navigate(action)
             }
         }

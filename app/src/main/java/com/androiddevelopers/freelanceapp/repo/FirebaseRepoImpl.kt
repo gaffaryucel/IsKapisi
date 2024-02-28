@@ -13,6 +13,7 @@ import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
 import com.androiddevelopers.freelanceapp.model.notification.PushNotification
 import com.androiddevelopers.freelanceapp.service.NotificationAPI
+import com.androiddevelopers.freelanceapp.util.NotificationType
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
@@ -357,7 +358,22 @@ class FirebaseRepoImpl @Inject constructor(
     override fun saveNotification(notification: InAppNotificationModel): Task<Void> {
         return notificationCollection.document(notification.notificationId.toString()).set(notification)
     }
-    override fun getNotifications(userId: String): Task<QuerySnapshot> {
-        return notificationCollection.whereEqualTo("userId", userId).get()
+    override fun getFollowNotifications(userId: String,limit : Long): Task<QuerySnapshot> {
+        return notificationCollection.whereEqualTo("userId", userId)
+            .whereEqualTo("notificationType", NotificationType.FOLLOW)
+            .limit(limit)
+            .get()
+    }
+    override fun getPostNotifications(userId: String,limit : Long): Task<QuerySnapshot> {
+        return notificationCollection.whereEqualTo("userId", userId)
+            .whereEqualTo("notificationType", NotificationType.POST)
+            .limit(limit)
+            .get()
+    }
+    override fun getJobPostNotifications(userId: String,limit : Long): Task<QuerySnapshot> {
+        return notificationCollection.whereEqualTo("userId", userId)
+            .whereEqualTo("notificationType", NotificationType.JOB_POST)
+            .limit(limit)
+            .get()
     }
 }

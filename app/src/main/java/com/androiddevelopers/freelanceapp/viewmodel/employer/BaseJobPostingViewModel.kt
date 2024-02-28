@@ -3,7 +3,6 @@ package com.androiddevelopers.freelanceapp.viewmodel.employer
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
@@ -162,4 +161,6 @@ open class BaseJobPostingViewModel(
     fun setListenerForChange(isChangeSavedPost: Boolean) = viewModelScope.launch {
         sharedPreferences.edit().putBoolean("employer_job_post_is_change",isChangeSavedPost).apply()
     }
+
+
 }
