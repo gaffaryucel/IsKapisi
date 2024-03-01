@@ -40,8 +40,8 @@ class DiscoverDetailsFragment : Fragment() {
 
         observeLiveData()
 
-        adapter.like = {ownerToken,imageUrl,postId,likeCount->
-            viewModel.likePost(ownerToken,imageUrl,postId,likeCount)
+        adapter.like = {ownerToken,imageUrl,postId,userId,likeCount->
+            viewModel.likePost(ownerToken,imageUrl,postId,likeCount,userId)
         }
         adapter.dislike = { postId,likeCount->
             viewModel.dislikePost(postId,likeCount)

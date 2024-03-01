@@ -27,6 +27,7 @@ class CommentsFragment : Fragment() {
     private var adapter = CommentsAdapter()
 
     var postId : String? = null
+    var token : String? = null
 
 
     override fun onCreateView(
@@ -38,6 +39,7 @@ class CommentsFragment : Fragment() {
         _binding = FragmentCommentsBinding.inflate(inflater, container, false)
         val root: View = binding.root
         postId = arguments?.getString("postId")
+        token = arguments?.getString("token")
         if (postId != null){
             viewModel.getAllComments(postId!!)
         }
@@ -53,7 +55,10 @@ class CommentsFragment : Fragment() {
 
         binding.btnSendComment.setOnClickListener{
             val comment = binding.etCommentInput.text.toString()
-            viewModel.makeComment(postId ?: "",comment)
+            val notification = viewModel.createNotificationData(
+                userToken = token ?: "",postId.toString()
+            )
+            viewModel.makeComment(postId ?: "",comment,notification)
             binding.etCommentInput.setText("")
         }
     }

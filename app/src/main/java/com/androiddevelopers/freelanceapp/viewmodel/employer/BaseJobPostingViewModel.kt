@@ -192,4 +192,6 @@ open class BaseJobPostingViewModel(
         sharedPreferences.edit().putBoolean("employer_job_post_is_change", isChangeSavedPost)
             .apply()
     }
+
+
 }

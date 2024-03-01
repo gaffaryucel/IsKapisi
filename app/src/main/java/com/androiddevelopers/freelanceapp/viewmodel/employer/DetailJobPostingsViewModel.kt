@@ -41,6 +41,7 @@ constructor(
         ).addOnCompleteListener{
             if (it.isSuccessful){
                 sendNotification(notification)
+                firebaseRepo.saveNotification(notification)
                 _preChatRoomAction.value = Resource.success(preChatModel)
             }else{
                 _preChatRoomAction.value = Resource.error(it.exception?.localizedMessage.toString(),null)
@@ -93,12 +94,7 @@ constructor(
         })
     }
 
-    private fun getCurrentTime(): String {
-        val currentTime = System.currentTimeMillis()
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-        val date = Date(currentTime)
-        return dateFormat.format(date)
-    }
+
 
 
 }

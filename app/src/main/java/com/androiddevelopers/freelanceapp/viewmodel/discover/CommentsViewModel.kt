@@ -1,5 +1,6 @@
 package com.androiddevelopers.freelanceapp.viewmodel.discover
 
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,8 +8,11 @@ import androidx.lifecycle.viewModelScope
 import com.androiddevelopers.freelanceapp.model.CommentModel
 import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
 import com.androiddevelopers.freelanceapp.model.UserModel
+import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
+import com.androiddevelopers.freelanceapp.util.NotificationType
 import com.androiddevelopers.freelanceapp.util.Resource
+import com.androiddevelopers.freelanceapp.viewmodel.BaseNotificationViewModel
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -21,9 +25,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CommentsViewModel  @Inject constructor(
     private val firebaseRepo: FirebaseRepoInterFace,
-    private val auth: FirebaseAuth,
-) : ViewModel() {
-    private val userId = auth.currentUser?.uid.toString()
+    auth: FirebaseAuth,
+) : BaseNotificationViewModel(firebaseRepo,auth) {
 
     private var _message = MutableLiveData<Resource<UserModel>>()
     val message: LiveData<Resource<UserModel>>
@@ -55,7 +58,7 @@ class CommentsViewModel  @Inject constructor(
                 _message.value = Resource.error("Belge alınamadı. Hata: $exception", null)
             }
     }
-    private fun sendComment(postId : String,myComment : CommentModel) = viewModelScope.launch{
+    private fun sendComment(postId : String,myComment : CommentModel,notification : InAppNotificationModel) = viewModelScope.launch{
         val mutableList = mutableListOf<CommentModel>()
         mutableList.addAll(discoverPostComments.value ?: emptyList())
         mutableList.add(myComment)
@@ -64,20 +67,34 @@ class CommentsViewModel  @Inject constructor(
         )
         firebaseRepo.commentToDiscoverPost(postId,likeData).addOnSuccessListener {
             getAllComments(postId)
+            sendNotification(notification)
         }
     }
-    fun makeComment(postId : String,comment : String){
+    fun createNotificationData(userToken : String,image : String) =
+        InAppNotificationModel(
+            userId = currentUserId,
+            notificationType = NotificationType.POST,
+            notificationId = UUID.randomUUID().toString(),
+            title = "Gönderine Yorum yaptı",
+            message = "${currentUserData.value?.fullName}: $message!",
+            userImage = currentUserData.value?.profileImageUrl.toString(),
+            imageUrl = image,
+            userToken = userToken,
+            time = getCurrentTime()
+        )
+
+    fun makeComment(postId : String,comment : String,notification : InAppNotificationModel){
         val commentId = UUID.randomUUID().toString()
         val myComment = CommentModel(
-            commentId,comment,userId,_userData.value?.profileImageUrl.toString(),
+            commentId,comment,currentUserId,_userData.value?.profileImageUrl.toString(),
             userData.value?.username.toString(),getCurrentTime()
         )
-        sendComment(postId,myComment)
+        sendComment(postId,myComment,notification)
     }
 
     private fun getUserDataFromFirebase() {
         _message.value = Resource.loading(null)
-        firebaseRepo.getUserDataByDocumentId(userId)
+        firebaseRepo.getUserDataByDocumentId(currentUserId)
             .addOnSuccessListener { documentSnapshot->
                 if (documentSnapshot.exists()) {
                     val user = documentSnapshot.toObject(UserModel::class.java)
@@ -89,12 +106,5 @@ class CommentsViewModel  @Inject constructor(
                 // Hata durzumunda işlemleri buraya ekleyebilirsiniz
                 _message.value = Resource.error("Belge alınamadı. Hata: $exception", null)
             }
-    }
-
-    private fun getCurrentTime(): String {
-        val currentTime = System.currentTimeMillis()
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-        val date = Date(currentTime)
-        return dateFormat.format(date)
     }
 }

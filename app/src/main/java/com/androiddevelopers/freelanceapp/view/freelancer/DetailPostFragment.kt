@@ -17,11 +17,13 @@ import com.androiddevelopers.freelanceapp.databinding.FragmentHomeDetailPostBind
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
+import com.androiddevelopers.freelanceapp.util.NotificationType
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.util.downloadImage
 import com.androiddevelopers.freelanceapp.viewmodel.freelancer.DetailPostViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.UUID
 
 @AndroidEntryPoint
 class DetailPostFragment : Fragment() {
@@ -65,11 +67,15 @@ class DetailPostFragment : Fragment() {
             } else {
                 try {
                     InAppNotificationModel(
-                        "Yeni Hizmet Talebi!",
-                        "${currentUser?.fullName} adlı kullanıcı sizden hizmet talep etti! Talep detaylarını görmek lütfen uygulamayı kontrol edin.",
-                        currentUser?.profileImageUrl.toString(),
-                        post?.images?.get(0).toString(),
-                        user?.token
+                        userId = currentUser?.userId.toString(),
+                        notificationType = NotificationType.JOB_POST,
+                        notificationId = UUID.randomUUID().toString(),
+                        title = "Yeni Hizmet Talebi!",
+                        message = "${currentUser?.fullName} adlı kullanıcı sizden hizmet talep etti!",
+                        userImage = currentUser?.profileImageUrl.toString(),
+                        imageUrl = post?.images?.get(0).toString(),
+                        userToken = user?.token.toString(),
+                        time = viewModel.getCurrentTime()
                     ).also { notification->
                         viewModel.createPreChatModel(
                             "frl",

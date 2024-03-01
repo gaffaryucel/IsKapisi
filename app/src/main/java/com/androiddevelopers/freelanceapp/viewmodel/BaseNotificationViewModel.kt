@@ -15,6 +15,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -50,6 +53,9 @@ open class BaseNotificationViewModel @Inject constructor(
     internal fun sendNotification(
         notification : InAppNotificationModel
     ) = CoroutineScope(Dispatchers.IO).launch {
+        if (currentUserData.value?.userId.equals(notification.userId)){
+            return@launch
+        }
         val TAG = "Notification"
         try {
             PushNotification(
@@ -64,5 +70,12 @@ open class BaseNotificationViewModel @Inject constructor(
         } catch(e: Exception) {
             Log.e(TAG, e.toString())
         }
+
+    }
+    internal fun getCurrentTime(): String {
+        val currentTime = System.currentTimeMillis()
+        val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault())
+        val date = Date(currentTime)
+        return dateFormat.format(date)
     }
 }

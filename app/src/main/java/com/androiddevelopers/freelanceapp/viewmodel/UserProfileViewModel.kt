@@ -8,8 +8,10 @@ import com.androiddevelopers.freelanceapp.model.FollowModel
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
+import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
 import com.androiddevelopers.freelanceapp.model.notification.PushNotification
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
+import com.androiddevelopers.freelanceapp.util.NotificationType
 import com.androiddevelopers.freelanceapp.util.Resource
 import com.androiddevelopers.freelanceapp.viewmodel.profile.BaseProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -20,6 +22,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -130,9 +133,23 @@ class UserProfileViewModel  @Inject constructor(
                 _userMessage.value = Resource.error("Belge alınamadı. Hata: $exception", null)
             }
     }
-    private fun follow(followerModel: FollowModel,followingModel: FollowModel){
+    private fun follow(followerModel: FollowModel,followingModel: FollowModel,token : String){
         firebaseRepo.follow(followerModel,followingModel).addOnSuccessListener {
             _followStatus.value = Resource.success(true)
+            sendNotification(
+                InAppNotificationModel(
+                    userId = followingModel.userId,
+                    notificationType = NotificationType.FOLLOW,
+                    notificationId = UUID.randomUUID().toString(),
+                    title = "Yeni bir takipçin var!",
+                    message = "${followerModel.userName} seni takip etmeye başladı.",
+                    userImage = followerModel.userImage,
+                    imageUrl = null,
+                    userToken = token
+                ).also {
+                    firebaseRepo.saveNotification(it)
+                }
+            )
         }.addOnFailureListener{
            it.localizedMessage?.let {msg ->
                _followStatus.value = Resource.error(msg,null)
@@ -153,10 +170,12 @@ class UserProfileViewModel  @Inject constructor(
         var followingName = ""
         var followingImage = ""
         var followingId = ""
+        var myToken = ""
         userInfo.value?.apply {
             followingId = userId.toString()
             followingName = username.toString()
             followingImage = profileImageUrl.toString()
+            myToken = token.toString()
         }
         val followingModel = FollowModel(followingId,followingName,followingImage)
         val followerModel = FollowModel(currentUserId,userData.value?.username,userData.value?.profileImageUrl)
@@ -164,13 +183,13 @@ class UserProfileViewModel  @Inject constructor(
             try {
                 unFollow()
             }catch (e: Exception){
-
+                //
             }
         }else{
             try {
-                follow(followerModel,followingModel)
+                follow(followerModel,followingModel,myToken)
             }catch (e: Exception){
-
+                //
             }
         }
     }
@@ -184,26 +203,11 @@ class UserProfileViewModel  @Inject constructor(
                         _followStatus.value = Resource.success(true)
                     }
                 }
-
             }
-
             override fun onCancelled(error: DatabaseError) {
-
+                _followStatus.value = Resource.error(error.message,null)
             }
 
         })
-    }
-
-
-    fun sendNotification(notification: PushNotification) = CoroutineScope(Dispatchers.IO).launch {
-        val TAG = "Notification"
-        try {
-            firebaseRepo.postNotification(notification)
-        } catch(e: Exception) {
-            Log.e(TAG, e.toString())
-        }
-    }
-    fun saveNotification(){
-
     }
 }
