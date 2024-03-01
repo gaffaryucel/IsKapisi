@@ -24,117 +24,98 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:padding="10dp">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/layoutEmployerCardUser"
+            <ImageView
+                android:id="@+id/ivEmployerCardUserImage"
+                downloadImage="@{user.profileImageUrl}"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/placeholder"
+                app:layout_constraintBottom_toBottomOf="@id/textEmployerCardUserLocation"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/textEmployerCardUserName"
+                tools:ignore="ContentDescription,ImageContrastCheck" />
+
+            <TextView
+                android:id="@+id/textEmployerCardUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:text="@{user.username}"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/ivEmployerCardUserImage"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="User Name" />
+
+            <ImageView
+                android:id="@+id/imageEmployerCardRating"
+                setRatingImage="@{user.rating}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/rating_star_empty"
+                app:layout_constraintBottom_toBottomOf="@id/textEmployerCardUserName"
+                app:layout_constraintStart_toEndOf="@id/textEmployerCardUserName"
+                app:layout_constraintTop_toTopOf="@id/textEmployerCardUserName"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/textEmployerCardRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:text="@{user.rating != null ? user.rating.toString() : `0.0`}"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@id/textEmployerCardUserName"
+                app:layout_constraintStart_toEndOf="@id/imageEmployerCardRating"
+                app:layout_constraintTop_toTopOf="@id/textEmployerCardUserName"
+                tools:text="5.0" />
+
+            <TextView
+                android:id="@+id/textEmployerCardUserLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:text="@{user.location.city +`/`+user.location.country}"
+                android:textSize="16sp"
+                app:layout_constraintStart_toEndOf="@id/ivEmployerCardUserImage"
+                app:layout_constraintTop_toBottomOf="@id/textEmployerCardUserName"
+                tools:text="User Location" />
+
+            <TextView
+                android:id="@+id/cardEmployerTextViewTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:hint="@string/hint_employer_title"
+                android:maxLines="1"
+                android:padding="3dp"
+                android:text="@{employer.title}"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@id/card_employer_guideline_vertical_right"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/textEmployerCardUserLocation"
+                tools:ignore="TextContrastCheck" />
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/ivEmployerCardUserImage"
-                    downloadImage="@{user.profileImageUrl}"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/placeholder"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="ImageContrastCheck" />
-
-                <TextView
-                    android:id="@+id/textEmployerCardUserName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="4dp"
-                    android:text="@{user.username}"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toEndOf="@id/ivEmployerCardUserImage"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="User Name" />
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/imageEmployerCardRating"
-                    setRatingImage="@{user.rating}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:src="@drawable/rating_star_empty"
-                    app:layout_constraintBottom_toBottomOf="@id/textEmployerCardUserName"
-                    app:layout_constraintStart_toEndOf="@id/textEmployerCardUserName"
-                    app:layout_constraintTop_toTopOf="@id/textEmployerCardUserName" />
-
-                <TextView
-                    android:id="@+id/textEmployerCardRating"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
-                    android:text="@{user.rating != null ? user.rating.toString() : `0.0`}"
-                    android:textSize="16sp"
-                    app:layout_constraintBottom_toBottomOf="@id/textEmployerCardUserName"
-                    app:layout_constraintStart_toEndOf="@id/imageEmployerCardRating"
-                    app:layout_constraintTop_toTopOf="@id/textEmployerCardUserName"
-                    tools:text="5.0" />
-
-                <TextView
-                    android:id="@+id/textEmployerCardUserLocation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:text="@{user.location.city +`/`+user.location.country}"
-                    android:textSize="16sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/ivEmployerCardUserImage"
-                    app:layout_constraintTop_toBottomOf="@id/textEmployerCardUserName"
-                    tools:text="User Location" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/layoutEmployerCardJobPost"
+            <TextView
+                android:id="@+id/cardEmployerTextViewDescription"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toStartOf="@id/card_employer_guideline_vertical_right"
+                android:hint="@string/hint_employer_description"
+                android:maxLines="3"
+                android:padding="3dp"
+                android:text="@{employer.description}"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layoutEmployerCardUser">
-
-                <TextView
-                    android:id="@+id/cardEmployerTextViewTitle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/hint_employer_title"
-                    android:maxLines="1"
-                    android:padding="3dp"
-                    android:text="@{employer.title}"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="TextContrastCheck" />
-
-                <TextView
-                    android:id="@+id/cardEmployerTextViewDescription"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/hint_employer_description"
-                    android:maxLines="3"
-                    android:padding="3dp"
-                    android:text="@{employer.description}"
-                    android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/cardEmployerTextViewTitle"
-                    tools:ignore="TextContrastCheck" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                app:layout_constraintTop_toBottomOf="@id/cardEmployerTextViewTitle"
+                tools:ignore="TextContrastCheck" />
 
             <TextView
                 android:id="@+id/cardEmployerTextViewUrgent"
@@ -212,7 +193,7 @@
                 app:layout_constraintBottom_toTopOf="@id/cardEmployerTextViewUrgent"
                 app:layout_constraintEnd_toStartOf="@+id/card_employer_guideline_vertical_right"
                 app:layout_constraintStart_toEndOf="@id/cardEmployerTextViewLocation"
-                app:layout_constraintTop_toBottomOf="@+id/layoutEmployerCardJobPost"
+                app:layout_constraintTop_toBottomOf="@+id/cardEmployerTextViewDescription"
                 app:layout_constraintWidth_max="@dimen/job_post_overviews_max_width"
                 tools:text="₺5000" />
 
@@ -223,7 +204,7 @@
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.92" />
 
-            <androidx.appcompat.widget.AppCompatImageView
+            <ImageView
                 android:id="@+id/imageViewSaved"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
@@ -232,9 +213,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@drawable/baseline_bookmark_border_24" />
+                app:srcCompat="@drawable/baseline_bookmark_border_24"
+                tools:ignore="ContentDescription" />
 
-            <androidx.appcompat.widget.AppCompatImageView
+            <ImageView
                 android:id="@+id/cardEmployerImageDetail"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
@@ -242,7 +224,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="1.0" />
+                app:layout_constraintVertical_bias="1.0"
+                tools:ignore="ContentDescription" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </layout>

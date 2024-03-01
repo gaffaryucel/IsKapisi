@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
@@ -27,14 +28,13 @@ class JobPostingsFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val userId = FirebaseAuth.getInstance().currentUser?.uid.toString()
-    private lateinit var employerAdapter: EmployerAdapter
+    private val employerAdapter = EmployerAdapter(userId)
     private val listEmployerJobPost = mutableListOf<EmployerJobPost>()
     private lateinit var errorDialog: AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this)[JobPostingsViewModel::class.java]
-        employerAdapter = EmployerAdapter(requireActivity().applicationContext, userId)
     }
 
     override fun onCreateView(
@@ -90,11 +90,12 @@ class JobPostingsFragment : Fragment() {
                 )
                 viewModel.setListenerForChange(true)
             }
+
         }
 
-//        with(binding) {
-//            search(jobPostingSearchView)
-//        }
+        with(binding) {
+            search(jobPostingSearchView)
+        }
     }
 
     override fun onDestroyView() {
@@ -119,14 +120,20 @@ class JobPostingsFragment : Fragment() {
                 }
             }
 
-            firebaseLiveData.observe(owner) { list ->
-                // firebase 'den gelen veriler ile adapter'i yeniliyoruz
-                employerAdapter.employerList = list
 
-                listEmployerJobPost.clear()
-                // firebase 'den gelen son verilerin kopyasını saklıyoruz
-                // search iptal edildiğinde bu verileri tekrar adapter'e set edeceğiz
-                listEmployerJobPost.addAll(list)
+
+            firebaseUserListData.observe(owner) { users ->
+                employerAdapter.refreshUserList(users)
+
+                firebaseLiveData.observe(owner) { list ->
+                    // firebase 'den gelen veriler ile adapter'i yeniliyoruz
+                    employerAdapter.employerList = list
+
+                    listEmployerJobPost.clear()
+                    // firebase 'den gelen son verilerin kopyasını saklıyoruz
+                    // search iptal edildiğinde bu verileri tekrar adapter'e set edeceğiz
+                    listEmployerJobPost.addAll(list)
+                }
             }
 
 
@@ -160,34 +167,34 @@ class JobPostingsFragment : Fragment() {
         }
     }
 
-//    private fun search(searchView: SearchView) {
-//        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-//            override fun onQueryTextSubmit(query: String?): Boolean {
-//                return false
-//            }
-//
-//            //her karakter girildiğinde arama yapar
-//            override fun onQueryTextChange(newText: String?): Boolean {
-//                //arama sonucunu her zaman elde etmek için kullanıcının girdiği bütün karakterleri küçük harfe çeviriyoruz
-//                newText?.lowercase()?.let { searchText ->
-//                    val list = ArrayList<EmployerJobPost>()
-//                    listEmployerJobPost.forEach {
-//                        //arama sonucunu her zaman elde etmek için firebase'ten gelen verileri küçük harfe çeviriyoruz
-//                        val title = it.title?.lowercase()
-//                        val description = it.description?.lowercase()
-//
-//                        if (title?.contains(searchText) == true || description?.contains(searchText) == true) {
-//                            list.add(it)
-//                        }
-//                    }
-//                    if (list.isNotEmpty()) {
-//                        employerAdapter.employerList = list
-//                    }
-//                }
-//
-//                return true
-//            }
-//
-//        })
-//    }
+    private fun search(searchView: SearchView) {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            //her karakter girildiğinde arama yapar
+            override fun onQueryTextChange(newText: String?): Boolean {
+                //arama sonucunu her zaman elde etmek için kullanıcının girdiği bütün karakterleri küçük harfe çeviriyoruz
+                newText?.lowercase()?.let { searchText ->
+                    val list = ArrayList<EmployerJobPost>()
+                    listEmployerJobPost.forEach {
+                        //arama sonucunu her zaman elde etmek için firebase'ten gelen verileri küçük harfe çeviriyoruz
+                        val title = it.title?.lowercase()
+                        val description = it.description?.lowercase()
+
+                        if (title?.contains(searchText) == true || description?.contains(searchText) == true) {
+                            list.add(it)
+                        }
+                    }
+                    if (list.isNotEmpty()) {
+                        employerAdapter.employerList = list
+                    }
+                }
+
+                return true
+            }
+
+        })
+    }
 }

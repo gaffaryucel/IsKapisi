@@ -35,6 +35,10 @@ open class BaseJobPostingViewModel(
     val firebaseUserData: LiveData<UserModel>
         get() = _firebaseUserData
 
+    private var _firebaseUserListData = MutableLiveData<List<UserModel>>()
+    val firebaseUserListData: LiveData<List<UserModel>>
+        get() = _firebaseUserListData
+
     private var _firebaseListenerForChange = MutableLiveData<Boolean>()
     val firebaseListenerForChange: LiveData<Boolean>
         get() = _firebaseListenerForChange
@@ -49,12 +53,17 @@ open class BaseJobPostingViewModel(
 
                 it?.let { querySnapshot ->
                     val list = mutableListOf<EmployerJobPost>()
+                    val userIdList = mutableSetOf<String>()
 
                     for (document in querySnapshot) {
                         val employerJobPost = document.toObject(EmployerJobPost::class.java)
                         if (employerJobPost.status == JobStatus.OPEN) {
                             list.add(employerJobPost)
+                            employerJobPost.employerId?.let { id -> userIdList.add(id) }
                         }
+                    }
+                    if (userIdList.isNotEmpty()) {
+                        getUserDataByDocumentIdList(userIdList.toList())
                     }
 
                     _firebaseLiveData.value = list
@@ -96,6 +105,26 @@ open class BaseJobPostingViewModel(
                         Resource.error(message, false)
                     }
                 }
+        }
+
+    fun getUserDataByDocumentIdList(list: List<String>) =
+        viewModelScope.launch {
+            firebaseRepo.getUsersFromFirestore(list).addOnSuccessListener { querySnapshot ->
+                val users = mutableListOf<UserModel>()
+
+                for (document in querySnapshot) {
+                    val userModel = document.toObject(UserModel::class.java)
+                    users.add(userModel)
+                }
+                _firebaseUserListData.value = users
+                _firebaseMessage.value = Resource.success(true)
+            }.addOnFailureListener {
+                _firebaseMessage.value = Resource.loading(false)
+
+                it.localizedMessage?.let { message ->
+                    Resource.error(message, false)
+                }
+            }
         }
 
     fun getEmployerJobPostWithDocumentByIdFromFirestore(documentId: String) =
