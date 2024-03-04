@@ -510,15 +510,76 @@
 
                     </LinearLayout>
 
-                    <Button
-                        android:id="@+id/buttonBuy"
-                        android:layout_width="wrap_content"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_margin="10dp"
+
+                        android:id="@+id/layoutJobPostAdditionalDetails"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text="@string/buy"
+                        android:layout_marginTop="@dimen/JobPostLinearLayoutMarginTop"
+                        android:baselineAligned="false"
+                        android:orientation="vertical"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/layoutPostAdditionalDetails" />
+                        app:layout_constraintTop_toBottomOf="@id/layoutPostAdditionalDetails" >
+
+                        <TextView
+                            android:id="@+id/textYouOfferJobPostDetail"
+                            style="@style/JopPostDetailTextTags"
+                            android:layout_width="wrap_content"
+                            android:text="@string/you_offer"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/textPrefixJobPostDetail"
+                            android:layout_width="wrap_content"
+                            android:layout_marginHorizontal="8dp"
+                            android:layout_height="wrap_content"
+                            android:text="₺"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/etOffer"
+                            app:layout_constraintBottom_toBottomOf="@id/etOffer"
+                            tools:ignore="HardcodedText" />
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/etOffer"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:hint="@string/enter_offer"
+                            android:inputType="number"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHeight_min="50dp"
+                            app:layout_constraintStart_toEndOf="@id/textPrefixJobPostDetail"
+                            app:layout_constraintTop_toBottomOf="@id/textYouOfferJobPostDetail"
+                            tools:ignore="TextContrastCheck" />
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/etMessageDescription"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:hint="@string/enter_offer_description"
+                            android:inputType="textMultiLine"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHeight_min="50dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/etOffer"
+                            tools:ignore="TextContrastCheck" />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:background="@color/bookmark_filled"
+                            android:id="@+id/buttonBuy"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="20dp"
+                            android:text="@string/buy"
+                            app:layout_constraintTop_toBottomOf="@+id/etMessageDescription"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

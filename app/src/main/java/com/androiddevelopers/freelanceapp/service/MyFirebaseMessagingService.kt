@@ -3,6 +3,8 @@ package com.androiddevelopers.freelanceapp.service
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Bitmap
@@ -12,11 +14,16 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.androiddevelopers.freelanceapp.R
+import com.androiddevelopers.freelanceapp.model.notification.MessageObject
+import com.androiddevelopers.freelanceapp.model.notification.PreMessageObject
+import com.androiddevelopers.freelanceapp.util.NotificationTypeForActions
+import com.androiddevelopers.freelanceapp.view.BottomNavigationActivity
 import com.androiddevelopers.freelanceapp.view.MainActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.google.gson.Gson
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -27,31 +34,60 @@ import java.net.HttpURLConnection
 import java.net.URL
 import kotlin.random.Random
 
+
 private const val CHANNEL_ID = "my_channel"
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
-    companion object {
-        var sharedPref: SharedPreferences? = null
 
-        var token: String?
-            get() {
-                return sharedPref?.getString("token", "")
-            }
-            set(value) {
-                sharedPref?.edit()?.putString("token", value)?.apply()
-            }
-    }
 
     override fun onNewToken(newToken: String) {
         super.onNewToken(newToken)
-        token = newToken
         saveToken(newToken)
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
-        val intent = Intent(this, MainActivity::class.java)
+
+        val sharedPref = applicationContext.getSharedPreferences("notification", Context.MODE_PRIVATE)
+
+        var usersOnlineChatId : String? = ""
+
+
+        val type = message.data["type"] ?: ""
+        sharedPref.edit().putString("not_type", type).apply()
+        when(type){
+            NotificationTypeForActions.MESSAGE.toString()->{
+                getMessagingObject(message,sharedPref)
+                usersOnlineChatId =sharedPref.getString("chatId", "")
+            }
+            NotificationTypeForActions.PRE_MESSAGE.toString()->{
+                getPreMessagingObject(message,sharedPref)
+                usersOnlineChatId = sharedPref.getString("postId", "")
+            }
+            NotificationTypeForActions.FRL_JOB_POST.toString()->{
+                val freelancerPostObject = message.data["freelancerPostObject"] ?: ""
+                sharedPref.edit().putString("freelancerPostObject", freelancerPostObject).apply()
+            }
+            NotificationTypeForActions.EMP_JOB_POST.toString()->{
+                val employerPostObject = message.data["employerPostObject"] ?: ""
+                sharedPref.edit().putString("employerPostObject", employerPostObject).apply()
+            }
+            NotificationTypeForActions.LIKE.toString()->{
+                val like = message.data["like"] ?: ""
+                sharedPref.edit().putString("like", like).apply()
+            }
+            NotificationTypeForActions.COMMENT.toString()->{
+                val comment = message.data["comment"] ?: ""
+                sharedPref.edit().putString("comment", comment).apply()
+            }
+            NotificationTypeForActions.FOLLOW.toString()->{
+                val followObject = message.data["followObject"] ?: ""
+                sharedPref.edit().putString("followObject", followObject).apply()
+            }
+        }
+
+        val intent = Intent(this, BottomNavigationActivity::class.java)
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         val notificationID = Random.nextInt()
 
@@ -83,7 +119,17 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             .setStyle(bigPictureStyle) // Büyük resim stili
             .build()
 
-        notificationManager.notify(notificationID, notification)
+
+        // Bildirim geldiğinde
+        val sharedPreferences = applicationContext.getSharedPreferences("chatPage", Context.MODE_PRIVATE)
+        val currentChatPageId = sharedPreferences.getString("current_chat_page_id", null)
+        if (currentChatPageId != null && currentChatPageId == usersOnlineChatId) {
+            // Bildirim, kullanıcının bulunduğu sayfa ile ilişkilendirilmişse, bildirimi gösterme
+            return
+        } else {
+            notificationManager.notify(notificationID, notification)
+        }
+
     }
 
     // URL'den bitmap olarak görsel indiren bir fonksiyon
@@ -128,5 +174,34 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             userCollection.document(userId).update(tokenMap)
         }
 
+    }
+
+    private fun getPreMessagingObject(notification : RemoteMessage,sharedPref : SharedPreferences){
+
+        val preMessageObjectJson = notification.data["preMessageObject"] ?: ""
+        val gson = Gson()
+        val preMessageObject = gson.fromJson(preMessageObjectJson, PreMessageObject::class.java)
+
+        sharedPref.edit().putString("userId", preMessageObject.userId).apply()
+        sharedPref.edit().putString("postId", preMessageObject.postId).apply()
+        sharedPref.edit().putString("type", preMessageObject.type).apply()
+
+    }
+    private fun getMessagingObject(notification : RemoteMessage,sharedPref :  SharedPreferences){
+
+        val preMessageObjectJson = notification.data["preMessageObject"] ?: ""
+        val gson = Gson()
+        val preMessageObject = gson.fromJson(preMessageObjectJson, MessageObject::class.java)
+
+        sharedPref.edit().putString("chatId", preMessageObject.chatId).apply()
+        sharedPref.edit().putString("receiverId", preMessageObject.receiverId).apply()
+        sharedPref.edit().putString("receiverUserName", preMessageObject.receiverUserName).apply()
+        sharedPref.edit().putString("receiverUserImage", preMessageObject.receiverUserImage).apply()
+
+    }
+}
+class YourNotificationReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context?, intent: Intent?) {
+        println("click")
     }
 }

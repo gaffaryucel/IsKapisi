@@ -7,9 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
+import com.androiddevelopers.freelanceapp.model.notification.MessageObject
 import com.androiddevelopers.freelanceapp.model.notification.NotificationData
+import com.androiddevelopers.freelanceapp.model.notification.PreMessageObject
 import com.androiddevelopers.freelanceapp.model.notification.PushNotification
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
+import com.androiddevelopers.freelanceapp.util.NotificationTypeForActions
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -51,18 +54,36 @@ open class BaseNotificationViewModel @Inject constructor(
         }
     }
     internal fun sendNotification(
-        notification : InAppNotificationModel
+        notification : InAppNotificationModel,
+        type : NotificationTypeForActions,
+        poreMessage : PreMessageObject? = null,
+        messageObject: MessageObject? = null,
+        freelancerPostObject: String? = null,
+        employerPostObject: String? = null,
+        discoverPostObject: String? = null,
+        like: String? = null,
+        comment: String? = null,
+        followObject: String? = null,
     ) = CoroutineScope(Dispatchers.IO).launch {
-        if (currentUserData.value?.userId.equals(notification.userId)){
-            return@launch
-        }
+
         val TAG = "Notification"
         try {
             PushNotification(
-                NotificationData(notification.title.toString(),
-                    notification.message.toString(),
-                    notification.imageUrl.toString(),
-                    notification.userImage.toString()),
+                NotificationData(
+                    title = notification.title.toString(),
+                    message = notification.message.toString(),
+                    imageUrl = notification.imageUrl.toString(),
+                    profileImage = notification.userImage.toString(),
+                    type =type,
+                    preMessageObject =poreMessage,
+                    messageObject = messageObject,
+                    freelancerPostObject =freelancerPostObject,
+                    employerPostObject =employerPostObject,
+                    discoverPostObject =discoverPostObject,
+                    like =like,
+                    comment =comment,
+                    followObject =followObject
+                ),
                 notification.userToken.toString()
             ).also {
                 firebaseRepo.postNotification(it)
@@ -71,6 +92,7 @@ open class BaseNotificationViewModel @Inject constructor(
             Log.e(TAG, e.toString())
         }
 
+
     }
     internal fun getCurrentTime(): String {
         val currentTime = System.currentTimeMillis()
@@ -78,4 +100,5 @@ open class BaseNotificationViewModel @Inject constructor(
         val date = Date(currentTime)
         return dateFormat.format(date)
     }
+
 }

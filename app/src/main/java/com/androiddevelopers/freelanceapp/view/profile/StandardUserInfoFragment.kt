@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.FragmentStandardUserInfoBinding
@@ -21,6 +22,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class StandardUserInfoFragment : Fragment() {
@@ -74,7 +76,9 @@ class StandardUserInfoFragment : Fragment() {
             viewModel.updateUserInfo("bio", bio)
             viewModel.updateUserInfo("phone", phoneNumber)
             viewModel.updateUserInfo("userType", UserStatus.STANDARD)
-            viewModel.saveImageToStorage(selectedImage!!)
+            lifecycleScope.launch {
+                viewModel.saveImageToStorage(selectedImage!!,"profile")
+            }
             FirebaseAuth.getInstance().currentUser?.let {
                 val profileUpdates = UserProfileChangeRequest.Builder()
                     .setDisplayName("Employer")

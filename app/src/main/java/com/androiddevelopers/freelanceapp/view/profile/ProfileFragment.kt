@@ -12,7 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.androiddevelopers.freelanceapp.adapters.ProfileDiscoverAdapter
 import com.androiddevelopers.freelanceapp.adapters.ProfileEmployerAdapter
 import com.androiddevelopers.freelanceapp.adapters.ProfileFreelancerAdapter
+import com.androiddevelopers.freelanceapp.adapters.SelectedSkillsAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentProfileBinding
+import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.util.UserStatus
 import com.androiddevelopers.freelanceapp.viewmodel.profile.ProfileViewModel
 import com.bumptech.glide.Glide
@@ -25,9 +27,12 @@ class ProfileFragment : Fragment() {
     private lateinit var employerAdapter: ProfileEmployerAdapter
     private lateinit var freelancerAdapter: ProfileFreelancerAdapter
     private lateinit var discoverAdapter: ProfileDiscoverAdapter
+    private lateinit var skillAdapter : SelectedSkillsAdapter
+
     private var isDiscoverListEmpty = false
     private var isFreelanceListEmpty = false
     private var isEmployerListEmpty = false
+
 
     private lateinit var viewModel: ProfileViewModel
     private var _binding: FragmentProfileBinding? = null
@@ -45,21 +50,22 @@ class ProfileFragment : Fragment() {
         employerAdapter = ProfileEmployerAdapter()
         freelancerAdapter = ProfileFreelancerAdapter()
         discoverAdapter = ProfileDiscoverAdapter()
+        skillAdapter = SelectedSkillsAdapter()
 
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.rvProfile.layoutManager = LinearLayoutManager(requireContext())
-        binding.profileFragmentSwipeRefreshLayout.setOnRefreshListener {
-            refreshData()
-        }
         observeLiveData()
         setupTabLayout()
+        setupBindingEvents()
+    }
+    private fun setupBindingEvents(){
+        binding.recyclerView.adapter = skillAdapter
+        binding.rvProfile.layoutManager = LinearLayoutManager(requireContext())
         binding.btnEditProfile.setOnClickListener {
-            val action =
-                ProfileFragmentDirections.actionNavigationProfileToEditUserProfileInfoFragment()
+            val action = ProfileFragmentDirections.actionNavigationProfileToEditUserProfileInfoFragment()
             Navigation.findNavController(it).navigate(action)
         }
         binding.btnFreelancerEntry.setOnClickListener {
@@ -67,9 +73,11 @@ class ProfileFragment : Fragment() {
             Navigation.findNavController(it).navigate(action)
         }
         binding.btnEmployerEntry.setOnClickListener {
-            val action =
-                ProfileFragmentDirections.actionNavigationProfileToStandardUserInfoFragment()
+            val action = ProfileFragmentDirections.actionNavigationProfileToStandardUserInfoFragment()
             Navigation.findNavController(it).navigate(action)
+        }
+        binding.profileFragmentSwipeRefreshLayout.setOnRefreshListener {
+            refreshData()
         }
     }
 
@@ -161,7 +169,8 @@ class ProfileFragment : Fragment() {
                 userInfo = userData
             }
             if (userData.skills != null) {
-                showSkills(userData.skills!!)
+                skillAdapter.skillList = userData.skills!!
+                skillAdapter.notifyDataSetChanged()
             }
             if (userData.profileImageUrl != null) {
                 if (userData.profileImageUrl!!.isNotEmpty()) {
@@ -173,12 +182,12 @@ class ProfileFragment : Fragment() {
                 when (userData.userType) {
                     UserStatus.FREELANCER -> {
                         binding.layoutProfileType.visibility = View.GONE
-                        binding.flexbox.visibility = View.VISIBLE
+                        binding.recyclerView.visibility = View.VISIBLE
                         binding.profileFragmentSwipeRefreshLayout.visibility = View.VISIBLE
                     }
 
                     UserStatus.STANDARD -> {
-                        binding.flexbox.visibility = View.GONE
+                        binding.recyclerView.visibility = View.GONE
                         binding.layoutProfileType.visibility = View.GONE
                         binding.profileFragmentSwipeRefreshLayout.visibility = View.VISIBLE
                     }
@@ -194,7 +203,6 @@ class ProfileFragment : Fragment() {
             }
         })
         viewModel.profileMessage.observe(viewLifecycleOwner, Observer {
-            /*
               when (it.status) {
                 Status.SUCCESS -> {
                     binding.rvProfile.visibility = View.VISIBLE
@@ -210,10 +218,11 @@ class ProfileFragment : Fragment() {
                     binding.pbPostLoading.visibility = View.GONE
                 }
                 else->{
-                    //
+                    binding.tvEmptyList.visibility = View.VISIBLE
+                    binding.pbPostLoading.visibility = View.GONE
                 }
             }
-             */
+
 
         })
         viewModel.freelanceJobPosts.observe(viewLifecycleOwner, Observer { freelancerPosts ->
@@ -249,31 +258,7 @@ class ProfileFragment : Fragment() {
         })
     }
 
-    private fun showSkills(skills: List<String>) {
-        for ((index, skill) in skills.withIndex()) {
-            when (index) {
-                0 -> {
-                    binding.tvSkill1.text = skill
-                }
 
-                1 -> {
-                    binding.tvSkill2.text = skill
-                }
-
-                2 -> {
-                    binding.tvSkill3.text = skill
-                }
-
-                3 -> {
-                    binding.tvSkill4.text = skill
-                }
-
-                4 -> {
-                    binding.tvSkill5.text = skill
-                }
-            }
-        }
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -36,7 +36,7 @@ class MessagesViewModel @Inject constructor(
         messageData : String,
         messageReceiver: String,
     ) {
-        val usersMessage = createChatModelForCurrentUser(
+        val usersMessage = createMessageModelForCurrentUser(
             messageData ,
             currentUserId ?: "" ,
             messageReceiver
@@ -53,7 +53,7 @@ class MessagesViewModel @Inject constructor(
         repo.addMessageInChatMatesRoom(messageReceiver,chatId,usersMessage)
     }
 
-    private fun createChatModelForCurrentUser(
+    private fun createMessageModelForCurrentUser(
         messageData: String,
         messageSender: String,
         messageReceiver: String

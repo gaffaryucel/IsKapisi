@@ -11,16 +11,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.androiddevelopers.freelanceapp.R
+import com.androiddevelopers.freelanceapp.adapters.PortfolioItemsAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentFreelancerInfoBinding
 import com.androiddevelopers.freelanceapp.model.Education
 import com.androiddevelopers.freelanceapp.model.PortfolioItem
-import com.androiddevelopers.freelanceapp.model.UserProfileModel
 import com.androiddevelopers.freelanceapp.util.PermissionUtils
+import com.androiddevelopers.freelanceapp.adapters.SelectedSkillsAdapter
+import com.androiddevelopers.freelanceapp.model.Availability
+import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.util.UserStatus
 import com.androiddevelopers.freelanceapp.viewmodel.profile.BaseProfileViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class FreelancerInfoFragment : Fragment() {
@@ -33,6 +40,12 @@ class FreelancerInfoFragment : Fragment() {
     private val REQUEST_IMAGE_CAPTURE = 101
     private val REQUEST_IMAGE_PICK = 102
     private var selectedImage: Bitmap? = null
+
+    private val selectedSkillsAdapter = SelectedSkillsAdapter()
+    private val portfolioAdapter = PortfolioItemsAdapter()
+
+    private val selectedSkillList = ArrayList<String>()
+    private val portfolioList = ArrayList<PortfolioItem>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,31 +63,128 @@ class FreelancerInfoFragment : Fragment() {
         binding.buttonSignup.setOnClickListener {
             makeFreelancer()
         }
-        binding.ivUserProfilePhoto.setOnClickListener{
+        binding.ivEditUserPhoto.setOnClickListener{
             openCamera()
         }
+        binding.ivUserProfilePhoto.setOnClickListener{
+            openGallery()
+        }
+        binding.btnAddSkill.setOnClickListener {
+            openSkillSelectionDialog()
+        }
+        binding.btnAddPortfolio.setOnClickListener {
+            openCreatePortfolioItemFragment()
+        }
+        binding.recyclerView.adapter = selectedSkillsAdapter
+        binding.recyclerViewPortfolio.adapter = portfolioAdapter
+        observeLiveData()
     }
 
+    private fun observeLiveData(){
+        viewModel.uploadMessage.observe(viewLifecycleOwner, Observer {
+            when(it.status){
+                Status.SUCCESS->{
+                    findNavController().popBackStack()
+                }
+                Status.ERROR->{
+                    binding.pbFreelancerInfo.visibility = View.INVISIBLE
+                    binding.svFreelancerInfo.isEnabled = true
+                    binding.buttonSignup.isEnabled = true
+                }
+                Status.LOADING->{
+                    binding.svFreelancerInfo.isEnabled = false
+                    binding.pbFreelancerInfo.visibility = View.VISIBLE
+                    binding.buttonSignup.isEnabled = false
+                }
+            }
+        })
+    }
+
+    private fun openSkillSelectionDialog() {
+        val skillSelectionDialog = SkillSelectionDialogFragment()
+
+        // SkillSelectionDialogFragment içerisindeki seçilen yeteneklerin listesine erişim sağlayan listener
+        skillSelectionDialog.setOnSkillSelectedListener(object : SkillSelectionDialogFragment.OnSkillSelectedListener {
+            override fun onSkillsSelected(selectedSkills: List<String>) {
+                // Seçilen yeteneklerin listesine ulaşma
+                if (selectedSkills.isNotEmpty()){
+                    selectedSkillsAdapter.skillList = selectedSkills
+                    selectedSkillsAdapter.notifyDataSetChanged()
+                    selectedSkillList.addAll(selectedSkills)
+                    binding.recyclerView.visibility = View.VISIBLE
+                    binding.tvWarningMessageSkills.visibility = View.GONE
+                }else{
+                    binding.tvWarningMessageSkills.visibility = View.VISIBLE
+                    binding.recyclerView.visibility = View.GONE
+                }
+            }
+        })
+        // SkillSelectionDialogFragment'i göster
+        skillSelectionDialog.show(parentFragmentManager, "SkillSelectionDialog")
+    }
+    private fun openCreatePortfolioItemFragment(){
+        val createPortfolioItemDialog = CreatePortfolioItemDialog()
+
+        // SkillSelectionDialogFragment içerisindeki seçilen yeteneklerin listesine erişim sağlayan listener
+        createPortfolioItemDialog.getCreatedPortfolioItems = {
+            if (it.isNotEmpty()){
+                portfolioAdapter.portfolioItemList = it
+                portfolioAdapter.notifyDataSetChanged()
+                binding.recyclerViewPortfolio.visibility = View.VISIBLE
+                binding.tvWarningMessagePortfolio.visibility = View.GONE
+            }else{
+                binding.recyclerViewPortfolio.visibility = View.GONE
+                binding.tvWarningMessagePortfolio.visibility = View.VISIBLE
+            }
+        }
+
+        // SkillSelectionDialogFragment'i göster
+        createPortfolioItemDialog.show(parentFragmentManager, "createPortfolioItemDialog")
+    }
     private fun makeFreelancer() {
         val fullName = binding.editFullName.text.toString()
         val bio = binding.editBio.text.toString()
         val phoneNumber = binding.editPhone.text.toString()
         val jobTitle = binding.editJobTitle.text.toString()
         val jobDescription = binding.etJobDescription.text.toString()
-        val skills = binding.editSkills.text.toString()
-        val portfolio = binding.editPortfolio.text.toString()
-        val education = binding.editEducation.text.toString()
+        val skills = selectedSkillList
+        val university = binding.etUniversity.text.toString()
+        val degree = binding.etInstitution.text.toString()
+        val graduationYear = binding.etGraduationYear.text.toString()
         val termsChecked = binding.checkboxTerms.isChecked
         val privacyChecked = binding.checkboxPrivacy.isChecked
+        val dayOfWeek = binding.checkboxPrivacy.isChecked.toString()
+        val startTime = binding.checkboxPrivacy.isChecked.toString()
+        val endTime = binding.checkboxPrivacy.isChecked.toString()
+        val availability = Availability(dayOfWeek, startTime,endTime)
+        val education = Education(university,degree,graduationYear.toInt())
+        val portfolio = ArrayList<PortfolioItem>()
 
+        lifecycleScope.launch {
+            try {
+                for (i in portfolioList){
+                    val imageUrl = viewModel.saveImageToStorage(i.image!!,"portfolio")
+                    val item = PortfolioItem(
+                        title = i.title,
+                        description = i.description,
+                        imageUrl = imageUrl,
+                        image = null
+                    )
+                    portfolio.add(item)
+                }
+            }catch (e : Exception){
+                Toast.makeText(requireContext(), "Hata : Portföy resimlerinde bir sorun var", Toast.LENGTH_SHORT).show()
+            }
 
+        }
 
         // Check if any field is empty
         if (fullName.isEmpty() || bio.isEmpty() || phoneNumber.isEmpty() || jobTitle.isEmpty() ||
-            skills.isEmpty() || portfolio.isEmpty() || jobDescription.isEmpty() ||
-            education.isEmpty() || !termsChecked || !privacyChecked || selectedImage == null) {
+            skills.isEmpty() ||  jobDescription.isEmpty() ||
+            dayOfWeek.isEmpty() || startTime.isEmpty() || endTime.isEmpty() ||
+            university.isEmpty() || degree.isEmpty() || graduationYear.isEmpty() || !termsChecked || !privacyChecked || selectedImage == null) {
             // Show error message or handle accordingly
-            Toast.makeText(requireContext(), "Please fill in all fields and agree to terms and privacy policy", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Lütfen Gerekli Tüm Bilgileri Giriniz", Toast.LENGTH_SHORT).show()
             return
         }else{
             viewModel.updateUserInfo("fullName", fullName)
@@ -82,11 +192,14 @@ class FreelancerInfoFragment : Fragment() {
             viewModel.updateUserInfo("phone", phoneNumber)
             viewModel.updateUserInfo("jobTitle", jobTitle)
             viewModel.updateUserInfo("jobDescription", jobDescription)
-            viewModel.updateUserInfo("skills", listOf(skills))
-            viewModel.updateUserInfo("portfolio", listOf(PortfolioItem(portfolio,portfolio,portfolio)))
-            viewModel.updateUserInfo("education", listOf(Education(education,education,2024)))
+            viewModel.updateUserInfo("skills", skills)
+            viewModel.updateUserInfo("education", listOf(education))
             viewModel.updateUserInfo("userType", UserStatus.FREELANCER)
-            viewModel.saveImageToStorage(selectedImage!!)
+            viewModel.updateUserInfo("portfolio", portfolio)
+            viewModel.updateUserInfo("availability", availability)
+            lifecycleScope.launch {
+                viewModel.saveImageToStorage(selectedImage!!,"profile")
+            }
         }
         // All fields are filled, proceed with registration
         // Perform registration logic here
@@ -117,6 +230,7 @@ class FreelancerInfoFragment : Fragment() {
                 REQUEST_IMAGE_CAPTURE -> {
                     val imageBitmap = data?.extras?.get("data") as Bitmap
                     binding.ivUserProfilePhoto.setImageBitmap(imageBitmap)
+                    binding.ivEditUserPhoto.visibility = View.INVISIBLE
                     selectedImage = imageBitmap
                 }
 
@@ -128,6 +242,7 @@ class FreelancerInfoFragment : Fragment() {
                             requireActivity().contentResolver,
                             selectedImageUri
                         )
+                        binding.ivEditUserPhoto.visibility = View.INVISIBLE
                         selectedImage = imageBitmap
                     }
                 }

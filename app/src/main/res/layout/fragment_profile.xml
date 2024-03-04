@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="userInfo"
             type="com.androiddevelopers.freelanceapp.model.UserModel" />
@@ -88,56 +87,13 @@
                             android:textStyle="normal" />
                     </LinearLayout>
 
-                    <com.google.android.flexbox.FlexboxLayout
-                        android:id="@+id/flexbox"
-                        android:layout_width="wrap_content"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerView"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        app:alignContent="stretch"
-                        app:alignItems="stretch"
-                        app:flexWrap="wrap">
-
-                        <TextView
-
-                            android:id="@+id/tvSkill1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            android:gravity="center"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:id="@+id/tvSkill2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            android:gravity="center"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:id="@+id/tvSkill3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            android:gravity="center"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:id="@+id/tvSkill4"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            android:gravity="center"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:id="@+id/tvSkill5"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            android:gravity="center"
-                            android:textSize="16sp" />
-                    </com.google.android.flexbox.FlexboxLayout>
+                        android:padding="8dp"
+                        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                        app:spanCount="3" />
 
                     <TextView
                         android:id="@+id/tvUserBio"
@@ -305,11 +261,11 @@
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <LinearLayout
+            android:visibility="gone"
             android:id="@+id/layoutProfileType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

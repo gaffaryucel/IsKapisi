@@ -324,9 +324,9 @@ class FirebaseRepoImpl @Inject constructor(
     ): Task<Void> {
         return discoverPostCollection.document(postId).update(updateData)
     }
-    
-    override suspend fun uploadUserProfileImage(bitmap: Bitmap,uid : String): String? {
-        val imagesRef = profilePhotoRef.child("$uid/profileImage/${UUID.randomUUID()}.jpg")
+
+    override suspend fun uploadPhotoToStorage(bitmap: Bitmap,uid : String,imagePath : String): String? {
+        val imagesRef = profilePhotoRef.child("$uid/$imagePath/${UUID.randomUUID()}.jpg")
 
         return try {
             val baos = ByteArrayOutputStream()

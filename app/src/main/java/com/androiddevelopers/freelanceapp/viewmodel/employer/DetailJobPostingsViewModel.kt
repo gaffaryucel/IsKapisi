@@ -5,7 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.androiddevelopers.freelanceapp.model.PreChatModel
 import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
+import com.androiddevelopers.freelanceapp.model.notification.PreMessageObject
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
+import com.androiddevelopers.freelanceapp.util.NotificationTypeForActions
 import com.androiddevelopers.freelanceapp.util.Resource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -33,14 +35,27 @@ constructor(
     private var _preChatRoomAction = MutableLiveData<Resource<PreChatModel>>()
     val preChatRoomAction = _preChatRoomAction
 
-    private fun createPreChatRoom(preChatModel: PreChatModel,notification : InAppNotificationModel){
+    private fun createPreChatRoom(preChatModel: PreChatModel,notification : InAppNotificationModel,message : String){
         firebaseRepo.createPreChatRoom(
             preChatModel.receiver.toString(),
             preChatModel.sender.toString(),
             preChatModel
         ).addOnCompleteListener{
             if (it.isSuccessful){
-                sendNotification(notification)
+                sendNotification(
+                    notification = notification,
+                    type = NotificationTypeForActions.PRE_MESSAGE,
+                    poreMessage = PreMessageObject(
+                        userId = currentUserId,
+                        postId = preChatModel.postId.toString(),
+                        type = "eöp"
+                    )
+                )
+                sendFirstMessage(
+                    preChatModel.postId.toString(),
+                    message,
+                    preChatModel.receiver.toString()
+                )
                 firebaseRepo.saveNotification(notification)
                 _preChatRoomAction.value = Resource.success(preChatModel)
             }else{
@@ -56,6 +71,7 @@ constructor(
         receiverName: String,
         receiverImage: String,
         notification : InAppNotificationModel,
+        message : String
     ){
         val preChat = PreChatModel(
             postId,
@@ -66,7 +82,7 @@ constructor(
             receiverImage,
             ""
         )
-        createPreChatRoom(preChat,notification)
+        createPreChatRoom(preChat,notification,message)
     }
 
     fun setMessageValue(value: Boolean) {
@@ -93,6 +109,7 @@ constructor(
 
         })
     }
+
 
 
 

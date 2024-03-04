@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.FragmentEditMainProfileInfoBinding
 import com.androiddevelopers.freelanceapp.model.UserModel
@@ -22,6 +23,8 @@ import com.androiddevelopers.freelanceapp.viewmodel.profile.BaseProfileViewModel
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class EditMainProfileInfoFragment : Fragment() {
@@ -67,7 +70,9 @@ class EditMainProfileInfoFragment : Fragment() {
         }
         binding.btnSaveProfilePhoto.setOnClickListener {
             if (selectedImage != null){
-                viewModel.saveImageToStorage(selectedImage!!)
+                lifecycleScope.launch {
+                    viewModel.saveImageToStorage(selectedImage!!,"profile")
+                }
             }
         }
 

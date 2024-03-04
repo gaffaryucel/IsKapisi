@@ -1,5 +1,6 @@
 package com.androiddevelopers.freelanceapp.view.chat
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +15,9 @@ import com.androiddevelopers.freelanceapp.adapters.MessageAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentMessagesBinding
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
+import com.androiddevelopers.freelanceapp.model.notification.MessageObject
 import com.androiddevelopers.freelanceapp.util.NotificationType
+import com.androiddevelopers.freelanceapp.util.NotificationTypeForActions
 import com.androiddevelopers.freelanceapp.util.Util.MESSAGE_TOPIC
 import com.androiddevelopers.freelanceapp.viewmodel.chat.MessagesViewModel
 import com.bumptech.glide.Glide
@@ -38,6 +41,7 @@ class MessagesFragment : Fragment() {
     private var receiverData : UserModel? = null
     private var currentUserData : UserModel? = null
 
+    private var chatId : String? = ""
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -46,15 +50,14 @@ class MessagesFragment : Fragment() {
         viewModel = ViewModelProvider(this)[MessagesViewModel::class.java]
         _binding = FragmentMessagesBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        chatId = arguments?.getString("chat_id")
         return root
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
 
-        val chatId = arguments?.let {
-            it.getString("chat_id")
-        }
+
         val messageReceiver = arguments?.let {
             it.getString("receiver")
         }
@@ -108,7 +111,16 @@ class MessagesFragment : Fragment() {
                         userToken = receiverData?.token.toString(),
                         time = viewModel.getCurrentTime()
                     ).also { notification->
-                        viewModel.sendNotification(notification)
+                        viewModel.sendNotification(
+                            notification = notification,
+                            messageObject = MessageObject(
+                                chatId.toString(),
+                                currentUserData?.userId.toString(),
+                                currentUserData?.fullName.toString(),
+                                currentUserData?.profileImageUrl.toString()
+                            ),
+                            type = NotificationTypeForActions.MESSAGE,
+                        )
                     }
                 }catch (e : Exception){
                     Toast.makeText(requireContext(), "Hata", Toast.LENGTH_SHORT).show()
@@ -151,11 +163,13 @@ class MessagesFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         hideBottomNavigation()
+        saveUserIdInSharedPref()
     }
 
     override fun onPause() {
         super.onPause()
         showBottomNavigation()
+        deleteUserIdInSharedPref()
     }
 
     private fun hideBottomNavigation() {
@@ -170,6 +184,25 @@ class MessagesFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun saveUserIdInSharedPref(){
+
+// Veriyi kaydetmek için
+        val sharedPreferences = requireContext().getSharedPreferences("chatPage", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString("current_chat_page_id", chatId) // chatPageId, kullanıcının bulunduğu sayfa kimliğidir
+        editor.apply()
+        println("current_chat_page_id : "+chatId)
+
+    }
+    private fun deleteUserIdInSharedPref(){
+// Kayıtlı veriyi silmek için
+        val sharedPreferences = requireContext().getSharedPreferences("chatPage", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.remove("current_chat_page_id")
+        editor.apply()
+
     }
 
 }

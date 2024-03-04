@@ -1,11 +1,18 @@
 package com.androiddevelopers.freelanceapp.view
 
+import android.R.id
+import android.app.PendingIntent
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.ActivityBottomNavigationBinding
+import com.androiddevelopers.freelanceapp.view.freelancer.HomeFragment
+import com.androiddevelopers.freelanceapp.view.freelancer.HomeFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -19,6 +26,20 @@ class BottomNavigationActivity : AppCompatActivity() {
         supportActionBar?.hide()
         binding = ActivityBottomNavigationBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        //Bildirime tıklanıldığında çlaışacak işlemler için
+        val sharedPref = applicationContext.getSharedPreferences("notification", Context.MODE_PRIVATE)
+        val not_type = sharedPref.getString("not_type", "") ?: ""
+        val isLogin = intent.getStringExtra("login")
+        println("login : "+isLogin)
+        if (isLogin.equals("login")){
+            println("in : ")
+        }else{
+            println("else : ")
+            if (not_type.isNotEmpty()){
+                sharedPref.edit().putBoolean("click", true).apply()
+            }
+        }
+
 
 //        val navView: BottomNavigationView = binding.navView
 //
@@ -54,6 +75,14 @@ class BottomNavigationActivity : AppCompatActivity() {
                 }
             }
         }
+        val notificationClicked = intent.getBooleanExtra("click", false)
+        println("gelen değer : "+notificationClicked)
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        baseContext.getSharedPreferences("notification", Context.MODE_PRIVATE)
+            .edit().clear().apply()
     }
 }

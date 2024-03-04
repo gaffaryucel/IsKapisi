@@ -437,7 +437,7 @@
                                     app:layout_constraintTop_toBottomOf="@id/textYouOfferJobPostDetail"
                                     tools:ignore="TextContrastCheck" />
 
-                                <androidx.appcompat.widget.AppCompatEditText
+                                -<androidx.appcompat.widget.AppCompatEditText
                                     android:id="@+id/edittextYouOfferDescriptionJobPostDetail"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"

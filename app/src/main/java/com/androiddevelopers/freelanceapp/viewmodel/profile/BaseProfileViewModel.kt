@@ -17,6 +17,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 @HiltViewModel  
 open class BaseProfileViewModel @Inject constructor(
@@ -66,20 +69,31 @@ open class BaseProfileViewModel @Inject constructor(
         }
     }
 
-    internal fun saveImageToStorage(bitmap : Bitmap) = viewModelScope.launch {
-        _uploadMessage.value = Resource.loading(null)
-        val imageUrl = firebaseRepo.uploadUserProfileImage(bitmap,currentUserId)
-        if (imageUrl != null) {
-            try {
-                updateUserInfo("profileImageUrl",imageUrl)
-                _uploadMessage.value = Resource.success(null)
-            }catch (e : Exception){
-                _uploadMessage.value = e.localizedMessage?.let { Resource.error(it,null) }
+    internal suspend fun saveImageToStorage(bitmap: Bitmap, path: String): String? {
+        return suspendCoroutine { continuation ->
+            viewModelScope.launch {
+                _uploadMessage.value = Resource.loading(null)
+                val imageUrl = firebaseRepo.uploadPhotoToStorage(bitmap, currentUserId, path)
+                if (path.equals("profile")) {
+                    if (imageUrl != null) {
+                        try {
+                            updateUserInfo("profileImageUrl", imageUrl)
+                            _uploadMessage.value = Resource.success(null)
+                        } catch (e: Exception) {
+                            _uploadMessage.value = e.localizedMessage?.let { Resource.error(it, null) }
+                            continuation.resumeWithException(e) // Hata durumunda devam et
+                        }
+                    } else {
+                        _uploadMessage.value = Resource.error("Hata", null)
+                        continuation.resume(null) // null döndür
+                    }
+                }else{
+                    continuation.resume(imageUrl)
+                }
             }
-        } else {
-            _uploadMessage.value = Resource.error("Hata",null)
         }
     }
+
 
     internal fun updateUserInfo(key : String,userData: Any) {
         viewModelScope.launch(Dispatchers.IO) {

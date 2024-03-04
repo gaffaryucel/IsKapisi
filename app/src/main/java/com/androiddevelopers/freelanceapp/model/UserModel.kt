@@ -1,5 +1,6 @@
 package com.androiddevelopers.freelanceapp.model
 
+import android.graphics.Bitmap
 import com.androiddevelopers.freelanceapp.util.UserStatus
 
 class UserModel {
@@ -16,7 +17,7 @@ class UserModel {
     var skills: List<String>? = null
     var portfolio: List<PortfolioItem>? = null
     var reviews: List<Review>? = null
-    var availability: List<Availability>? = null
+    var availability: Availability? = null
     var location: Location? = null
     var education: List<Education>? = null
     var certifications: List<Certification>? = null
@@ -47,7 +48,7 @@ class UserModel {
         skills: List<String>? = null,
         portfolio: List<PortfolioItem>? = null,
         reviews: List<Review>? = null,
-        availability: List<Availability>? = null,
+        availability: Availability? = null,
         location: Location? = null,
         education: List<Education>? = null,
         certifications: List<Certification>? = null,
@@ -141,7 +142,8 @@ class UserModel {
 data class PortfolioItem(
     var title: String? = null,
     var description: String? = null,
-    var imageUrl: String? = null
+    var imageUrl: String? = null,
+    var image: Bitmap? = null
 )
 
 data class Review(

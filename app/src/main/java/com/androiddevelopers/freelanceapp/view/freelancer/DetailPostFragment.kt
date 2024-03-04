@@ -62,33 +62,40 @@ class DetailPostFragment : Fragment() {
         observeLiveData(viewLifecycleOwner)
 
         binding.buttonBuy.setOnClickListener {
+            val messageData = binding.etOffer.text.toString()
+            val offer = binding.etMessageDescription.text.toString()
+            val message = "$messageData \n Teklif Edilen Tutar $offer"
             if (isExists) {
                 goToPreMessaging()
             } else {
-                try {
-                    InAppNotificationModel(
-                        userId = currentUser?.userId.toString(),
-                        notificationType = NotificationType.JOB_POST,
-                        notificationId = UUID.randomUUID().toString(),
-                        title = "Yeni Hizmet Talebi!",
-                        message = "${currentUser?.fullName} adlı kullanıcı sizden hizmet talep etti!",
-                        userImage = currentUser?.profileImageUrl.toString(),
-                        imageUrl = post?.images?.get(0).toString(),
-                        userToken = user?.token.toString(),
-                        time = viewModel.getCurrentTime()
-                    ).also { notification->
-                        viewModel.createPreChatModel(
-                            "frl",
-                            post?.postId ?: "",
-                            post?.freelancerId ?: "",
-                            user?.username ?: "",
-                            user?.profileImageUrl ?: "",
-                            notification,
-                        )
+                if (messageData.isEmpty() || offer.isEmpty()){
+                    try {
+                        InAppNotificationModel(
+                            userId = currentUser?.userId.toString(),
+                            notificationType = NotificationType.JOB_POST,
+                            notificationId = UUID.randomUUID().toString(),
+                            title = "Yeni Hizmet Talebi!",
+                            message = "${currentUser?.fullName} adlı kullanıcı sizden hizmet talep etti!",
+                            userImage = currentUser?.profileImageUrl.toString(),
+                            imageUrl = post?.images?.get(0).toString(),
+                            userToken = user?.token.toString(),
+                            time = viewModel.getCurrentTime()
+                        ).also { notification->
+                            viewModel.createPreChatModel(
+                                "frl",
+                                post?.postId ?: "",
+                                post?.freelancerId ?: "",
+                                user?.username ?: "",
+                                user?.profileImageUrl ?: "",
+                                notification,
+                                message
+                            )
+                        }
+                    }catch (e : Exception){
+                        Toast.makeText(requireContext(), "Hata", Toast.LENGTH_SHORT).show()
                     }
-                }catch (e : Exception){
-                    Toast.makeText(requireContext(), "Hata", Toast.LENGTH_SHORT).show()
                 }
+
 
             }
         }

@@ -40,6 +40,7 @@ class SplashFragment : Fragment() {
             //Kullanıcının e-posta adresinin doğrulandığını kontrol ediyoruz
             if (it.isEmailVerified) {
                 val intent = Intent(requireContext(), BottomNavigationActivity::class.java)
+                intent.putExtra("login","login")
                 requireActivity().finish()
                 requireActivity().startActivity(intent)
             } else {

@@ -6,7 +6,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.profile.FreelancerInfoFragment">
 
+
     <ScrollView
+        android:id="@+id/svFreelancerInfo"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -27,147 +29,409 @@
                     android:text="Yüzünüzün net bir şekilde göründüğü bir portre fotoğraf kullanmanız gereklidir"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
+                <ImageView
+                    android:src="@drawable/upload_profile_photo"
+                    android:id="@+id/ivEditUserPhoto"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"/>
+
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:src="@drawable/placeholder"
                     android:id="@+id/ivUserProfilePhoto"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_width="200dp"
                     android:layout_height="200dp"/>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-            <!-- Personal Information Section -->
-            <TextView
-                android:id="@+id/text_personal_info"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Kişisel bilgiler"
-                android:textSize="18sp"
+            <LinearLayout
                 android:layout_below="@id/photoLayout"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
-
-            <EditText
-                android:id="@+id/edit_full_name"
+                android:id="@+id/layout_profile_info"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Ad Soyad"
-                android:layout_below="@id/text_personal_info"
-                android:layout_marginBottom="8dp"/>
+                android:padding="16dp">
 
-            <EditText
-                android:id="@+id/edit_bio"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Kişisel Bilgiler"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp"/>
+
+
+                <!-- Kişisel Bilgiler -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Ad Soyad">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_full_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Kendinden Bahset">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_bio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Telefon Numarası">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_phone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="phone" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- İş Detayları -->
+                <TextView
+                    android:id="@+id/text_professional_details"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="İş Detayları"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="İşin">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_job_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="İşinden Biraz Bahset">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etJobDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Portföy Oluştur Butonu -->
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_skills"
+                android:orientation="vertical"
+                android:layout_below="@id/layout_profile_info"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Kendinden Bahset"
-                android:layout_below="@id/edit_full_name"
-                android:layout_marginBottom="8dp"/>
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:text="Yeteneklerin Neler"
+                    android:textStyle="bold"
+                    android:textSize="28sp"
+                    android:textColor="@color/black"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:text="Bu yetenekler kendine uygun işleri bulmanda ve bu işlere başvurmanda önemli bir paya sahip olucak"
+                    android:textSize="16sp"
+                    android:textColor="#757575"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"/>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:background="@drawable/rounded_corner_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+                    <androidx.recyclerview.widget.RecyclerView
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:id="@+id/recyclerView"
+                        setHasFixedSize="@{true}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                        app:spanCount="2" />
+
+                    <TextView
+                        android:id="@+id/tvWarningMessageSkills"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:padding="30dp"
+                        android:text="Henüz bir Yetenek eklenmedi."
+                        android:textColor="#2962FF"
+                        android:textSize="16sp"
+                        android:textStyle="italic"
+                        android:gravity="center"
+                        />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-            <EditText
-                android:id="@+id/edit_phone"
+
+                <Button
+                    android:id="@+id/btnAddSkill"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Yetenek Ekle +"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"
+                    android:background="@drawable/rounded_button_background"
+                    android:layout_gravity="end"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_portfolio"
+                android:orientation="vertical"
+                android:layout_below="@id/layout_skills"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Telefon numarası"
-                android:inputType="phone"
-                android:layout_below="@id/edit_bio"
-                android:layout_marginBottom="8dp"/>
+                android:layout_height="wrap_content">
 
+                <TextView
+                    android:text="Portföy Oluştur"
+                    android:textStyle="bold"
+                    android:textSize="28sp"
+                    android:textColor="@color/black"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
 
-            <!-- Professional Details Section -->
-            <TextView
-                android:id="@+id/text_professional_details"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="İş Detayları"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_below="@id/edit_phone"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"/>
+                <TextView
+                    android:text="Şimdiye kadar yaptığın projeleri yayınlayarak, daha fazla müşteri çekebilirsin."
+                    android:textSize="16sp"
+                    android:textColor="#757575"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"/>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:background="@drawable/rounded_corner_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
 
-            <EditText
-                android:id="@+id/edit_job_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="İşin"
-                android:layout_below="@id/text_professional_details"
-                android:layout_marginBottom="8dp"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:id="@+id/recyclerView_portfolio"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"/>
 
-            <EditText
-                android:id="@+id/etJobDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="İşinden biraz bahset"
-                android:layout_below="@id/edit_job_title"
-                android:layout_marginBottom="8dp"/>
+                    <TextView
+                        android:id="@+id/tvWarningMessagePortfolio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:padding="30dp"
+                        android:text="Henüz bir portföy öğesi eklenmedi."
+                        android:textColor="#2962FF"
+                        android:textSize="16sp"
+                        android:textStyle="italic"
+                        android:gravity="center"
+                       />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+                <Button
+                    android:id="@+id/btnAddPortfolio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Portföyü Ekle +"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"
+                    android:background="@drawable/rounded_button_background"
+                    android:layout_gravity="end"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp" />
 
-            <EditText
-                android:id="@+id/edit_skills"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Yeteneklerin"
-                android:layout_below="@id/etJobDescription"
-                android:layout_marginBottom="8dp"/>
+            </LinearLayout>
 
-            <EditText
-                android:id="@+id/edit_portfolio"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Portfolio"
-                android:layout_below="@id/edit_skills"
-                android:layout_marginBottom="8dp"/>
 
             <!-- Pricing and Availability Section -->
-            <TextView
-                android:id="@+id/text_pricing_availability"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Ücretlendirme ve Müsaitlik(Zorunlu değil)"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_below="@id/edit_portfolio"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"/>
 
-            <EditText
-                android:id="@+id/edit_hourly_rate"
+
+
+            <LinearLayout
+                android:id="@+id/layout_availability"
+                android:layout_below="@id/layout_portfolio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Saatlik Ücret"
-                android:inputType="numberDecimal"
-                android:layout_below="@id/text_pricing_availability"
-                android:layout_marginBottom="8dp"/>
+                android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/edit_availability"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Müsait olduğun zaman aralığı"
-                android:layout_below="@id/edit_hourly_rate"
-                android:layout_marginBottom="8dp"/>
+                <TextView
+                    android:id="@+id/text_pricing_availability"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ücretlendirme ve Müsaitlik Durumu"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp"/>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputLayoutHourlyRate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Talep Edilen Saatlik Ücret">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etHourlyRate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputLayoutDayOfWeek"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Müsait Olduğunuz Künler">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etDayOfWeek"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputLayoutStartTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Başlangıç Saati">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etStartTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputLayoutEndTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Bitiş Saati">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etEndTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+            </LinearLayout>
+
 
             <!-- Additional Information Section -->
-            <TextView
-                android:id="@+id/text_additional_info"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Eğitim Bilgilerin"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_below="@id/edit_availability"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"/>
-
-            <EditText
-                android:id="@+id/edit_education"
+            <LinearLayout
+                android:layout_marginTop="8dp"
+                android:id="@+id/layout_education"
+                android:layout_below="@id/layout_availability"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Eğitimin"
-                android:layout_below="@id/text_additional_info"
-                android:layout_marginBottom="8dp"/>
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:text="Eğitim Bilgileri"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etUniversity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Mezun Olduğun Okul" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etInstitution"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Mezun Olduğun Bölüm" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etGraduationYear"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Mezuniyet Yılın"
+                        android:inputType="numberDecimal" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+
 
             <!-- Legal/Contractual Agreements Section -->
             <TextView
@@ -177,7 +441,7 @@
                 android:text="Legal/Contractual Agreements"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:layout_below="@id/edit_education"
+                android:layout_below="@id/layout_education"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"/>
 
@@ -197,13 +461,28 @@
                 android:layout_below="@id/checkbox_terms"/>
 
             <!-- Sign Up Button -->
-            <Button
-                android:id="@+id/button_signup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Sign Up"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_below="@id/checkbox_privacy"
-                android:layout_marginTop="16dp"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/button_signup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Sign Up"
+                    android:layout_marginTop="16dp"/>
+
+                <ProgressBar
+                    android:id="@+id/pbFreelancerInfo"
+                    app:layout_constraintTop_toTopOf="@+id/button_signup"
+                    app:layout_constraintEnd_toEndOf="@+id/button_signup"
+                    app:layout_constraintBottom_toBottomOf="@+id/button_signup"
+                    app:layout_constraintStart_toStartOf="@+id/button_signup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         </RelativeLayout>
 

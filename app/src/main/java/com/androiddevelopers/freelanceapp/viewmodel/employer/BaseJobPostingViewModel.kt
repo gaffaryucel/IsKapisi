@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.androiddevelopers.freelanceapp.model.MessageModel
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
@@ -12,6 +13,7 @@ import com.androiddevelopers.freelanceapp.util.Resource
 import com.androiddevelopers.freelanceapp.viewmodel.BaseNotificationViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 open class BaseJobPostingViewModel(
     val firebaseRepo: FirebaseRepoInterFace,
@@ -162,5 +164,31 @@ open class BaseJobPostingViewModel(
         sharedPreferences.edit().putBoolean("employer_job_post_is_change",isChangeSavedPost).apply()
     }
 
+    fun sendFirstMessage(
+        chatId: String,
+        messageData: String,
+        messageReceiver: String,
+    ) {
+        val usersMessage = creatMessageModelForCurrentUser(
+            messageData,
+            currentUserId ?: "",
+            messageReceiver
+        )
+        firebaseRepo.sendMessageToPreChatRoom(currentUserId ?: "id yok",messageReceiver, chatId, usersMessage)
+    }
 
+    private fun creatMessageModelForCurrentUser(
+        messageData: String,
+        messageSender: String,
+        messageReceiver: String
+    ): MessageModel {
+        val messageId = UUID.randomUUID().toString()
+        return MessageModel(
+            messageId,
+            messageData,
+            messageSender,
+            messageReceiver,
+            getCurrentTime()
+        )
+    }
 }

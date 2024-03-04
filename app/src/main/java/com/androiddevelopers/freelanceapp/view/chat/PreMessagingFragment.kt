@@ -1,6 +1,7 @@
 package com.androiddevelopers.freelanceapp.view.chat
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -24,7 +25,9 @@ import com.androiddevelopers.freelanceapp.databinding.FragmentPreMessagingBindin
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.BaseJobPost
 import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
+import com.androiddevelopers.freelanceapp.model.notification.PreMessageObject
 import com.androiddevelopers.freelanceapp.util.NotificationType
+import com.androiddevelopers.freelanceapp.util.NotificationTypeForActions
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.util.Util.PRE_MESSAGE_TOPIC
 import com.androiddevelopers.freelanceapp.viewmodel.chat.PreMessagingViewModel
@@ -50,6 +53,8 @@ class PreMessagingFragment : Fragment() {
     private var currentUser : UserModel? = null
     private var receiverData : UserModel? = null
 
+    private var chatId : String? = ""
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -58,6 +63,7 @@ class PreMessagingFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(PreMessagingViewModel::class.java)
         _binding = FragmentPreMessagingBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        chatId = arguments?.getString("post_id")
         return root
     }
 
@@ -65,9 +71,7 @@ class PreMessagingFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        val chatId = arguments?.let {
-            it.getString("post_id")
-        }
+
         val receiver = arguments?.let {
             it.getString("receiver")
         }
@@ -113,7 +117,15 @@ class PreMessagingFragment : Fragment() {
                         userToken = receiverData?.token.toString(),
                         time = viewModel.getCurrentTime()
                     ).also { notification->
-                        viewModel.sendNotification(notification)
+                        viewModel.sendNotification(
+                            notification = notification,
+                            poreMessage = PreMessageObject(
+                                receiver.toString(),
+                                chatId.toString(),
+                                type.toString()
+                            ),
+                            type = NotificationTypeForActions.PRE_MESSAGE,
+                        )
                     }
                 }catch (e : Exception){
                     Toast.makeText(requireContext(), "Hata", Toast.LENGTH_SHORT).show()
@@ -133,6 +145,8 @@ class PreMessagingFragment : Fragment() {
         binding.ivDot.setOnClickListener {
             showpopup(post)
         }
+
+
 
     }
 
@@ -242,11 +256,13 @@ class PreMessagingFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         hideBottomNavigation()
+        saveUserIdInSharedPref()
     }
 
     override fun onPause() {
         super.onPause()
         showBottomNavigation()
+        deleteUserIdInSharedPref()
     }
 
     private fun hideBottomNavigation() {
@@ -262,5 +278,24 @@ class PreMessagingFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+    private fun saveUserIdInSharedPref(){
+
+// Veriyi kaydetmek için
+        val sharedPreferences = requireContext().getSharedPreferences("chatPage", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString("current_chat_page_id", chatId) // chatPageId, kullanıcının bulunduğu sayfa kimliğidir
+        editor.apply()
+        println("current_chat_page_id : "+chatId)
+
+    }
+    private fun deleteUserIdInSharedPref(){
+// Kayıtlı veriyi silmek için
+        val sharedPreferences = requireContext().getSharedPreferences("chatPage", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.remove("current_chat_page_id")
+        editor.apply()
+
+    }
+
 
 }

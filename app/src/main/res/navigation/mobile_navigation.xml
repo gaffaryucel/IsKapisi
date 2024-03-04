@@ -22,6 +22,28 @@
         <action
             android:id="@+id/action_navigation_home_to_preChatFragment"
             app:destination="@id/preChatFragment" />
+        <action
+            android:id="@+id/action_pre_message_notification"
+            app:destination="@id/preMessagingFragment" />
+        <action
+            android:id="@+id/action_message_notification"
+            app:destination="@id/messagesFragment" />
+        <action
+            android:id="@+id/action_job_post_details_notification"
+            app:destination="@id/detailJobPostingsFragment" />
+        <action
+            android:id="@+id/action_freelancer_job_post_details_notification"
+            app:destination="@id/detailPostFragment" />
+        <action
+            android:id="@+id/action_discover_post_comments_notification"
+            app:destination="@id/commentsFragment" />
+        <action
+            android:id="@+id/action_discover_post_like_notification"
+            app:destination="@id/profileDiscoverPostDetailsFragment" />
+        <action
+            android:id="@+id/action_follow_notification"
+            app:destination="@id/userProfileFragment" />
+
     </fragment>
 
     <fragment

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="important_skills">
+        <item>Java Programlama</item>
+        <item>Kotlin Programlama</item>
+        <item>C++ Programlama</item>
+        <item>C# Programlama</item>
+        <item>Python Programlama</item>
+        <item>JavaScript Programlama</item>
+        <item>Swift Programlama</item>
+        <item>PHP Programlama</item>
+        <item>HTML</item>
+        <item>CSS</item>
+        <item>SQL Veritabanı Yönetimi</item>
+        <item>NoSQL Veritabanı Yönetimi</item>
+        <item>React Framework</item>
+        <item>Angular Framework</item>
+        <item>Vue.js Framework</item>
+        <item>Node.js Platformu</item>
+        <item>Express.js Framework</item>
+        <item>MongoDB Veritabanı</item>
+        <item>Firebase Platformu</item>
+        <item>GraphQL Sorgulama Dili</item>
+        <item>Ruby Programlama</item>
+        <item>Ruby on Rails Framework</item>
+        <item>Spring Framework</item>
+        <item>.NET Framework</item>
+        <item>Android Uygulama Geliştirme</item>
+        <item>iOS Uygulama Geliştirme</item>
+        <item>UI/UX Tasarım</item>
+        <item>Duyarlı Web Tasarımı</item>
+        <item>RESTful API Geliştirme</item>
+        <item>Microservices</item>
+        <item>Docker Konteynerleme Platformu</item>
+        <item>Kubernetes Yönetim Platformu</item>
+        <item>Amazon Web Hizmetleri (AWS)</item>
+        <item>Google Cloud Platform (GCP)</item>
+        <item>Microsoft Azure</item>
+        <item>Blockchain Teknolojisi</item>
+        <item>Makine Öğrenimi</item>
+        <item>Derin Öğrenme</item>
+        <item>Doğal Dil İşleme (NLP)</item>
+        <item>Bilgisayar Görüsü</item>
+        <item>Veri Bilimi</item>
+        <item>Büyük Veri</item>
+        <item>Yapay Zeka (AI)</item>
+        <item>Nesnelerin İnterneti (IoT)</item>
+        <item>Artırılmış Gerçeklik (AR)</item>
+        <item>Sanal Gerçeklik (VR)</item>
+        <item>Bilgi Güvenliği</item>
+        <item>Penetrasyon Testi</item>
+        <item>Ağ Güvenliği</item>
+        <item>Şifreleme</item>
+        <item>Web Güvenliği</item>
+        <item>Güvenli Kodlama</item>
+        <item>Agile Yazılım Geliştirme Metodolojisi</item>
+        <item>Scrum</item>
+        <item>Kanban</item>
+        <item>Lean Geliştirme</item>
+        <item>Sürekli Entegrasyon (CI)</item>
+        <item>Sürekli Dağıtım (CD)</item>
+        <item>Test Odaklı Geliştirme (TDD)</item>
+        <item>Davranış Odaklı Geliştirme (BDD)</item>
+        <item>DevOps</item>
+        <item>Git Versiyon Kontrol Sistemi</item>
+        <item>GitHub</item>
+        <item>Bitbucket</item>
+        <item>JIRA Proje Yönetimi</item>
+        <item>Trello Proje Yönetimi</item>
+        <item>Slack İş İletişim Platformu</item>
+        <item>Microsoft Teams İş İletişim Platformu</item>
+        <item>Zoom Video Konferans Platformu</item>
+        <item>Skype</item>
+        <item>Asana Proje Yönetimi</item>
+        <item>Adobe Creative Suite Tasarım Yazılımları</item>
+        <item>Microsoft Office Suite Ofis Yazılımları</item>
+        <item>G Suite Ofis Yazılımları</item>
+        <item>Proje Yönetimi</item>
+        <item>Liderlik</item>
+        <item>Problem Çözme</item>
+        <item>Kritik Düşünme</item>
+        <item>İletişim</item>
+        <item>Takım Çalışması</item>
+        <item>Zaman Yönetimi</item>
+        <item>Uyum Sağlama</item>
+        <item>Yaratıcılık</item>
+        <item>İnovasyon</item>
+        <item>Detaylara Dikkat</item>
+        <item>Dikkatli Dinleme</item>
+        <item>Hızlı Öğrenme</item>
+        <item>Esneklik</item>
+        <item>Temel Analiz</item>
+        <item>Raporlama</item>
+        <item>Karar Verme</item>
+        <item>Yönetim Becerileri</item>
+        <item>Müşteri İlişkileri Yönetimi</item>
+        <item>Stratejik Planlama</item>
+        <item>Risk Yönetimi</item>
+        <item>Finansal Yönetim</item>
+        <item>Veri Analizi</item>
+        <item>Tasarım Düşüncesi</item>
+        <item>Problem Çözme Becerileri</item>
+        <item>Yaratıcı Düşünme</item>
+        <item>Ürün Yönetimi</item>
+        <item>Yapılandırılmış Düşünme</item>
+        <item>Karar Alma Yeteneği</item>
+        <item>Değişim Yönetimi</item>
+        <item>İş Analitiği</item>
+        <item>Kişiye Özel Ürünler</item>
+        <item>Proje Yönetimi Yazılımları</item>
+        <item>Bütçe Yönetimi</item>
+        <item>İş Stratejisi Geliştirme</item>
+        <item>Kurumsal Gelişim</item>
+        <item>Yenilikçilik</item>
+        <item>Yönetim Danışmanlığı</item>
+        <item>Kalite Kontrol</item>
+        <item>İş Geliştirme</item>
+        <item>Tedarik Zinciri Yönetimi</item>
+        <item>Müşteri Hizmetleri</item>
+        <item>Marka Yönetimi</item>
+        <item>Reklamcılık</item>
+        <item>SEO ve SEM</item>
+        <item>Dijital Pazarlama</item>
+        <item>Sosyal Medya Yönetimi</item>
+        <item>Halkla İlişkiler</item>
+        <item>Satış ve Pazarlama</item>
+        <item>Stratejik İletişim</item>
+        <item>Tüketici Araştırmaları</item>
+        <item>Ürün Pazarlama</item>
+        <item>Perakende Satış</item>
+        <item>Dağıtım ve Lojistik</item>
+        <item>E-ticaret</item>
+        <item>İş Geliştirme</item>
+        <item>Yeniden Yapılanma</item>
+        <item>Kriz Yönetimi</item>
+        <item>Karar Verme Süreci</item>
+        <item>Kararlar Almak</item>
+        <item>Liderlik ve Takım Yönetimi</item>
+        <item>Yönetim Bilgi Sistemleri</item>
+        <item>Stratejik Yönetim</item>
+        <item>Kurumsal Finansman</item>
+        <item>İş Geliştirme</item>
+        <item>İş Planlama ve Geliştirme</item>
+        <item>Küresel Pazarlama</item>
+        <item>Uluslararası İş Geliştirme</item>
+        <item>Uluslararası İş İlişkileri</item>
+        <item>İş ve Yönetim</item>
+        <item>Organizasyon ve Yönetim</item>
+        <item>Lojistik ve Tedarik Zinciri Yönetimi</item>
+        <item>Yeni İş Geliştirme</item>
+        <item>İş Hukuku</item>
+        <item>Sözleşme Yönetimi</item>
+        <item>Şirket Hukuku</item>
+        <item>Fikri Mülkiyet Hukuku</item>
+        <item>Uluslararası Ticaret Hukuku</item>
+        <item>Ticari Uygulamalar</item>
+        <item>İş Hukuku ve Uygulamaları</item>
+        <item>Pazarlama ve Reklam Hukuku</item>
+        <item>Bankacılık ve Finans Hukuku</item>
+        <item>Hukuki İşlemler ve Yönetim</item>
+        <item>İş Hukuku ve İdare Hukuku</item>
+        <item>Yabancı Yatırımlar ve İşlemler</item>
+        <item>Yenilenebilir Enerji ve Çevre Hukuku</item>
+        <item>Kamu İhaleleri ve Kamu İhale Hukuku</item>
+        <item>Sözleşme Yönetimi ve Ticaret Hukuku</item>
+        <item>Hukuk ve İş Etiketi</item>
+        <item>Hukuk İçin İş Uygulamaları</item>
+        <item>Hukuki Araştırma ve İşler</item>
+        <item>Kurumsal Yönetim ve İşletme Hukuku</item>
+        <item>İş Uygulamaları ve Ticaret Hukuku</item>
+        <item>Hukuk Bilimi ve İş Uygulamaları</item>
+        <item>Hukuk ve İşletme Araştırmaları</item>
+        <item>Hukuk ve İşletme Uygulamaları</item>
+        <item>Hukuk ve Yönetim Bilimi</item>
+        <item>Hukuk ve Yönetim Uygulamaları</item>
+        <item>Hukuk ve Ticaret Yönetimi</item>
+        <item>Hukuk ve Ticaret Uygulamaları</item>
+        <item>İşletme Yönetimi ve Hukuk Bilimi</item>
+        <item>İşletme Yönetimi ve Hukuk Uygulamaları</item>
+        <item>İşletme Yönetimi ve Ticaret Hukuku</item>
+        <item>İşletme Yönetimi ve Ticaret Uygulamaları</item>
+        <item>Ticaret ve İşletme Hukuku</item>
+        <item>Ticaret ve İşletme Uygulamaları</item>
+        <item>Uluslararası Hukuk ve İş Uygulamaları</item>
+        <item>Uluslararası Hukuk ve Ticaret Uygulamaları</item>
+        <item>Uluslararası Ticaret ve Hukuk Uygulamaları</item>
+        <item>İş Uygulamaları ve Ticaret Hukuku</item>
+        <item>İş Uygulamaları ve Ticaret Uygulamaları</item>
+        <item>İş Uygulamaları ve Yönetim Bilimi</item>
+        <item>İş Uygulamaları ve Yönetim Uygulamaları</item>
+        <item>Yönetim Bilimi ve Hukuk Uygulamaları</item>
+        <item>Yönetim Bilimi ve İş Uygulamaları</item>
+        <item>Yönetim Uygulamaları ve Hukuk Uygulamaları</item>
+        <item>Yönetim Uygulamaları ve İş Uygulamaları</item>
+        <item>Ticaret ve İşletme Yönetimi</item>
+        <item>Ticaret ve İşletme Uygulamaları</item>
+        <item>Uluslararası İşletme Yönetimi ve Hukuk</item>
+        <item>Uluslararası İşletme Yönetimi ve İş Uygulamaları</item>
+        <item>Uluslararası İşletme Yönetimi ve Ticaret Hukuku</item>
+        <item>Uluslararası İşletme Yönetimi ve Ticaret Uygulamaları</item>
+        <item>Uluslararası Ticaret ve İşletme Hukuku</item>
+        <item>Uluslararası Ticaret ve İşletme Uygulamaları</item>
+        <item>Uluslararası Ticaret ve Yönetim Uygulamaları</item>
+        <item>Uluslararası Ticaret ve Ticaret Hukuku</item>
+    </array>
+</resources>

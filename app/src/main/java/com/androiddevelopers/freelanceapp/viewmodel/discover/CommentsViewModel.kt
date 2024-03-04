@@ -11,6 +11,7 @@ import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.NotificationType
+import com.androiddevelopers.freelanceapp.util.NotificationTypeForActions
 import com.androiddevelopers.freelanceapp.util.Resource
 import com.androiddevelopers.freelanceapp.viewmodel.BaseNotificationViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -67,7 +68,11 @@ class CommentsViewModel  @Inject constructor(
         )
         firebaseRepo.commentToDiscoverPost(postId,likeData).addOnSuccessListener {
             getAllComments(postId)
-            sendNotification(notification)
+            sendNotification(
+                notification = notification,
+                type = NotificationTypeForActions.COMMENT,
+                comment = postId
+            )
         }
     }
     fun createNotificationData(userToken : String,image : String) =

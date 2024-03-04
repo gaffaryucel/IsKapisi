@@ -115,6 +115,7 @@ class LoginFragment : Fragment() {
 
     private fun gotoHome() {
         val intent = Intent(requireContext(), BottomNavigationActivity::class.java)
+        intent.putExtra("login","login")
         requireActivity().finish()
         requireActivity().startActivity(intent)
     }

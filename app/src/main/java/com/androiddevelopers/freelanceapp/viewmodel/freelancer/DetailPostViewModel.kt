@@ -5,13 +5,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.androiddevelopers.freelanceapp.model.MessageModel
 import com.androiddevelopers.freelanceapp.model.PreChatModel
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
 import com.androiddevelopers.freelanceapp.model.notification.NotificationData
+import com.androiddevelopers.freelanceapp.model.notification.PreMessageObject
 import com.androiddevelopers.freelanceapp.model.notification.PushNotification
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
+import com.androiddevelopers.freelanceapp.util.NotificationTypeForActions
 import com.androiddevelopers.freelanceapp.util.Resource
 import com.androiddevelopers.freelanceapp.viewmodel.BaseNotificationViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -22,6 +25,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -49,8 +53,6 @@ class DetailPostViewModel @Inject constructor(
 
     private var _preChatRoomAction = MutableLiveData<Resource<PreChatModel>>()
     val preChatRoomAction = _preChatRoomAction
-
-
 
     fun getFreelancerJobPostWithDocumentByIdFromFirestore(documentId: String) =
         viewModelScope.launch {
@@ -105,21 +107,35 @@ class DetailPostViewModel @Inject constructor(
                     }
                 }
         }
-    private fun createPreChatRoom(preChatModel: PreChatModel,notification : InAppNotificationModel){
+    private fun createPreChatRoom(preChatModel: PreChatModel,notification : InAppNotificationModel,message : String){
         firebaseRepo.createPreChatRoom(
             preChatModel.receiver.toString(),
             preChatModel.sender.toString(),
             preChatModel
         ).addOnCompleteListener{
             if (it.isSuccessful){
-                sendNotification(notification)
+                sendNotification(
+                    notification = notification,
+                    type = NotificationTypeForActions.PRE_MESSAGE,
+                    poreMessage = PreMessageObject(
+                        userId = currentUserId,
+                        postId = preChatModel.postId.toString(),
+                        type = "frl"
+                    )
+                )
                 firebaseRepo.saveNotification(notification)
+                sendFirstMessage(
+                    preChatModel.postId.toString(),
+                    message,
+                    preChatModel.receiver.toString()
+                )
                 _preChatRoomAction.value = Resource.success(preChatModel)
             }else{
                 _preChatRoomAction.value = Resource.error(it.exception?.localizedMessage.toString(),null)
             }
         }
     }
+
     fun createPreChatModel(
         type: String,
         postId: String,
@@ -127,6 +143,7 @@ class DetailPostViewModel @Inject constructor(
         receiverName: String,
         receiverImage: String,
         notification : InAppNotificationModel,
+        message : String,
     ){
         val preChat = PreChatModel(
             postId,
@@ -137,7 +154,7 @@ class DetailPostViewModel @Inject constructor(
             receiverImage,
             ""
         )
-        createPreChatRoom(preChat,notification)
+        createPreChatRoom(preChat,notification,message)
     }
     fun setMessageValue(value : Boolean){
         if (value){
@@ -163,5 +180,30 @@ class DetailPostViewModel @Inject constructor(
 
         })
     }
-
+    private fun sendFirstMessage(
+        chatId: String,
+        messageData: String,
+        messageReceiver: String,
+    ) {
+        val usersMessage = creatMessageModelForCurrentUser(
+            messageData,
+            currentUserId ?: "",
+            messageReceiver
+        )
+        firebaseRepo.sendMessageToPreChatRoom(currentUserId ?: "id yok",messageReceiver, chatId, usersMessage)
+    }
+    private fun creatMessageModelForCurrentUser(
+        messageData: String,
+        messageSender: String,
+        messageReceiver: String
+    ): MessageModel {
+        val messageId = UUID.randomUUID().toString()
+        return MessageModel(
+            messageId,
+            messageData,
+            messageSender,
+            messageReceiver,
+            getCurrentTime()
+        )
+    }
 }

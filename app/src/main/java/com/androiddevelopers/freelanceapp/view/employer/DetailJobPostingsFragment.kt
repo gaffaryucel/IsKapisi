@@ -83,11 +83,15 @@ class DetailJobPostingsFragment : Fragment() {
 
         with(binding) {
             buttonGiveOffer.setOnClickListener {
+                val messageData = edittextYouOfferDescriptionJobPostDetail.text.toString()
+                val offer = edittextYouOfferJobPostDetail.text.toString()
+                val message = "$messageData \n Teklif Edilen Tutar $offer"
                 if (isExists) {
                     goToPreMessaging()
                 } else {
-                    FirebaseMessaging.getInstance().subscribeToTopic(EMPLOYER_POST_TOPIC)
-
+                    if (messageData.isEmpty() || offer.isEmpty()){
+                        return@setOnClickListener
+                    }
                     try {
                         InAppNotificationModel(
                             userId = currentUser?.userId,
@@ -107,6 +111,7 @@ class DetailJobPostingsFragment : Fragment() {
                                 user?.username ?: "",
                                 user?.profileImageUrl ?: "",
                                 notification,
+                                message
                             )
                         }
                     }catch (e : Exception){

@@ -12,6 +12,7 @@ import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationMo
 import com.androiddevelopers.freelanceapp.model.notification.PushNotification
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.NotificationType
+import com.androiddevelopers.freelanceapp.util.NotificationTypeForActions
 import com.androiddevelopers.freelanceapp.util.Resource
 import com.androiddevelopers.freelanceapp.viewmodel.profile.BaseProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -136,20 +137,23 @@ class UserProfileViewModel  @Inject constructor(
     private fun follow(followerModel: FollowModel,followingModel: FollowModel,token : String){
         firebaseRepo.follow(followerModel,followingModel).addOnSuccessListener {
             _followStatus.value = Resource.success(true)
-            sendNotification(
-                InAppNotificationModel(
-                    userId = followingModel.userId,
-                    notificationType = NotificationType.FOLLOW,
-                    notificationId = UUID.randomUUID().toString(),
-                    title = "Yeni bir takipçin var!",
-                    message = "${followerModel.userName} seni takip etmeye başladı.",
-                    userImage = followerModel.userImage,
-                    imageUrl = null,
-                    userToken = token
-                ).also {
-                    firebaseRepo.saveNotification(it)
-                }
+            val notification =  InAppNotificationModel(
+                userId = followingModel.userId,
+                notificationType = NotificationType.FOLLOW,
+                notificationId = UUID.randomUUID().toString(),
+                title = "Yeni bir takipçin var!",
+                message = "${followerModel.userName} seni takip etmeye başladı.",
+                userImage = followerModel.userImage,
+                imageUrl = null,
+                userToken = token
             )
+            sendNotification(
+                notification = notification,
+                type = NotificationTypeForActions.FOLLOW,
+                followObject = currentUserId
+            )
+            firebaseRepo.saveNotification(notification)
+
         }.addOnFailureListener{
            it.localizedMessage?.let {msg ->
                _followStatus.value = Resource.error(msg,null)

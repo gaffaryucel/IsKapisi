@@ -13,6 +13,7 @@ import com.androiddevelopers.freelanceapp.model.notification.PushNotification
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.repo.RoomUserDatabaseRepoInterface
 import com.androiddevelopers.freelanceapp.util.NotificationType
+import com.androiddevelopers.freelanceapp.util.NotificationTypeForActions
 import com.androiddevelopers.freelanceapp.util.Resource
 import com.androiddevelopers.freelanceapp.viewmodel.BaseNotificationViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -49,7 +50,7 @@ class DiscoverDetailsViewModel @Inject constructor(
         firebaseRepo.getAllDiscoverPostsFromFirestore()
             .addOnSuccessListener {
                 val postList = mutableListOf<DiscoverPostModel>()
-                for (document in it .documents) {
+                for (document in it.documents) {
                     val post = document.toObject(DiscoverPostModel::class.java)
                     post?.let { postList.add(it) }
                 }
@@ -60,31 +61,28 @@ class DiscoverDetailsViewModel @Inject constructor(
             }
     }
 
-    fun likePost(postOwnersToken : String,imageUrl : String,postId : String,likeList: List<String>,userId : String) = GlobalScope.launch(Dispatchers.IO){
-            delay(1000)
-            val mutableList = mutableSetOf<String>()
-            mutableList.addAll(likeList)
-            mutableList.add(currentUserId)
-            val likeData = hashMapOf<String,Any?>(
-                "likeCount" to mutableList.toList()
+    fun likePost(
+        postOwnersToken: String,
+        imageUrl: String,
+        postId: String,
+        likeList: List<String>,
+    ) = GlobalScope.launch(Dispatchers.IO) {
+        delay(1000)
+        val mutableList = mutableSetOf<String>()
+        mutableList.addAll(likeList)
+        mutableList.add(currentUserId)
+        val likeData = hashMapOf<String, Any?>(
+            "likeCount" to mutableList.toList()
+        )
+        firebaseRepo.likePost(postId, likeData).addOnSuccessListener {
+            val myNotification  =createNotification(imageUrl,postOwnersToken)
+            sendNotification(
+                notification =myNotification,
+                type = NotificationTypeForActions.LIKE,
+                like = postId
             )
-            firebaseRepo.likePost(postId,likeData).addOnSuccessListener {
-                sendNotification(
-                    InAppNotificationModel(
-                        userId = currentUserId,
-                        notificationType = NotificationType.POST,
-                        notificationId = UUID.randomUUID().toString(),
-                        title = "Yeni Bir Beğeni",
-                        message = "${currentUserData.value?.fullName}, gönderinizi beğendi.",
-                        userImage = "${currentUserData.value?.profileImageUrl}",
-                        imageUrl = imageUrl,
-                        userToken = postOwnersToken,
-                        time = getCurrentTime()
-                    ).also {
-                        firebaseRepo.saveNotification(it)
-                    }
-                )
-            }
+            firebaseRepo.saveNotification(myNotification)
+        }
     }
     fun dislikePost(postId : String,likeList: List<String>) = GlobalScope.launch(Dispatchers.IO){
         delay(1000)
@@ -96,4 +94,18 @@ class DiscoverDetailsViewModel @Inject constructor(
         )
         firebaseRepo.likePost(postId,likeData)
     }
+    private fun createNotification(
+        imageUrl : String,
+        postOwnersToken : String
+    ) = InAppNotificationModel(
+            userId = currentUserId,
+            notificationType = NotificationType.POST,
+            notificationId = UUID.randomUUID().toString(),
+            title = "Yeni Bir Beğeni",
+            message = "${currentUserData.value?.fullName}, gönderinizi beğendi.",
+            userImage = "${currentUserData.value?.profileImageUrl}",
+            imageUrl = imageUrl,
+            userToken = postOwnersToken,
+            time = getCurrentTime()
+        )
 }
