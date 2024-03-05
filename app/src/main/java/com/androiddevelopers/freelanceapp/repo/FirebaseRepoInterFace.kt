@@ -32,6 +32,7 @@ interface FirebaseRepoInterFace {
     fun deleteUserFromFirestore(documentId: String): Task<Void>
     fun getUserDataByDocumentId(documentId: String): Task<DocumentSnapshot>
     fun getUsersFromFirestore(): Task<QuerySnapshot>
+    fun getUsersFromFirestore(list: List<String>): Task<QuerySnapshot>
     fun uploadDataInUserNode(userId: String, data: Any, type: String, dataId: String): Task<Void>
 
     // Firestore Freelancer Job Post işlemleri
@@ -116,7 +117,6 @@ interface FirebaseRepoInterFace {
         postId: String,
         file: String
     ): UploadTask
-
 
     fun addDiscoverPostImage(
         uri: Uri,

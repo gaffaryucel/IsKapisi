@@ -1,6 +1,5 @@
 package com.androiddevelopers.freelanceapp.adapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,38 +10,13 @@ import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.RowEmployerJobBinding
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
-import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.snackbar
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
-import dagger.hilt.android.EntryPointAccessors
-import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
-class EmployerAdapter(context: Context, private val userId: String) :
+class EmployerAdapter(private val userId: String) :
     RecyclerView.Adapter<EmployerAdapter.EmployerViewHolder>() {
     lateinit var clickListener: ((EmployerJobPost, View) -> Unit)
     lateinit var savedListener: ((String, Boolean, List<String>) -> Unit)
-
-    //Repoya erişim için değişkeni tanımlıyoruz
-    //Sonrasında init yaptığımız için değer atamaya gerek yok
-    val repo: FirebaseRepoInterFace
-
-    //Hilt ile repoya erişmek için giriş notkası oluşturuyoruz
-    @EntryPoint
-    @InstallIn(SingletonComponent::class)
-    interface RepoEntryPoint {
-        fun getRepo(): FirebaseRepoInterFace
-    }
-
-    //Oluşturduğumuz giriş noktası sayesinde değişkenimize hilt ile interface sınıfımızı bağlıyoruz
-    init {
-        val repoEntryPoint =
-            EntryPointAccessors.fromApplication(context, RepoEntryPoint::class.java)
-        repo = repoEntryPoint.getRepo()
-    }
-
+    val users = mutableListOf<UserModel>()
 
     private val diffUtil = object : DiffUtil.ItemCallback<EmployerJobPost>() {
         override fun areItemsTheSame(
@@ -85,8 +59,6 @@ class EmployerAdapter(context: Context, private val userId: String) :
     }
 
     override fun onBindViewHolder(holder: EmployerViewHolder, position: Int) {
-        // val adapterOverview = JobOverviewAdapter()
-
         val employerJobPost = employerList[position]
 
         val savedUsers = employerJobPost.savedUsers
@@ -123,16 +95,9 @@ class EmployerAdapter(context: Context, private val userId: String) :
                         "İlan kaydedilenler listenizden çıkarıldı".snackbar(binding.root)
                     }
                 }
-
-            }
-        }
-
-        //İlanı oluşturan kullanıcı id ile firebase den her kart için istek yapıp databinding ile görsel öğelerimize aktarıyoruz
-        runBlocking {
-            launch {
-                employerJobPost.employerId?.let { id ->
-                    repo.getUserDataByDocumentId(id).addOnSuccessListener {
-                        holder.binding.user = it.toObject(UserModel::class.java)
+                users.forEach {
+                    if (it.userId.equals(employerJobPost.employerId)) {
+                        user = it
                     }
                 }
             }
@@ -147,5 +112,10 @@ class EmployerAdapter(context: Context, private val userId: String) :
                 imageViewSaved.setImageResource(R.drawable.baseline_bookmark_border_24)
             }
         }
+    }
+
+    fun refreshUserList(newList: List<UserModel>) {
+        users.clear()
+        users.addAll(newList)
     }
 }

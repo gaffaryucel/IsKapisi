@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.FirebaseStorage
@@ -251,6 +252,10 @@ class FirebaseRepoImpl @Inject constructor(
     //
     override fun getUsersFromFirestore(): Task<QuerySnapshot> {
         return userCollection.get()
+    }
+
+    override fun getUsersFromFirestore(list: List<String>): Task<QuerySnapshot> {
+        return userCollection.whereIn(FieldPath.documentId(), list).get()
     }
 
     override fun uploadDiscoverPostToFirestore(post: DiscoverPostModel): Task<Void> {

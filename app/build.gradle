@@ -73,13 +73,13 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-inappmessaging-display-ktx'
+    implementation("com.google.firebase:firebase-perf")
     implementation 'com.google.android.gms:play-services-auth:20.7.0'
 
 
     //Room
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
-
 
 
     //Facebook SDK

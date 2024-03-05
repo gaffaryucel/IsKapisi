@@ -77,7 +77,7 @@ class LoginFragment : Fragment() {
                 forgotPasswordDialog.setButton(
                     AlertDialog.BUTTON_POSITIVE, context?.getString(R.string.yes)
                 ) { _, _ ->
-                    val email = edittextEmail.text.toString()
+                    val email = edittextEmail.text.toString().trim()
 
                     if (email.isNotEmpty()) {
                         viewModel.forgotPassword(email)

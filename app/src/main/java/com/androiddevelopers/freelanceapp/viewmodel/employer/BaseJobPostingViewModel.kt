@@ -19,7 +19,7 @@ open class BaseJobPostingViewModel(
     val firebaseRepo: FirebaseRepoInterFace,
     val sharedPreferences: SharedPreferences,
     auth: FirebaseAuth
-) : BaseNotificationViewModel(firebaseRepo,auth) {
+) : BaseNotificationViewModel(firebaseRepo, auth) {
 
     var _firebaseMessage = MutableLiveData<Resource<Boolean>>()
     val firebaseMessage: LiveData<Resource<Boolean>>
@@ -37,11 +37,15 @@ open class BaseJobPostingViewModel(
     val firebaseUserData: LiveData<UserModel>
         get() = _firebaseUserData
 
+    private var _firebaseUserListData = MutableLiveData<List<UserModel>>()
+    val firebaseUserListData: LiveData<List<UserModel>>
+        get() = _firebaseUserListData
+
     private var _firebaseListenerForChange = MutableLiveData<Boolean>()
     val firebaseListenerForChange: LiveData<Boolean>
         get() = _firebaseListenerForChange
 
-    fun getAllEmployerJobPost() = viewModelScope.launch {
+    fun getAllEmployerJobPost() {
         _firebaseMessage.value = Resource.loading(true)
 
         firebaseRepo.getAllEmployerJobPostFromFirestore()
@@ -50,20 +54,25 @@ open class BaseJobPostingViewModel(
                 _firebaseMessage.value = Resource.loading(false)
 
                 it?.let { querySnapshot ->
-                    val list = ArrayList<EmployerJobPost>()
+                    val list = mutableListOf<EmployerJobPost>()
+                    val userIdList = mutableSetOf<String>()
 
                     for (document in querySnapshot) {
                         val employerJobPost = document.toObject(EmployerJobPost::class.java)
                         if (employerJobPost.status == JobStatus.OPEN) {
                             list.add(employerJobPost)
+                            employerJobPost.employerId?.let { id -> userIdList.add(id) }
                         }
+                    }
+                    if (userIdList.isNotEmpty()) {
+                        getUserDataByDocumentIdList(userIdList.toList())
                     }
 
                     _firebaseLiveData.value = list
 
-                    _firebaseMessage.value = Resource.success(true)
-
                 }
+                _firebaseMessage.value = Resource.success(true)
+
             }.addOnFailureListener {
                 _firebaseMessage.value = Resource.loading(false)
 
@@ -98,6 +107,26 @@ open class BaseJobPostingViewModel(
                         Resource.error(message, false)
                     }
                 }
+        }
+
+    fun getUserDataByDocumentIdList(list: List<String>) =
+        viewModelScope.launch {
+            firebaseRepo.getUsersFromFirestore(list).addOnSuccessListener { querySnapshot ->
+                val users = mutableListOf<UserModel>()
+
+                for (document in querySnapshot) {
+                    val userModel = document.toObject(UserModel::class.java)
+                    users.add(userModel)
+                }
+                _firebaseUserListData.value = users
+                _firebaseMessage.value = Resource.success(true)
+            }.addOnFailureListener {
+                _firebaseMessage.value = Resource.loading(false)
+
+                it.localizedMessage?.let { message ->
+                    Resource.error(message, false)
+                }
+            }
         }
 
     fun getEmployerJobPostWithDocumentByIdFromFirestore(documentId: String) =
@@ -157,11 +186,13 @@ open class BaseJobPostingViewModel(
     }
 
     fun getListenerForChange() = viewModelScope.launch {
-        _firebaseListenerForChange.value = sharedPreferences.getBoolean("employer_job_post_is_change",false)
+        _firebaseListenerForChange.value =
+            sharedPreferences.getBoolean("employer_job_post_is_change", false)
     }
 
     fun setListenerForChange(isChangeSavedPost: Boolean) = viewModelScope.launch {
-        sharedPreferences.edit().putBoolean("employer_job_post_is_change",isChangeSavedPost).apply()
+        sharedPreferences.edit().putBoolean("employer_job_post_is_change", isChangeSavedPost)
+            .apply()
     }
 
     fun sendFirstMessage(

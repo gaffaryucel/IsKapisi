@@ -1,5 +1,6 @@
 package com.androiddevelopers.freelanceapp.viewmodel.employer
 
+import android.content.Context
 import android.content.SharedPreferences
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.Resource
@@ -14,7 +15,8 @@ constructor(
     firebaseRepo: FirebaseRepoInterFace,
     auth: FirebaseAuth,
     sharedPreferences: SharedPreferences,
-) : BaseJobPostingViewModel(firebaseRepo, sharedPreferences,auth) {
+    context: Context
+) : BaseJobPostingViewModel(firebaseRepo, sharedPreferences, auth) {
 
     init {
         getAllEmployerJobPost()
@@ -24,7 +26,7 @@ constructor(
         postId: String,
         newCount: MutableSet<String>
     ) {
-        val list = arrayListOf<String>()
+        val list = mutableListOf<String>()
         list.addAll(newCount)
 
         _firebaseMessage.value = Resource.loading(true)
