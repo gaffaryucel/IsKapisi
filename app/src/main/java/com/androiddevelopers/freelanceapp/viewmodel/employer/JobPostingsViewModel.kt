@@ -1,6 +1,5 @@
 package com.androiddevelopers.freelanceapp.viewmodel.employer
 
-import android.content.Context
 import android.content.SharedPreferences
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.Resource
@@ -14,8 +13,7 @@ class JobPostingsViewModel
 constructor(
     firebaseRepo: FirebaseRepoInterFace,
     auth: FirebaseAuth,
-    sharedPreferences: SharedPreferences,
-    context: Context
+    sharedPreferences: SharedPreferences
 ) : BaseJobPostingViewModel(firebaseRepo, sharedPreferences, auth) {
 
     init {

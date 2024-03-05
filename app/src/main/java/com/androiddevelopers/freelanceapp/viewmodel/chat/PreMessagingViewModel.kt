@@ -9,20 +9,22 @@ import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.Resource
+import com.androiddevelopers.freelanceapp.util.toEmployerJobPost
+import com.androiddevelopers.freelanceapp.util.toFreelancerJobPost
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.util.UUID
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class PreMessagingViewModel  @Inject constructor(
-    private val repo  : FirebaseRepoInterFace,
-    auth  : FirebaseAuth
-): BaseChatViewModel(repo,auth) {
+class PreMessagingViewModel @Inject constructor(
+    private val repo: FirebaseRepoInterFace,
+    auth: FirebaseAuth
+) : BaseChatViewModel(repo, auth) {
 
     //ön sohbet odasının oluşturulması ve kullanılması gerekli
 
@@ -36,11 +38,11 @@ class PreMessagingViewModel  @Inject constructor(
         get() = _messageStatus
 
     private var _receiverMessage = MutableLiveData<Resource<UserModel>>()
-    val receiverMessage : LiveData<Resource<UserModel>>
+    val receiverMessage: LiveData<Resource<UserModel>>
         get() = _receiverMessage
 
     private var _firebaseMessage = MutableLiveData<Resource<String>>()
-    val firebaseMessage : LiveData<Resource<String>>
+    val firebaseMessage: LiveData<Resource<String>>
         get() = _firebaseMessage
 
     private var _freelancerPost = MutableLiveData<FreelancerJobPost>()
@@ -58,12 +60,17 @@ class PreMessagingViewModel  @Inject constructor(
     ) {
         val usersMessage = createChatModelForCurrentUser(
             messageData,
-            currentUserId ?: "",
+            currentUserId,
             messageReceiver
         )
 
         _messageStatus.value = Resource.loading(null)
-        repo.sendMessageToPreChatRoom(currentUserId ?: "id yok",messageReceiver, chatId, usersMessage)
+        repo.sendMessageToPreChatRoom(
+            currentUserId,
+            messageReceiver,
+            chatId,
+            usersMessage
+        )
             .addOnSuccessListener {
                 _messageStatus.value = Resource.success(null)
             }
@@ -89,7 +96,7 @@ class PreMessagingViewModel  @Inject constructor(
 
     fun getMessages(chatId: String) {
         _messageStatus.value = Resource.loading(null)
-        repo.getAllMessagesFromPreChatRoom(currentUserId ?: "", chatId).addValueEventListener(
+        repo.getAllMessagesFromPreChatRoom(currentUserId, chatId).addValueEventListener(
             object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val messageList = mutableListOf<MessageModel>()
@@ -112,20 +119,14 @@ class PreMessagingViewModel  @Inject constructor(
         )
     }
 
-
-
-
-
     fun getEmployerJobPostWithDocumentByIdFromFirestore(documentId: String) =
         viewModelScope.launch {
             _firebaseMessage.value = Resource.loading(null)
 
             repo.getEmployerJobPostWithDocumentByIdFromFirestore(documentId)
                 .addOnSuccessListener { document ->
-                    val employerJobPost = document.toObject(EmployerJobPost::class.java)
-
-                    employerJobPost?.let {
-                        _employerPost.value = it
+                    document.toEmployerJobPost()?.let { employerJobPost ->
+                        _employerPost.value = employerJobPost
                     } ?: run {
                         _firebaseMessage.value =
                             Resource.error("İlan alınırken hata oluştu.", null)
@@ -146,11 +147,8 @@ class PreMessagingViewModel  @Inject constructor(
 
             repo.getFreelancerJobPostWithDocumentByIdFromFirestore(documentId)
                 .addOnSuccessListener { document ->
-                    val freelancerJobPost = document.toObject(FreelancerJobPost::class.java)
-
-                    freelancerJobPost?.let {
-                        _freelancerPost.value = it
-
+                    document.toFreelancerJobPost()?.let { freelancerJobPost ->
+                        _freelancerPost.value = freelancerJobPost
                     } ?: run {
                         _firebaseMessage.value =
                             Resource.error("İlan alınırken hata oluştu.", null)
@@ -159,9 +157,8 @@ class PreMessagingViewModel  @Inject constructor(
 
                 }.addOnFailureListener {
                     it.localizedMessage?.let { message ->
-                        _firebaseMessage.value =  Resource.error(message, null)
+                        _firebaseMessage.value = Resource.error(message, null)
                     }
                 }
         }
-
 }

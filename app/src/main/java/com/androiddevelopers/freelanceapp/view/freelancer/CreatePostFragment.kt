@@ -20,17 +20,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.FragmentHomeCreatePostBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
-import com.androiddevelopers.freelanceapp.util.JobStatus
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.viewmodel.freelancer.CreatePostViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.ByteArrayOutputStream
-import java.util.*
 
 @AndroidEntryPoint
 class CreatePostFragment : Fragment() {
@@ -61,43 +58,43 @@ class CreatePostFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requestPermissionsIfNeeded()
-        setupOnClicks()
-        observeLiveData()
+//        requestPermissionsIfNeeded()
+//        setupOnClicks()
+//        observeLiveData()
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setupOnClicks() {
         val tagList = ArrayList<String>()
 
-        binding.ivPost.setOnClickListener {
-            if (allPermissionsGranted) {
-                openCamera()
-            } else {
-                Toast.makeText(requireContext(), "Permission not granted", Toast.LENGTH_SHORT)
-                    .show()
-            }
-        }
-        binding.shareButton.setOnClickListener {
-            val postModel = getPostDataAndCreateFreelancerPostModel()
-            if (resultByteArray.isNotEmpty()) {
-                viewModel.uploadPostPicture(
-                    postModel,
-                    resultByteArray
-                )
-            }
-        }
-
-        binding.ivAddTag.setOnClickListener {
-            val tag = binding.etTags.text.toString()
-            tagList.add(tag)
-            _tagList.value = tagList
-            binding.etTags.setText("")
-        }
-
-        binding.ivClose.setOnClickListener {
-            findNavController().popBackStack()
-        }
+//        binding.ivPost.setOnClickListener {
+//            if (allPermissionsGranted) {
+//                openCamera()
+//            } else {
+//                Toast.makeText(requireContext(), "Permission not granted", Toast.LENGTH_SHORT)
+//                    .show()
+//            }
+//        }
+//        binding.shareButton.setOnClickListener {
+//            val postModel = getPostDataAndCreateFreelancerPostModel()
+//            if (resultByteArray.isNotEmpty()) {
+//                viewModel.uploadPostPicture(
+//                    postModel,
+//                    resultByteArray
+//                )
+//            }
+//        }
+//
+//        binding.ivAddTag.setOnClickListener {
+//            val tag = binding.etTags.text.toString()
+//            tagList.add(tag)
+//            _tagList.value = tagList
+//            binding.etTags.setText("")
+//        }
+//
+//        binding.ivClose.setOnClickListener {
+//            findNavController().popBackStack()
+//        }
 
     }
 
@@ -124,15 +121,16 @@ class CreatePostFragment : Fragment() {
 
 
     private fun getPostDataAndCreateFreelancerPostModel(): FreelancerJobPost {
-        val title = binding.etTitle.text.toString()
-        val description = binding.etDescription.text.toString()
-        return FreelancerJobPost(
-            postId = UUID.randomUUID().toString(),
-            title = title,
-            description = description,
-            skillsRequired = _tagList.value,
-            status = JobStatus.OPEN
-        )
+//        val title = binding.etTitle.text.toString()
+//        val description = binding.etDescription.text.toString()
+//        return FreelancerJobPost(
+//            postId = UUID.randomUUID().toString(),
+//            title = title,
+//            description = description,
+//            skillsRequired = _tagList.value,
+//            status = JobStatus.OPEN
+//        )
+        return FreelancerJobPost()
     }
 
     @SuppressLint("QueryPermissionsNeeded")
@@ -158,13 +156,13 @@ class CreatePostFragment : Fragment() {
             when (requestCode) {
                 REQUEST_IMAGE_CAPTURE -> {
                     val imageBitmap = data?.extras?.get("data") as Bitmap
-                    binding.ivPost.setImageBitmap(imageBitmap)
+                    //binding.ivPost.setImageBitmap(imageBitmap)
                     compressedForCam(imageBitmap)
                 }
 
                 REQUEST_IMAGE_PICK -> {
                     val selectedImageUri = data?.data
-                    binding.ivPost.setImageURI(selectedImageUri)
+                    //binding.ivPost.setImageURI(selectedImageUri)
                     if (selectedImageUri != null) {
                         compressedForGalery(selectedImageUri)
                     }

@@ -10,6 +10,7 @@ import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.Resource
 import com.androiddevelopers.freelanceapp.util.snackbar
+import com.androiddevelopers.freelanceapp.util.toEmployerJobPost
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -18,10 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateJobPostingViewModel
-@Inject
-constructor(
-    private val firebaseRepo: FirebaseRepoInterFace,
-    private val firebaseAuth: FirebaseAuth
+@Inject constructor(
+    private val firebaseRepo: FirebaseRepoInterFace, private val firebaseAuth: FirebaseAuth
 ) : ViewModel() {
 
     private var _firebaseMessage = MutableLiveData<Resource<Boolean>>()
@@ -61,28 +60,23 @@ constructor(
                 uri.lastPathSegment?.let { file ->
                     firebaseRepo.addImageToStorageForJobPosting(uri, uId, jobPost.postId!!, file)
                         .addOnSuccessListener { task ->
-                            task.storage.downloadUrl
-                                .addOnSuccessListener {
-                                    newUriList.removeAt(0)
-                                    downloadUriList.add(it.toString())
-                                    addImageAndJobPostToFirebase(
-                                        newUriList,
-                                        jobPost,
-                                        downloadUriList
-                                    )
-                                }.addOnFailureListener {
-                                    _firebaseMessage.value =
-                                        it.localizedMessage?.let { message ->
-                                            _firebaseMessage.value = Resource.loading(false)
-                                            Resource.error(message, false)
-                                        }
-                                }
-                        }.addOnFailureListener {
-                            _firebaseMessage.value =
-                                it.localizedMessage?.let { message ->
+                            task.storage.downloadUrl.addOnSuccessListener {
+                                newUriList.removeAt(0)
+                                downloadUriList.add(it.toString())
+                                addImageAndJobPostToFirebase(
+                                    newUriList, jobPost, downloadUriList
+                                )
+                            }.addOnFailureListener {
+                                _firebaseMessage.value = it.localizedMessage?.let { message ->
                                     _firebaseMessage.value = Resource.loading(false)
                                     Resource.error(message, false)
                                 }
+                            }
+                        }.addOnFailureListener {
+                            _firebaseMessage.value = it.localizedMessage?.let { message ->
+                                _firebaseMessage.value = Resource.loading(false)
+                                Resource.error(message, false)
+                            }
                         }
                 }
             }
@@ -103,10 +97,9 @@ constructor(
             if (task.isSuccessful) {
                 _firebaseMessage.value = Resource.success(true)
             } else {
-                _firebaseMessage.value =
-                    task.exception?.localizedMessage?.let { message ->
-                        Resource.error(message, false)
-                    }
+                _firebaseMessage.value = task.exception?.localizedMessage?.let { message ->
+                    Resource.error(message, false)
+                }
             }
         }
         //updateUserData(jobPost)
@@ -121,10 +114,9 @@ constructor(
                     _firebaseMessage.value = Resource.success(true)
                     "$title İlanınınz silindi.".snackbar(view)
                 } else {
-                    _firebaseMessage.value =
-                        task.exception?.localizedMessage?.let { message ->
-                            Resource.error(message, false)
-                        }
+                    _firebaseMessage.value = task.exception?.localizedMessage?.let { message ->
+                        Resource.error(message, false)
+                    }
                 }
             }
         }
@@ -144,9 +136,7 @@ constructor(
 
             firebaseRepo.getEmployerJobPostWithDocumentByIdFromFirestore(documentId)
                 .addOnSuccessListener { document ->
-                    val employerJobPost = document.toObject(EmployerJobPost::class.java)
-
-                    employerJobPost?.let {
+                    document.toEmployerJobPost()?.let {
                         _firebaseLiveData.value = it
                     } ?: run {
                         _firebaseMessage.value =

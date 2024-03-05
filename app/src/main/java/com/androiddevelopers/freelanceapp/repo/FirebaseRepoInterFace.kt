@@ -133,14 +133,14 @@ interface FirebaseRepoInterFace {
     fun unFollow(currentUserId: String, followingId: String): Task<Void>
     fun updateUserData(userId: String, updateData: HashMap<String, Any?>): Task<Void>
     fun getFollowers(userId: String): DatabaseReference
-    suspend fun uploadPhotoToStorage(bitmap: Bitmap, uid : String,imagePath : String): String?
+    suspend fun uploadPhotoToStorage(bitmap: Bitmap, uid: String, imagePath: String): String?
 
     //Notification
     suspend fun postNotification(notification: PushNotification): Response<ResponseBody>
     fun saveNotification(notification: InAppNotificationModel): Task<Void>
-    fun getFollowNotifications(userId: String,limit : Long): Task<QuerySnapshot>
-    fun getPostNotifications(userId: String,limit : Long): Task<QuerySnapshot>
-    fun getJobPostNotifications(userId: String,limit : Long): Task<QuerySnapshot>
+    fun getFollowNotifications(userId: String, limit: Long): Task<QuerySnapshot>
+    fun getPostNotifications(userId: String, limit: Long): Task<QuerySnapshot>
+    fun getJobPostNotifications(userId: String, limit: Long): Task<QuerySnapshot>
 
 }
 
