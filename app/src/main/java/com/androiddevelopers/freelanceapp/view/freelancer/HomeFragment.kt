@@ -19,7 +19,6 @@ import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.viewmodel.freelancer.HomeViewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -31,7 +30,7 @@ class HomeFragment : Fragment() {
     private val freelancerAdapter = FreelancerAdapter(userId)
 
     private lateinit var viewModel: HomeViewModel
-    private lateinit var listFreelancerJobPost: ArrayList<FreelancerJobPost>
+    private val listFreelancerJobPost = mutableListOf<FreelancerJobPost>()
     private lateinit var errorDialog: AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,8 +45,7 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        listFreelancerJobPost = arrayListOf()
-        //binding.adapter = freelancerAdapter
+        binding.adapter = freelancerAdapter
 
         return view
     }
@@ -61,7 +59,7 @@ class HomeFragment : Fragment() {
         viewModel.getUserDataByDocumentId(userId)
         setProgressBar(false)
         setupDialogs(requireContext())
-        //observeLiveData(viewLifecycleOwner)
+        observeLiveData(viewLifecycleOwner)
 
 
         with(freelancerAdapter) {
@@ -95,8 +93,6 @@ class HomeFragment : Fragment() {
         }
 
         with(binding) {
-            adapter = freelancerAdapter
-
             search(searchView)
 
             ivNotifications.setOnClickListener {
@@ -112,11 +108,6 @@ class HomeFragment : Fragment() {
                 Navigation.findNavController(it).navigate(action)
             }
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        observeLiveData(viewLifecycleOwner)
     }
 
     override fun onDestroyView() {
@@ -186,7 +177,7 @@ class HomeFragment : Fragment() {
             override fun onQueryTextChange(newText: String?): Boolean {
                 //arama sonucunu her zaman elde etmek için kullanıcının girdiği bütün karakterleri küçük harfe çeviriyoruz
                 newText?.lowercase()?.let { searchText ->
-                    val list = ArrayList<FreelancerJobPost>()
+                    val list = mutableListOf<FreelancerJobPost>()
                     listFreelancerJobPost.forEach {
                         //arama sonucunu her zaman elde etmek için firebase'ten gelen verileri küçük harfe çeviriyoruz
                         val title = it.title?.lowercase()
@@ -196,7 +187,10 @@ class HomeFragment : Fragment() {
                             list.add(it)
                         }
                     }
-                    freelancerAdapter.freelancerList = list
+                    if (list.isNotEmpty()) {
+                        freelancerAdapter.freelancerList = list
+                    }
+
                 }
 
                 return true
@@ -204,7 +198,6 @@ class HomeFragment : Fragment() {
 
         })
     }
-
 
 
 }

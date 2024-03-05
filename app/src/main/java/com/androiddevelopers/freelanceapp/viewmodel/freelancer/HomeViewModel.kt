@@ -37,7 +37,7 @@ constructor(
         getAllFreelanceJobPost()
     }
 
-    private fun getAllFreelanceJobPost() = viewModelScope.launch {
+    private fun getAllFreelanceJobPost() {
         _firebaseMessage.value = Resource.loading(true)
 
         firebaseRepo.getAllFreelancerJobPostFromFirestore()
@@ -45,7 +45,7 @@ constructor(
                 _firebaseMessage.value = Resource.loading(false)
 
                 it?.let { querySnapshot ->
-                    val list = ArrayList<FreelancerJobPost>()
+                    val list = mutableListOf<FreelancerJobPost>()
 
                     for (document in querySnapshot) {
                         val freelancerJobPost = document.toObject(FreelancerJobPost::class.java)

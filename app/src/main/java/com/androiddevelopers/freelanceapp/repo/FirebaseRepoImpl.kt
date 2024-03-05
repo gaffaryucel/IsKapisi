@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.FirebaseStorage
@@ -253,6 +254,10 @@ class FirebaseRepoImpl @Inject constructor(
         return userCollection.get()
     }
 
+    override fun getUsersFromFirestore(list: List<String>): Task<QuerySnapshot> {
+        return userCollection.whereIn(FieldPath.documentId(), list).get()
+    }
+
     override fun uploadDiscoverPostToFirestore(post: DiscoverPostModel): Task<Void> {
         return discoverPostCollection.document(post.postId.toString()).set(post)
     }
@@ -324,8 +329,8 @@ class FirebaseRepoImpl @Inject constructor(
     ): Task<Void> {
         return discoverPostCollection.document(postId).update(updateData)
     }
-    
-    override suspend fun uploadUserProfileImage(bitmap: Bitmap,uid : String): String? {
+
+    override suspend fun uploadUserProfileImage(bitmap: Bitmap, uid: String): String? {
         val imagesRef = profilePhotoRef.child("$uid/profileImage/${UUID.randomUUID()}.jpg")
 
         return try {

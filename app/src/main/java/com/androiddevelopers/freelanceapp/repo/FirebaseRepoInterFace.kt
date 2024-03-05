@@ -32,6 +32,7 @@ interface FirebaseRepoInterFace {
     fun deleteUserFromFirestore(documentId: String): Task<Void>
     fun getUserDataByDocumentId(documentId: String): Task<DocumentSnapshot>
     fun getUsersFromFirestore(): Task<QuerySnapshot>
+    fun getUsersFromFirestore(list: List<String>): Task<QuerySnapshot>
     fun uploadDataInUserNode(userId: String, data: Any, type: String, dataId: String): Task<Void>
 
     // Firestore Freelancer Job Post işlemleri
@@ -132,7 +133,7 @@ interface FirebaseRepoInterFace {
     fun unFollow(currentUserId: String, followingId: String): Task<Void>
     fun updateUserData(userId: String, updateData: HashMap<String, Any?>): Task<Void>
     fun getFollowers(userId: String): DatabaseReference
-    suspend fun uploadUserProfileImage(bitmap: Bitmap, uid : String): String?
+    suspend fun uploadUserProfileImage(bitmap: Bitmap, uid: String): String?
 
     //Notification
     suspend fun postNotification(notification: PushNotification): Response<ResponseBody>

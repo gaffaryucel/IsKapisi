@@ -28,15 +28,13 @@ class JobPostingsFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val userId = FirebaseAuth.getInstance().currentUser?.uid.toString()
-    private lateinit var employerAdapter: EmployerAdapter
-    private lateinit var listEmployerJobPost: ArrayList<EmployerJobPost>
+    private val employerAdapter = EmployerAdapter(userId)
+    private val listEmployerJobPost = mutableListOf<EmployerJobPost>()
     private lateinit var errorDialog: AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this)[JobPostingsViewModel::class.java]
-        employerAdapter = EmployerAdapter(requireActivity().applicationContext, userId)
-
     }
 
     override fun onCreateView(
@@ -48,9 +46,8 @@ class JobPostingsFragment : Fragment() {
         _binding = FragmentJobPostingsBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        listEmployerJobPost = arrayListOf()
-
         viewModel.getListenerForChange()
+        binding.adapter = employerAdapter
 
         return view
     }
@@ -93,10 +90,10 @@ class JobPostingsFragment : Fragment() {
                 )
                 viewModel.setListenerForChange(true)
             }
+
         }
 
         with(binding) {
-            adapter = employerAdapter
             search(jobPostingSearchView)
         }
     }
@@ -123,14 +120,20 @@ class JobPostingsFragment : Fragment() {
                 }
             }
 
-            firebaseLiveData.observe(owner) { list ->
-                // firebase 'den gelen veriler ile adapter'i yeniliyoruz
-                employerAdapter.employerList = list
 
-                listEmployerJobPost.clear()
-                // firebase 'den gelen son verilerin kopyasını saklıyoruz
-                // search iptal edildiğinde bu verileri tekrar adapter'e set edeceğiz
-                listEmployerJobPost.addAll(list)
+
+            firebaseUserListData.observe(owner) { users ->
+                employerAdapter.refreshUserList(users)
+
+                firebaseLiveData.observe(owner) { list ->
+                    // firebase 'den gelen veriler ile adapter'i yeniliyoruz
+                    employerAdapter.employerList = list
+
+                    listEmployerJobPost.clear()
+                    // firebase 'den gelen son verilerin kopyasını saklıyoruz
+                    // search iptal edildiğinde bu verileri tekrar adapter'e set edeceğiz
+                    listEmployerJobPost.addAll(list)
+                }
             }
 
 
@@ -184,7 +187,9 @@ class JobPostingsFragment : Fragment() {
                             list.add(it)
                         }
                     }
-                    employerAdapter.employerList = list
+                    if (list.isNotEmpty()) {
+                        employerAdapter.employerList = list
+                    }
                 }
 
                 return true
