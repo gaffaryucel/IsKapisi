@@ -41,7 +41,7 @@ class CreateJobPostingFragment : Fragment() {
     private val dateFormatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
     private lateinit var viewModel: CreateJobPostingViewModel
     private lateinit var datePicker: MaterialDatePicker<Long>
-    private lateinit var selectedImages: ArrayList<Uri>
+    private val selectedImages = mutableListOf<Uri>()
     private var selectedImagesSize = 0
 
     private lateinit var imageLauncher: ActivityResultLauncher<Intent>
@@ -50,9 +50,9 @@ class CreateJobPostingFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var errorDialog: AlertDialog
-    private lateinit var skillAdapter: SkillAdapter
+    private val skillAdapter = SkillAdapter()
 
-    private lateinit var skillList: ArrayList<String>
+    private val skillList = mutableListOf<String>()
     private lateinit var viewPagerAdapter: ViewPagerAdapterForCreateJobPost
 
     private var employerJobPost: EmployerJobPost? = null
@@ -69,13 +69,6 @@ class CreateJobPostingFragment : Fragment() {
             .datePicker()
             .setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR)
             .build()
-
-        //skill recycler view için adaptörümüzü bağlıyoruz
-        skillAdapter = SkillAdapter(viewModel, arrayListOf())
-        //ekleme işleminde kullanabilmek için skill listesinin örneğini oluşturduk
-        skillList = arrayListOf()
-
-        selectedImages = arrayListOf()
 
         viewPagerAdapter = ViewPagerAdapterForCreateJobPost(listener = {
             viewModel.setImageUriList(it)
@@ -105,6 +98,10 @@ class CreateJobPostingFragment : Fragment() {
             //data binding ile skill adaptörü set ediyoruz
             rvSkillAdapter = skillAdapter
 
+            skillAdapter.clickListener = { list ->
+                viewModel.setSkills(list.toList())
+            }
+
             //viewpager adapter ve indicatoru set ediyoruz
             viewPagerCreateJobPost.adapter = viewPagerAdapter
             indicatorCreateJobPost.setViewPager(viewPagerCreateJobPost)
@@ -113,7 +110,7 @@ class CreateJobPostingFragment : Fragment() {
             // sonrasında yeni eklenen skill in recycler view de ve diğer yerlerde güncellenemsi iç viewmodel e gönderiyoruz
             skillAddTextInputLayout.setEndIconOnClickListener {
                 skillList.add(skillAddEditText.text.toString())
-                viewModel.setSkills(skillList)
+                viewModel.setSkills(skillList.toList())
                 skillAddEditText.text = null
             }
 
@@ -216,13 +213,15 @@ class CreateJobPostingFragment : Fragment() {
             }
 
             skills.observe(owner) { list ->
+                skillList.clear()
+                skillList.addAll(list)
                 skillAdapter.skillsRefresh(list)
-                skillList = list
             }
 
-            imageUriList.observe(owner) {
-                selectedImages = it
-                viewPagerAdapter.refreshList(it)
+            imageUriList.observe(owner) { images ->
+                selectedImages.clear()
+                selectedImages.addAll(images)
+                viewPagerAdapter.refreshList(images)
                 with(binding) {
                     //indicatoru viewpager yeni liste ile set ediyoruz
                     indicatorCreateJobPost.setViewPager(viewPagerCreateJobPost)
@@ -268,7 +267,7 @@ class CreateJobPostingFragment : Fragment() {
             deadlineTextInputEditText.setText(post.deadline)
 
             post.skillsRequired?.let {
-                viewModel.setSkills(it as ArrayList<String>)
+                viewModel.setSkills(it.toList())
             }
 
             createJobPostDeleteButton.visibility = View.VISIBLE
