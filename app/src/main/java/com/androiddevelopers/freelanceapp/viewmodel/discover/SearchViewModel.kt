@@ -11,18 +11,21 @@ import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.JobStatus
 import com.androiddevelopers.freelanceapp.util.Resource
+import com.androiddevelopers.freelanceapp.util.toDiscoverPostModel
+import com.androiddevelopers.freelanceapp.util.toEmployerJobPost
+import com.androiddevelopers.freelanceapp.util.toFreelancerJobPost
+import com.androiddevelopers.freelanceapp.util.toUserModel
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchViewModel  @Inject constructor(
+class SearchViewModel @Inject constructor(
     private val repo: FirebaseRepoInterFace,
-    private val auth : FirebaseAuth,
-): ViewModel() {
+    private val auth: FirebaseAuth,
+) : ViewModel() {
     private val userId = auth.currentUser!!.uid
 
     //ana değişkenler
@@ -45,25 +48,24 @@ class SearchViewModel  @Inject constructor(
 
     //Search Results
     private var _userSearchResult = MutableLiveData<List<UserModel>>()
-    val userSearchResult : LiveData<List<UserModel>>
+    val userSearchResult: LiveData<List<UserModel>>
         get() = _userSearchResult
 
     private var _discoverSearchResult = MutableLiveData<List<DiscoverPostModel>>()
-    val discoverSearchResult : LiveData<List<DiscoverPostModel>>
+    val discoverSearchResult: LiveData<List<DiscoverPostModel>>
         get() = _discoverSearchResult
 
     private var _freelancerSearchResult = MutableLiveData<List<FreelancerJobPost>>()
-    val freelancerSearchResult : LiveData<List<FreelancerJobPost>>
+    val freelancerSearchResult: LiveData<List<FreelancerJobPost>>
         get() = _freelancerSearchResult
 
     private var _employerSearchResults = MutableLiveData<List<EmployerJobPost>>()
-    val employerSearchResults : LiveData<List<EmployerJobPost>>
+    val employerSearchResults: LiveData<List<EmployerJobPost>>
         get() = _employerSearchResults
 
 
-
     private var _firebaseMessage = MutableLiveData<Resource<Boolean>>()
-    val firebaseMessage : LiveData<Resource<Boolean>>
+    val firebaseMessage: LiveData<Resource<Boolean>>
         get() = _firebaseMessage
 
 
@@ -73,16 +75,18 @@ class SearchViewModel  @Inject constructor(
         getAllFreelanceJobPost()
         getAllEmployerJobPost()
     }
-    private fun getUsers() = viewModelScope.launch{
+
+    private fun getUsers() = viewModelScope.launch {
         _firebaseMessage.value = Resource.loading(null)
         repo.getUsersFromFirestore().addOnSuccessListener {
             _firebaseMessage.value = Resource.loading(false)
             it?.let { querySnapshot ->
                 val list: ArrayList<UserModel> = ArrayList()
                 querySnapshot.forEach { queryDocumentSnapshot ->
-                    val user = queryDocumentSnapshot.toObject(UserModel::class.java)
-                    if (user.userId != userId){
-                        list.add(user)
+                    queryDocumentSnapshot.toUserModel()?.let { user ->
+                        if (user.userId != userId) {
+                            list.add(user)
+                        }
                     }
                 }
                 _users.value = list
@@ -93,7 +97,8 @@ class SearchViewModel  @Inject constructor(
             }
         }
     }
-    private fun getAllDiscoverPostsFromFirestore() = viewModelScope.launch{
+
+    private fun getAllDiscoverPostsFromFirestore() = viewModelScope.launch {
         println("discover")
         _firebaseMessage.value = Resource.loading(null)
         repo.getAllDiscoverPostsFromFirestore()
@@ -101,9 +106,8 @@ class SearchViewModel  @Inject constructor(
                 val postList = mutableListOf<DiscoverPostModel>()
                 for (document in it.documents) {
                     // Belgeden her bir videoyu çek
-                    println("p : "+document)
-                    val post = document.toObject(DiscoverPostModel::class.java)
-                    post?.let { postList.add(post) }
+                    println("p : " + document)
+                    document.toDiscoverPostModel()?.let { post -> postList.add(post) }
                     _firebaseMessage.value = Resource.success(null)
                 }
                 _discoverPosts.value = postList
@@ -112,7 +116,8 @@ class SearchViewModel  @Inject constructor(
                 _firebaseMessage.value = Resource.error("Belge alınamadı. Hata: $exception", null)
             }
     }
-    private fun getAllFreelanceJobPost() = viewModelScope.launch{
+
+    private fun getAllFreelanceJobPost() = viewModelScope.launch {
         _firebaseMessage.value = Resource.loading(true)
 
         repo.getAllFreelancerJobPostFromFirestore()
@@ -123,9 +128,10 @@ class SearchViewModel  @Inject constructor(
                     val list = ArrayList<FreelancerJobPost>()
 
                     for (document in querySnapshot) {
-                        val freelancerJobPost = document.toObject(FreelancerJobPost::class.java)
-                        if (freelancerJobPost.status == JobStatus.OPEN) {
-                            list.add(freelancerJobPost)
+                        document.toFreelancerJobPost()?.let { freelancerJobPost ->
+                            if (freelancerJobPost.status == JobStatus.OPEN) {
+                                list.add(freelancerJobPost)
+                            }
                         }
                     }
 
@@ -141,7 +147,8 @@ class SearchViewModel  @Inject constructor(
                 }
             }
     }
-    private fun getAllEmployerJobPost() = viewModelScope.launch{
+
+    private fun getAllEmployerJobPost() = viewModelScope.launch {
         _firebaseMessage.value = Resource.loading(true)
 
         repo.getAllEmployerJobPostFromFirestore()
@@ -153,9 +160,10 @@ class SearchViewModel  @Inject constructor(
                     val list = ArrayList<EmployerJobPost>()
 
                     for (document in querySnapshot) {
-                        val employerJobPost = document.toObject(EmployerJobPost::class.java)
-                        if (employerJobPost.status == JobStatus.OPEN) {
-                            list.add(employerJobPost)
+                        document.toEmployerJobPost()?.let { employerJobPost ->
+                            if (employerJobPost.status == JobStatus.OPEN) {
+                                list.add(employerJobPost)
+                            }
                         }
                     }
                     _employerJobPosts.value = list
@@ -168,24 +176,31 @@ class SearchViewModel  @Inject constructor(
                 }
             }
     }
-    fun searchByUsername(query: String) = viewModelScope.launch{
+
+    fun searchByUsername(query: String) = viewModelScope.launch {
         delay(500)
         val list = users.value
         _userSearchResult.value = list?.filter { it.username!!.contains(query, ignoreCase = true) }
     }
-    fun searchByDiscoverDescription(query: String) = viewModelScope.launch{
+
+    fun searchByDiscoverDescription(query: String) = viewModelScope.launch {
         delay(500)
         val list = discoverPosts.value
-        _discoverSearchResult.value = list?.filter { it.description!!.contains(query, ignoreCase = true) }
+        _discoverSearchResult.value =
+            list?.filter { it.description!!.contains(query, ignoreCase = true) }
     }
-    fun searchByFreelanceJobPostTitle(query: String) = viewModelScope.launch{
+
+    fun searchByFreelanceJobPostTitle(query: String) = viewModelScope.launch {
         delay(500)
         val list = freelancerJobPosts.value
-        _freelancerSearchResult.value = list?.filter { it.title!!.contains(query, ignoreCase = true) }
+        _freelancerSearchResult.value =
+            list?.filter { it.title!!.contains(query, ignoreCase = true) }
     }
-    fun searchByEmployerJobPostTitle(query: String) = viewModelScope.launch{
+
+    fun searchByEmployerJobPostTitle(query: String) = viewModelScope.launch {
         delay(500)
         val list = employerJobPosts.value
-        _employerSearchResults.value = list?.filter { it.title!!.contains(query, ignoreCase = true) }
+        _employerSearchResults.value =
+            list?.filter { it.title!!.contains(query, ignoreCase = true) }
     }
 }

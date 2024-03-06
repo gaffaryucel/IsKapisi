@@ -1,33 +1,29 @@
 package com.androiddevelopers.freelanceapp.viewmodel.discover
 
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.androiddevelopers.freelanceapp.model.CommentModel
-import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.NotificationType
 import com.androiddevelopers.freelanceapp.util.NotificationTypeForActions
 import com.androiddevelopers.freelanceapp.util.Resource
+import com.androiddevelopers.freelanceapp.util.toDiscoverPostModel
+import com.androiddevelopers.freelanceapp.util.toUserModel
 import com.androiddevelopers.freelanceapp.viewmodel.BaseNotificationViewModel
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import java.util.UUID
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class CommentsViewModel  @Inject constructor(
+class CommentsViewModel @Inject constructor(
     private val firebaseRepo: FirebaseRepoInterFace,
     auth: FirebaseAuth,
-) : BaseNotificationViewModel(firebaseRepo,auth) {
+) : BaseNotificationViewModel(firebaseRepo, auth) {
 
     private var _message = MutableLiveData<Resource<UserModel>>()
     val message: LiveData<Resource<UserModel>>
@@ -44,14 +40,14 @@ class CommentsViewModel  @Inject constructor(
     init {
         getUserDataFromFirebase()
     }
-    fun getAllComments(postId : String){
+
+    fun getAllComments(postId: String) {
         _message.value = Resource.loading(null)
         firebaseRepo.getDiscoverPostDataFromFirebase(postId)
-            .addOnSuccessListener { documentSnapshot->
+            .addOnSuccessListener { documentSnapshot ->
                 if (documentSnapshot.exists()) {
-                    val post = documentSnapshot.toObject(DiscoverPostModel::class.java)
-                    if (post != null) {
-                        _discoverPostComments.value = post!!.comments
+                    documentSnapshot.toDiscoverPostModel()?.let { post ->
+                        _discoverPostComments.value = post.comments
                     }
                 }
             }
@@ -59,14 +55,19 @@ class CommentsViewModel  @Inject constructor(
                 _message.value = Resource.error("Belge alınamadı. Hata: $exception", null)
             }
     }
-    private fun sendComment(postId : String,myComment : CommentModel,notification : InAppNotificationModel) = viewModelScope.launch{
+
+    private fun sendComment(
+        postId: String,
+        myComment: CommentModel,
+        notification: InAppNotificationModel
+    ) = viewModelScope.launch {
         val mutableList = mutableListOf<CommentModel>()
         mutableList.addAll(discoverPostComments.value ?: emptyList())
         mutableList.add(myComment)
-        val likeData = hashMapOf<String,Any?>(
+        val likeData = hashMapOf<String, Any?>(
             "comments" to mutableList
         )
-        firebaseRepo.commentToDiscoverPost(postId,likeData).addOnSuccessListener {
+        firebaseRepo.commentToDiscoverPost(postId, likeData).addOnSuccessListener {
             getAllComments(postId)
             sendNotification(
                 notification = notification,
@@ -75,7 +76,8 @@ class CommentsViewModel  @Inject constructor(
             )
         }
     }
-    fun createNotificationData(userToken : String,image : String) =
+
+    fun createNotificationData(userToken: String, image: String) =
         InAppNotificationModel(
             userId = currentUserId,
             notificationType = NotificationType.POST,
@@ -88,23 +90,22 @@ class CommentsViewModel  @Inject constructor(
             time = getCurrentTime()
         )
 
-    fun makeComment(postId : String,comment : String,notification : InAppNotificationModel){
+    fun makeComment(postId: String, comment: String, notification: InAppNotificationModel) {
         val commentId = UUID.randomUUID().toString()
         val myComment = CommentModel(
-            commentId,comment,currentUserId,_userData.value?.profileImageUrl.toString(),
-            userData.value?.username.toString(),getCurrentTime()
+            commentId, comment, currentUserId, _userData.value?.profileImageUrl.toString(),
+            userData.value?.username.toString(), getCurrentTime()
         )
-        sendComment(postId,myComment,notification)
+        sendComment(postId, myComment, notification)
     }
 
     private fun getUserDataFromFirebase() {
         _message.value = Resource.loading(null)
         firebaseRepo.getUserDataByDocumentId(currentUserId)
-            .addOnSuccessListener { documentSnapshot->
+            .addOnSuccessListener { documentSnapshot ->
                 if (documentSnapshot.exists()) {
-                    val user = documentSnapshot.toObject(UserModel::class.java)
-                    if (user != null) {
-                        _userData.value = user ?: UserModel()
+                    documentSnapshot.toUserModel()?.let { userModel ->
+                        _userData.value = userModel
                     }
                 }
             }.addOnFailureListener { exception ->

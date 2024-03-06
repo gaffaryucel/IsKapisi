@@ -7,8 +7,10 @@ import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
-import com.androiddevelopers.freelanceapp.repo.RoomUserDatabaseRepoInterface
 import com.androiddevelopers.freelanceapp.util.Resource
+import com.androiddevelopers.freelanceapp.util.toDiscoverPostModel
+import com.androiddevelopers.freelanceapp.util.toEmployerJobPost
+import com.androiddevelopers.freelanceapp.util.toFreelancerJobPost
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -20,22 +22,22 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val firebaseRepo: FirebaseRepoInterFace,
     firebaseAuth: FirebaseAuth,
-): BaseProfileViewModel(firebaseRepo,firebaseAuth) {
+) : BaseProfileViewModel(firebaseRepo, firebaseAuth) {
 
     private var _profileMessage = MutableLiveData<Resource<UserModel>>()
-    val profileMessage : LiveData<Resource<UserModel>>
+    val profileMessage: LiveData<Resource<UserModel>>
         get() = _profileMessage
 
     private val _freelancerJobPosts = MutableLiveData<List<FreelancerJobPost>>()
-    val freelanceJobPosts : LiveData<List<FreelancerJobPost>>
+    val freelanceJobPosts: LiveData<List<FreelancerJobPost>>
         get() = _freelancerJobPosts
 
     private val _employerJobPosts = MutableLiveData<List<EmployerJobPost>>()
-    val employerJobPosts : LiveData<List<EmployerJobPost>>
+    val employerJobPosts: LiveData<List<EmployerJobPost>>
         get() = _employerJobPosts
 
     private val _discoverPosts = MutableLiveData<List<DiscoverPostModel>>()
-    val discoverPosts : LiveData<List<DiscoverPostModel>>
+    val discoverPosts: LiveData<List<DiscoverPostModel>>
         get() = _discoverPosts
 
     private var _followerCount = MutableLiveData<Long>()
@@ -49,15 +51,14 @@ class ProfileViewModel @Inject constructor(
     }
 
 
-    private fun getFreelancerJobPostsFromUser(){
+    private fun getFreelancerJobPostsFromUser() {
         _profileMessage.value = Resource.loading(null)
         firebaseRepo.getAllFreelancerJobPostsFromUser(currentUserId)
             .addOnSuccessListener {
                 val postList = mutableListOf<FreelancerJobPost>()
                 for (document in it.documents) {
                     // Belgeden her bir videoyu çek
-                    val post = document.toObject(FreelancerJobPost::class.java)
-                    post?.let { postList.add(post) }
+                    document.toFreelancerJobPost()?.let { post -> postList.add(post) }
                 }
                 _freelancerJobPosts.value = postList
             }.addOnFailureListener { exception ->
@@ -65,15 +66,15 @@ class ProfileViewModel @Inject constructor(
                 _profileMessage.value = Resource.error("Belge alınamadı. Hata: $exception", null)
             }
     }
-    private fun getEmployerJobPostsFromUser(){
+
+    private fun getEmployerJobPostsFromUser() {
         _profileMessage.value = Resource.loading(null)
         firebaseRepo.getAllEmployerJobPostsFromUser(currentUserId)
             .addOnSuccessListener {
                 val postList = mutableListOf<EmployerJobPost>()
                 for (document in it.documents) {
                     // Belgeden her bir videoyu çek
-                    val post = document.toObject(EmployerJobPost::class.java)
-                    post?.let { postList.add(post) }
+                    document.toEmployerJobPost()?.let { post -> postList.add(post) }
                 }
                 _employerJobPosts.value = postList
             }.addOnFailureListener { exception ->
@@ -81,15 +82,15 @@ class ProfileViewModel @Inject constructor(
                 _profileMessage.value = Resource.error("Belge alınamadı. Hata: $exception", null)
             }
     }
-    private fun getDiscoverPostsFromUser(){
+
+    private fun getDiscoverPostsFromUser() {
         _profileMessage.value = Resource.loading(null)
         firebaseRepo.getAllDiscoverPostsFromUser(currentUserId)
             .addOnSuccessListener {
                 val postList = mutableListOf<DiscoverPostModel>()
                 for (document in it.documents) {
                     // Belgeden her bir videoyu çek
-                    val post = document.toObject(DiscoverPostModel::class.java)
-                    post?.let { postList.add(post) }
+                    document.toDiscoverPostModel()?.let { post -> postList.add(post) }
                 }
                 _discoverPosts.value = postList
             }.addOnFailureListener { exception ->
@@ -98,17 +99,18 @@ class ProfileViewModel @Inject constructor(
             }
     }
 
-    private fun getFollowerCount(){
-        firebaseRepo.getFollowers(currentUserId).addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                _followerCount.value = snapshot.childrenCount
-            }
+    private fun getFollowerCount() {
+        firebaseRepo.getFollowers(currentUserId)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    _followerCount.value = snapshot.childrenCount
+                }
 
-            override fun onCancelled(error: DatabaseError) {
-                //asdasd
-            }
+                override fun onCancelled(error: DatabaseError) {
+                    //asdasd
+                }
 
-        })
+            })
     }
 
 

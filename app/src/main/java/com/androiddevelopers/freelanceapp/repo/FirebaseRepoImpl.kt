@@ -141,9 +141,9 @@ class FirebaseRepoImpl @Inject constructor(
 
     override fun updateSavedUsersEmployerJobPostFromFirestore(
         postId: String,
-        likes: List<String>
+        savedUsers: List<String>
     ): Task<Void> {
-        return employerPostCollection.document(postId).update("savedUsers", likes)
+        return employerPostCollection.document(postId).update("savedUsers", savedUsers)
     }
 
     override fun addImageToStorageForJobPosting(
@@ -330,7 +330,11 @@ class FirebaseRepoImpl @Inject constructor(
         return discoverPostCollection.document(postId).update(updateData)
     }
 
-    override suspend fun uploadPhotoToStorage(bitmap: Bitmap,uid : String,imagePath : String): String? {
+    override suspend fun uploadPhotoToStorage(
+        bitmap: Bitmap,
+        uid: String,
+        imagePath: String
+    ): String? {
         val imagesRef = profilePhotoRef.child("$uid/$imagePath/${UUID.randomUUID()}.jpg")
 
         return try {
@@ -360,22 +364,27 @@ class FirebaseRepoImpl @Inject constructor(
     override suspend fun postNotification(notification: PushNotification): Response<ResponseBody> {
         return notificationAPI.postNotification(notification)
     }
+
     override fun saveNotification(notification: InAppNotificationModel): Task<Void> {
-        return notificationCollection.document(notification.notificationId.toString()).set(notification)
+        return notificationCollection.document(notification.notificationId.toString())
+            .set(notification)
     }
-    override fun getFollowNotifications(userId: String,limit : Long): Task<QuerySnapshot> {
+
+    override fun getFollowNotifications(userId: String, limit: Long): Task<QuerySnapshot> {
         return notificationCollection.whereEqualTo("userId", userId)
             .whereEqualTo("notificationType", NotificationType.FOLLOW)
             .limit(limit)
             .get()
     }
-    override fun getPostNotifications(userId: String,limit : Long): Task<QuerySnapshot> {
+
+    override fun getPostNotifications(userId: String, limit: Long): Task<QuerySnapshot> {
         return notificationCollection.whereEqualTo("userId", userId)
             .whereEqualTo("notificationType", NotificationType.POST)
             .limit(limit)
             .get()
     }
-    override fun getJobPostNotifications(userId: String,limit : Long): Task<QuerySnapshot> {
+
+    override fun getJobPostNotifications(userId: String, limit: Long): Task<QuerySnapshot> {
         return notificationCollection.whereEqualTo("userId", userId)
             .whereEqualTo("notificationType", NotificationType.JOB_POST)
             .limit(limit)
