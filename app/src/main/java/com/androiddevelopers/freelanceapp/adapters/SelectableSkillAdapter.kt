@@ -8,6 +8,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.androiddevelopers.freelanceapp.R
+import com.androiddevelopers.freelanceapp.databinding.RowSelectableSkillBinding
 
 class SelectableSkillAdapter() : RecyclerView.Adapter<SelectableSkillAdapter.SkillViewHolder>() {
 
@@ -27,40 +29,68 @@ class SelectableSkillAdapter() : RecyclerView.Adapter<SelectableSkillAdapter.Ski
         get() = recyclerListDiffer.currentList
         set(value) = recyclerListDiffer.submitList(value)
 
-    inner class SkillViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val textView: TextView = itemView.findViewById(android.R.id.text1)
+    val selectedSkills = mutableSetOf<String>()
 
-        init {
-            itemView.setOnClickListener {
-                val position = adapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    val skill = skillList[position]
-                    onItemClickListener?.onItemClick(skill)
-                }
-            }
+    inner class SkillViewHolder(val binding : RowSelectableSkillBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun select(skill : String){
+            binding.tvSkill.setBackgroundResource(
+                R.drawable.skill_text_bg
+            )
+            selectedSkills.add(skill)
+            onClick?.invoke(selectedSkills.toList())
+        }
+        fun remove(skill : String){
+            binding.tvSkill.setBackgroundResource(
+                R.drawable.rounded_corner_background
+            )
+            selectedSkills.remove(skill)
+            onClick?.invoke(selectedSkills.toList())
+        }
+        fun changeSelectedBg(){
+            binding.tvSkill.setBackgroundResource(
+                R.drawable.skill_text_bg
+            )
+        }
+        fun changeUnSelectedBg(){
+            binding.tvSkill.setBackgroundResource(
+                R.drawable.rounded_corner_background
+            )
         }
     }
 
-    interface OnItemClickListener {
-        fun onItemClick(skill: String)
-    }
-
-    private var onItemClickListener: OnItemClickListener? = null
-
-    fun setOnItemClickListener(listener: OnItemClickListener) {
-        onItemClickListener = listener
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SkillViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(android.R.layout.simple_list_item_1, parent, false)
-        return SkillViewHolder(view)
+        val binding = RowSelectableSkillBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return SkillViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: SkillViewHolder, position: Int) {
-        holder.textView.text = skillList[position]
+        val skill = skillList[position]
+        holder.binding.apply {
+            item = skill
+        }
+        holder.itemView.setOnClickListener{
+            if (isSkillSelected(skill)){
+                //Seçilmişse
+                holder.remove(skill)
+            }else{
+                //seçilmemişse
+                holder.select(skill)
+            }
+        }
+        if (isSkillSelected(skill)){
+           holder.changeSelectedBg()
+        }else{
+            holder.changeUnSelectedBg()
+        }
+
+    }
+    private fun isSkillSelected(skill : String) : Boolean{
+        return selectedSkills.contains(skill)
     }
 
     override fun getItemCount(): Int {
         return skillList.size
     }
+    var onClick: ((List<String>) -> Unit)? = null
 }

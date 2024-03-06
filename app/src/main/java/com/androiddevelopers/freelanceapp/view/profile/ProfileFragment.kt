@@ -179,24 +179,29 @@ class ProfileFragment : Fragment() {
                 }
             }
             if (userData.userType != null) {
-                when (userData.userType) {
-                    UserStatus.FREELANCER -> {
-                        binding.layoutProfileType.visibility = View.GONE
-                        binding.recyclerView.visibility = View.VISIBLE
-                        binding.profileFragmentSwipeRefreshLayout.visibility = View.VISIBLE
-                    }
+                binding.layoutProfileType.visibility = View.VISIBLE
+                binding.profileFragmentSwipeRefreshLayout.visibility = View.GONE
 
-                    UserStatus.STANDARD -> {
-                        binding.recyclerView.visibility = View.GONE
-                        binding.layoutProfileType.visibility = View.GONE
-                        binding.profileFragmentSwipeRefreshLayout.visibility = View.VISIBLE
-                    }
+                /*  when (userData.userType) {
+                      UserStatus.FREELANCER -> {
+                          binding.layoutProfileType.visibility = View.GONE
+                          binding.recyclerView.visibility = View.VISIBLE
+                          binding.profileFragmentSwipeRefreshLayout.visibility = View.VISIBLE
+                      }
 
-                    else -> {
-                        binding.layoutProfileType.visibility = View.VISIBLE
-                        binding.profileFragmentSwipeRefreshLayout.visibility = View.GONE
-                    }
-                }
+                      UserStatus.STANDARD -> {
+                          binding.recyclerView.visibility = View.GONE
+                          binding.layoutProfileType.visibility = View.GONE
+                          binding.profileFragmentSwipeRefreshLayout.visibility = View.VISIBLE
+                      }
+
+                      else -> {
+                          binding.layoutProfileType.visibility = View.VISIBLE
+                          binding.profileFragmentSwipeRefreshLayout.visibility = View.GONE
+                      }
+                  }
+
+                 */
             } else {
                 binding.layoutProfileType.visibility = View.VISIBLE
                 binding.profileFragmentSwipeRefreshLayout.visibility = View.GONE
