@@ -1,114 +1,282 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".view.freelancer.CreatePostFragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
 
-    <ScrollView
-        android:id="@+id/svCreatePost"
+        <import type="androidx.navigation.Navigation" />
+
+        <variable
+            name="rvSkillAdapter"
+            type="com.androiddevelopers.freelanceapp.adapters.SkillAdapter" />
+    </data>
+
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:fillViewport="true"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_max="400dp"
+        tools:context=".view.freelancer.CreatePostFragment">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/ivClose"
-                android:layout_gravity="end"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:src="@drawable/baseline_close_24"
-                android:layout_width="40dp"
-                android:layout_height="40dp"/>
-
-            <ImageView
-                android:src="@drawable/image_placeholder"
-                android:layout_margin="5dp"
-                android:id="@+id/ivPost"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                tools:ignore="HardcodedText" />
-
-            <EditText
-                android:layout_margin="5dp"
-                android:id="@+id/etTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Title"
-                tools:ignore="HardcodedText"
-                android:autofillHints="" />
-
-
-            <EditText
-                android:layout_margin="5dp"
-                android:id="@+id/etDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Description"
-                tools:ignore="HardcodedText" />
-
+            android:layout_height="match_parent"
+            android:padding="10dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_margin="5dp"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:id="@+id/layoutTopIconsHomeCreate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <EditText
-                    android:layout_weight="1"
-                    android:layout_margin="5dp"
-                    android:id="@+id/etTags"
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/ivBackButton"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:onClick="@{() -> Navigation.findNavController(ivBackButton).popBackStack()}"
+                    android:src="@drawable/baseline_keyboard_arrow_left_24"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/ivAddTag"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:hint="Tags"
-                    tools:ignore="HardcodedText" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:id="@+id/ivAddTag"
-                    android:layout_weight="1"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/tvAllTags"
-                    android:src="@drawable/icon_add"
-                    android:layout_margin="5dp"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"/>
-
-                <TextView
-                    android:id="@+id/tvAllTags"
-                    app:layout_constraintTop_toBottomOf="@id/etTags"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:text="Share"
-                android:id="@+id/shareButton"
-                android:layout_marginVertical="10dp"
-                android:layout_marginHorizontal="20dp"
-                android:layout_width="match_parent"
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/progressBarHomeCreate"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:ignore="HardcodedText" />
+                android:indeterminate="true"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layoutTopIconsHomeCreate" />
 
-            <TextView
+            <ScrollView
                 android:layout_width="0dp"
-                android:layout_height="300dp"/>
-        </LinearLayout>
+                android:layout_height="0dp"
+                android:layout_marginTop="@dimen/job_post_detail_top_margin"
+                android:fillViewport="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/progressBarHomeCreate">
 
-    </ScrollView>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/imagePlaceHolderHomeCreate"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:src="@drawable/placeholder"
+                        app:layout_constraintBottom_toBottomOf="@id/layoutImageViewsHomeCreate"
+                        app:layout_constraintEnd_toEndOf="@id/layoutImageViewsHomeCreate"
+                        app:layout_constraintStart_toStartOf="@id/layoutImageViewsHomeCreate"
+                        app:layout_constraintTop_toTopOf="@id/layoutImageViewsHomeCreate" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/layoutImageViewsHomeCreate"
+                        android:layout_width="0dp"
+                        android:layout_height="300dp"
+                        android:layout_margin="10dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintWidth_max="@dimen/edittextMaxWidth">
+
+
+                        <androidx.viewpager2.widget.ViewPager2
+                            android:id="@+id/viewPagerCreateJobPost"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:orientation="horizontal"
+                            app:layout_constraintBottom_toTopOf="@id/indicatorCreateJobPost"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <me.relex.circleindicator.CircleIndicator3
+                            android:id="@+id/indicatorCreateJobPost"
+                            style="@style/IndicatorStyle"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="@id/viewPagerCreateJobPost"
+                            app:layout_constraintStart_toStartOf="@id/viewPagerCreateJobPost"
+                            app:layout_constraintTop_toBottomOf="@id/viewPagerCreateJobPost" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fabLoadImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="8dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:fabCustomSize="48dp"
+                        app:fabSize="auto"
+                        app:layout_constraintBottom_toBottomOf="@id/layoutImageViewsHomeCreate"
+                        app:layout_constraintEnd_toEndOf="@id/layoutImageViewsHomeCreate"
+                        app:srcCompat="@drawable/baseline_add_a_photo_24"
+                        tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/budgetTextInputLayout"
+                        style="@style/StyleTextInputLayout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:endIconMode="clear_text"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/layoutImageViewsHomeCreate"
+                        app:prefixText="₺">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/budgetTextInputEditText"
+
+                            style="@style/StyleTextInputEditText"
+                            android:hint="@string/enter_budget_freelancer"
+                            android:inputType="number|numberDecimal|numberSigned"
+                            tools:ignore="TextContrastCheck" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/titleTextInputLayout"
+                        style="@style/StyleTextInputLayout"
+                        isEmptyCheck="@{titleTextInputEditText}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/createJobPostingMarginTop"
+                        app:endIconMode="clear_text"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/budgetTextInputLayout">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/titleTextInputEditText"
+                            style="@style/StyleTextInputEditText"
+                            android:hint="@string/enter_title"
+                            tools:ignore="TextContrastCheck" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/descriptionTextInputLayout"
+                        style="@style/StyleTextInputLayout"
+                        isEmptyCheck="@{titleTextInputEditText}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/createJobPostingMarginTop"
+                        app:endIconMode="clear_text"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/titleTextInputLayout">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/descriptionTextInputEditText"
+                            style="@style/StyleTextInputEditText"
+                            android:hint="@string/enter_description"
+                            tools:ignore="TextContrastCheck" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- TODO: Lokasyonlar listeden gelebilir-->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/locationTextInputLayout"
+                        style="@style/StyleTextInputLayout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/createJobPostingMarginTop"
+                        app:endIconMode="clear_text"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/descriptionTextInputLayout">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/locationsTextInputEditText"
+                            style="@style/StyleTextInputEditText"
+                            android:hint="@string/enter_location"
+                            tools:ignore="TextContrastCheck" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/skillsRequiredLayout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/createJobPostingMarginTop"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/locationTextInputLayout"
+                        app:layout_constraintWidth_max="@dimen/edittextMaxWidth">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/skillAddTextInputLayout"
+                            style="@style/StyleTextInputLayout"
+                            isEmptyCheck="@{skillAddEditText}"
+                            android:layout_marginTop="0dp"
+                            android:layout_weight="1"
+                            app:endIconDrawable="@drawable/baseline_add_24"
+                            app:endIconMode="custom"
+                            app:errorEnabled="true"
+                            app:layout_constraintBottom_toTopOf="@id/skillRowRecyclerView"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/skillAddEditText"
+                                style="@style/StyleTextInputEditText"
+                                android:hint="@string/enter_skills_freelancer"
+                                tools:ignore="TextContrastCheck" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/skillRowRecyclerView"
+                            setHasFixedSize="@{true}"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:adapter="@{rvSkillAdapter}"
+                            android:padding="4dp"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/skillAddTextInputLayout" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <Button
+                        android:id="@+id/createJobPostDeleteButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:backgroundTint="@color/delete_button"
+                        android:text="@string/delete"
+                        app:layout_constraintBottom_toBottomOf="@id/createJobPostSaveButton"
+                        app:layout_constraintEnd_toStartOf="@id/createJobPostSaveButton"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/createJobPostSaveButton" />
+
+                    <Button
+                        android:id="@+id/createJobPostSaveButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:text="@string/save"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/createJobPostDeleteButton"
+                        app:layout_constraintTop_toBottomOf="@id/skillsRequiredLayout"
+                        app:layout_constraintWidth_max="@dimen/buttonMaxWidth" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </ScrollView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</layout>
