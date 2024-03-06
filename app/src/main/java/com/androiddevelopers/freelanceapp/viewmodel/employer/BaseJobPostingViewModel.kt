@@ -10,10 +10,12 @@ import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.JobStatus
 import com.androiddevelopers.freelanceapp.util.Resource
+import com.androiddevelopers.freelanceapp.util.toEmployerJobPost
+import com.androiddevelopers.freelanceapp.util.toUserModel
 import com.androiddevelopers.freelanceapp.viewmodel.BaseNotificationViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
-import java.util.UUID
+import java.util.*
 
 open class BaseJobPostingViewModel(
     val firebaseRepo: FirebaseRepoInterFace,
@@ -45,89 +47,87 @@ open class BaseJobPostingViewModel(
     val firebaseListenerForChange: LiveData<Boolean>
         get() = _firebaseListenerForChange
 
-    fun getAllEmployerJobPost() {
+    fun getAllEmployerJobPost() = viewModelScope.launch {
         _firebaseMessage.value = Resource.loading(true)
 
-        firebaseRepo.getAllEmployerJobPostFromFirestore()
-            .addOnSuccessListener {
+        firebaseRepo.getAllEmployerJobPostFromFirestore().addOnSuccessListener {
 
-                _firebaseMessage.value = Resource.loading(false)
+            _firebaseMessage.value = Resource.loading(false)
 
-                it?.let { querySnapshot ->
-                    val list = mutableListOf<EmployerJobPost>()
-                    val userIdList = mutableSetOf<String>()
+            it?.let { querySnapshot ->
+                val list = mutableListOf<EmployerJobPost>()
+                val userIdList = mutableSetOf<String>()
 
-                    for (document in querySnapshot) {
-                        val employerJobPost = document.toObject(EmployerJobPost::class.java)
+                for (document in querySnapshot) {
+                    document.toEmployerJobPost()?.let { employerJobPost ->
                         if (employerJobPost.status == JobStatus.OPEN) {
                             list.add(employerJobPost)
                             employerJobPost.employerId?.let { id -> userIdList.add(id) }
                         }
                     }
-                    if (userIdList.isNotEmpty()) {
-                        getUserDataByDocumentIdList(userIdList.toList())
-                    }
-
-                    _firebaseLiveData.value = list
-
                 }
-                _firebaseMessage.value = Resource.success(true)
 
-            }.addOnFailureListener {
-                _firebaseMessage.value = Resource.loading(false)
-
-                it.localizedMessage?.let { message ->
-                    _firebaseMessage.value = Resource.error(message, false)
+                if (userIdList.isNotEmpty()) {
+                    getUserDataByDocumentIdList(userIdList.toList())
                 }
+
+                _firebaseLiveData.value = list
+
             }
+            _firebaseMessage.value = Resource.success(true)
+
+        }.addOnFailureListener {
+            _firebaseMessage.value = Resource.loading(false)
+
+            it.localizedMessage?.let { message ->
+                _firebaseMessage.value = Resource.error(message, false)
+            }
+        }
     }
 
-    fun getUserDataByDocumentId(documentId: String) =
-        viewModelScope.launch {
-            _firebaseMessage.value = Resource.loading(true)
+    fun getUserDataByDocumentId(documentId: String) = viewModelScope.launch {
+        _firebaseMessage.value = Resource.loading(true)
 
-            firebaseRepo.getUserDataByDocumentId(documentId)
-                .addOnSuccessListener { document ->
-                    val userModel = document.toObject(UserModel::class.java)
+        firebaseRepo.getUserDataByDocumentId(documentId).addOnSuccessListener { document ->
+            document.toUserModel()?.let { userModel ->
+                _firebaseUserData.value = userModel
+            } ?: run {
+                _firebaseMessage.value =
+                    Resource.error("Bu hesapla eşleşen kullanıcı bulunamadı", null)
+            }
 
-                    userModel?.let {
-                        _firebaseUserData.value = it
-                    } ?: run {
-                        _firebaseMessage.value =
-                            Resource.error("Bu hesapla eşleşen kullanıcı bulunamadı", null)
-                    }
+            _firebaseMessage.value = Resource.loading(false)
+            _firebaseMessage.value = Resource.success(true)
 
-                    _firebaseMessage.value = Resource.loading(false)
-                    _firebaseMessage.value = Resource.success(true)
+        }.addOnFailureListener {
+            _firebaseMessage.value = Resource.loading(false)
 
-                }.addOnFailureListener {
-                    _firebaseMessage.value = Resource.loading(false)
-
-                    it.localizedMessage?.let { message ->
-                        Resource.error(message, false)
-                    }
-                }
-        }
-
-    fun getUserDataByDocumentIdList(list: List<String>) =
-        viewModelScope.launch {
-            firebaseRepo.getUsersFromFirestore(list).addOnSuccessListener { querySnapshot ->
-                val users = mutableListOf<UserModel>()
-
-                for (document in querySnapshot) {
-                    val userModel = document.toObject(UserModel::class.java)
-                    users.add(userModel)
-                }
-                _firebaseUserListData.value = users
-                _firebaseMessage.value = Resource.success(true)
-            }.addOnFailureListener {
-                _firebaseMessage.value = Resource.loading(false)
-
-                it.localizedMessage?.let { message ->
-                    Resource.error(message, false)
-                }
+            it.localizedMessage?.let { message ->
+                Resource.error(message, false)
             }
         }
+    }
+
+    private fun getUserDataByDocumentIdList(list: List<String>) = viewModelScope.launch {
+        firebaseRepo.getUsersFromFirestore(list).addOnSuccessListener { querySnapshot ->
+            val users = mutableListOf<UserModel>()
+
+            for (document in querySnapshot) {
+                document.toUserModel()?.let { user ->
+                    users.add(user)
+                }
+            }
+
+            _firebaseUserListData.value = users
+            _firebaseMessage.value = Resource.success(true)
+        }.addOnFailureListener {
+            _firebaseMessage.value = Resource.loading(false)
+
+            it.localizedMessage?.let { message ->
+                Resource.error(message, false)
+            }
+        }
+    }
 
     fun getEmployerJobPostWithDocumentByIdFromFirestore(documentId: String) =
         viewModelScope.launch {
@@ -135,10 +135,8 @@ open class BaseJobPostingViewModel(
 
             firebaseRepo.getEmployerJobPostWithDocumentByIdFromFirestore(documentId)
                 .addOnSuccessListener { document ->
-                    val employerJobPost = document.toObject(EmployerJobPost::class.java)
-
-                    employerJobPost?.let {
-                        _firebaseLiveDataEmployerJobPost.value = it
+                    document.toEmployerJobPost()?.let { employerJobPost ->
+                        _firebaseLiveDataEmployerJobPost.value = employerJobPost
                     } ?: run {
                         _firebaseMessage.value =
                             Resource.error("İlan alınırken hata oluştu.", false)
@@ -157,10 +155,7 @@ open class BaseJobPostingViewModel(
         }
 
     fun updateSavedUsersEmployerJobPostFromFirestore(
-        userId: String,
-        postId: String,
-        isSavedPost: Boolean,
-        savedUsers: List<String>
+        userId: String, postId: String, isSavedPost: Boolean, savedUsers: List<String>
     ) = viewModelScope.launch {
         val list = mutableSetOf<String>()
         list.addAll(savedUsers)
@@ -205,7 +200,12 @@ open class BaseJobPostingViewModel(
             currentUserId ?: "",
             messageReceiver
         )
-        firebaseRepo.sendMessageToPreChatRoom(currentUserId ?: "id yok",messageReceiver, chatId, usersMessage)
+        firebaseRepo.sendMessageToPreChatRoom(
+            currentUserId ?: "id yok",
+            messageReceiver,
+            chatId,
+            usersMessage
+        )
     }
 
     private fun creatMessageModelForCurrentUser(

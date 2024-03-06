@@ -8,36 +8,36 @@ import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.Resource
+import com.androiddevelopers.freelanceapp.util.toUserModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import java.util.UUID
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateDiscoverPostViewModel @Inject constructor(
-    private val repo : FirebaseRepoInterFace,
-    private val storage : FirebaseStorage,
-    private val auth : FirebaseAuth
+    private val repo: FirebaseRepoInterFace,
+    private val storage: FirebaseStorage,
+    private val auth: FirebaseAuth
 ) : ViewModel() {
 
     private val storageReference = storage.reference
-    private val currentUserId = auth.currentUser?.let { it.uid }
+    private val currentUserId = auth.currentUser?.uid
 
     private val _uploadPhotoMessage = MutableLiveData<Resource<String>>()
-    val uploadPhotoMessage : LiveData<Resource<String>> = _uploadPhotoMessage
+    val uploadPhotoMessage: LiveData<Resource<String>> = _uploadPhotoMessage
 
     private val _userData = MutableLiveData<UserModel>()
-    val userData : LiveData<UserModel> = _userData
+    val userData: LiveData<UserModel> = _userData
 
     init {
         getUserDataFromFirebase()
     }
-    fun uploadPostPicture(postModel : DiscoverPostModel, r: ByteArray) = viewModelScope.launch {
+
+    fun uploadPostPicture(postModel: DiscoverPostModel, r: ByteArray) = viewModelScope.launch {
         _uploadPhotoMessage.value = Resource.loading("loading")
 
         val photoFileName = "${UUID.randomUUID()}.jpg"
@@ -63,41 +63,47 @@ class CreateDiscoverPostViewModel @Inject constructor(
             }
     }
 
-    private fun uploadPostToFirestore(postModel: DiscoverPostModel){
+    private fun uploadPostToFirestore(postModel: DiscoverPostModel) {
         repo.uploadDiscoverPostToFirestore(postModel)
         updateUserData(postModel)
     }
 
     fun createDiscoverPostModel(
-        description : String,
-        tags : List<String>
-    ) : DiscoverPostModel{
+        description: String,
+        tags: List<String>
+    ): DiscoverPostModel {
         val postId = UUID.randomUUID().toString()
         return DiscoverPostModel(
-            postId,currentUserId,
-            description,tags,
-            emptyList(),getCurrentTime(),
+            postId, currentUserId,
+            description, tags,
+            emptyList(), getCurrentTime(),
             userData.value?.username.toString(),
             userData.value?.profileImageUrl.toString()
         )
     }
+
     private fun getCurrentTime(): String {
         val currentTime = System.currentTimeMillis()
         val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
         val date = Date(currentTime)
         return dateFormat.format(date)
     }
-    private fun updateUserData(discoverPost : DiscoverPostModel){
-        repo.uploadDataInUserNode(currentUserId.toString(),discoverPost,"discover",discoverPost.postId.toString())
+
+    private fun updateUserData(discoverPost: DiscoverPostModel) {
+        repo.uploadDataInUserNode(
+            currentUserId.toString(),
+            discoverPost,
+            "discover",
+            discoverPost.postId.toString()
+        )
     }
 
     private fun getUserDataFromFirebase() {
         repo.getUserDataByDocumentId(currentUserId.toString())
             .addOnSuccessListener { documentSnapshot ->
                 if (documentSnapshot.exists()) {
-                    val user = documentSnapshot.toObject(UserModel::class.java)
-                    if (user != null) {
-                        _userData.value = user ?: UserModel()
+                    documentSnapshot.toUserModel()?.let { userModel ->
+                        _userData.value = userModel
                     }
                 }
             }

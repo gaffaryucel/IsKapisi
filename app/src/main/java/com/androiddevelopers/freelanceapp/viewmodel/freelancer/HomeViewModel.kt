@@ -9,6 +9,8 @@ import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.JobStatus
 import com.androiddevelopers.freelanceapp.util.Resource
+import com.androiddevelopers.freelanceapp.util.toFreelancerJobPost
+import com.androiddevelopers.freelanceapp.util.toUserModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -48,9 +50,10 @@ constructor(
                     val list = mutableListOf<FreelancerJobPost>()
 
                     for (document in querySnapshot) {
-                        val freelancerJobPost = document.toObject(FreelancerJobPost::class.java)
-                        if (freelancerJobPost.status == JobStatus.OPEN) {
-                            list.add(freelancerJobPost)
+                        document.toFreelancerJobPost()?.let { freelancerJobPost ->
+                            if (freelancerJobPost.status == JobStatus.OPEN) {
+                                list.add(freelancerJobPost)
+                            }
                         }
                     }
 
@@ -150,9 +153,8 @@ constructor(
 
     fun getUserDataByDocumentId(userId: String) = viewModelScope.launch {
         _firebaseMessage.value = Resource.loading(true)
-        firebaseRepo.getUserDataByDocumentId(userId).addOnSuccessListener {
-            val userModel = it.toObject(UserModel::class.java)
-            userModel?.let { user ->
+        firebaseRepo.getUserDataByDocumentId(userId).addOnSuccessListener { document ->
+            document.toUserModel()?.let { user ->
                 _firebaseUserLiveData.value = user
             }
             _firebaseMessage.value = Resource.loading(false)

@@ -7,6 +7,7 @@ import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.Resource
+import com.androiddevelopers.freelanceapp.util.toDiscoverPostModel
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -15,7 +16,7 @@ import javax.inject.Inject
 class ProfileDiscoverPostDetailsViewModel @Inject constructor(
     private val firebaseRepo: FirebaseRepoInterFace,
     firebaseAuth: FirebaseAuth,
-): ViewModel() {
+) : ViewModel() {
     private val userId = firebaseAuth.currentUser!!.uid
 
     private var _message = MutableLiveData<Resource<UserModel>>()
@@ -35,9 +36,8 @@ class ProfileDiscoverPostDetailsViewModel @Inject constructor(
         firebaseRepo.getAllDiscoverPostsFromUser(userId)
             .addOnSuccessListener {
                 val postList = mutableListOf<DiscoverPostModel>()
-                for (document in it .documents) {
-                    val post = document.toObject(DiscoverPostModel::class.java)
-                    post?.let { postList.add(it) }
+                for (document in it.documents) {
+                    document.toDiscoverPostModel()?.let { post -> postList.add(post) }
                 }
                 _discoverPosts.value = postList
             }

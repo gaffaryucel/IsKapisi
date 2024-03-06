@@ -6,16 +6,15 @@ import androidx.lifecycle.ViewModel
 import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
-import com.androiddevelopers.freelanceapp.repo.RoomUserDatabaseRepoInterface
 import com.androiddevelopers.freelanceapp.util.Resource
-import com.google.firebase.auth.FirebaseAuth
+import com.androiddevelopers.freelanceapp.util.toDiscoverPostModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class DiscoverViewModel  @Inject constructor(
+class DiscoverViewModel @Inject constructor(
     private val firebaseRepo: FirebaseRepoInterFace
-): ViewModel() {
+) : ViewModel() {
 
     private var _message = MutableLiveData<Resource<UserModel>>()
     val message: LiveData<Resource<UserModel>>
@@ -36,8 +35,7 @@ class DiscoverViewModel  @Inject constructor(
                 val postList = mutableListOf<DiscoverPostModel>()
                 for (document in it.documents) {
                     // Belgeden her bir videoyu çek
-                    val post = document.toObject(DiscoverPostModel::class.java)
-                    post?.let { postList.add(post) }
+                    document.toDiscoverPostModel()?.let { post -> postList.add(post) }
                     _message.value = Resource.success(null)
                 }
                 _postData.value = postList

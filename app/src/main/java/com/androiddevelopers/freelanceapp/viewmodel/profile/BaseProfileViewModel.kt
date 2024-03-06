@@ -3,29 +3,26 @@ package com.androiddevelopers.freelanceapp.viewmodel.profile
 import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.androiddevelopers.freelanceapp.model.UserModel
-import com.androiddevelopers.freelanceapp.model.UserProfileModel
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
-import com.androiddevelopers.freelanceapp.repo.RoomUserDatabaseRepoInterface
 import com.androiddevelopers.freelanceapp.util.Resource
+import com.androiddevelopers.freelanceapp.util.toUserModel
 import com.androiddevelopers.freelanceapp.viewmodel.BaseNotificationViewModel
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-@HiltViewModel  
+@HiltViewModel
 open class BaseProfileViewModel @Inject constructor(
     private val firebaseRepo: FirebaseRepoInterFace,
     private val firebaseAuth: FirebaseAuth,
-) : BaseNotificationViewModel(firebaseRepo,firebaseAuth) {
+) : BaseNotificationViewModel(firebaseRepo, firebaseAuth) {
 
     private var _message = MutableLiveData<Resource<UserModel>>()
     val message: LiveData<Resource<UserModel>>
@@ -40,31 +37,29 @@ open class BaseProfileViewModel @Inject constructor(
         get() = _userData
 
 
-
     init {
         getUserDataFromFirebase()
     }
 
-    internal fun getUserDataFromFirebase(){
+    internal fun getUserDataFromFirebase() {
         viewModelScope.launch(Dispatchers.IO) {
             firebaseRepo.getUserDataByDocumentId(currentUserId)
                 .addOnSuccessListener { documentSnapshot ->
                     if (documentSnapshot.exists()) {
-                        val user = documentSnapshot.toObject(UserModel::class.java)
-                        if (user != null) {
-                            _userData.value = user ?: UserModel()
+                        documentSnapshot.toUserModel()?.let { userModel ->
+                            _userData.value = userModel
                             _message.value = Resource.success(null)
-                        }else{
-                            _message.value = Resource.error("Belirtilen belge bulunamadı",null)
+                        } ?: run {
+                            _message.value = Resource.error("Belirtilen belge bulunamadı", null)
                         }
                     } else {
                         // Belge yoksa işlemleri buraya ekleyebilirsiniz
-                        _message.value = Resource.error("kullanıcı kaydedilmemiş",null)
+                        _message.value = Resource.error("kullanıcı kaydedilmemiş", null)
                     }
                 }
                 .addOnFailureListener { exception ->
                     // Hata durzumunda işlemleri buraya ekleyebilirsiniz
-                    _message.value = Resource.error("Belge alınamadı. Hata: $exception",null)
+                    _message.value = Resource.error("Belge alınamadı. Hata: $exception", null)
                 }
         }
     }
@@ -80,14 +75,15 @@ open class BaseProfileViewModel @Inject constructor(
                             updateUserInfo("profileImageUrl", imageUrl)
                             _uploadMessage.value = Resource.success(null)
                         } catch (e: Exception) {
-                            _uploadMessage.value = e.localizedMessage?.let { Resource.error(it, null) }
+                            _uploadMessage.value =
+                                e.localizedMessage?.let { Resource.error(it, null) }
                             continuation.resumeWithException(e) // Hata durumunda devam et
                         }
                     } else {
                         _uploadMessage.value = Resource.error("Hata", null)
                         continuation.resume(null) // null döndür
                     }
-                }else{
+                } else {
                     continuation.resume(imageUrl)
                 }
             }
@@ -95,18 +91,19 @@ open class BaseProfileViewModel @Inject constructor(
     }
 
 
-    internal fun updateUserInfo(key : String,userData: Any) {
+    internal fun updateUserInfo(key: String, userData: Any) {
         viewModelScope.launch(Dispatchers.IO) {
-            val photoMap = hashMapOf<String,Any?>(
+            val photoMap = hashMapOf<String, Any?>(
                 key to userData
             )
-            firebaseRepo.updateUserData(currentUserId,photoMap).addOnSuccessListener {
+            firebaseRepo.updateUserData(currentUserId, photoMap).addOnSuccessListener {
                 _message.value = Resource.success(null)
-            }.addOnFailureListener{
-                _message.value = Resource.error(it.localizedMessage ?: "error",null)
+            }.addOnFailureListener {
+                _message.value = Resource.error(it.localizedMessage ?: "error", null)
             }
         }
     }
+
     fun signOut() = firebaseAuth.signOut()
 
 }

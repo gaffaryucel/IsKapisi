@@ -1,37 +1,30 @@
 package com.androiddevelopers.freelanceapp.viewmodel.discover
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
-import com.androiddevelopers.freelanceapp.model.notification.NotificationData
-import com.androiddevelopers.freelanceapp.model.notification.PushNotification
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
-import com.androiddevelopers.freelanceapp.repo.RoomUserDatabaseRepoInterface
 import com.androiddevelopers.freelanceapp.util.NotificationType
 import com.androiddevelopers.freelanceapp.util.NotificationTypeForActions
 import com.androiddevelopers.freelanceapp.util.Resource
+import com.androiddevelopers.freelanceapp.util.toDiscoverPostModel
 import com.androiddevelopers.freelanceapp.viewmodel.BaseNotificationViewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.UUID
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class DiscoverDetailsViewModel @Inject constructor(
     private val firebaseRepo: FirebaseRepoInterFace,
     auth: FirebaseAuth
-): BaseNotificationViewModel(firebaseRepo,auth) {
+) : BaseNotificationViewModel(firebaseRepo, auth) {
 
     private var _message = MutableLiveData<Resource<UserModel>>()
     val message: LiveData<Resource<UserModel>>
@@ -51,8 +44,7 @@ class DiscoverDetailsViewModel @Inject constructor(
             .addOnSuccessListener {
                 val postList = mutableListOf<DiscoverPostModel>()
                 for (document in it.documents) {
-                    val post = document.toObject(DiscoverPostModel::class.java)
-                    post?.let { postList.add(it) }
+                    document.toDiscoverPostModel()?.let { post -> postList.add(post) }
                 }
                 _discoverPosts.value = postList
             }
@@ -75,37 +67,39 @@ class DiscoverDetailsViewModel @Inject constructor(
             "likeCount" to mutableList.toList()
         )
         firebaseRepo.likePost(postId, likeData).addOnSuccessListener {
-            val myNotification  =createNotification(imageUrl,postOwnersToken)
+            val myNotification = createNotification(imageUrl, postOwnersToken)
             sendNotification(
-                notification =myNotification,
+                notification = myNotification,
                 type = NotificationTypeForActions.LIKE,
                 like = postId
             )
             firebaseRepo.saveNotification(myNotification)
         }
     }
-    fun dislikePost(postId : String,likeList: List<String>) = GlobalScope.launch(Dispatchers.IO){
+
+    fun dislikePost(postId: String, likeList: List<String>) = GlobalScope.launch(Dispatchers.IO) {
         delay(1000)
         val mutableList = mutableSetOf<String>()
         mutableList.addAll(likeList)
         mutableList.remove(currentUserId)
-        val likeData = hashMapOf<String,Any?>(
+        val likeData = hashMapOf<String, Any?>(
             "likeCount" to mutableList.toList()
         )
-        firebaseRepo.likePost(postId,likeData)
+        firebaseRepo.likePost(postId, likeData)
     }
+
     private fun createNotification(
-        imageUrl : String,
-        postOwnersToken : String
+        imageUrl: String,
+        postOwnersToken: String
     ) = InAppNotificationModel(
-            userId = currentUserId,
-            notificationType = NotificationType.POST,
-            notificationId = UUID.randomUUID().toString(),
-            title = "Yeni Bir Beğeni",
-            message = "${currentUserData.value?.fullName}, gönderinizi beğendi.",
-            userImage = "${currentUserData.value?.profileImageUrl}",
-            imageUrl = imageUrl,
-            userToken = postOwnersToken,
-            time = getCurrentTime()
-        )
+        userId = currentUserId,
+        notificationType = NotificationType.POST,
+        notificationId = UUID.randomUUID().toString(),
+        title = "Yeni Bir Beğeni",
+        message = "${currentUserData.value?.fullName}, gönderinizi beğendi.",
+        userImage = "${currentUserData.value?.profileImageUrl}",
+        imageUrl = imageUrl,
+        userToken = postOwnersToken,
+        time = getCurrentTime()
+    )
 }
