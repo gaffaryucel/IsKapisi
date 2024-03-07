@@ -49,10 +49,10 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         super.onMessageReceived(message)
 
 
+
         val sharedPref = applicationContext.getSharedPreferences("notification", Context.MODE_PRIVATE)
 
         var usersOnlineChatId : String? = ""
-
 
         val type = message.data["type"] ?: ""
         sharedPref.edit().putString("not_type", type).apply()

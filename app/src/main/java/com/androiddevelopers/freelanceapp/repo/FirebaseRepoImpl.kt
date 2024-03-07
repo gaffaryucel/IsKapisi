@@ -279,16 +279,16 @@ class FirebaseRepoImpl @Inject constructor(
     }
 
 
-    override fun getAllDiscoverPostsFromUser(userId: String): Task<QuerySnapshot> {
-        return discoverPostCollection.whereEqualTo("postOwner", userId).get()
+    override fun getAllDiscoverPostsFromUser(userId: String,limit : Long): Task<QuerySnapshot> {
+        return discoverPostCollection.whereEqualTo("postOwner", userId).limit(limit).get()
     }
 
-    override fun getAllEmployerJobPostsFromUser(userId: String): Task<QuerySnapshot> {
-        return employerPostCollection.whereEqualTo("employerId", userId).get()
+    override fun getAllEmployerJobPostsFromUser(userId: String,limit : Long): Task<QuerySnapshot> {
+        return employerPostCollection.whereEqualTo("employerId", userId).limit(limit).get()
     }
 
-    override fun getAllFreelancerJobPostsFromUser(userId: String): Task<QuerySnapshot> {
-        return freelancerPostCollection.whereEqualTo("freelancerId", userId).get()
+    override fun getAllFreelancerJobPostsFromUser(userId: String,limit : Long): Task<QuerySnapshot> {
+        return freelancerPostCollection.whereEqualTo("freelancerId", userId).limit(limit).get()
     }
 
     override fun follow(followerModel: FollowModel, followingModel: FollowModel): Task<Void> {

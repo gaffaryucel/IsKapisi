@@ -44,16 +44,16 @@ class ProfileViewModel @Inject constructor(
     val followerCount = _followerCount
 
     init {
-        getDiscoverPostsFromUser()
-        getEmployerJobPostsFromUser()
-        getFreelancerJobPostsFromUser()
+        getDiscoverPostsFromUser(4)
+        getEmployerJobPostsFromUser(4)
+        getFreelancerJobPostsFromUser(4)
         getFollowerCount()
     }
 
 
-    private fun getFreelancerJobPostsFromUser() {
+    private fun getFreelancerJobPostsFromUser(limit : Long) {
         _profileMessage.value = Resource.loading(null)
-        firebaseRepo.getAllFreelancerJobPostsFromUser(currentUserId)
+        firebaseRepo.getAllFreelancerJobPostsFromUser(currentUserId,limit)
             .addOnSuccessListener {
                 val postList = mutableListOf<FreelancerJobPost>()
                 for (document in it.documents) {
@@ -67,9 +67,9 @@ class ProfileViewModel @Inject constructor(
             }
     }
 
-    private fun getEmployerJobPostsFromUser() {
+    private fun getEmployerJobPostsFromUser(limit : Long) {
         _profileMessage.value = Resource.loading(null)
-        firebaseRepo.getAllEmployerJobPostsFromUser(currentUserId)
+        firebaseRepo.getAllEmployerJobPostsFromUser(currentUserId,limit)
             .addOnSuccessListener {
                 val postList = mutableListOf<EmployerJobPost>()
                 for (document in it.documents) {
@@ -83,9 +83,9 @@ class ProfileViewModel @Inject constructor(
             }
     }
 
-    private fun getDiscoverPostsFromUser() {
+    private fun getDiscoverPostsFromUser(limit : Long) {
         _profileMessage.value = Resource.loading(null)
-        firebaseRepo.getAllDiscoverPostsFromUser(currentUserId)
+        firebaseRepo.getAllDiscoverPostsFromUser(currentUserId,limit)
             .addOnSuccessListener {
                 val postList = mutableListOf<DiscoverPostModel>()
                 for (document in it.documents) {

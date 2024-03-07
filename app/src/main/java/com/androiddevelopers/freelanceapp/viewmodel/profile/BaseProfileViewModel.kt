@@ -42,6 +42,7 @@ open class BaseProfileViewModel @Inject constructor(
     }
 
     internal fun getUserDataFromFirebase() {
+        _message.value = Resource.loading(null)
         viewModelScope.launch(Dispatchers.IO) {
             firebaseRepo.getUserDataByDocumentId(currentUserId)
                 .addOnSuccessListener { documentSnapshot ->

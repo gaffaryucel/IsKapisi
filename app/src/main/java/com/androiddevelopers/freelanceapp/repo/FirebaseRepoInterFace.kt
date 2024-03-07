@@ -126,9 +126,9 @@ interface FirebaseRepoInterFace {
     ): UploadTask
 
     //User Profile Data İşlemleri
-    fun getAllDiscoverPostsFromUser(userId: String): Task<QuerySnapshot>
-    fun getAllEmployerJobPostsFromUser(userId: String): Task<QuerySnapshot>
-    fun getAllFreelancerJobPostsFromUser(userId: String): Task<QuerySnapshot>
+    fun getAllDiscoverPostsFromUser(userId: String,limit : Long): Task<QuerySnapshot>
+    fun getAllEmployerJobPostsFromUser(userId: String,limit : Long): Task<QuerySnapshot>
+    fun getAllFreelancerJobPostsFromUser(userId: String,limit : Long): Task<QuerySnapshot>
     fun follow(followerModel: FollowModel, followingModel: FollowModel): Task<Void>
     fun unFollow(currentUserId: String, followingId: String): Task<Void>
     fun updateUserData(userId: String, updateData: HashMap<String, Any?>): Task<Void>

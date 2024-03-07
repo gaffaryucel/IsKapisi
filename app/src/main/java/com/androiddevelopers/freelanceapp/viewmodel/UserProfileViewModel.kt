@@ -68,9 +68,9 @@ class UserProfileViewModel @Inject constructor(
                 documentSnapshot.toUserModel()?.let { userModel ->
                     _userInfo.value = userModel
                     _userMessage.value = Resource.success(null)
-                    getDiscoverPostsFromUser(userId)
-                    getEmployerJobPostsFromUser(userId)
-                    getFreelancerJobPostsFromUser(userId)
+                    getDiscoverPostsFromUser(userId,4)
+                    getEmployerJobPostsFromUser(userId,4)
+                    getFreelancerJobPostsFromUser(userId,4)
                 } ?: run {
                     _userMessage.value = Resource.error("Belirtilen belge bulunamadı", null)
                 }
@@ -84,8 +84,8 @@ class UserProfileViewModel @Inject constructor(
         }
     }
 
-    private fun getFreelancerJobPostsFromUser(userId: String) {
-        firebaseRepo.getAllFreelancerJobPostsFromUser(userId).addOnSuccessListener {
+    private fun getFreelancerJobPostsFromUser(userId: String,limit : Long) {
+        firebaseRepo.getAllFreelancerJobPostsFromUser(userId,limit).addOnSuccessListener {
             val postList = mutableListOf<FreelancerJobPost>()
             for (document in it.documents) {
                 // Belgeden her bir videoyu çek
@@ -98,8 +98,8 @@ class UserProfileViewModel @Inject constructor(
         }
     }
 
-    private fun getEmployerJobPostsFromUser(userId: String) {
-        firebaseRepo.getAllEmployerJobPostsFromUser(userId).addOnSuccessListener {
+    private fun getEmployerJobPostsFromUser(userId: String,limit : Long) {
+        firebaseRepo.getAllEmployerJobPostsFromUser(userId,limit).addOnSuccessListener {
             val postList = mutableListOf<EmployerJobPost>()
             for (document in it.documents) {
                 // Belgeden her bir videoyu çek
@@ -112,8 +112,8 @@ class UserProfileViewModel @Inject constructor(
         }
     }
 
-    private fun getDiscoverPostsFromUser(userId: String) {
-        firebaseRepo.getAllDiscoverPostsFromUser(userId).addOnSuccessListener {
+    private fun getDiscoverPostsFromUser(userId: String,limit : Long) {
+        firebaseRepo.getAllDiscoverPostsFromUser(userId,limit).addOnSuccessListener {
             val postList = mutableListOf<DiscoverPostModel>()
             for (document in it.documents) {
                 // Belgeden her bir videoyu çek

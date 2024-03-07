@@ -8,12 +8,16 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.androiddevelopers.freelanceapp.adapters.PortfolioItemsAdapter
 import com.androiddevelopers.freelanceapp.adapters.ProfileDiscoverAdapter
 import com.androiddevelopers.freelanceapp.adapters.ProfileEmployerAdapter
 import com.androiddevelopers.freelanceapp.adapters.ProfileFreelancerAdapter
 import com.androiddevelopers.freelanceapp.adapters.SelectedSkillsAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentProfileBinding
+import com.androiddevelopers.freelanceapp.model.PortfolioItem
+import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.util.UserStatus
 import com.androiddevelopers.freelanceapp.viewmodel.profile.ProfileViewModel
@@ -28,6 +32,7 @@ class ProfileFragment : Fragment() {
     private lateinit var freelancerAdapter: ProfileFreelancerAdapter
     private lateinit var discoverAdapter: ProfileDiscoverAdapter
     private lateinit var skillAdapter : SelectedSkillsAdapter
+    private lateinit var portfolioAdapter : PortfolioItemsAdapter
 
     private var isDiscoverListEmpty = false
     private var isFreelanceListEmpty = false
@@ -51,6 +56,7 @@ class ProfileFragment : Fragment() {
         freelancerAdapter = ProfileFreelancerAdapter()
         discoverAdapter = ProfileDiscoverAdapter()
         skillAdapter = SelectedSkillsAdapter()
+        portfolioAdapter = PortfolioItemsAdapter()
 
         return view
     }
@@ -63,7 +69,7 @@ class ProfileFragment : Fragment() {
     }
     private fun setupBindingEvents(){
         binding.recyclerView.adapter = skillAdapter
-        binding.rvProfile.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvPortfolio.adapter = portfolioAdapter
         binding.btnEditProfile.setOnClickListener {
             val action = ProfileFragmentDirections.actionNavigationProfileToEditUserProfileInfoFragment()
             Navigation.findNavController(it).navigate(action)
@@ -83,9 +89,10 @@ class ProfileFragment : Fragment() {
 
     private fun setupTabLayout() {
         // TabLayout'a sekmeleri ekle
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Posts"))
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Freelancing"))
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Employers"))
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Hakkında"))
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Gönderiler"))
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Hizmetler"))
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("İş İlanları"))
 
         // TabLayout'un tıklama olayını dinle
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -93,14 +100,17 @@ class ProfileFragment : Fragment() {
                 // Sekmeye tıklandığında, adapter'a yeni verileri set et
                 when (tab.position) {
                     0 -> {
+                        showPersonalInfo()
+                    }
+                    1 -> {
                         showDiscoverItems()
                     }
 
-                    1 -> {
+                    2 -> {
                         showFreelancerItems()
                     }
 
-                    2 -> {
+                    3 -> {
                         showEmployerItems()
                     }
 
@@ -122,11 +132,13 @@ class ProfileFragment : Fragment() {
     }
 
     private fun showDiscoverItems() {
+        binding.rvProfile.layoutManager = GridLayoutManager(requireContext(),2)
         binding.rvProfile.adapter = discoverAdapter
         try {
             discoverAdapter.postList[0]
             binding.rvProfile.visibility = View.VISIBLE
             binding.tvEmptyList.visibility = View.GONE
+            binding.layoutPersonalInfo.visibility = View.GONE
         } catch (e: Exception) {
             binding.rvProfile.visibility = View.GONE
             binding.tvEmptyList.visibility = View.VISIBLE
@@ -135,11 +147,13 @@ class ProfileFragment : Fragment() {
     }
 
     private fun showFreelancerItems() {
+        binding.rvProfile.layoutManager = LinearLayoutManager(requireContext())
         binding.rvProfile.adapter = freelancerAdapter
         try {
             freelancerAdapter.postList[0]
             binding.rvProfile.visibility = View.VISIBLE
             binding.tvEmptyList.visibility = View.GONE
+            binding.layoutPersonalInfo.visibility = View.GONE
         } catch (e: Exception) {
             binding.rvProfile.visibility = View.GONE
             binding.tvEmptyList.visibility = View.VISIBLE
@@ -147,15 +161,22 @@ class ProfileFragment : Fragment() {
     }
 
     private fun showEmployerItems() {
+        binding.rvProfile.layoutManager = LinearLayoutManager(requireContext())
         binding.rvProfile.adapter = employerAdapter
         try {
             employerAdapter.postList[0]
             binding.rvProfile.visibility = View.VISIBLE
             binding.tvEmptyList.visibility = View.GONE
+            binding.layoutPersonalInfo.visibility = View.GONE
         } catch (e: Exception) {
             binding.rvProfile.visibility = View.GONE
             binding.tvEmptyList.visibility = View.VISIBLE
         }
+    }
+
+    private fun showPersonalInfo() {
+        binding.layoutPersonalInfo.visibility = View.VISIBLE
+        binding.rvProfile.visibility = View.GONE
     }
 
     private fun refreshData() {
@@ -165,65 +186,31 @@ class ProfileFragment : Fragment() {
 
     private fun observeLiveData() {
         viewModel.userData.observe(viewLifecycleOwner, Observer { userData ->
-            binding.apply {
-                userInfo = userData
-            }
-            if (userData.skills != null) {
-                skillAdapter.skillList = userData.skills!!
-                skillAdapter.notifyDataSetChanged()
-            }
-            if (userData.profileImageUrl != null) {
-                if (userData.profileImageUrl!!.isNotEmpty()) {
-                    Glide.with(requireContext()).load(userData.profileImageUrl.toString())
-                        .into(binding.ivUserProfile)
-                }
-            }
-            if (userData.userType != null) {
-                binding.layoutProfileType.visibility = View.VISIBLE
-                binding.profileFragmentSwipeRefreshLayout.visibility = View.GONE
-
-                /*  when (userData.userType) {
-                      UserStatus.FREELANCER -> {
-                          binding.layoutProfileType.visibility = View.GONE
-                          binding.recyclerView.visibility = View.VISIBLE
-                          binding.profileFragmentSwipeRefreshLayout.visibility = View.VISIBLE
-                      }
-
-                      UserStatus.STANDARD -> {
-                          binding.recyclerView.visibility = View.GONE
-                          binding.layoutProfileType.visibility = View.GONE
-                          binding.profileFragmentSwipeRefreshLayout.visibility = View.VISIBLE
-                      }
-
-                      else -> {
-                          binding.layoutProfileType.visibility = View.VISIBLE
-                          binding.profileFragmentSwipeRefreshLayout.visibility = View.GONE
-                      }
-                  }
-
-                 */
-            } else {
-                binding.layoutProfileType.visibility = View.VISIBLE
-                binding.profileFragmentSwipeRefreshLayout.visibility = View.GONE
-            }
+            setBindingData(userData)
         })
         viewModel.profileMessage.observe(viewLifecycleOwner, Observer {
               when (it.status) {
                 Status.SUCCESS -> {
                     binding.rvProfile.visibility = View.VISIBLE
                     binding.tvEmptyList.visibility = View.GONE
-                    binding.pbPostLoading.visibility = View.GONE
                 }
                 Status.LOADING -> {
-                    binding.pbPostLoading.visibility = View.VISIBLE
                     binding.tvEmptyList.visibility = View.GONE
                 }
                 Status.ERROR -> {
                     binding.tvEmptyList.visibility = View.VISIBLE
+                }
+            }
+        })
+        viewModel.message.observe(viewLifecycleOwner, Observer {
+            when (it.status) {
+                Status.SUCCESS -> {
                     binding.pbPostLoading.visibility = View.GONE
                 }
-                else->{
-                    binding.tvEmptyList.visibility = View.VISIBLE
+                Status.LOADING -> {
+                    binding.pbPostLoading.visibility = View.VISIBLE
+                }
+                Status.ERROR -> {
                     binding.pbPostLoading.visibility = View.GONE
                 }
             }
@@ -256,15 +243,54 @@ class ProfileFragment : Fragment() {
                 isDiscoverListEmpty = true
             }
             binding.tvPostCount.text = discoverPosts.size.toString()
-            showDiscoverItems()
         })
         viewModel.followerCount.observe(viewLifecycleOwner, Observer {
-            binding.tvFollowersCount.text = it.toString()
+            binding.tvFollower.text = "$it Takipçi"
         })
     }
 
-
-
+    private fun setBindingData(userData : UserModel){
+        binding.apply {
+            userInfo = userData
+            tvScholl.text = userData.education?.get(0)?.institution.toString()
+            tvYears.text =  userData.education?.get(0)?.graduationYear.toString()
+        }
+        if (userData.skills != null) {
+            skillAdapter.skillList = userData.skills!!
+            skillAdapter.notifyDataSetChanged()
+        }
+        if (userData.portfolio != null) {
+            portfolioAdapter.portfolioItemList = userData.portfolio!!
+            portfolioAdapter.notifyDataSetChanged()
+        }
+        if (userData.profileImageUrl != null) {
+            if (userData.profileImageUrl!!.isNotEmpty()) {
+                Glide.with(requireContext()).load(userData.profileImageUrl.toString())
+                    .into(binding.ivUserProfile)
+            }
+        }
+        if (userData.userType != null) {
+            when (userData.userType) {
+                UserStatus.FREELANCER -> {
+                    binding.layoutProfileType.visibility = View.GONE
+                    binding.recyclerView.visibility = View.VISIBLE
+                    binding.profileFragmentSwipeRefreshLayout.visibility = View.VISIBLE
+                }
+                UserStatus.STANDARD -> {
+                    binding.recyclerView.visibility = View.GONE
+                    binding.layoutProfileType.visibility = View.GONE
+                    binding.profileFragmentSwipeRefreshLayout.visibility = View.VISIBLE
+                }
+                else -> {
+                    binding.layoutProfileType.visibility = View.VISIBLE
+                    binding.profileFragmentSwipeRefreshLayout.visibility = View.GONE
+                }
+            }
+        } else {
+            binding.layoutProfileType.visibility = View.VISIBLE
+            binding.profileFragmentSwipeRefreshLayout.visibility = View.GONE
+        }
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
