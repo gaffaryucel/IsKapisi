@@ -38,11 +38,16 @@ class PortfolioItemsAdapter : RecyclerView.Adapter<PortfolioItemsAdapter.Portfol
         holder.itemView.setOnClickListener {
             onClick?.invoke(portfolioItem)
         }
-        if (portfolioItem.imageUrl.toString().isNotEmpty()){
-            Glide.with(holder.itemView.context).load(portfolioItem.imageUrl.toString()).into(holder.binding.ivPortfolioItem)
+        if (portfolioItem.imageUrl != null){
+            if (portfolioItem.imageUrl!!.isNotEmpty()){
+                Glide.with(holder.itemView.context).load(portfolioItem.imageUrl.toString()).into(holder.binding.ivPortfolioItem)
+            }else{
+                holder.binding.ivPortfolioItem.setImageBitmap(portfolioItem.image)
+            }
         }else{
             holder.binding.ivPortfolioItem.setImageBitmap(portfolioItem.image)
         }
+
         holder.binding.apply {
             item = portfolioItem
         }

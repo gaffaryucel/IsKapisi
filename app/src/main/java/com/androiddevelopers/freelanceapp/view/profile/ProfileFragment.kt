@@ -253,6 +253,7 @@ class ProfileFragment : Fragment() {
         binding.apply {
             userInfo = userData
             tvScholl.text = userData.education?.get(0)?.institution.toString()
+            tvInstitute.text =  userData.education?.get(0)?.degree.toString()
             tvYears.text =  userData.education?.get(0)?.graduationYear.toString()
         }
         if (userData.skills != null) {

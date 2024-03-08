@@ -12,4 +12,13 @@
     <color name="card_job_overview">@color/md_theme_dark_background</color>
     <color name="bookmark_filled">@color/md_theme_dark_primary</color>
     <color name="rating_star">#FFD700</color>
+
+
+    <!-- Application Style Colors Night-->
+    <color name="app_bg_color">#2d2d2d</color>
+    <color name="secondary_bg_color">#323232</color>
+    <color name="bold_text_color">#FFFFFF</color>
+    <color name="button_bg_color">#1188d3</color>
+    <color name="selected_skill_bg">#323232</color>
+
 </resources>

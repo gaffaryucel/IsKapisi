@@ -8,21 +8,30 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.androiddevelopers.freelanceapp.R
+import com.androiddevelopers.freelanceapp.adapters.PortfolioItemsAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentEditProfileServiceInfoBinding
+import com.androiddevelopers.freelanceapp.model.PortfolioItem
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.viewmodel.profile.BaseProfileViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class EditProfileServiceInfoFragment : Fragment() {
 
     private lateinit var viewModel: BaseProfileViewModel
 
+    private lateinit var portfolioAdapter : PortfolioItemsAdapter
+
+
     private var skillsList = ArrayList<String>()
     private var user = UserModel()
+
+    private val portfolioList = ArrayList<PortfolioItem>()
 
     private var _binding: FragmentEditProfileServiceInfoBinding? = null
     private val binding get() = _binding!!
@@ -33,17 +42,26 @@ class EditProfileServiceInfoFragment : Fragment() {
     ): View {
         viewModel = ViewModelProvider(this)[BaseProfileViewModel::class.java]
         _binding = FragmentEditProfileServiceInfoBinding.inflate(inflater, container, false)
+        portfolioAdapter = PortfolioItemsAdapter()
         val root: View = binding.root
         return root
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.recyclerViewPortfolio.adapter = portfolioAdapter
+
         binding.btnSave.setOnClickListener {
             updateInfo()
         }
         binding.tvAddSkill.setOnClickListener{
             addSkill()
         }
+
+        binding.btnAddPortfolio.setOnClickListener {
+            openCreatePortfolioItemFragment()
+        }
+
         observeLiveData()
     }
     private fun addSkill(){
@@ -97,9 +115,39 @@ class EditProfileServiceInfoFragment : Fragment() {
                     }
                 }
             }
+            if (user.portfolio != null){
+                portfolioList.clear()
+                portfolioList.addAll(user.portfolio!!)
+                portfolioAdapter.portfolioItemList = portfolioList
+                portfolioAdapter.notifyDataSetChanged()
+                binding.tvWarningMessagePortfolio.visibility = View.GONE
+            }
         })
     }
     private fun updateInfo(){
+        val portfolio = ArrayList<PortfolioItem>()
+        if (portfolioList.isNotEmpty()){
+            lifecycleScope.launch {
+                try {
+                    for (i in portfolioList){
+                        val imageUrl = viewModel.saveImageToStorage(i.image!!,"portfolio")
+                        val item = PortfolioItem(
+                            title = i.title,
+                            description = i.description,
+                            imageUrl = imageUrl,
+                            image = null
+                        )
+                        portfolio.add(item)
+                    }
+                    viewModel.updateUserInfo("portfolio",portfolio)
+                }catch (e : Exception){
+                    Toast.makeText(requireContext(), "Hata : Portföy resimlerinde bir sorun var", Toast.LENGTH_SHORT).show()
+                }
+
+            }
+        }
+
+
         val newJobTitle = binding.etJob.text.toString()
         if (!user.jobTitle.equals(newJobTitle) && newJobTitle.isNotEmpty()){
             viewModel.updateUserInfo("jobTitle",newJobTitle)
@@ -111,6 +159,30 @@ class EditProfileServiceInfoFragment : Fragment() {
         }
 
         viewModel.updateUserInfo("skills",skillsList)
+    }
+
+    private fun openCreatePortfolioItemFragment(){
+        val createPortfolioItemDialog = CreatePortfolioItemDialog()
+        val portfolioSet = mutableSetOf<PortfolioItem>()
+        portfolioSet.addAll(portfolioList)
+        // SkillSelectionDialogFragment içerisindeki seçilen yeteneklerin listesine erişim sağlayan listener
+        createPortfolioItemDialog.getCreatedPortfolioItems = {
+            if (it.isNotEmpty()){
+                portfolioSet.addAll(it)
+                portfolioAdapter.portfolioItemList = portfolioSet.toList()
+                portfolioAdapter.notifyDataSetChanged()
+                binding.recyclerViewPortfolio.visibility = View.VISIBLE
+                binding.tvWarningMessagePortfolio.visibility = View.GONE
+            }else{
+                binding.recyclerViewPortfolio.visibility = View.GONE
+                binding.tvWarningMessagePortfolio.visibility = View.VISIBLE
+            }
+            portfolioList.clear()
+            portfolioList.addAll(portfolioSet.toList())
+        }
+
+        // SkillSelectionDialogFragment'i göster
+        createPortfolioItemDialog.show(parentFragmentManager, "createPortfolioItemDialog")
     }
     override fun onResume() {
         super.onResume()

@@ -115,4 +115,15 @@
     <color name="card_job_overview">@color/md_theme_light_background</color>
     <color name="bookmark_filled">@color/md_theme_light_primary</color>
     <color name="rating_star">#9B9A00</color>
+
+
+
+
+    <!-- Application Style Colors Light-->
+    <color name="app_bg_color">#FFFFFF</color>
+    <color name="secondary_bg_color">#e9ebef</color>
+    <color name="bold_text_color">#202020</color>
+    <color name="button_bg_color">#1e90ff</color>
+    <color name="selected_skill_bg">#e9ebef</color>
+
 </resources>

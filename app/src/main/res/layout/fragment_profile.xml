@@ -10,7 +10,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:background="#161616"
+        style="@style/ApplicationBackGround"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -47,8 +47,8 @@
                             app:layout_constraintTop_toBottomOf="@+id/layoutTopBar" />
 
                         <androidx.constraintlayout.widget.ConstraintLayout
+                            style="@style/ApplicationSecondaryBackground"
                             android:padding="10dp"
-                            android:background="#2d2d2d"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintEnd_toStartOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -64,18 +64,16 @@
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
                                 app:tint="@color/white" />
+
                             <TextView
-                                android:textColor="@color/white"
-                                android:textSize="22sp"
-                                android:textStyle="bold"
+                                style="@style/BoldTextStyle"
                                 android:textAlignment="center"
                                 android:text="Profile"
                                 app:layout_constraintTop_toTopOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"/>
+                               />
 
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -222,17 +220,17 @@
                         android:orientation="horizontal">
 
                         <androidx.appcompat.widget.AppCompatButton
-                            android:id="@+id/btnEditProfile"
+                            style="@style/ButtonStyle"
                             android:layout_width="match_parent"
-                            android:layout_height="40dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/btnEditProfile"
                             android:layout_margin="6dp"
                             android:layout_weight="1"
-                            android:textColor="@color/white"
-                            android:background="@drawable/btn_job_offer_bg"
                             android:text="Profili düzenle"
                             tools:ignore="HardcodedText" />
 
                         <ImageView
+                            android:visibility="gone"
                             android:id="@+id/ivMoreInFollow"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
@@ -243,11 +241,13 @@
 
 
                     <com.google.android.material.tabs.TabLayout
+                        style="@style/ApplicationBackGround"
                         android:id="@+id/tabLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
+                        style="@style/ApplicationBackGround"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
@@ -260,12 +260,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
 
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/cardPersonalInfo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            app:cardCornerRadius="12dp">
+
 
                             <LinearLayout
                                 android:id="@+id/layoutPersonalInfo"
@@ -275,28 +270,18 @@
                                 android:padding="16dp">
 
                                 <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="Hakkında"
-                                    android:textSize="24sp"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/black"/>
+                                    style="@style/BoldTextStyle"
+                                    android:text="Hakkında"/>
 
                                 <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
+                                    style="@style/SecondaryTextStyle"
                                     android:layout_marginTop="8dp"
-                                    android:text="@{userInfo.bio}"
-                                    android:textSize="16sp"/>
+                                    android:text="@{userInfo.bio}" />
 
                                 <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
+                                    style="@style/BoldTextStyle"
                                     android:text="Yetenekler"
-                                    android:textSize="24sp"
-                                    android:textStyle="bold"
-                                    android:layout_marginTop="16dp"
-                                    android:textColor="@color/black"/>
+                                    android:layout_marginTop="16dp" />
 
                                 <androidx.recyclerview.widget.RecyclerView
                                     android:id="@+id/recyclerView"
@@ -307,51 +292,66 @@
                                     app:spanCount="2"/>
 
                                 <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
+                                    style="@style/BoldTextStyle"
                                     android:text="Eğitim"
-                                    android:textSize="24sp"
-                                    android:textStyle="bold"
-                                    android:layout_marginTop="16dp"
-                                    android:textColor="@color/black"/>
+                                    android:layout_marginTop="16dp" />
+
+                                <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+
+                                    <ImageView
+                                        android:id="@+id/ivGraduation"
+                                        style="@style/SchoolIconStyle"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent"
+                                        app:layout_constraintBottom_toBottomOf="parent" />
+
+                                   <LinearLayout
+                                       android:layout_marginStart="5dp"
+                                       android:orientation="vertical"
+                                       app:layout_constraintStart_toEndOf="@+id/ivGraduation"
+                                       app:layout_constraintTop_toTopOf="@+id/ivGraduation"
+                                       app:layout_constraintBottom_toBottomOf="@+id/ivGraduation"
+                                       app:layout_constraintEnd_toEndOf="parent"
+                                       android:layout_width="0dp"
+                                       android:layout_height="0dp">
+
+                                       <TextView
+                                           style="@style/SecondaryBigTextStyle"
+                                           android:id="@+id/tvScholl" />
+
+                                       <TextView
+                                           style="@style/SecondaryTextStyle"
+                                           android:id="@+id/tvInstitute" />
+
+                                       <TextView
+                                           style="@style/ThirdTextStyle"
+                                           android:id="@+id/tvYears"/>
+
+                                   </LinearLayout>
+
+                                </androidx.constraintlayout.widget.ConstraintLayout>
+                              
 
                                 <TextView
-                                    android:id="@+id/tvScholl"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:textSize="16sp"/>
-
-                                <TextView
-                                    android:id="@+id/tvYears"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:textSize="12sp"/>
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
+                                    style="@style/BoldTextStyle"
                                     android:text="Portföy"
-                                    android:textSize="24sp"
-                                    android:textStyle="bold"
-                                    android:layout_marginTop="16dp"
-                                    android:textColor="@color/black"/>
+                                    android:layout_marginTop="16dp" />
 
                                 <androidx.recyclerview.widget.RecyclerView
                                     android:id="@+id/rvPortfolio"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:padding="8dp"
-                                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                                    app:spanCount="2"/>
+                                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                    />
 
                                 <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
+                                    style="@style/BoldTextStyle"
                                     android:text="Yorumlar"
-                                    android:textSize="24sp"
-                                    android:textStyle="bold"
                                     android:layout_marginTop="16dp"
-                                    android:textColor="@color/black"/>
+                                   />
 
                                 <androidx.recyclerview.widget.RecyclerView
                                     android:id="@+id/rvReviews"
@@ -361,7 +361,6 @@
                                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
                             </LinearLayout>
-                        </androidx.cardview.widget.CardView>
 
 
                     </androidx.constraintlayout.widget.ConstraintLayout>

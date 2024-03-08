@@ -8,6 +8,7 @@
             type="com.androiddevelopers.freelanceapp.model.PortfolioItem" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@color/selected_skill_bg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >

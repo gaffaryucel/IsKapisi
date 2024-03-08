@@ -173,6 +173,7 @@ class FreelancerInfoFragment : Fragment() {
                     )
                     portfolio.add(item)
                 }
+                viewModel.updateUserInfo("portfolio",portfolio)
             }catch (e : Exception){
                 Toast.makeText(requireContext(), "Hata : Portföy resimlerinde bir sorun var", Toast.LENGTH_SHORT).show()
             }

@@ -44,9 +44,9 @@ class ProfileViewModel @Inject constructor(
     val followerCount = _followerCount
 
     init {
-        getDiscoverPostsFromUser(4)
-        getEmployerJobPostsFromUser(4)
-        getFreelancerJobPostsFromUser(4)
+        getDiscoverPostsFromUser(20)
+        getEmployerJobPostsFromUser(20)
+        getFreelancerJobPostsFromUser(20)
         getFollowerCount()
     }
 
