@@ -6,33 +6,40 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.AsyncTask
-import androidx.fragment.app.viewModels
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.FragmentCreateDiscoverPostBinding
 import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
-import com.androiddevelopers.freelanceapp.viewmodel.discover.CreateDiscoverPostViewModel
-import java.io.ByteArrayOutputStream
 import com.androiddevelopers.freelanceapp.util.Status
+import com.androiddevelopers.freelanceapp.util.chooseImagePermission
+import com.androiddevelopers.freelanceapp.viewmodel.discover.CreateDiscoverPostViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.ByteArrayOutputStream
 
 
 @AndroidEntryPoint
 class CreateDiscoverPostFragment : Fragment() {
-
+    private lateinit var imageCameraLauncher: ActivityResultLauncher<Intent>
+    private lateinit var imageGalleryLauncher: ActivityResultLauncher<Intent>
+    private lateinit var takePictureLauncher: ActivityResultLauncher<Void?>
     private val REQUEST_IMAGE_CAPTURE = 101
     private val REQUEST_IMAGE_PICK = 102
     private val PERMISSION_REQUEST_CODE = 200
@@ -47,19 +54,82 @@ class CreateDiscoverPostFragment : Fragment() {
 
     private var _tagList = MutableLiveData<List<String>>()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+//        imageCameraLauncher =
+//            registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+//                if (isGranted) {
+//                    takePictureLauncher.launch(null)
+////                    val imageBitmapByteArray = result.data?.extras?.getByteArray("data")
+////                    val imageBitmap = BitmapFactory.decodeByteArray(
+////                        imageBitmapByteArray,
+////                        0,
+////                        imageBitmapByteArray?.size ?: 0
+////                    )
+////                    binding.ivPost.setImageBitmap(imageBitmap)
+////                    compressedForCam(imageBitmap)
+////                    binding.ivAddImage.visibility = View.GONE
+////                    binding.layoutCreatePost.visibility = View.VISIBLE
+//                } else {
+//                    println("")
+//                }
+//            }
+
+        takePictureLauncher =
+            registerForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap ->
+                if (bitmap != null) {
+                    // Bitmap işleme kodları burada olacak.
+                    binding.ivPost.setImageBitmap(bitmap)
+                    compressedForCam(bitmap)
+                    binding.ivAddImage.visibility = View.GONE
+                    binding.layoutCreatePost.visibility = View.VISIBLE
+                }
+            }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentCreateDiscoverPostBinding.inflate(inflater,container,false)
+    ): View {
+        _binding = FragmentCreateDiscoverPostBinding.inflate(inflater, container, false)
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requestPermissionsIfNeeded()
         setupOnClicks()
         observeLiveData()
+
+        imageCameraLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    val uri = result.data?.extras?.classLoader?.toString()
+                    uri?.let {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                            val newUri = Uri.parse(uri)
+                            val imageSource =
+                                ImageDecoder.createSource(requireActivity().contentResolver, newUri)
+                            val imageBitmap = ImageDecoder.decodeBitmap(imageSource)
+                            binding.ivPost.setImageBitmap(imageBitmap)
+                            compressedForCam(imageBitmap)
+                        } else {
+                            val newUri = Uri.parse(uri)
+                            val imageBitmap = MediaStore.Images.Media.getBitmap(
+                                requireActivity().contentResolver,
+                                newUri
+                            )
+                            binding.ivPost.setImageBitmap(imageBitmap)
+                            compressedForCam(imageBitmap)
+                        }
+                    }
+
+                    binding.ivAddImage.visibility = View.GONE
+                    binding.layoutCreatePost.visibility = View.VISIBLE
+                }
+            }
     }
 
     private fun setupOnClicks() {
@@ -69,7 +139,8 @@ class CreateDiscoverPostFragment : Fragment() {
             if (allPermissionsGranted) {
                 openCamera()
             } else {
-                Toast.makeText(requireContext(), "Permission not granted", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Permission not granted", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
         binding.shareButton.setOnClickListener {
@@ -87,16 +158,21 @@ class CreateDiscoverPostFragment : Fragment() {
             tagList.add(tag)
             _tagList.value = tagList
             binding.etTags.setText("")
-            if (!isClicked){
+            if (!isClicked) {
 
             }
         }
 
         binding.ivAddImage.setOnClickListener {
+//            if (checkPermissionImageGallery(requireActivity(), 800)) {
+//                openCamera()
+//            }
+
             if (allPermissionsGranted) {
                 openCamera()
             } else {
-                Toast.makeText(requireContext(), "Permission not granted", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Permission not granted", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }
@@ -107,77 +183,83 @@ class CreateDiscoverPostFragment : Fragment() {
                 Status.SUCCESS -> {
                     Toast.makeText(requireContext(), "Upload Success", Toast.LENGTH_SHORT).show()
                 }
+
                 Status.ERROR -> {
                     Toast.makeText(requireContext(), "Upload Faild", Toast.LENGTH_SHORT).show()
                 }
+
                 Status.LOADING -> {
                     Toast.makeText(requireContext(), "Uploading", Toast.LENGTH_SHORT).show()
                 }
             }
         })
-        _tagList.observe(viewLifecycleOwner,Observer{
+        _tagList.observe(viewLifecycleOwner, Observer {
             binding.tvAllTags.text = it.toString()
         })
     }
 
 
-    private fun getPostDataAndCreateDiscoverPostModel() : DiscoverPostModel{
+    private fun getPostDataAndCreateDiscoverPostModel(): DiscoverPostModel {
         val description = binding.etDescription.text.toString()
         return viewModel.createDiscoverPostModel(
             description,
             _tagList.value as List<String>
         )
     }
+
     @SuppressLint("QueryPermissionsNeeded")
     private fun openCamera() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        if (intent.resolveActivity(requireActivity().packageManager) != null) {
-            startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
-        }
+        imageCameraLauncher.launch(intent)
+        //imageCameraLauncher.launch(MediaStore.ACTION_IMAGE_CAPTURE)
+//        if (intent.resolveActivity(requireActivity().packageManager) != null) {
+//            startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
+//        }
     }
 
-    @SuppressLint("QueryPermissionsNeeded")
-    private fun openGallery() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        if (intent.resolveActivity(requireActivity().packageManager) != null) {
-            startActivityForResult(intent, REQUEST_IMAGE_PICK)
-        }
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                REQUEST_IMAGE_CAPTURE -> {
-                    val imageBitmap = data?.extras?.get("data") as Bitmap
-                    binding.ivPost.setImageBitmap(imageBitmap)
-                    compressedForCam(imageBitmap)
-                    binding.ivAddImage.visibility = View.GONE
-                    binding.layoutCreatePost.visibility = View.VISIBLE
-                }
-
-                REQUEST_IMAGE_PICK -> {
-                    val selectedImageUri = data?.data
-                    binding.ivPost.setImageURI(selectedImageUri)
-                    if (selectedImageUri != null) {
-                        compressedForGalery(selectedImageUri)
-                    }
-                    binding.ivAddImage.visibility = View.GONE
-                    binding.layoutCreatePost.visibility = View.VISIBLE
-                }
-            }
-        }
-    }
+//    @SuppressLint("QueryPermissionsNeeded")
+//    private fun openGallery() {
+//        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+//        if (intent.resolveActivity(requireActivity().packageManager) != null) {
+//            startActivityForResult(intent, REQUEST_IMAGE_PICK)
+//        }
+//    }
+//
+//    @Deprecated("Deprecated in Java")
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        if (resultCode == Activity.RESULT_OK) {
+//            when (requestCode) {
+//                REQUEST_IMAGE_CAPTURE -> {
+////                    val imageBitmap = data?.extras?.get("data") as Bitmap
+////                    binding.ivPost.setImageBitmap(imageBitmap)
+////                    compressedForCam(imageBitmap)
+////                    binding.ivAddImage.visibility = View.GONE
+////                    binding.layoutCreatePost.visibility = View.VISIBLE
+//                }
+//
+//                REQUEST_IMAGE_PICK -> {
+//                    val selectedImageUri = data?.data
+//                    binding.ivPost.setImageURI(selectedImageUri)
+//                    if (selectedImageUri != null) {
+//                        compressedForGalery(selectedImageUri)
+//                    }
+//                    binding.ivAddImage.visibility = View.GONE
+//                    binding.layoutCreatePost.visibility = View.VISIBLE
+//                }
+//            }
+//        }
+//    }
 
     private fun requestPermissionsIfNeeded() {
+        val currentImagePermission = chooseImagePermission()
         if (ContextCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.CAMERA
             ) != PackageManager.PERMISSION_GRANTED ||
             ContextCompat.checkSelfPermission(
                 requireContext(),
-                Manifest.permission.READ_EXTERNAL_STORAGE
+                currentImagePermission
             ) != PackageManager.PERMISSION_GRANTED
         ) {
 
@@ -186,7 +268,7 @@ class CreateDiscoverPostFragment : Fragment() {
                 requireActivity(),
                 arrayOf(
                     Manifest.permission.CAMERA,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
+                    currentImagePermission
                 ),
                 PERMISSION_REQUEST_CODE
             )
@@ -263,6 +345,7 @@ class CreateDiscoverPostFragment : Fragment() {
         myBitmap?.compress(Bitmap.CompressFormat.JPEG, i, stream)
         return stream.toByteArray()
     }
+
     override fun onResume() {
         super.onResume()
         hideBottomNavigation()
@@ -282,6 +365,7 @@ class CreateDiscoverPostFragment : Fragment() {
         val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
         bottomNavigationView?.visibility = View.VISIBLE
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
