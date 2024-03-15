@@ -20,6 +20,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
@@ -33,6 +34,7 @@ import com.androiddevelopers.freelanceapp.viewmodel.discover.CreateDiscoverPostV
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.ByteArrayOutputStream
+import java.io.File
 
 
 @AndroidEntryPoint
@@ -40,6 +42,9 @@ class CreateDiscoverPostFragment : Fragment() {
     private lateinit var imageCameraLauncher: ActivityResultLauncher<Intent>
     private lateinit var imageGalleryLauncher: ActivityResultLauncher<Intent>
     private lateinit var takePictureLauncher: ActivityResultLauncher<Void?>
+    private lateinit var cameraLauncher:  ActivityResultLauncher<Uri>
+    private lateinit var imageUri: Uri
+
     private val REQUEST_IMAGE_CAPTURE = 101
     private val REQUEST_IMAGE_PICK = 102
     private val PERMISSION_REQUEST_CODE = 200
@@ -56,6 +61,7 @@ class CreateDiscoverPostFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
 
 //        imageCameraLauncher =
 //            registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -130,6 +136,13 @@ class CreateDiscoverPostFragment : Fragment() {
                     binding.layoutCreatePost.visibility = View.VISIBLE
                 }
             }
+
+        imageUri = createImageUri()
+
+        cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) {
+            binding.ivPost.setImageURI(null)
+            binding.ivPost.setImageURI(imageUri)
+        }
     }
 
     private fun setupOnClicks() {
@@ -209,8 +222,9 @@ class CreateDiscoverPostFragment : Fragment() {
 
     @SuppressLint("QueryPermissionsNeeded")
     private fun openCamera() {
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        imageCameraLauncher.launch(intent)
+        cameraLauncher.launch(imageUri)
+//        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+//        imageCameraLauncher.launch(intent)
         //imageCameraLauncher.launch(MediaStore.ACTION_IMAGE_CAPTURE)
 //        if (intent.resolveActivity(requireActivity().packageManager) != null) {
 //            startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
@@ -344,6 +358,15 @@ class CreateDiscoverPostFragment : Fragment() {
         var stream = ByteArrayOutputStream()
         myBitmap?.compress(Bitmap.CompressFormat.JPEG, i, stream)
         return stream.toByteArray()
+    }
+
+    private fun createImageUri(): Uri {
+        val image = File(requireContext().filesDir, "camera_photos.png")
+        return FileProvider.getUriForFile(
+            requireContext(),
+            "com.androiddevelopers.freelanceapp.FileProvider",
+            image
+        )
     }
 
     override fun onResume() {

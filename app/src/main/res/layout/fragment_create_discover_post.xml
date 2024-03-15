@@ -77,8 +77,8 @@
                 app:layout_constraintBottom_toTopOf="@id/tvAllTags"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@android:drawable/ic_input_add"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription"
+                tools:srcCompat="@android:drawable/ic_input_add" />
 
             <TextView
                 android:id="@+id/tvAllTags"
