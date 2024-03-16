@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -16,14 +15,13 @@
         android:padding="10dp"
         tools:context=".view.chat.ChatsFragment">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/chatImage"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:adjustViewBounds="true"
             android:scaleType="centerCrop"
             android:visibility="visible"
-            app:srcCompat="@drawable/ic_launcher_background" />
+            app:srcCompat="@drawable/placeholder" />
 
         <LinearLayout
             android:id="@+id/chatNameAndMessageLayout"
@@ -43,9 +41,10 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLength="25"
-                android:textColor="@color/white"
+                android:textColor="@color/normal_text_color"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:text="John Doe" />
 
             <TextView
                 android:id="@+id/chatLastMessage"
@@ -56,7 +55,8 @@
                 android:fontFamily="sans-serif"
                 android:maxLines="1"
                 android:textColor="@color/GREY"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                tools:text="Son Mesaj Burada Gösterilecek" />
         </LinearLayout>
 
         <TextView
@@ -68,7 +68,8 @@
             android:fontFamily="sans-serif"
             android:text="@{preChatItem.timestamp.toString()}"
             android:textColor="@color/GREY"
-            android:textSize="10sp" />
+            android:textSize="10sp"
+            tools:text="12:30 PM" />
 
     </RelativeLayout>
 </layout>

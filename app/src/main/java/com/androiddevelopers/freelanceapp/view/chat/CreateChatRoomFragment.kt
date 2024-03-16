@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
@@ -44,6 +45,22 @@ class CreateChatRoomFragment : Fragment() {
 
         observeLiveData()
 
+        binding.svCreateChat.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+            androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                query?.let {
+                    viewModel.searchPreChatByUsername(it)
+                }
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                newText?.let {
+                    viewModel.searchPreChatByUsername(it)
+                }
+                return true
+            }
+        })
         adapter.onClick = {
             viewModel.createChatRoom(it)
         }
@@ -57,9 +74,20 @@ class CreateChatRoomFragment : Fragment() {
             binding.rvUsers.layoutManager = LinearLayoutManager(requireContext())
             binding.rvUsers.adapter = adapter
             adapter.userList = it
+            adapter.notifyDataSetChanged()
             if (it.isEmpty()){
                 binding.rvUsers.visibility = View.INVISIBLE
                 binding.tvNoFollowing.visibility = View.VISIBLE
+                binding.tvNoFollowing.text = "+ Yeni insanları takip et"
+            }
+        })
+        viewModel.searchResult.observe(viewLifecycleOwner, Observer {
+            adapter.userList = it
+            adapter.notifyDataSetChanged()
+            if (it.isEmpty()){
+                binding.rvUsers.visibility = View.INVISIBLE
+                binding.tvNoFollowing.visibility = View.VISIBLE
+                binding.tvNoFollowing.text = "Sonuç Yok"
             }
         })
         viewModel.dataStatus.observe(viewLifecycleOwner, Observer {

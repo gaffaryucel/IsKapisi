@@ -8,8 +8,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.databinding.RowMessageReceiverBinding
 import com.androiddevelopers.freelanceapp.databinding.RowMessageSenderBinding
+import com.androiddevelopers.freelanceapp.model.FollowModel
 import com.androiddevelopers.freelanceapp.model.MessageModel
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MessageAdapter : RecyclerView.Adapter<MessageAdapter.ViewHolder>() {
 
@@ -56,7 +60,6 @@ class MessageAdapter : RecyclerView.Adapter<MessageAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val messageItem = messageList[position]
-
         when (holder.itemViewType) {
             VIEW_TYPE_SENDER -> (holder as SenderMessageViewHolder).bindView(messageItem)
             VIEW_TYPE_RECEIVER -> (holder as ReceiverMessageViewHolder).bindView(messageItem)
@@ -82,8 +85,11 @@ class MessageAdapter : RecyclerView.Adapter<MessageAdapter.ViewHolder>() {
     class SenderMessageViewHolder(var binding: RowMessageSenderBinding) : ViewHolder(binding.root) {
         fun bindView(messageModel: MessageModel) {
             // Burada gönderilen mesajları göstermek için kullanılan görünüm öğelerini bağla
-            binding.textSender.text = messageModel.messageData
-            // Diğer bağlama işlemlerini buraya ekleyebilirsiniz
+            binding.textViewMessage.text = messageModel.messageData
+            val time = messageModel.timestamp
+            if (time != null){
+                binding.textViewTime.text = time.substringAfter(" ").split(":").take(2).joinToString(separator = ":")
+            }
         }
     }
 
@@ -91,8 +97,11 @@ class MessageAdapter : RecyclerView.Adapter<MessageAdapter.ViewHolder>() {
         ViewHolder(binding.root) {
         fun bindView(messageModel: MessageModel) {
             // Burada alınan mesajları göstermek için kullanılan görünüm öğelerini bağla
-            binding.textReceiver.text = messageModel.messageData
-            // Diğer bağlama işlemlerini buraya ekleyebilirsiniz
+            binding.textViewMessage.text = messageModel.messageData
+            val time = messageModel.timestamp
+            if (time != null){
+                binding.textViewTime.text = time.substringAfter(" ").split(":").take(2).joinToString(separator = ":")
+            }
         }
     }
 
@@ -100,4 +109,5 @@ class MessageAdapter : RecyclerView.Adapter<MessageAdapter.ViewHolder>() {
         private const val VIEW_TYPE_SENDER = 1
         private const val VIEW_TYPE_RECEIVER = 2
     }
+
 }

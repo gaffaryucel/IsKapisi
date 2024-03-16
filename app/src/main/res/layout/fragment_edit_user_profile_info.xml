@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            tools:context=".view.profile.EditUserProfileInfoFragment"
+            tools:context=".view.profile.editprofile.EditUserProfileInfoFragment"
             android:padding="16dp">
 
 

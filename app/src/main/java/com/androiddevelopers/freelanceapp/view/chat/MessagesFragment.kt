@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.MessageAdapter
@@ -57,7 +58,7 @@ class MessagesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-
+//Arguments
         val messageReceiver = arguments?.let {
             it.getString("receiver")
         }
@@ -68,38 +69,33 @@ class MessagesFragment : Fragment() {
             it.getString("receiver_image")
         }
 
+//User Info
         viewModel.getUserData(messageReceiver ?: "")
         viewModel.getMessages(chatId ?: "")
-
-
-        Glide.with(requireContext()).load(
-         userImage
-        ).into(
-            binding.ivUser
-        )
         binding.tvUserName.text = receiverName
-        observeLiveData()
+        Glide.with(requireContext()).load(userImage).into(binding.ivUser)
 
-        binding.btnSend.setOnClickListener{
-            val message = binding.messageInput.text.toString()
+//Click Listeners
+        binding.layoutUserInfo.setOnClickListener {
+            goToUserProfile(messageReceiver)
+        }
+        binding.buttonSend.setOnClickListener{
+            val message = binding.editTextMessage.text.toString()
             if (message.isNotEmpty()){
                 viewModel.sendMessage(
                     chatId.toString(),
                     message,
                     messageReceiver.toString()
                 )
-                binding.messageInput.setText("")
-
-                val lastItemPosition = adapter.itemCount - 1
-                if (lastItemPosition >= 0) {
-                    binding.messageRecyclerView.smoothScrollToPosition(lastItemPosition)
-                }
-
-                FirebaseMessaging.getInstance().subscribeToTopic(MESSAGE_TOPIC)
-
+                binding.editTextMessage.setText("")
+                val itemCount = adapter?.itemCount ?: 0
+                scrollToMessage(itemCount+1)
                 val title = "yeni mesajın var"
-
                 try {
+                    if (chatId == null || currentUserData?.userId == null || currentUserData?.fullName == null || currentUserData?.profileImageUrl == null){
+                        println("nullll")
+                        return@setOnClickListener
+                    }
                     InAppNotificationModel(
                         userId = currentUserData?.userId,
                         notificationType = NotificationType.MESSAGE,
@@ -118,7 +114,7 @@ class MessagesFragment : Fragment() {
                                 currentUserData?.userId.toString(),
                                 currentUserData?.fullName.toString(),
                                 currentUserData?.profileImageUrl.toString()
-                            ),
+                            ), receiverId = messageReceiver.toString(),
                             type = NotificationTypeForActions.MESSAGE,
                         )
                     }
@@ -129,32 +125,45 @@ class MessagesFragment : Fragment() {
             }
         }
 
+//Data Binding
         adapter = MessageAdapter()
         val layoutManager = LinearLayoutManager(requireContext())
         layoutManager.stackFromEnd = true
         binding.messageRecyclerView.setLayoutManager(layoutManager)
         binding.messageRecyclerView.adapter = adapter
+        observeLiveData()
+    }
 
-
+    private fun goToUserProfile(messageReceiver: String?) {
+        if (messageReceiver != null){
+            val action = MessagesFragmentDirections.actionMessageToProfile(messageReceiver)
+            Navigation.findNavController(requireView()).navigate(action)
+        }
     }
 
     private fun observeLiveData(){
         viewModel.messages.observe(viewLifecycleOwner, Observer {
             if (isFirst){
                 adapter.messageList = it
-                adapter.notifyItemInserted(0)
+                adapter.notifyDataSetChanged()
                 isFirst = false
+                println("size : "+it.size)
             }else{
                 adapter.messageList = it
-                adapter.notifyItemInserted(adapter.itemCount)
-            }
-            val lastItemPosition = adapter.itemCount - 1
-            if (lastItemPosition >= 0) {
-                binding.messageRecyclerView.smoothScrollToPosition(lastItemPosition)
+                adapter.notifyItemInserted(adapter.itemCount+1)
             }
         })
         viewModel.userData.observe(viewLifecycleOwner, Observer {
             receiverData = it
+            if (it.isOnline != null){
+                if (it.isOnline!!){
+                    binding.ivOnlineUser.visibility = View.VISIBLE
+                }else{
+                    binding.ivOnlineUser.visibility = View.INVISIBLE
+                }
+            }else{
+                binding.ivOnlineUser.visibility = View.INVISIBLE
+            }
         })
         viewModel.currentUserData.observe(viewLifecycleOwner, Observer {
             currentUserData = it
@@ -187,14 +196,11 @@ class MessagesFragment : Fragment() {
     }
 
     private fun saveUserIdInSharedPref(){
-
 // Veriyi kaydetmek için
         val sharedPreferences = requireContext().getSharedPreferences("chatPage", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.putString("current_chat_page_id", chatId) // chatPageId, kullanıcının bulunduğu sayfa kimliğidir
         editor.apply()
-        println("current_chat_page_id : "+chatId)
-
     }
     private fun deleteUserIdInSharedPref(){
 // Kayıtlı veriyi silmek için
@@ -202,7 +208,16 @@ class MessagesFragment : Fragment() {
         val editor = sharedPreferences.edit()
         editor.remove("current_chat_page_id")
         editor.apply()
-
     }
-
+    private fun scrollLast() {
+        val itemCount = adapter?.itemCount ?: 0
+        if (itemCount > 0) {
+            binding.messageRecyclerView.scrollToPosition(itemCount)
+        }
+    }
+    private fun scrollToMessage(itemCount : Int) {
+        if (itemCount > 0) {
+            binding.messageRecyclerView.smoothScrollToPosition(itemCount)
+        }
+    }
 }

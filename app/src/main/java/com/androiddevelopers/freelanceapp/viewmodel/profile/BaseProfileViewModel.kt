@@ -24,6 +24,10 @@ open class BaseProfileViewModel @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
 ) : BaseNotificationViewModel(firebaseRepo, firebaseAuth) {
 
+    private val _signOutMessage = MutableLiveData<Resource<String>>()
+    val signOutMessage: LiveData<Resource<String>>
+        get() = _signOutMessage
+
     private var _message = MutableLiveData<Resource<UserModel>>()
     val message: LiveData<Resource<UserModel>>
         get() = _message
@@ -105,6 +109,20 @@ open class BaseProfileViewModel @Inject constructor(
         }
     }
 
-    fun signOut() = firebaseAuth.signOut()
-
+    fun signOut() {
+        deleteUsersToken()
+    }
+    private fun deleteUsersToken() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val tokenMap = hashMapOf<String, Any?>(
+                "token" to ""
+            )
+            firebaseRepo.updateUserData(currentUserId, tokenMap).addOnSuccessListener {
+                _signOutMessage.value = Resource.success(null)
+                firebaseAuth.signOut()
+            }.addOnFailureListener {
+                _signOutMessage.value = Resource.error(it.localizedMessage ?: "error", null)
+            }
+        }
+    }
 }

@@ -63,32 +63,34 @@ open class BaseNotificationViewModel @Inject constructor(
         like: String? = null,
         comment: String? = null,
         followObject: String? = null,
+        receiverId : String? = null
     ) = CoroutineScope(Dispatchers.IO).launch {
-
-        val TAG = "Notification"
-        try {
-            PushNotification(
-                NotificationData(
-                    title = notification.title.toString(),
-                    message = notification.message.toString(),
-                    imageUrl = notification.imageUrl.toString(),
-                    profileImage = notification.userImage.toString(),
-                    type = type,
-                    preMessageObject = poreMessage,
-                    messageObject = messageObject,
-                    freelancerPostObject = freelancerPostObject,
-                    employerPostObject = employerPostObject,
-                    discoverPostObject = discoverPostObject,
-                    like = like,
-                    comment = comment,
-                    followObject = followObject
-                ),
-                notification.userToken.toString()
-            ).also {
-                firebaseRepo.postNotification(it)
+        if (receiverId != currentUserId){
+            val TAG = "Notification"
+            try {
+                PushNotification(
+                    NotificationData(
+                        title = notification.title.toString(),
+                        message = notification.message.toString(),
+                        imageUrl = notification.imageUrl.toString(),
+                        profileImage = notification.userImage.toString(),
+                        type = type,
+                        preMessageObject = poreMessage,
+                        messageObject = messageObject,
+                        freelancerPostObject = freelancerPostObject,
+                        employerPostObject = employerPostObject,
+                        discoverPostObject = discoverPostObject,
+                        like = like,
+                        comment = comment,
+                        followObject = followObject
+                    ),
+                    notification.userToken.toString()
+                ).also {
+                    firebaseRepo.postNotification(it)
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, e.toString())
             }
-        } catch (e: Exception) {
-            Log.e(TAG, e.toString())
         }
     }
 

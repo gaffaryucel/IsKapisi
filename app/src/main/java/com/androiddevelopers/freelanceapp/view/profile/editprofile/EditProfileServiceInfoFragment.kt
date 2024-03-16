@@ -1,4 +1,4 @@
-package com.androiddevelopers.freelanceapp.view.profile
+package com.androiddevelopers.freelanceapp.view.profile.editprofile
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -15,6 +15,7 @@ import com.androiddevelopers.freelanceapp.databinding.FragmentEditProfileService
 import com.androiddevelopers.freelanceapp.model.PortfolioItem
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.util.Status
+import com.androiddevelopers.freelanceapp.view.profile.CreatePortfolioItemDialog
 import com.androiddevelopers.freelanceapp.viewmodel.profile.BaseProfileViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,6 +33,7 @@ class EditProfileServiceInfoFragment : Fragment() {
     private var user = UserModel()
 
     private val portfolioList = ArrayList<PortfolioItem>()
+    private val basePortfolioList = ArrayList<PortfolioItem>()
 
     private var _binding: FragmentEditProfileServiceInfoBinding? = null
     private val binding get() = _binding!!
@@ -118,6 +120,7 @@ class EditProfileServiceInfoFragment : Fragment() {
             if (user.portfolio != null){
                 portfolioList.clear()
                 portfolioList.addAll(user.portfolio!!)
+                basePortfolioList.addAll(user.portfolio!!)
                 portfolioAdapter.portfolioItemList = portfolioList
                 portfolioAdapter.notifyDataSetChanged()
                 binding.tvWarningMessagePortfolio.visibility = View.GONE
@@ -126,18 +129,38 @@ class EditProfileServiceInfoFragment : Fragment() {
     }
     private fun updateInfo(){
         val portfolio = ArrayList<PortfolioItem>()
-        if (portfolioList.isNotEmpty()){
+        val ortakOlmayanlarListesi = portfolioList.subtract(
+            basePortfolioList.toSet()
+        ) + basePortfolioList.subtract(
+            portfolioList.toSet()
+        )
+
+        basePortfolioList.addAll(ortakOlmayanlarListesi)
+
+        if (basePortfolioList.isNotEmpty()){
             lifecycleScope.launch {
                 try {
-                    for (i in portfolioList){
-                        val imageUrl = viewModel.saveImageToStorage(i.image!!,"portfolio")
-                        val item = PortfolioItem(
-                            title = i.title,
-                            description = i.description,
-                            imageUrl = imageUrl,
-                            image = null
-                        )
-                        portfolio.add(item)
+                    for (i in basePortfolioList){
+                        if (i.imageUrl != null){
+                            if ( i.imageUrl!!.isNotEmpty()){
+                                val item = PortfolioItem(
+                                    title = i.title,
+                                    description = i.description,
+                                    imageUrl = i.imageUrl,
+                                    image = null
+                                )
+                                portfolio.add(item)
+                            }
+                        }else{
+                            val imageUrl = viewModel.saveImageToStorage(i.image!!,"portfolio")
+                            val item = PortfolioItem(
+                                title = i.title,
+                                description = i.description,
+                                imageUrl = imageUrl,
+                                image = null
+                            )
+                            portfolio.add(item)
+                        }
                     }
                     viewModel.updateUserInfo("portfolio",portfolio)
                 }catch (e : Exception){

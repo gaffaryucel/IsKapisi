@@ -95,6 +95,18 @@ interface FirebaseRepoInterFace {
     fun createChatRoomForOwner(currentUserId: String, chat: ChatModel): Task<Void>
     fun createChatRoomForChatMate(userId: String, chat: ChatModel): Task<Void>
     fun getAllChatRooms(currentUserId: String): DatabaseReference
+    fun     changeLastMessage(
+        userId: String,
+        chatId: String,
+        message: String,
+        time : String
+    ): Task<Void>
+    fun changeLastMessageInChatMatesRoom(
+        chatMateId: String,
+        chatId: String,
+        message: String,
+        time : String
+    ): Task<Void>
 
     //PreChatRoom
     fun getAllPreChatRooms(currentUserId: String): DatabaseReference
@@ -141,6 +153,8 @@ interface FirebaseRepoInterFace {
     fun getFollowNotifications(userId: String, limit: Long): Task<QuerySnapshot>
     fun getPostNotifications(userId: String, limit: Long): Task<QuerySnapshot>
     fun getJobPostNotifications(userId: String, limit: Long): Task<QuerySnapshot>
+
+    fun changeOnlineStatus(userId: String, onlineData: Boolean): Task<Void>
 
 }
 

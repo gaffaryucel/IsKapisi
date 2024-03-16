@@ -15,10 +15,34 @@
 
 
     <!-- Application Style Colors Night-->
-    <color name="app_bg_color">#2d2d2d</color>
+    <color name="app_bg_color">#000000</color>
     <color name="secondary_bg_color">#323232</color>
+    <color name="third_bg_color">#111111</color>
+
+
+    <!-- Light Tema İçin  Text Colors-->
     <color name="bold_text_color">#FFFFFF</color>
-    <color name="button_bg_color">#1188d3</color>
+    <color name="normal_text_color">#FFFFFF</color>
+    <color name="special_text_color">#73b7f7</color>
+
+
+    <!-- Light Tema İçin  Button Colors-->
+    <color name="button_bg_color">#70b5fa</color>
+
+
+    <!-- Light Tema İçin  Background Colors-->
     <color name="selected_skill_bg">#323232</color>
+    <color name="sender_message_bg">#70b5fa</color>
+    <color name="receiver_message_bg">#323232</color>
+
+
+    <!-- Dark Tema İçin SearcHView Renkleri -->
+    <color name="searchview_background">#323232</color>
+    <color name="searchview_text">#FFFFFF</color>
+    <color name="searchview_icon">#CCCCCC</color>
+
+
+    <!-- İconlar için renkler -->
+    <color name="unread_message_color">#1976D2</color> <!-- Siyah tema için -->
 
 </resources>

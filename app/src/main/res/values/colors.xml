@@ -121,9 +121,30 @@
 
     <!-- Application Style Colors Light-->
     <color name="app_bg_color">#FFFFFF</color>
-    <color name="secondary_bg_color">#e9ebef</color>
+    <color name="secondary_bg_color">#f0f0f0</color>
+    <color name="third_bg_color">#F2F2F2</color>
+
+    <!-- Light Tema İçin  Text Colors-->
     <color name="bold_text_color">#202020</color>
-    <color name="button_bg_color">#1e90ff</color>
+    <color name="normal_text_color">#202020</color>
+    <color name="special_text_color">#1059ae</color>
+
+    <!-- Light Tema İçin  Button Colors-->
+    <color name="button_bg_color">#0b66c3</color>
+
+    <!-- Light Tema İçin  Background Colors-->
     <color name="selected_skill_bg">#e9ebef</color>
+    <color name="sender_message_bg">#0b66c3</color>
+    <color name="receiver_message_bg">#f0f0f0</color>
+
+    <!-- Light Tema İçin Search View Renkleri -->
+    <color name="searchview_background">#f0f0f0</color>
+    <color name="searchview_text">#333333</color>
+    <color name="searchview_icon">#666666</color>
+
+
+
+    <!-- İconlar için renkler -->
+    <color name="unread_message_color">#1e90ff</color> <!-- Beyaz tema için -->
 
 </resources>

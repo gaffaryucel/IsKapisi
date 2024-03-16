@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.databinding.RowPreChatBinding
 import com.androiddevelopers.freelanceapp.model.PreChatModel
-import com.androiddevelopers.freelanceapp.view.chat.PreChatFragmentDirections
+import com.androiddevelopers.freelanceapp.view.chat.ChatsFragmentDirections
 import com.bumptech.glide.Glide
 
 class PreChatAdapter : RecyclerView.Adapter<PreChatAdapter.PreChatViewHolder>() {
@@ -43,7 +43,7 @@ class PreChatAdapter : RecyclerView.Adapter<PreChatAdapter.PreChatViewHolder>() 
             .into(holder.binding.chatImage)
 
         holder.itemView.setOnClickListener {
-            val action = PreChatFragmentDirections.actionPreChatFragmentToPreMessagingFragment(
+            val action = ChatsFragmentDirections.actionChatFragmentToPreMessagingFragment(
                 chat.postId.toString(),
                 chat.receiver.toString(),
                 chat.postType.toString(),

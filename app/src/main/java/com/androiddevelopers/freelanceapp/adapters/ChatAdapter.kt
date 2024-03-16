@@ -38,20 +38,30 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
     override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
         val chat = chatsList[position]
 
-        Glide.with(holder.itemView.context).load(chat.receiverUserImage)
-            .into(holder.binding.chatImage)
-        holder.binding.apply {
-            chatItem = chat
+        try {
+            Glide.with(holder.itemView.context).load(chat.receiverUserImage)
+                .into(holder.binding.chatImage)
+            val time = chat.chatLastMessageTimestamp
+            if (time != null){
+                holder.binding.chatLastMessageTimeStamp.text = time.substringAfter(" ").split(":").take(2).joinToString(separator = ":")
+            }
+            holder.binding.apply {
+                chatItem = chat
+            }
+            holder.itemView.setOnClickListener {
+                val action = ChatsFragmentDirections.actionChatsFragmentToMessagesFragment(
+                    chat.chatId.toString(),
+                    chat.receiverId.toString(),
+                    chat.receiverUserName.toString(),
+                    chat.receiverUserImage.toString()
+                )
+                Navigation.findNavController(it).navigate(action)
+            }
+        }catch (e: Exception){
+
         }
-        holder.itemView.setOnClickListener {
-            val action = ChatsFragmentDirections.actionChatsFragmentToMessagesFragment(
-                chat.chatId.toString(),
-                chat.receiverId.toString(),
-                chat.receiverUserName.toString(),
-                chat.receiverUserImage.toString()
-            )
-            Navigation.findNavController(it).navigate(action)
-        }
+
+
     }
 
     override fun getItemCount(): Int {

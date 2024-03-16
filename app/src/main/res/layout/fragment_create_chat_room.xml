@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/ApplicationBackGround"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.chat.CreateChatRoomFragment">
 
+
+
+    <androidx.appcompat.widget.SearchView
+        android:layout_marginTop="8dp"
+        android:layout_marginHorizontal="10dp"
+        style="@style/SearchViewStyle"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/svCreateChat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <TextView
         android:visibility="gone"
@@ -18,16 +31,16 @@
         android:id="@+id/tvNoFollowing"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
     <androidx.recyclerview.widget.RecyclerView
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="5dp"
+        style="@style/ApplicationBackGround"
+        app:layout_constraintTop_toBottomOf="@+id/svCreateChat"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:id="@+id/rvUsers"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
-
-
+        android:layout_height="0dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

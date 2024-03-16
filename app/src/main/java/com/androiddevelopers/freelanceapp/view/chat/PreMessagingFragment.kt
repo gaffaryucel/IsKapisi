@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.MessageAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentPreMessagingBinding
+import com.androiddevelopers.freelanceapp.databinding.FragmentPreMessagingBindingImpl
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.jobpost.BaseJobPost
 import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
@@ -89,15 +90,15 @@ class PreMessagingFragment : Fragment() {
         viewModel.getMessages(chatId ?: "")
 
 
-        binding.btnSend.setOnClickListener{
-            val message = binding.messageInput.text.toString()
+        binding.buttonSend.setOnClickListener{
+            val message = binding.editTextMessage.text.toString()
             if (message.isNotEmpty()){
                 viewModel.sendMessage(
                     chatId.toString(),
                     message,
                     receiver.toString()
                 )
-                binding.messageInput.setText("")
+                binding.editTextMessage.setText("")
                 val lastItemPosition = adapter.itemCount - 1
                 if (lastItemPosition >= 0) {
                     binding.messageRecyclerView.smoothScrollToPosition(lastItemPosition)
@@ -143,7 +144,7 @@ class PreMessagingFragment : Fragment() {
         observeLiveData()
 
         binding.ivDot.setOnClickListener {
-            showpopup(post)
+            showPopup(post,receiverData)
         }
 
 
@@ -194,8 +195,8 @@ class PreMessagingFragment : Fragment() {
         })
     }
 
-    @SuppressLint("InflateParams")
-    fun showpopup(post : BaseJobPost?){
+    @SuppressLint("InflateParams", "MissingInflatedId")
+    fun showPopup(post : BaseJobPost?,user : UserModel?){
 
         //inlater kısmı
         val inflater = LayoutInflater.from(requireContext())
@@ -221,6 +222,13 @@ class PreMessagingFragment : Fragment() {
         val option1 = popupView.findViewById<TextView>(R.id.tvPostTitle)
         val option2 = popupView.findViewById<TextView>(R.id.tvPostDescription)
         val option3 = popupView.findViewById<ImageView>(R.id.ivPostPopup)
+        val userIv = popupView.findViewById<ImageView>(R.id.ivPreChatUser)
+        val userNameText = popupView.findViewById<TextView>(R.id.tvPreChatUserName)
+
+        if (user != null){
+            userNameText.text = user.fullName
+            Glide.with(requireContext()).load(user.profileImageUrl).into(userIv)
+        }
         if (post != null){
             try {
                 option1.text = post.title
@@ -228,6 +236,7 @@ class PreMessagingFragment : Fragment() {
                 Glide.with(requireContext()).load(post.images?.get(0)).into(option3)
             }catch (e : Exception){
                 option3.setImageResource(R.drawable.placeholder)
+                option3.visibility = View.GONE
             }
         }else{
             print("Null")

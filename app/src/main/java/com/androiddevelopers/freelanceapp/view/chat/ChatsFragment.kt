@@ -8,15 +8,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Toast
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.ChatAdapter
+import com.androiddevelopers.freelanceapp.adapters.PreChatAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentChatsBinding
 import com.androiddevelopers.freelanceapp.model.ChatModel
 import com.androiddevelopers.freelanceapp.viewmodel.chat.ChatsViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -26,10 +30,11 @@ class ChatsFragment : Fragment() {
     private lateinit var viewModel: ChatsViewModel
     private var _binding: FragmentChatsBinding? = null
     private val binding get() = _binding!!
-    private val adapter = ChatAdapter()
+    private val chatAdapter = ChatAdapter()
+    private val preChatAdapter = PreChatAdapter()
 
-    private var userList = ArrayList<ChatModel>()
-    private var searchResult = ArrayList<ChatModel>()
+    private var myTab = MutableLiveData<String>()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,8 +47,15 @@ class ChatsFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.rvChat.layoutManager = LinearLayoutManager(requireContext())
-        binding.rvChat.adapter = adapter
+
+        myTab.value = "chat"
+
+        setupBinding()
+        setupTabLayout()
+        observeLiveData()
+    }
+    private fun setupBinding(){
+        binding.rvChat.adapter = chatAdapter
 
         binding.fabCreateChatRoom.setOnClickListener{
             val action = ChatsFragmentDirections.actionChatsFragmentToCreateChatRoomFragment()
@@ -53,33 +65,132 @@ class ChatsFragment : Fragment() {
         binding.svChat.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                query?.let {
-                    viewModel.searchByUsername(it)
-                }
+                myTab.observe(viewLifecycleOwner, Observer {t->
+                    query?.let {
+                        when(t){
+                            "chat"->{
+                                viewModel.searchChatByUsername(it)
+                            }
+                            "preChat"->{
+                                viewModel.searchPreChatByUsername(it)
+                            }
+                            else->{
+                                viewModel.searchChatByUsername(it)
+                            }
+                        }
+                    }
+                })
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                newText?.let {
-                    viewModel.searchByUsername(it)
-                }
+                myTab.observe(viewLifecycleOwner, Observer { t ->
+                    newText?.let {
+                        when (t) {
+                            "chat" -> {
+                                viewModel.searchChatByUsername(it)
+                            }
+
+                            "preChat" -> {
+                                viewModel.searchPreChatByUsername(it)
+                            }
+
+                            else -> {
+                                viewModel.searchChatByUsername(it)
+                            }
+                        }
+                    }
+                })
                 return true
             }
         })
-        observeLiveData()
+
+    }
+    private fun setupTabLayout() {
+        // TabLayout'a sekmeleri ekle
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Sohbeler"))
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("İlan Sohbetleri"))
+
+        // TabLayout'un tıklama olayını dinle
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                // Sekmeye tıklandığında, adapter'a yeni verileri set et
+                when (tab.position) {
+                    0 -> {
+                        showChats()
+                        myTab.value = "chat"
+                        binding.fabCreateChatRoom.visibility = View.VISIBLE
+                    }
+                    1 -> {
+                        showPreChats()
+                        myTab.value = "preChat"
+                        binding.fabCreateChatRoom.visibility = View.INVISIBLE
+                    }
+
+                    else -> {
+                        showChats()
+                    }
+                }
+            }
+
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                // Boş bırakılabilir
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                // Boş bırakılabilir
+            }
+        })
     }
 
     private fun observeLiveData(){
         viewModel.chatRooms.observe(viewLifecycleOwner, Observer {
-            adapter.chatsList = it
-            adapter.notifyDataSetChanged()
+            chatAdapter.chatsList = it
+            chatAdapter.notifyDataSetChanged()
         })
+        viewModel.preChats.observe(viewLifecycleOwner, Observer {
+            preChatAdapter.chatsList = it
+            preChatAdapter.notifyDataSetChanged()
+        })
+
         viewModel.chatSearchResult.observe(viewLifecycleOwner, Observer {searchResult ->
             if (searchResult != null){
-                adapter.chatsList = searchResult
-                adapter.notifyDataSetChanged()
+                chatAdapter.chatsList = searchResult
+                chatAdapter.notifyDataSetChanged()
             }
         })
+        viewModel.preChatSearchResult.observe(viewLifecycleOwner, Observer {searchResult ->
+            if (searchResult != null){
+                preChatAdapter.chatsList = searchResult
+                preChatAdapter.notifyDataSetChanged()
+            }
+        })
+    }
+
+    private fun showChats() {
+        binding.rvChat.adapter = chatAdapter
+        try {
+            chatAdapter.chatsList[0]
+            binding.rvChat.visibility = View.VISIBLE
+            //binding.tvEmptyList.visibility = View.GONE
+        } catch (e: Exception) {
+            binding.rvChat.visibility = View.GONE
+            //binding.tvEmptyList.visibility = View.VISIBLE
+        }
+
+    }
+    private fun showPreChats() {
+        binding.rvChat.adapter = preChatAdapter
+        try {
+            preChatAdapter.chatsList[0]
+            binding.rvChat.visibility = View.VISIBLE
+            //binding.tvEmptyList.visibility = View.GONE
+        } catch (e: Exception) {
+            binding.rvChat.visibility = View.GONE
+            //binding.tvEmptyList.visibility = View.VISIBLE
+        }
+
     }
     override fun onResume() {
         super.onResume()

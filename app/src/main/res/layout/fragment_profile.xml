@@ -108,7 +108,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="18sp"
                             android:textStyle="italic"
-                            android:textColor="#003BE1" />
+                            android:textColor="@color/special_text_color" />
                     </LinearLayout>
 
                     <LinearLayout

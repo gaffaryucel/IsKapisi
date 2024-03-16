@@ -31,6 +31,7 @@ import retrofit2.Response
 import java.io.ByteArrayOutputStream
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.HashMap
 
 class FirebaseRepoImpl @Inject constructor(
     private val auth: FirebaseAuth,
@@ -211,6 +212,35 @@ class FirebaseRepoImpl @Inject constructor(
         return messagesReference.child(currentUserId)
     }
 
+    override fun changeLastMessage(
+        userId: String,
+        chatId: String,
+        message: String,
+        time: String
+    ): Task<Void> {
+        val reference = messagesReference.child(userId).child(chatId)
+        val updates = hashMapOf<String, Any>(
+            "chatLastMessage" to message,
+            "chatLastMessageTimestamp" to time
+        )
+        return reference.updateChildren(updates)
+    }
+
+    override fun changeLastMessageInChatMatesRoom(
+        chatMateId: String,
+        chatId: String,
+        message: String,
+        time: String
+    ): Task<Void> {
+        val reference = messagesReference.child(chatMateId).child(chatId)
+        val updates = hashMapOf<String, Any>(
+            "chatLastMessage" to message,
+            "chatLastMessageTimestamp" to time
+        )
+        return reference.updateChildren(updates)
+    }
+
+
     override fun getAllFollowingUsers(currentUserId: String): DatabaseReference {
         return userFollowRef.child(currentUserId).child("following")
     }
@@ -390,4 +420,12 @@ class FirebaseRepoImpl @Inject constructor(
             .limit(limit)
             .get()
     }
+
+    override fun changeOnlineStatus(userId: String, onlineData: Boolean): Task<Void> {
+        val map = hashMapOf<String, Any?>(
+            "isOnline" to onlineData,
+        )
+        return userCollection.document(userId).update(map)
+    }
+
 }

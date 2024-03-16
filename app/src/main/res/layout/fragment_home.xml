@@ -42,17 +42,6 @@
                 tools:text="Merhaba, ________" />
 
             <ImageView
-                android:id="@+id/pre_chat_icon"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:padding="6dp"
-                android:src="@drawable/comment_black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/ivNotifications"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="ContentDescription" />
-
-            <ImageView
                 android:id="@+id/ivMessage"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
