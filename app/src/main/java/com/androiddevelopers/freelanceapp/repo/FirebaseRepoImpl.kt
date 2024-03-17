@@ -240,6 +240,22 @@ class FirebaseRepoImpl @Inject constructor(
         return reference.updateChildren(updates)
     }
 
+    override fun seeMessage(userId: String, chatId: String): Task<Void> {
+        val seen = hashMapOf<String, Any>(
+            "seen" to true,
+        )
+        val userChatReference = messagesReference.child(userId).child(chatId)
+        return userChatReference.updateChildren(seen)
+    }
+     override fun changeReceiverSeenStatus(receiver: String, chatId: String): Task<Void> {
+        val unSeen = hashMapOf<String, Any>(
+            "seen" to false,
+        )
+        val receiverChatReference = messagesReference.child(receiver).child(chatId)
+        return receiverChatReference.updateChildren(unSeen)
+    }
+
+
 
     override fun getAllFollowingUsers(currentUserId: String): DatabaseReference {
         return userFollowRef.child(currentUserId).child("following")
@@ -259,7 +275,7 @@ class FirebaseRepoImpl @Inject constructor(
         return preChatReference.child(sender).child(chat.postId.toString()).setValue(chat)
     }
 
-    //PreMessaging
+//PreMessaging
     override fun getAllMessagesFromPreChatRoom(
         currentUserId: String,
         chatId: String
@@ -278,6 +294,43 @@ class FirebaseRepoImpl @Inject constructor(
         return preChatReference.child(userId).child(chatId).child("messages")
             .child(message.messageId.toString()).setValue(message)
     }
+    override fun changeLastPreMessage(
+        userId: String,
+        receiver: String,
+        chatId: String,
+        message: String,
+        time: String
+    ): Task<Void> {
+        val updateUsersChatRoom = hashMapOf<String, Any>(
+            "lastMessage" to message,
+            "timestamp" to time
+        )
+        val updateReceiversChatRoom = hashMapOf<String, Any>(
+            "lastMessage" to message,
+            "timestamp" to time
+        )
+        val referenceUser = preChatReference.child(userId).child(chatId)
+        val referenceReceiver = preChatReference.child(receiver).child(chatId)
+        referenceReceiver.updateChildren(updateReceiversChatRoom)
+        return referenceUser.updateChildren(updateUsersChatRoom)
+    }
+
+    override fun seePreMessage(userId: String, chatId: String): Task<Void> {
+        val seen = hashMapOf<String, Any>(
+            "seen" to true,
+        )
+        val userChatReference = preChatReference.child(userId).child(chatId)
+        return userChatReference.updateChildren(seen)
+    }
+
+    override fun changeReceiverPreSeenStatus(receiverId: String, chatId: String): Task<Void> {
+        val unSeen = hashMapOf<String, Any>(
+            "seen" to false,
+        )
+        val receiverChatReference = preChatReference.child(receiverId).child(chatId)
+        return receiverChatReference.updateChildren(unSeen)
+    }
+
 
     //
     override fun getUsersFromFirestore(): Task<QuerySnapshot> {

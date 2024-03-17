@@ -9,6 +9,7 @@ class PreChatModel {
     var receiverImage: String? = null
     var lastMessage: String? = null
     var timestamp: String? = null
+    var seen: Boolean? = null
 
     constructor()
 
@@ -20,7 +21,8 @@ class PreChatModel {
         receiverName: String? = null,
         receiverImage: String? = null,
         lastMessage: String? = null,
-        timestamp: String? = null
+        timestamp: String? = null,
+        seen: Boolean? = null
     ) {
         this.postId = postId
         this.postType = postType
@@ -30,6 +32,7 @@ class PreChatModel {
         this.receiverImage = receiverImage
         this.lastMessage = lastMessage
         this.timestamp = timestamp
+        this.seen = seen
     }
 
     override fun equals(other: Any?): Boolean {
@@ -40,7 +43,8 @@ class PreChatModel {
                 this.receiverName == other.receiverName &&
                 this.receiverImage == other.receiverImage &&
                 this.lastMessage == other.lastMessage &&
-                this.timestamp == other.timestamp
+                this.timestamp == other.timestamp &&
+                this.seen == seen
     }
 
     override fun hashCode(): Int {
@@ -52,6 +56,7 @@ class PreChatModel {
         result = 31 * result + (receiverImage?.hashCode() ?: 0)
         result = 31 * result + (lastMessage?.hashCode() ?: 0)
         result = 31 * result + (timestamp?.hashCode() ?: 0)
+        result = 31 * result + (seen?.hashCode() ?: 0)
         return result
     }
 }

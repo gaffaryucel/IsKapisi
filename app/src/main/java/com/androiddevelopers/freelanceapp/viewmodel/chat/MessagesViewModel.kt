@@ -52,6 +52,7 @@ class MessagesViewModel @Inject constructor(
             .addOnSuccessListener {
                 _messageStatus.value = Resource.success(null)
                 changeLastMessage(chatId,messageData,time,messageReceiver)
+                repo.changeReceiverSeenStatus(messageReceiver,chatId)
             }
             .addOnFailureListener { error ->
                 _messageStatus.value = error.localizedMessage?.let { Resource.error(it,null) }
@@ -95,6 +96,7 @@ class MessagesViewModel @Inject constructor(
                     }
                     val sortedList = sortListByDate(messageList)
                     _messages.value = sortedList
+                    repo.seeMessage(currentUserId,chatId)
                 }
 
                 override fun onCancelled(error: DatabaseError) {

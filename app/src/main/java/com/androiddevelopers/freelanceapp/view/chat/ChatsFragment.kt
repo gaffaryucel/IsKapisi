@@ -1,5 +1,6 @@
 package com.androiddevelopers.freelanceapp.view.chat
 
+import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -48,15 +49,46 @@ class ChatsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        myTab.value = "chat"
-
         setupBinding()
         setupTabLayout()
         observeLiveData()
     }
+
+    override fun onStart() {
+        super.onStart()
+        getCurrentList()
+    }
+
+    private fun getCurrentList() {
+        val sharedPref = requireContext().getSharedPreferences("cht", Context.MODE_PRIVATE)
+        val place = sharedPref.getString("place", "") ?: ""
+        if (place.isNotEmpty()){
+            when (place) {
+                "chat" -> {
+                    showChats()
+                    myTab.value = "chat"
+                    binding.fabCreateChatRoom.visibility = View.VISIBLE
+                    binding.tabLayout.getTabAt(0)!!.select()
+                }
+
+                "pre_chat" -> {
+                    showPreChats()
+                    myTab.value = "preChat"
+                    binding.fabCreateChatRoom.visibility = View.INVISIBLE
+                    binding.tabLayout.getTabAt(1)!!.select()
+                }
+                else -> {
+                    showChats()
+                    myTab.value = "chat"
+                    binding.fabCreateChatRoom.visibility = View.VISIBLE
+                    binding.tabLayout.getTabAt(0)!!.select()
+                }
+            }
+            sharedPref.edit().clear().apply()
+        }
+    }
     private fun setupBinding(){
         binding.rvChat.adapter = chatAdapter
-
         binding.fabCreateChatRoom.setOnClickListener{
             val action = ChatsFragmentDirections.actionChatsFragmentToCreateChatRoomFragment()
             Navigation.findNavController(it).navigate(action)
@@ -108,6 +140,7 @@ class ChatsFragment : Fragment() {
     }
     private fun setupTabLayout() {
         // TabLayout'a sekmeleri ekle
+        println("setupTabLayout")
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Sohbeler"))
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("İlan Sohbetleri"))
 

@@ -7,6 +7,7 @@ class ChatModel {
     var receiverUserImage: String? = null
     var chatLastMessage: String? = null
     var chatLastMessageTimestamp: String? = null
+    var seen: Boolean? = null
 
     constructor()
 
@@ -17,6 +18,7 @@ class ChatModel {
         receiverUserImage: String? = null,
         chatLastMessage: String? = null,
         chatLastMessageTimestamp: String? = null,
+        seen: Boolean? = null,
     ) {
         this.chatId = chatId
         this.receiverId = receiverId
@@ -24,6 +26,7 @@ class ChatModel {
         this.receiverUserImage = receiverUserImage
         this.chatLastMessage = chatLastMessage
         this.chatLastMessageTimestamp = chatLastMessageTimestamp
+        this.seen = seen
     }
 
     override fun equals(other: Any?): Boolean {
@@ -32,7 +35,8 @@ class ChatModel {
                 this.receiverUserName == other.receiverUserName &&
                 this.receiverUserImage == other.receiverUserImage &&
                 this.chatLastMessage == other.chatLastMessage &&
-                this.chatLastMessageTimestamp == other.chatLastMessageTimestamp
+                this.chatLastMessageTimestamp == other.chatLastMessageTimestamp &&
+                this.seen == other.seen
 
     }
 
@@ -43,6 +47,7 @@ class ChatModel {
         result = 31 * result + (receiverUserImage?.hashCode() ?: 0)
         result = 31 * result + (chatLastMessage?.hashCode() ?: 0)
         result = 31 * result + (chatLastMessageTimestamp?.hashCode() ?: 0)
+        result = 31 * result + (seen?.hashCode() ?: 0)
         return result
     }
 

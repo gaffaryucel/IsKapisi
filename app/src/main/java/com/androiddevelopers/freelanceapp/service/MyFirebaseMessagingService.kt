@@ -39,8 +39,6 @@ import kotlin.random.Random
 private const val CHANNEL_ID = "my_channel"
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
-
-
     override fun onNewToken(newToken: String) {
         super.onNewToken(newToken)
         saveToken(newToken)
@@ -48,8 +46,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
-
-
 
         val sharedPref = applicationContext.getSharedPreferences("notification", Context.MODE_PRIVATE)
 

@@ -107,7 +107,14 @@ interface FirebaseRepoInterFace {
         message: String,
         time : String
     ): Task<Void>
-
+    fun seeMessage(
+        userId: String,
+        chatId: String
+    ): Task<Void>
+    fun changeReceiverSeenStatus(
+        receiverId: String,
+        chatId: String
+    ): Task<Void>
     //PreChatRoom
     fun getAllPreChatRooms(currentUserId: String): DatabaseReference
     fun createPreChatRoom(receiver: String, sender: String, chat: PreChatModel): Task<Void>
@@ -120,6 +127,22 @@ interface FirebaseRepoInterFace {
         receiver: String,
         chatId: String,
         message: MessageModel
+    ): Task<Void>
+    fun changeLastPreMessage(
+        userId: String,
+        receiver: String,
+        chatId: String,
+        message: String,
+        time: String
+    ): Task<Void>
+
+    fun seePreMessage(
+        userId: String,
+        chatId: String
+    ): Task<Void>
+    fun changeReceiverPreSeenStatus(
+        receiverId: String,
+        chatId: String
     ): Task<Void>
 
     // Firebase Storage işlemleri
