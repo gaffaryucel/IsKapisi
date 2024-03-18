@@ -27,12 +27,12 @@ class CreateJobPostingViewModel
     val firebaseMessage: LiveData<Resource<Boolean>>
         get() = _firebaseMessage
 
-    private var _skills = MutableLiveData<ArrayList<String>>()
-    val skills: LiveData<ArrayList<String>>
+    private var _skills = MutableLiveData<List<String>>()
+    val skills: LiveData<List<String>>
         get() = _skills
 
-    private var _imageUriList = MutableLiveData<ArrayList<Uri>>()
-    val imageUriList: LiveData<ArrayList<Uri>>
+    private var _imageUriList = MutableLiveData<List<Uri>>()
+    val imageUriList: LiveData<List<Uri>>
         get() = _imageUriList
 
     private var _imageSize = MutableLiveData<Int>()
@@ -44,9 +44,9 @@ class CreateJobPostingViewModel
         get() = _firebaseLiveData
 
     fun addImageAndJobPostToFirebase(
-        newUriList: ArrayList<Uri>,
+        newUriList: MutableList<Uri>,
         jobPost: EmployerJobPost,
-        downloadUriList: ArrayList<String> = arrayListOf()
+        downloadUriList: MutableList<String> = mutableListOf()
     ) {
         val uId = firebaseAuth.currentUser?.uid.toString()
         if (newUriList.size > 0) {
@@ -121,12 +121,12 @@ class CreateJobPostingViewModel
             }
         }
 
-    fun setImageUriList(newList: ArrayList<Uri>) = viewModelScope.launch {
+    fun setImageUriList(newList: List<Uri>) = viewModelScope.launch {
         _imageUriList.value = newList
         _imageSize.value = newList.size
     }
 
-    fun setSkills(newSkills: ArrayList<String>) {
+    fun setSkills(newSkills: List<String>) {
         _skills.value = newSkills
     }
 
