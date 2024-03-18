@@ -1,4 +1,4 @@
-package com.androiddevelopers.freelanceapp.view.profile
+package com.androiddevelopers.freelanceapp.view.profile.editprofile
 
 
 import android.app.Activity
@@ -23,7 +23,6 @@ import com.androiddevelopers.freelanceapp.viewmodel.profile.BaseProfileViewModel
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint

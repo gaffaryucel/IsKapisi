@@ -8,6 +8,9 @@
             type="com.androiddevelopers.freelanceapp.model.PortfolioItem" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:paddingVertical="8dp"
+        android:layout_marginVertical="8dp"
+        android:background="@drawable/portfolio_item_bg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
@@ -17,6 +20,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_margin="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:id="@+id/ivPortfolioItem"
             android:src="@drawable/placeholder"
             android:layout_width="60dp"
@@ -37,7 +41,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/ivPortfolioItem"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:text="asdfjkaslşfjsdfşldgklşjasdşfjsdafljasdfklsdajfklsdşfmnsdlkfnsdalşkndsklfsdnafklsdanflksdanfasdlkfnsakşldfnasklşdnl"
+                android:text="@{item.title}"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:textSize="16sp"
@@ -50,7 +54,7 @@
                 android:ellipsize="end"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                android:text="asdfjkaslşfjsdfşldgklşjasdşfjsdafljasdfklsdajfklsdşfmnsdlkfnsdalşkndsklfsdnafklsdanflksdanfasdlkfnsakşldfnasklşdnl"
+                android:text="@{item.description}"
                 android:layout_marginTop="4dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>

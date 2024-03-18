@@ -11,6 +11,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.androiddevelopers.freelanceapp.R
@@ -38,8 +39,6 @@ import kotlin.random.Random
 private const val CHANNEL_ID = "my_channel"
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
-
-
     override fun onNewToken(newToken: String) {
         super.onNewToken(newToken)
         saveToken(newToken)
@@ -48,44 +47,43 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
-
         val sharedPref = applicationContext.getSharedPreferences("notification", Context.MODE_PRIVATE)
 
         var usersOnlineChatId : String? = ""
 
-
         val type = message.data["type"] ?: ""
         sharedPref.edit().putString("not_type", type).apply()
-        when(type){
-            NotificationTypeForActions.MESSAGE.toString()->{
-                getMessagingObject(message,sharedPref)
-                usersOnlineChatId =sharedPref.getString("chatId", "")
+            when(type){
+                NotificationTypeForActions.MESSAGE.toString()->{
+                    getMessagingObject(message,sharedPref)
+                    usersOnlineChatId =sharedPref.getString("chatId", "")
+                }
+                NotificationTypeForActions.PRE_MESSAGE.toString()->{
+                    getPreMessagingObject(message,sharedPref)
+                    usersOnlineChatId = sharedPref.getString("postId", "")
+                }
+                NotificationTypeForActions.FRL_JOB_POST.toString()->{
+                    val freelancerPostObject = message.data["freelancerPostObject"] ?: ""
+                    sharedPref.edit().putString("freelancerPostObject", freelancerPostObject).apply()
+                }
+                NotificationTypeForActions.EMP_JOB_POST.toString()->{
+                    val employerPostObject = message.data["employerPostObject"] ?: ""
+                    sharedPref.edit().putString("employerPostObject", employerPostObject).apply()
+                }
+                NotificationTypeForActions.LIKE.toString()->{
+                    val like = message.data["like"] ?: ""
+                    sharedPref.edit().putString("like", like).apply()
+                }
+                NotificationTypeForActions.COMMENT.toString()->{
+                    val comment = message.data["comment"] ?: ""
+                    sharedPref.edit().putString("comment", comment).apply()
+                }
+                NotificationTypeForActions.FOLLOW.toString()->{
+                    val followObject = message.data["followObject"] ?: ""
+                    sharedPref.edit().putString("followObject", followObject).apply()
+                }
             }
-            NotificationTypeForActions.PRE_MESSAGE.toString()->{
-                getPreMessagingObject(message,sharedPref)
-                usersOnlineChatId = sharedPref.getString("postId", "")
-            }
-            NotificationTypeForActions.FRL_JOB_POST.toString()->{
-                val freelancerPostObject = message.data["freelancerPostObject"] ?: ""
-                sharedPref.edit().putString("freelancerPostObject", freelancerPostObject).apply()
-            }
-            NotificationTypeForActions.EMP_JOB_POST.toString()->{
-                val employerPostObject = message.data["employerPostObject"] ?: ""
-                sharedPref.edit().putString("employerPostObject", employerPostObject).apply()
-            }
-            NotificationTypeForActions.LIKE.toString()->{
-                val like = message.data["like"] ?: ""
-                sharedPref.edit().putString("like", like).apply()
-            }
-            NotificationTypeForActions.COMMENT.toString()->{
-                val comment = message.data["comment"] ?: ""
-                sharedPref.edit().putString("comment", comment).apply()
-            }
-            NotificationTypeForActions.FOLLOW.toString()->{
-                val followObject = message.data["followObject"] ?: ""
-                sharedPref.edit().putString("followObject", followObject).apply()
-            }
-        }
+
 
         val intent = Intent(this, BottomNavigationActivity::class.java)
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
@@ -176,32 +174,43 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     }
 
-    private fun getPreMessagingObject(notification : RemoteMessage,sharedPref : SharedPreferences){
+    private fun getPreMessagingObject(notification: RemoteMessage, sharedPref: SharedPreferences) {
+        try {
+            val preMessageObjectJson = notification.data["preMessageObject"] ?: ""
+            if (preMessageObjectJson.isNotEmpty()) {
+                val gson = Gson()
+                val preMessageObject = gson.fromJson(preMessageObjectJson, PreMessageObject::class.java)
 
-        val preMessageObjectJson = notification.data["preMessageObject"] ?: ""
-        val gson = Gson()
-        val preMessageObject = gson.fromJson(preMessageObjectJson, PreMessageObject::class.java)
-
-        sharedPref.edit().putString("userId", preMessageObject.userId).apply()
-        sharedPref.edit().putString("postId", preMessageObject.postId).apply()
-        sharedPref.edit().putString("type", preMessageObject.type).apply()
-
+                sharedPref.edit().putString("userId", preMessageObject.userId).apply()
+                sharedPref.edit().putString("postId", preMessageObject.postId).apply()
+                sharedPref.edit().putString("type", preMessageObject.type).apply()
+            } else {
+                println("hata : boş obje")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            // Hata durumunda uygun bir işlem yapabilirsiniz
+        }
     }
-    private fun getMessagingObject(notification : RemoteMessage,sharedPref :  SharedPreferences){
 
-        val preMessageObjectJson = notification.data["preMessageObject"] ?: ""
-        val gson = Gson()
-        val preMessageObject = gson.fromJson(preMessageObjectJson, MessageObject::class.java)
+    private fun getMessagingObject(notification: RemoteMessage, sharedPref: SharedPreferences) {
+        try {
+            val preMessageObjectJson = notification.data["preMessageObject"] ?: ""
+            if (preMessageObjectJson.isNotEmpty()) {
+                val gson = Gson()
+                val preMessageObject = gson.fromJson(preMessageObjectJson, MessageObject::class.java)
 
-        sharedPref.edit().putString("chatId", preMessageObject.chatId).apply()
-        sharedPref.edit().putString("receiverId", preMessageObject.receiverId).apply()
-        sharedPref.edit().putString("receiverUserName", preMessageObject.receiverUserName).apply()
-        sharedPref.edit().putString("receiverUserImage", preMessageObject.receiverUserImage).apply()
-
+                sharedPref.edit().putString("chatId", preMessageObject.chatId).apply()
+                sharedPref.edit().putString("receiverId", preMessageObject.receiverId).apply()
+                sharedPref.edit().putString("receiverUserName", preMessageObject.receiverUserName).apply()
+                sharedPref.edit().putString("receiverUserImage", preMessageObject.receiverUserImage).apply()
+            } else {
+                println("hata : boş obje")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            // Hata durumunda uygun bir işlem yapabilirsiniz
+        }
     }
 }
-class YourNotificationReceiver : BroadcastReceiver() {
-    override fun onReceive(context: Context?, intent: Intent?) {
-        println("click")
-    }
-}
+

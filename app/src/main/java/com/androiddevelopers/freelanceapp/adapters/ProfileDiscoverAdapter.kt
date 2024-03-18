@@ -56,7 +56,7 @@ class ProfileDiscoverAdapter :
         val post = postList[position]
         val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
         if (!post.postOwner.equals(currentUserId)) {
-            holder.binding.layoutEdit.visibility = ViewGroup.GONE
+            //holder.binding.layoutEdit.visibility = ViewGroup.GONE
         }
         holder.binding.apply {
             postData = post

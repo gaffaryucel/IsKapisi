@@ -40,7 +40,7 @@ class CreateChatAdapter : RecyclerView.Adapter<CreateChatAdapter.CreateChatViewH
         holder.binding.apply {
             userItem = user
         }
-        Glide.with(holder.itemView.context).load(user.userImage).into(holder.binding.chatImage)
+        Glide.with(holder.itemView.context).load(user.userImage).into(holder.binding.userImage)
         holder.itemView.setOnClickListener {
             onClick?.invoke(user)
         }

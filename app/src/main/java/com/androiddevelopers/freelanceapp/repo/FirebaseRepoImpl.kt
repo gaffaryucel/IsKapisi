@@ -31,6 +31,7 @@ import retrofit2.Response
 import java.io.ByteArrayOutputStream
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.HashMap
 
 class FirebaseRepoImpl @Inject constructor(
     private val auth: FirebaseAuth,
@@ -211,6 +212,51 @@ class FirebaseRepoImpl @Inject constructor(
         return messagesReference.child(currentUserId)
     }
 
+    override fun changeLastMessage(
+        userId: String,
+        chatId: String,
+        message: String,
+        time: String
+    ): Task<Void> {
+        val reference = messagesReference.child(userId).child(chatId)
+        val updates = hashMapOf<String, Any>(
+            "chatLastMessage" to message,
+            "chatLastMessageTimestamp" to time
+        )
+        return reference.updateChildren(updates)
+    }
+
+    override fun changeLastMessageInChatMatesRoom(
+        chatMateId: String,
+        chatId: String,
+        message: String,
+        time: String
+    ): Task<Void> {
+        val reference = messagesReference.child(chatMateId).child(chatId)
+        val updates = hashMapOf<String, Any>(
+            "chatLastMessage" to message,
+            "chatLastMessageTimestamp" to time
+        )
+        return reference.updateChildren(updates)
+    }
+
+    override fun seeMessage(userId: String, chatId: String): Task<Void> {
+        val seen = hashMapOf<String, Any>(
+            "seen" to true,
+        )
+        val userChatReference = messagesReference.child(userId).child(chatId)
+        return userChatReference.updateChildren(seen)
+    }
+     override fun changeReceiverSeenStatus(receiver: String, chatId: String): Task<Void> {
+        val unSeen = hashMapOf<String, Any>(
+            "seen" to false,
+        )
+        val receiverChatReference = messagesReference.child(receiver).child(chatId)
+        return receiverChatReference.updateChildren(unSeen)
+    }
+
+
+
     override fun getAllFollowingUsers(currentUserId: String): DatabaseReference {
         return userFollowRef.child(currentUserId).child("following")
     }
@@ -229,7 +275,7 @@ class FirebaseRepoImpl @Inject constructor(
         return preChatReference.child(sender).child(chat.postId.toString()).setValue(chat)
     }
 
-    //PreMessaging
+//PreMessaging
     override fun getAllMessagesFromPreChatRoom(
         currentUserId: String,
         chatId: String
@@ -248,6 +294,43 @@ class FirebaseRepoImpl @Inject constructor(
         return preChatReference.child(userId).child(chatId).child("messages")
             .child(message.messageId.toString()).setValue(message)
     }
+    override fun changeLastPreMessage(
+        userId: String,
+        receiver: String,
+        chatId: String,
+        message: String,
+        time: String
+    ): Task<Void> {
+        val updateUsersChatRoom = hashMapOf<String, Any>(
+            "lastMessage" to message,
+            "timestamp" to time
+        )
+        val updateReceiversChatRoom = hashMapOf<String, Any>(
+            "lastMessage" to message,
+            "timestamp" to time
+        )
+        val referenceUser = preChatReference.child(userId).child(chatId)
+        val referenceReceiver = preChatReference.child(receiver).child(chatId)
+        referenceReceiver.updateChildren(updateReceiversChatRoom)
+        return referenceUser.updateChildren(updateUsersChatRoom)
+    }
+
+    override fun seePreMessage(userId: String, chatId: String): Task<Void> {
+        val seen = hashMapOf<String, Any>(
+            "seen" to true,
+        )
+        val userChatReference = preChatReference.child(userId).child(chatId)
+        return userChatReference.updateChildren(seen)
+    }
+
+    override fun changeReceiverPreSeenStatus(receiverId: String, chatId: String): Task<Void> {
+        val unSeen = hashMapOf<String, Any>(
+            "seen" to false,
+        )
+        val receiverChatReference = preChatReference.child(receiverId).child(chatId)
+        return receiverChatReference.updateChildren(unSeen)
+    }
+
 
     //
     override fun getUsersFromFirestore(): Task<QuerySnapshot> {
@@ -279,16 +362,16 @@ class FirebaseRepoImpl @Inject constructor(
     }
 
 
-    override fun getAllDiscoverPostsFromUser(userId: String): Task<QuerySnapshot> {
-        return discoverPostCollection.whereEqualTo("postOwner", userId).get()
+    override fun getAllDiscoverPostsFromUser(userId: String,limit : Long): Task<QuerySnapshot> {
+        return discoverPostCollection.whereEqualTo("postOwner", userId).limit(limit).get()
     }
 
-    override fun getAllEmployerJobPostsFromUser(userId: String): Task<QuerySnapshot> {
-        return employerPostCollection.whereEqualTo("employerId", userId).get()
+    override fun getAllEmployerJobPostsFromUser(userId: String,limit : Long): Task<QuerySnapshot> {
+        return employerPostCollection.whereEqualTo("employerId", userId).limit(limit).get()
     }
 
-    override fun getAllFreelancerJobPostsFromUser(userId: String): Task<QuerySnapshot> {
-        return freelancerPostCollection.whereEqualTo("freelancerId", userId).get()
+    override fun getAllFreelancerJobPostsFromUser(userId: String,limit : Long): Task<QuerySnapshot> {
+        return freelancerPostCollection.whereEqualTo("freelancerId", userId).limit(limit).get()
     }
 
     override fun follow(followerModel: FollowModel, followingModel: FollowModel): Task<Void> {
@@ -390,4 +473,12 @@ class FirebaseRepoImpl @Inject constructor(
             .limit(limit)
             .get()
     }
+
+    override fun changeOnlineStatus(userId: String, onlineData: Boolean): Task<Void> {
+        val map = hashMapOf<String, Any?>(
+            "isOnline" to onlineData,
+        )
+        return userCollection.document(userId).update(map)
+    }
+
 }

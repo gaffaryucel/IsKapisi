@@ -1,4 +1,4 @@
-package com.androiddevelopers.freelanceapp.view.profile
+package com.androiddevelopers.freelanceapp.view.profile.editprofile
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle

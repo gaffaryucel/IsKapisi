@@ -4,19 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="user"
             type="com.androiddevelopers.freelanceapp.model.UserModel" />
-
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layoutPreMessaging"
+        style="@style/ApplicationBackGround"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
+            style="@style/ApplicationBackGround"
             android:id="@+id/messageRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -26,68 +26,65 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 
-        <LinearLayout
-            android:background="@color/black"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/edittextHeight"
-            android:layout_marginHorizontal="8dp"
-            android:layout_marginVertical="4dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutUserInfo"
+            android:paddingVertical="5dp"
+            android:paddingHorizontal="10dp"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@color/secondary_bg_color"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_margin="8dp"
                 android:id="@+id/ivUser"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:padding="5dp"
-                android:src="@drawable/baseline_person_24"
-                tools:ignore="ContentDescription" />
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="10"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tvUserName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="4dp"
-                    android:text="@{user.username}"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tvIsOnline"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:text="Online"
-                    tools:ignore="HardcodedText" />
-            </LinearLayout>
-
-
-            <ImageView
-                android:id="@+id/ivDot"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:src="@drawable/baseline_person_24" />
+
+            <ImageView
+                android:visibility="invisible"
+                android:id="@+id/ivOnlineUser"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_alignParentEnd="true"
+                app:layout_constraintBottom_toBottomOf="@id/ivUser"
+                app:layout_constraintEnd_toEndOf="@id/ivUser"
+                android:background="@drawable/unread_message_indicator"
+                android:contentDescription="TODO"
+                tools:ignore="ContentDescription,HardcodedText" />
+
+            <TextView
+                app:layout_constraintStart_toEndOf="@id/ivUser"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:text="@{user.fullName}"
+                app:layout_constraintTop_toTopOf="@id/ivUser"
+                app:layout_constraintBottom_toBottomOf="@+id/ivUser"
+                android:id="@+id/tvUserName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="1"
-                android:padding="5dp"
-                android:src="@drawable/baseline_more_horiz_24"
-                tools:ignore="ContentDescription" />
+                android:layout_marginStart="8dp"
+                tools:text="gaffar yücel"
+                android:textStyle="bold"
+                style="@style/SecondaryBigTextStyle" />
 
-        </LinearLayout>
-
+            <ImageView
+                android:layout_marginEnd="5dp"
+                android:paddingVertical="5dp"
+                android:id="@+id/ivDot"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:src="@drawable/down_white"
+                android:layout_width="40dp"
+                android:layout_height="40dp"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ProgressBar
             android:id="@+id/messageProgressBar"
@@ -99,83 +96,43 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-
-
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
+            android:layout_marginBottom="5dp"
+            android:layout_marginHorizontal="5dp"
             android:id="@+id/messageInputContainer"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_margin="6dp"
-            android:background="@drawable/input_background"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/btnSend"
-            tools:context="com.example.chattutorial.ChannelActivity">
-
-            <ImageButton
-                android:id="@+id/addEmoticon"
-                android:layout_width="21dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="12dp"
-                android:background="@null"
-                android:src="@drawable/ic_insert_emoticon_black_24dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="ContentDescription,TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/rounded_message_box_background"> <!-- Arka planı kıvrımlı şekilde ayarla -->
 
             <EditText
-                android:id="@+id/messageInput"
+                android:maxLines="5"
+                android:id="@+id/editTextMessage"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="12dp"
-                android:background="@android:color/transparent"
-                android:hint="Type a message"
-                android:textColor="@color/black"
-                android:textColorHint="@color/GREY"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/addEmoticon"
-                app:layout_constraintRight_toLeftOf="@+id/addAttachment"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageButton
-                android:id="@+id/addAttachment"
-                android:layout_width="22dp"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Mesajınızı yazın"
                 android:background="@null"
-                android:src="@drawable/ic_attach_file_black_24dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/takePicture"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="ContentDescription,TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                tools:ignore="Autofill,HardcodedText,TextFields" />
 
-            <ImageButton
-                android:id="@+id/takePicture"
-                android:layout_width="22dp"
-                android:layout_height="0dp"
-                android:background="@null"
-                android:src="@drawable/ic_camera_alt_black_24dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/black"
-                tools:ignore="ContentDescription,TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+            <ImageView
+                android:layout_gravity="center"
+                android:padding="15dp"
+                android:id="@+id/buttonSend"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/send_message_img"
+                android:background="@drawable/send_button_background"
+                android:contentDescription="TODO"
+                tools:ignore="ContentDescription,HardcodedText" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/btnSend"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_margin="6dp"
-            app:backgroundTint="@color/g_blue"
-            app:fabCustomSize="48dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/messageInputContainer"
-            app:tint="@color/white"
-            tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

@@ -1,5 +1,6 @@
 package com.androiddevelopers.freelanceapp.adapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.Navigation
@@ -8,7 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.databinding.RowPreChatBinding
 import com.androiddevelopers.freelanceapp.model.PreChatModel
-import com.androiddevelopers.freelanceapp.view.chat.PreChatFragmentDirections
+import com.androiddevelopers.freelanceapp.view.chat.ChatsFragmentDirections
 import com.bumptech.glide.Glide
 
 class PreChatAdapter : RecyclerView.Adapter<PreChatAdapter.PreChatViewHolder>() {
@@ -38,12 +39,27 @@ class PreChatAdapter : RecyclerView.Adapter<PreChatAdapter.PreChatViewHolder>() 
 
     override fun onBindViewHolder(holder: PreChatViewHolder, position: Int) {
         val chat = chatsList[position]
+        val sharedPref = holder.itemView.context.getSharedPreferences("cht", Context.MODE_PRIVATE)
 
+
+        val time = chat.timestamp
+        if (time != null){
+            holder.binding.chatLastMessageTimeStamp.text = time.substringAfter(" ").split(":").take(2).joinToString(separator = ":")
+        }
+        val seen = chat.seen
+        if (seen != null){
+            if (seen){
+                holder.binding.unreadMessageIndicator.visibility = ViewGroup.INVISIBLE
+            }else{
+                holder.binding.unreadMessageIndicator.visibility = ViewGroup.VISIBLE
+            }
+        }
         Glide.with(holder.itemView.context).load(chat.receiverImage)
             .into(holder.binding.chatImage)
 
         holder.itemView.setOnClickListener {
-            val action = PreChatFragmentDirections.actionPreChatFragmentToPreMessagingFragment(
+            sharedPref.edit().putString("place", "pre_chat").apply()
+            val action = ChatsFragmentDirections.actionChatFragmentToPreMessagingFragment(
                 chat.postId.toString(),
                 chat.receiver.toString(),
                 chat.postType.toString(),

@@ -20,9 +20,6 @@
             android:id="@+id/action_navigation_home_to_notificationsFragment"
             app:destination="@id/notificationsFragment" />
         <action
-            android:id="@+id/action_navigation_home_to_preChatFragment"
-            app:destination="@id/preChatFragment" />
-        <action
             android:id="@+id/action_pre_message_notification"
             app:destination="@id/preMessagingFragment" />
         <action
@@ -112,6 +109,9 @@
         <action
             android:id="@+id/action_chatsFragment_to_createChatRoomFragment"
             app:destination="@id/createChatRoomFragment" />
+        <action
+            android:id="@+id/action_chatFragment_to_preMessagingFragment"
+            app:destination="@id/preMessagingFragment" />
     </fragment>
 
     <fragment
@@ -131,6 +131,9 @@
         <argument
             android:name="receiver_image"
             app:argType="string" />
+        <action
+            android:id="@+id/action_message_to_profile"
+            app:destination="@id/userProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/createChatRoomFragment"
@@ -163,7 +166,7 @@
     </fragment>
     <fragment
         android:id="@+id/editUserProfileInfoFragment"
-        android:name="com.androiddevelopers.freelanceapp.view.profile.EditUserProfileInfoFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.profile.editprofile.EditUserProfileInfoFragment"
         tools:layout="@layout/fragment_edit_user_profile_info">
         <action
             android:id="@+id/action_editUserProfileInfoFragment_to_editMainProfileInfoFragment"
@@ -189,7 +192,7 @@
     </fragment>
     <fragment
         android:id="@+id/editMainProfileInfoFragment"
-        android:name="com.androiddevelopers.freelanceapp.view.profile.EditMainProfileInfoFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.profile.editprofile.EditMainProfileInfoFragment"
         android:label="fragment_edit_main_profile_info"
         tools:layout="@layout/fragment_edit_main_profile_info">
         <argument
@@ -207,12 +210,12 @@
     </fragment>
     <fragment
         android:id="@+id/editProfileAccountSettingsFragment"
-        android:name="com.androiddevelopers.freelanceapp.view.profile.EditProfileAccountSettingsFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.profile.editprofile.EditProfileAccountSettingsFragment"
         android:label="fragment_edit_profile_account_settings"
         tools:layout="@layout/fragment_edit_profile_account_settings" />
     <fragment
         android:id="@+id/editProfilePersonalInfoFragment"
-        android:name="com.androiddevelopers.freelanceapp.view.profile.EditProfilePersonalInfoFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.profile.editprofile.EditProfilePersonalInfoFragment"
         android:label="fragment_edit_profile_personal_info"
         tools:layout="@layout/fragment_edit_profile_personal_info">
         <argument
@@ -225,7 +228,7 @@
     </fragment>
     <fragment
         android:id="@+id/editProfileServiceInfoFragment"
-        android:name="com.androiddevelopers.freelanceapp.view.profile.EditProfileServiceInfoFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.profile.editprofile.EditProfileServiceInfoFragment"
         android:label="fragment_edit_profile_service_info"
         tools:layout="@layout/fragment_edit_profile_service_info" />
 
@@ -438,15 +441,7 @@
         android:name="com.androiddevelopers.freelanceapp.view.NotificationsFragment"
         android:label="fragment_notifications"
         tools:layout="@layout/fragment_notifications" />
-    <fragment
-        android:id="@+id/preChatFragment"
-        android:name="com.androiddevelopers.freelanceapp.view.chat.PreChatFragment"
-        android:label="fragment_pre_chat"
-        tools:layout="@layout/fragment_pre_chat">
-        <action
-            android:id="@+id/action_preChatFragment_to_preMessagingFragment"
-            app:destination="@id/preMessagingFragment" />
-    </fragment>
+
     <fragment
         android:id="@+id/navigation_create"
         android:name="com.androiddevelopers.freelanceapp.view.BaseCreateFragment"

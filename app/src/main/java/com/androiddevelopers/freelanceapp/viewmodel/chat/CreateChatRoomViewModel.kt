@@ -3,6 +3,7 @@ package com.androiddevelopers.freelanceapp.viewmodel.chat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.androiddevelopers.freelanceapp.model.ChatModel
 import com.androiddevelopers.freelanceapp.model.FollowModel
 import com.androiddevelopers.freelanceapp.model.UserModel
@@ -28,9 +29,9 @@ class CreateChatRoomViewModel  @Inject constructor(
 
     val currentUserId = auth.currentUser?.let { it.uid }
 
-    private var _userProfiles = MutableLiveData<List<UserModel>>()
-    val userProfiles : LiveData<List<UserModel>>
-        get() = _userProfiles
+    private var _searchResult = MutableLiveData<List<FollowModel>>()
+    val searchResult : LiveData<List<FollowModel>>
+        get() = _searchResult
 
     private var _dataStatus = MutableLiveData<Resource<Boolean>>()
     val dataStatus : LiveData<Resource<Boolean>>
@@ -126,6 +127,20 @@ class CreateChatRoomViewModel  @Inject constructor(
                 }
             }
         )
+    }
+
+    fun searchPreChatByUsername(query: String) = viewModelScope.launch{
+        val list = followingUsers.value
+        val result = list?.filter { it.userName!!.contains(query, ignoreCase = true)  } ?: emptyList()
+        if (query.isEmpty()){
+            _searchResult.value = followingUsers.value
+            return@launch
+        }
+        if (result.isNotEmpty()){
+            _searchResult.value = result
+        }else{
+            _searchResult.value = followingUsers.value
+        }
     }
 
 

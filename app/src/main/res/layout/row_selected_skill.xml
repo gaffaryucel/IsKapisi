@@ -13,12 +13,13 @@
             android:paddingVertical="12dp"
             android:paddingHorizontal="8dp"
             android:layout_margin="5dp"
+            android:textStyle="bold"
             android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{skill}"
             android:background="@drawable/skill_text_bg"
-            android:textColor="#ffffff" /> <!-- Beyaz renkte metin -->
+            android:textColor="@color/bold_text_color" /> <!-- Beyaz renkte metin -->
 
     </FrameLayout>
 </layout>

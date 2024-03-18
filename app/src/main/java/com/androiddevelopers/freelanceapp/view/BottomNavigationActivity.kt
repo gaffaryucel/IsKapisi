@@ -3,9 +3,11 @@ package com.androiddevelopers.freelanceapp.view
 import android.R.id
 import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
@@ -13,28 +15,40 @@ import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.ActivityBottomNavigationBinding
 import com.androiddevelopers.freelanceapp.view.freelancer.HomeFragment
 import com.androiddevelopers.freelanceapp.view.freelancer.HomeFragmentDirections
+import com.androiddevelopers.freelanceapp.viewmodel.BottomNavigationViewModel
+import com.androiddevelopers.freelanceapp.viewmodel.profile.ProfileViewModel
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
 class BottomNavigationActivity : AppCompatActivity() {
 
+    private lateinit var viewModel: BottomNavigationViewModel
+
     private lateinit var binding: ActivityBottomNavigationBinding
+    private val mAuth = FirebaseAuth.getInstance()
+    private val mAuthListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
+        val user = firebaseAuth.currentUser
+        if (user == null) {
+            // Kullanıcı oturumu kapatıldığında yapılacak işlemler burada gerçekleştirilir
+            exit()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this)[BottomNavigationViewModel::class.java]
+
         supportActionBar?.hide()
         binding = ActivityBottomNavigationBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         //Bildirime tıklanıldığında çlaışacak işlemler için
         val sharedPref = applicationContext.getSharedPreferences("notification", Context.MODE_PRIVATE)
         val not_type = sharedPref.getString("not_type", "") ?: ""
         val isLogin = intent.getStringExtra("login")
-        println("login : "+isLogin)
-        if (isLogin.equals("login")){
-            println("in : ")
-        }else{
-            println("else : ")
+        if (!isLogin.equals("login")){
             if (not_type.isNotEmpty()){
                 sharedPref.edit().putBoolean("click", true).apply()
             }
@@ -75,14 +89,31 @@ class BottomNavigationActivity : AppCompatActivity() {
                 }
             }
         }
-        val notificationClicked = intent.getBooleanExtra("click", false)
-        println("gelen değer : "+notificationClicked)
-
+    }
+    private fun exit(){
+        val intent = Intent(this,MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        finish()
+        startActivity(intent)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         baseContext.getSharedPreferences("notification", Context.MODE_PRIVATE)
             .edit().clear().apply()
+    }
+
+
+
+    override fun onStart() {
+        super.onStart()
+        mAuth.addAuthStateListener(mAuthListener)
+        viewModel.setUserOnline()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mAuth.removeAuthStateListener(mAuthListener)
+        viewModel.setUserOffline()
     }
 }

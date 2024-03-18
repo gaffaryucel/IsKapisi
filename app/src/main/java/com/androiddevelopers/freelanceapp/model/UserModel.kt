@@ -32,6 +32,7 @@ class UserModel {
     var unfinishedJobs: Int? = null // Zamanında bitmeyen iş sayısı
     var rating: Double? = null
     var token: String? = null
+    var isOnline: Boolean? = null
 
     constructor()
 
@@ -62,7 +63,8 @@ class UserModel {
         canceledJobs: Int? = null,
         unfinishedJobs: Int? = null,
         rating: Double? = null,
-        token: String? = null
+        token: String? = null,
+        isOnline: Boolean? = null
     ) {
         this.userId = userId
         this.username = username
@@ -91,6 +93,7 @@ class UserModel {
         this.unfinishedJobs = unfinishedJobs
         this.rating = rating
         this.token = token
+        this.isOnline = isOnline
     }
 
     override fun equals(other: Any?): Boolean {

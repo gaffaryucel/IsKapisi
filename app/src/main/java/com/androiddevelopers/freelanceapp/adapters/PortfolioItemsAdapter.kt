@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.databinding.RowPortfolioItemBinding
 import com.androiddevelopers.freelanceapp.model.PortfolioItem
+import com.bumptech.glide.Glide
 
 class PortfolioItemsAdapter : RecyclerView.Adapter<PortfolioItemsAdapter.PortfolioItemViewHolder>() {
 
@@ -37,7 +38,16 @@ class PortfolioItemsAdapter : RecyclerView.Adapter<PortfolioItemsAdapter.Portfol
         holder.itemView.setOnClickListener {
             onClick?.invoke(portfolioItem)
         }
-        holder.binding.ivPortfolioItem.setImageBitmap(portfolioItem.image)
+        if (portfolioItem.imageUrl != null){
+            if (portfolioItem.imageUrl!!.isNotEmpty()){
+                Glide.with(holder.itemView.context).load(portfolioItem.imageUrl.toString()).into(holder.binding.ivPortfolioItem)
+            }else{
+                holder.binding.ivPortfolioItem.setImageBitmap(portfolioItem.image)
+            }
+        }else{
+            holder.binding.ivPortfolioItem.setImageBitmap(portfolioItem.image)
+        }
+
         holder.binding.apply {
             item = portfolioItem
         }
