@@ -17,6 +17,11 @@ fun String.snackbar(view: View, duration: Int = Toast.LENGTH_SHORT): Snackbar {
     return Snackbar.make(view, this, duration).apply { show() }
 }
 
+//String öğelerin sonuna fonksiyon ile toast çıkarma özelliği sağlar
+fun String.toast(view: View, duration: Int = Toast.LENGTH_SHORT): Toast {
+    return Toast.makeText(view.context, this, duration).apply { show() }
+}
+
 //Modellerdeki değişkenler ile veritabanı değişkenleri arasında uyumsuzluk olursa uygulamanın çökmemesi için eklendi
 fun QueryDocumentSnapshot.toUserModel(): UserModel? = try {
     toObject(UserModel::class.java)

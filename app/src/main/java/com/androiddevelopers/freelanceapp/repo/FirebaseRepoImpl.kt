@@ -48,7 +48,7 @@ class FirebaseRepoImpl @Inject constructor(
     private val discoverPostCollection = firestore.collection("discover_posts")
 
     //StorageRef
-    private val imagesParentRef = storage.reference.child("user_images")
+    private val imagesParentRef = storage.reference.child("users")
     private val profilePhotoRef = storage.reference
 
     //RealtimeRef
@@ -117,7 +117,7 @@ class FirebaseRepoImpl @Inject constructor(
         return freelancerPostCollection.document(postId).update("savedUsers", savedUsers)
     }
 
-    override fun addEmployerJobPostToFirestore(job: EmployerJobPost): Task<Void> {
+    override fun addEmployerPostToFirestore(job: EmployerJobPost): Task<Void> {
         return employerPostCollection.document(job.postId.toString()).set(job)
     }
 
@@ -147,32 +147,46 @@ class FirebaseRepoImpl @Inject constructor(
         return employerPostCollection.document(postId).update("savedUsers", savedUsers)
     }
 
-    override fun addImageToStorageForJobPosting(
+    override fun addFreelancerPostImage(
         uri: Uri,
         uId: String,
         postId: String,
-        file: String
     ): UploadTask {
         return imagesParentRef
-            .child(uId)
-            .child("job_posts")
-            .child(postId)
-            .child(file)
+            .child("userId=$uId")
+            .child("images")
+            .child("freelancerPost")
+            .child("postId=$postId")
+            .child("${UUID.randomUUID()}.jpg")
+            .putFile(uri)
+    }
+
+    override fun addEmployerPostImage(
+        uri: Uri,
+        uId: String,
+        postId: String,
+    ): UploadTask {
+        return imagesParentRef
+            .child("userId=$uId")
+            .child("images")
+            .child("employerPost")
+            .child("postId=$postId")
+            .child("${UUID.randomUUID()}.jpg")
             .putFile(uri)
     }
 
     override fun addDiscoverPostImage(
-        uri: Uri,
+        image: ByteArray,
         uId: String,
-        postId: String,
-        file: String
+        postId: String
     ): UploadTask {
         return imagesParentRef
-            .child(uId)
-            .child("job_posts")
-            .child(postId)
-            .child(file)
-            .putFile(uri)
+            .child("userId=$uId")
+            .child("images")
+            .child("discoverPost")
+            .child("postId=$postId")
+            .child("${UUID.randomUUID()}.jpg")
+            .putBytes(image)
     }
 
     override fun sendMessageToRealtimeDatabase(

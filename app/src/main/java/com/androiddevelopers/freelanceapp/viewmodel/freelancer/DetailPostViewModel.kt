@@ -171,10 +171,10 @@ class DetailPostViewModel @Inject constructor(
         messageReceiver: String,
     ) {
         val usersMessage = creatMessageModelForCurrentUser(
-            messageData, currentUserId ?: "", messageReceiver
+            messageData, currentUserId, messageReceiver
         )
         firebaseRepo.sendMessageToPreChatRoom(
-            currentUserId ?: "id yok", messageReceiver, chatId, usersMessage
+            currentUserId, messageReceiver, chatId, usersMessage
         )
     }
 
