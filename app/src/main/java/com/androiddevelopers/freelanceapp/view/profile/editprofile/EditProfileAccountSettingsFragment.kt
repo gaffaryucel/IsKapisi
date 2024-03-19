@@ -1,4 +1,4 @@
-package com.androiddevelopers.freelanceapp.view.profile
+package com.androiddevelopers.freelanceapp.view.profile.editprofile
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.androiddevelopers.freelanceapp.R
-import com.androiddevelopers.freelanceapp.viewmodel.profile.EditProfileAccountSettingsViewModel
+import com.androiddevelopers.freelanceapp.viewmodel.profile.editprofile.EditProfileAccountSettingsViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class EditProfileAccountSettingsFragment : Fragment() {

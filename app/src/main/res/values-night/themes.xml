@@ -80,10 +80,6 @@
 
 
 
-    <!-- Search View Styles -->
-    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
-        <item name="android:background">@drawable/search_view_background_dark</item>
-    </style>
 
     <!-- Bottom Nav Style -->
     <style name="MyBottomNavigationViewTheme" parent="Widget.Design.BottomNavigationView">
@@ -105,6 +101,74 @@
     <!-- Icons Style -->
     <style name="MessageIconStyle" >
         <item name="android:src">@drawable/message_white</item>
+    </style>
+
+<!-- NEW STYLE //////////////////////////////////////// -->
+
+    <!-- Application Background Style-->
+    <style name="ApplicationBackGround">
+        <item name="android:background">@color/app_bg_color</item>
+    </style>
+    <style name="ApplicationSecondaryBackground">
+        <item name="android:background">@color/secondary_bg_color</item>
+    </style>
+
+
+    <!-- Karanlık tema için buton stili -->
+    <style name="ButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/rounded_button_background</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+
+
+    <!-- Karanlık tema için Text stilleri -->
+    <style name="BoldTextStyle" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="SecondaryBigTextStyle" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="SecondaryTextStyle" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="ThirdTextStyle" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">12sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+
+    <!-- Karanlık tema için Icon stilleri -->
+    <style name="SchoolIconStyle" parent="FilterImageviewStyle">
+        <item name="android:background">@drawable/gray_rounded_bg</item>
+        <item name="android:padding">6dp</item>
+        <item name="android:src">@drawable/cap_white</item>
+        <item name="android:layout_width">65dp</item>
+        <item name="android:layout_height">65dp</item>
+    </style>
+
+    <!-- SearchView Stili -->
+    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <item name="android:background">@drawable/search_view_bg</item>
+        <item name="android:textColor">@color/searchview_text</item>
+        <item name="android:radius">8dp</item>
+    </style>
+
+    <!-- FAB Stili -->
+    <style name="FabStyle" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="android:src">@drawable/icon_add_light</item>
+        <item name="backgroundTint">@color/button_bg_color</item>
     </style>
 
 </resources>

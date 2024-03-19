@@ -2,6 +2,7 @@ package com.androiddevelopers.freelanceapp.viewmodel.chat
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.androiddevelopers.freelanceapp.model.MessageModel
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.Resource
@@ -10,7 +11,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.util.*
+import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,16 +37,21 @@ class MessagesViewModel @Inject constructor(
         messageData: String,
         messageReceiver: String,
     ) {
+        val time = getCurrentTime()
+
         val usersMessage = createMessageModelForCurrentUser(
-            messageData,
-            currentUserId,
-            messageReceiver
+            messageData ,
+            currentUserId ?: "" ,
+            messageReceiver,
+            time
         )
 
         _messageStatus.value = Resource.loading(null)
         repo.sendMessageToRealtimeDatabase(currentUserId, chatId, usersMessage)
             .addOnSuccessListener {
                 _messageStatus.value = Resource.success(null)
+                changeLastMessage(chatId,messageData,time,messageReceiver)
+                repo.changeReceiverSeenStatus(messageReceiver,chatId)
             }
             .addOnFailureListener { error ->
                 _messageStatus.value = error.localizedMessage?.let { Resource.error(it, null) }
@@ -52,18 +59,24 @@ class MessagesViewModel @Inject constructor(
         repo.addMessageInChatMatesRoom(messageReceiver, chatId, usersMessage)
     }
 
+    private fun changeLastMessage(chatId : String,messageData: String, time: String,messageReceiver : String) = viewModelScope.launch{
+        repo.changeLastMessage(currentUserId,chatId,messageData,time)
+        repo.changeLastMessageInChatMatesRoom(messageReceiver,chatId,messageData,time)
+    }
+
     private fun createMessageModelForCurrentUser(
         messageData: String,
         messageSender: String,
-        messageReceiver: String
-    ): MessageModel {
+        messageReceiver: String,
+        time : String
+    ) : MessageModel {
         val messageId = UUID.randomUUID().toString()
         return MessageModel(
             messageId,
             messageData,
             messageSender,
             messageReceiver,
-            getCurrentTime()
+            time
         )
     }
 
@@ -82,6 +95,7 @@ class MessagesViewModel @Inject constructor(
                     }
                     val sortedList = sortListByDate(messageList)
                     _messages.value = sortedList
+                    repo.seeMessage(currentUserId,chatId)
                 }
 
                 override fun onCancelled(error: DatabaseError) {

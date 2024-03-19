@@ -101,13 +101,14 @@ class FreelancerInfoFragment : Fragment() {
     }
 
     private fun openSkillSelectionDialog() {
-        val skillSelectionDialog = SkillSelectionDialogFragment()
+        val skillSelectionDialog = SkillSelectionDialogFragment(selectedSkillList)
 
         // SkillSelectionDialogFragment içerisindeki seçilen yeteneklerin listesine erişim sağlayan listener
         skillSelectionDialog.setOnSkillSelectedListener(object : SkillSelectionDialogFragment.OnSkillSelectedListener {
             override fun onSkillsSelected(selectedSkills: List<String>) {
                 // Seçilen yeteneklerin listesine ulaşma
                 if (selectedSkills.isNotEmpty()){
+                    selectedSkillList.clear()
                     selectedSkillsAdapter.skillList = selectedSkills
                     selectedSkillsAdapter.notifyDataSetChanged()
                     selectedSkillList.addAll(selectedSkills)
@@ -172,6 +173,7 @@ class FreelancerInfoFragment : Fragment() {
                     )
                     portfolio.add(item)
                 }
+                viewModel.updateUserInfo("portfolio",portfolio)
             }catch (e : Exception){
                 Toast.makeText(requireContext(), "Hata : Portföy resimlerinde bir sorun var", Toast.LENGTH_SHORT).show()
             }

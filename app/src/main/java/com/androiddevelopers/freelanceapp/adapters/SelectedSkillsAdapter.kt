@@ -35,7 +35,6 @@ class SelectedSkillsAdapter  : RecyclerView.Adapter<SelectedSkillsAdapter.Select
 
     override fun onBindViewHolder(holder: SelectedSkillViewHolder, position: Int) {
         val userSkill = skillList[position]
-        println("yetenekler : "+userSkill)
         holder.itemView.setOnClickListener {
             onClick?.invoke(userSkill)
         }

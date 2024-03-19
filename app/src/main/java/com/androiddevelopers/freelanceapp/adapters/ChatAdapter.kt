@@ -1,7 +1,10 @@
 package com.androiddevelopers.freelanceapp.adapters
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -37,21 +40,41 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
     override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
         val chat = chatsList[position]
+        val sharedPref = holder.itemView.context.getSharedPreferences("cht", Context.MODE_PRIVATE)
 
-        Glide.with(holder.itemView.context).load(chat.receiverUserImage)
-            .into(holder.binding.chatImage)
-        holder.binding.apply {
-            chatItem = chat
+        try {
+            Glide.with(holder.itemView.context).load(chat.receiverUserImage)
+                .into(holder.binding.chatImage)
+            val time = chat.chatLastMessageTimestamp
+            if (time != null){
+                holder.binding.chatLastMessageTimeStamp.text = time.substringAfter(" ").split(":").take(2).joinToString(separator = ":")
+            }
+            val seen = chat.seen
+            if (seen != null){
+                if (seen){
+                    holder.binding.unreadMessageIndicator.visibility = ViewGroup.INVISIBLE
+                }else{
+                    holder.binding.unreadMessageIndicator.visibility = ViewGroup.VISIBLE
+                }
+            }
+            holder.binding.apply {
+                chatItem = chat
+            }
+            holder.itemView.setOnClickListener {
+                sharedPref.edit().putString("place", "chat").apply()
+                val action = ChatsFragmentDirections.actionChatsFragmentToMessagesFragment(
+                    chat.chatId.toString(),
+                    chat.receiverId.toString(),
+                    chat.receiverUserName.toString(),
+                    chat.receiverUserImage.toString()
+                )
+                Navigation.findNavController(it).navigate(action)
+            }
+        }catch (e: Exception){
+            Toast.makeText(holder.itemView.context, "Hata : Chat", Toast.LENGTH_SHORT).show()
         }
-        holder.itemView.setOnClickListener {
-            val action = ChatsFragmentDirections.actionChatsFragmentToMessagesFragment(
-                chat.chatId.toString(),
-                chat.receiverId.toString(),
-                chat.receiverUserName.toString(),
-                chat.receiverUserImage.toString()
-            )
-            Navigation.findNavController(it).navigate(action)
-        }
+
+
     }
 
     override fun getItemCount(): Int {

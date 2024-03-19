@@ -11,7 +11,7 @@ import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.SelectableSkillAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentSkillSelectionDialogBinding
 
-class SkillSelectionDialogFragment : DialogFragment() {
+class SkillSelectionDialogFragment(private val preSelectedSkills : List<String>? = null) : DialogFragment() {
 
     private lateinit var binding: FragmentSkillSelectionDialogBinding
     private var adapter = SelectableSkillAdapter()
@@ -33,6 +33,12 @@ class SkillSelectionDialogFragment : DialogFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentSkillSelectionDialogBinding.inflate(inflater, container, false)
         val view = binding.root
+        if (preSelectedSkills != null){
+            selectedSkills.clear()
+            selectedSkills.addAll(preSelectedSkills)
+            adapter.selectedSkills.clear()
+            adapter.selectedSkills.addAll(preSelectedSkills)
+        }
 
         // values klasöründeki arrays.xml dosyasından yetenekleri al
         val skillArray = resources.getStringArray(R.array.important_skills).toList()
@@ -44,11 +50,10 @@ class SkillSelectionDialogFragment : DialogFragment() {
         binding.recyclerView.adapter = adapter
 
         // RecyclerView üzerindeki herhangi bir öğeye tıklandığında
-        adapter.setOnItemClickListener(object : SelectableSkillAdapter.OnItemClickListener {
-            override fun onItemClick(skill: String) {
-                selectedSkills.add(skill)
-            }
-        })
+        adapter.onClick =  {
+            selectedSkills.clear()
+            selectedSkills.addAll(it)
+        }
         binding.searchView.setOnQueryTextListener(object :SearchView.OnQueryTextListener,
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {

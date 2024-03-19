@@ -58,10 +58,13 @@ class PreMessagingViewModel @Inject constructor(
         messageData: String,
         messageReceiver: String,
     ) {
+        val time = getCurrentTime()
+
         val usersMessage = createChatModelForCurrentUser(
             messageData,
             currentUserId,
-            messageReceiver
+            messageReceiver,
+            time
         )
 
         _messageStatus.value = Resource.loading(null)
@@ -73,6 +76,8 @@ class PreMessagingViewModel @Inject constructor(
         )
             .addOnSuccessListener {
                 _messageStatus.value = Resource.success(null)
+                repo.changeLastPreMessage(currentUserId,messageReceiver,chatId,messageData,time)
+                repo.changeReceiverPreSeenStatus(messageReceiver,chatId)
             }
             .addOnFailureListener { error ->
                 _messageStatus.value = error.localizedMessage?.let { Resource.error(it, null) }
@@ -82,7 +87,8 @@ class PreMessagingViewModel @Inject constructor(
     private fun createChatModelForCurrentUser(
         messageData: String,
         messageSender: String,
-        messageReceiver: String
+        messageReceiver: String,
+        time : String
     ): MessageModel {
         val messageId = UUID.randomUUID().toString()
         return MessageModel(
@@ -90,7 +96,7 @@ class PreMessagingViewModel @Inject constructor(
             messageData,
             messageSender,
             messageReceiver,
-            getCurrentTime()
+            time
         )
     }
 
@@ -107,6 +113,7 @@ class PreMessagingViewModel @Inject constructor(
                             messageList.add(it)
                         }
                     }
+                    repo.seePreMessage(currentUserId,chatId)
                     _messageStatus.value = Resource.success(null)
                     val sortedList = sortListByDate(messageList)
                     _messages.value = sortedList

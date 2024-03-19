@@ -33,7 +33,7 @@ class ProfileDiscoverPostDetailsViewModel @Inject constructor(
 
     private fun getUserDataFromFirebase() {
         _message.value = Resource.loading(null)
-        firebaseRepo.getAllDiscoverPostsFromUser(userId)
+        firebaseRepo.getAllDiscoverPostsFromUser(userId,200)
             .addOnSuccessListener {
                 val postList = mutableListOf<DiscoverPostModel>()
                 for (document in it.documents) {

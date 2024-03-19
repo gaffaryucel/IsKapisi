@@ -105,10 +105,6 @@ class HomeFragment : Fragment() {
                 val action = HomeFragmentDirections.actionNavigationHomeToChatsFragment()
                 Navigation.findNavController(it).navigate(action)
             }
-            preChatIcon.setOnClickListener {
-                val action = HomeFragmentDirections.actionNavigationHomeToPreChatFragment()
-                Navigation.findNavController(it).navigate(action)
-            }
         }
         getSharedPref()
     }
@@ -130,13 +126,13 @@ class HomeFragment : Fragment() {
                     val receiverUserImage = sharedPref.getString("receiverUserImage", "")
                     sharedPref.edit().clear().apply()
 
-                    if (userId.isNotEmpty()) {
-                        val action = HomeFragmentDirections.actionMessageNotification(
-                            chatId.toString(),
-                            receiverId.toString(),
-                            receiverUserName.toString(),
-                            receiverUserImage.toString()
-                        )
+                    if (userId.isNotEmpty()){
+                        val action = HomeFragmentDirections.actionMessageNotification(chatId.toString(),receiverId.toString(),receiverUserName.toString(),receiverUserImage.toString())
+                        sharedPref.edit().remove("chatId").apply()
+                        sharedPref.edit().remove("receiverId").apply()
+                        sharedPref.edit().remove("receiverUserName").apply()
+                        sharedPref.edit().remove("receiverUserImage").apply()
+
                         chatId = ""
                         Navigation.findNavController(requireView()).navigate(action)
                     }
@@ -148,22 +144,22 @@ class HomeFragment : Fragment() {
                     val postId = sharedPref.getString("postId", "")
                     val type = sharedPref.getString("type", "")
                     sharedPref.edit().clear().apply()
-                    if (userId.isNotEmpty()) {
-                        val action = HomeFragmentDirections.actionPreMessageNotification(
-                            postId.toString(),
-                            userId.toString(),
-                            type.toString(),
-                            null,
-                            null
-                        )
+
+                    if (userId.isNotEmpty()){
+                        val action = HomeFragmentDirections.actionPreMessageNotification(postId.toString(),userId.toString(),type.toString(),null,null)
+                        sharedPref.edit().remove("userId").apply()
+                        sharedPref.edit().remove("postId").apply()
+                        sharedPref.edit().remove("type").apply()
+
                         userId = ""
+
                         Navigation.findNavController(requireView()).navigate(action)
                     }
                 }
 
                 NotificationTypeForActions.FRL_JOB_POST.toString() -> {
                     val freelancerPostObject = sharedPref.getString("freelancerPostObject", "")
-                    sharedPref.edit().clear().apply()
+                    sharedPref.edit().remove("freelancerPostObject").apply()
 
                     val action = HomeFragmentDirections.actionFreelancerJobPostDetailsNotification(
                         freelancerPostObject.toString()
@@ -173,7 +169,7 @@ class HomeFragment : Fragment() {
 
                 NotificationTypeForActions.EMP_JOB_POST.toString() -> {
                     val employerPostObject = sharedPref.getString("employerPostObject", "")
-                    sharedPref.edit().clear().apply()
+                    sharedPref.edit().remove("employerPostObject").apply()
 
                     val action =
                         HomeFragmentDirections.actionJobPostDetailsNotification(employerPostObject.toString())
@@ -182,7 +178,7 @@ class HomeFragment : Fragment() {
 
                 NotificationTypeForActions.LIKE.toString() -> {
                     val postId = sharedPref.getString("like", "")
-                    sharedPref.edit().clear().apply()
+                    sharedPref.edit().remove("like").apply()
 
                     val action = HomeFragmentDirections.actionDiscoverPostLikeNotification("1")
                     Navigation.findNavController(requireView()).navigate(action)
@@ -190,7 +186,7 @@ class HomeFragment : Fragment() {
 
                 NotificationTypeForActions.COMMENT.toString() -> {
                     val postId = sharedPref.getString("comment", "")
-                    sharedPref.edit().clear().apply()
+                    sharedPref.edit().remove("comment").apply()
 
                     val action = HomeFragmentDirections.actionDiscoverPostCommentsNotification(
                         postId.toString(),
@@ -201,7 +197,7 @@ class HomeFragment : Fragment() {
 
                 NotificationTypeForActions.FOLLOW.toString() -> {
                     val followerId = sharedPref.getString("followObject", "")
-                    sharedPref.edit().clear().apply()
+                    sharedPref.edit().remove("followObject").apply()
 
                     val action =
                         HomeFragmentDirections.actionFollowNotification(followerId.toString())

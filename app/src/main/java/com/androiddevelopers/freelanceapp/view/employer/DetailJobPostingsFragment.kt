@@ -21,14 +21,11 @@ import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
 import com.androiddevelopers.freelanceapp.util.NotificationType
 import com.androiddevelopers.freelanceapp.util.Status
-import com.androiddevelopers.freelanceapp.util.Util
-import com.androiddevelopers.freelanceapp.util.Util.EMPLOYER_POST_TOPIC
 import com.androiddevelopers.freelanceapp.util.downloadImage
 import com.androiddevelopers.freelanceapp.util.snackbar
 import com.androiddevelopers.freelanceapp.viewmodel.employer.DetailJobPostingsViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.UUID
 
@@ -166,7 +163,9 @@ class DetailJobPostingsFragment : Fragment() {
             DetailJobPostingsFragmentDirections.actionDetailJobPostingsFragmentToPreMessagingFragment(
                 post?.postId ?: "", post?.employerId ?: "", "emp", offer, offerDescription
             )
+        viewModel.setMessageValue(true)
         Navigation.findNavController(requireView()).navigate(action)
+
     }
 
     private fun observeLiveData(owner: LifecycleOwner) {

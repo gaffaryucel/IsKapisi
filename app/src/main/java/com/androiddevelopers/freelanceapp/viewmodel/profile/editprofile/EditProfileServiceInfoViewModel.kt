@@ -1,4 +1,4 @@
-package com.androiddevelopers.freelanceapp.viewmodel.profile
+package com.androiddevelopers.freelanceapp.viewmodel.profile.editprofile
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
