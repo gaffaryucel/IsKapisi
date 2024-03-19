@@ -56,7 +56,7 @@ interface FirebaseRepoInterFace {
     ): Task<Void>
 
     // Firestore Employer Job Post işlemleri
-    fun addEmployerJobPostToFirestore(job: EmployerJobPost): Task<Void>
+    fun addEmployerPostToFirestore(job: EmployerJobPost): Task<Void>
     fun getAllEmployerJobPostFromFirestore(): Task<QuerySnapshot>
     fun getEmployerJobPostWithDocumentByIdFromFirestore(documentId: String): Task<DocumentSnapshot>
     fun updateViewCountEmployerJobPostWithDocumentById(
@@ -111,18 +111,23 @@ interface FirebaseRepoInterFace {
     ): Task<Void>
 
     // Firebase Storage işlemleri
-    fun addImageToStorageForJobPosting(
+
+    fun addFreelancerPostImage(
         uri: Uri,
         uId: String,
         postId: String,
-        file: String
+    ): UploadTask
+
+    fun addEmployerPostImage(
+        uri: Uri,
+        uId: String,
+        postId: String,
     ): UploadTask
 
     fun addDiscoverPostImage(
-        uri: Uri,
+        image: ByteArray,
         uId: String,
-        postId: String,
-        file: String
+        postId: String
     ): UploadTask
 
     //User Profile Data İşlemleri

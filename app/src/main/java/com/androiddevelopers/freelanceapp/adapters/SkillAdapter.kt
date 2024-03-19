@@ -34,9 +34,9 @@ class SkillAdapter : RecyclerView.Adapter<SkillAdapter.SkillViewHolder>() {
     override fun onBindViewHolder(holder: SkillViewHolder, position: Int) {
         with(holder) {
             with(binding) {
-                skill = skills[position]
+                "\u2713 ${skills[position]}".also { skillRowTextView.text = it }
 
-                deleteRowtextView.setOnClickListener {
+                deleteRowTextView.setOnClickListener {
                     skills.removeAt(position)
                     onClickDelete(skills)
                 }

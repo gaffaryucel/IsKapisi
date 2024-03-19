@@ -20,8 +20,11 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateJobPostingViewModel
 @Inject constructor(
-    private val firebaseRepo: FirebaseRepoInterFace, private val firebaseAuth: FirebaseAuth
+    private val firebaseRepo: FirebaseRepoInterFace,
+    firebaseAuth: FirebaseAuth
 ) : ViewModel() {
+
+    private val userId = firebaseAuth.currentUser?.uid.toString()
 
     private var _firebaseMessage = MutableLiveData<Resource<Boolean>>()
     val firebaseMessage: LiveData<Resource<Boolean>>
@@ -43,56 +46,53 @@ class CreateJobPostingViewModel
     val firebaseLiveData: LiveData<EmployerJobPost>
         get() = _firebaseLiveData
 
-    fun addImageAndJobPostToFirebase(
-        newUriList: MutableList<Uri>,
+    fun addImageAndEmployerPostToFirebase(
+        images: MutableList<Uri>,
         jobPost: EmployerJobPost,
-        downloadUriList: MutableList<String> = mutableListOf()
+        uploadedImages: MutableList<String> = mutableListOf()
     ) {
-        val uId = firebaseAuth.currentUser?.uid.toString()
-        if (newUriList.size > 0) {
-            val uri = newUriList[0]
+        if (jobPost.postId == null) {
+            jobPost.postId = UUID.randomUUID().toString()
+        }
+
+        if (images.size > 0) {
+            val uri = images[0]
             if (uri.toString().contains("firebasestorage")) {
-                newUriList.removeAt(0)
-                downloadUriList.add(uri.toString())
-                addImageAndJobPostToFirebase(newUriList, jobPost, downloadUriList)
+                images.removeAt(0)
+                uploadedImages.add(uri.toString())
+                addImageAndEmployerPostToFirebase(images, jobPost, uploadedImages)
             } else {
                 _firebaseMessage.value = Resource.loading(true)
-                uri.lastPathSegment?.let { file ->
-                    firebaseRepo.addImageToStorageForJobPosting(uri, uId, jobPost.postId!!, file)
-                        .addOnSuccessListener { task ->
-                            task.storage.downloadUrl.addOnSuccessListener {
-                                newUriList.removeAt(0)
-                                downloadUriList.add(it.toString())
-                                addImageAndJobPostToFirebase(
-                                    newUriList, jobPost, downloadUriList
-                                )
-                            }.addOnFailureListener {
-                                _firebaseMessage.value = it.localizedMessage?.let { message ->
-                                    _firebaseMessage.value = Resource.loading(false)
-                                    Resource.error(message, false)
-                                }
-                            }
+                firebaseRepo.addEmployerPostImage(uri, userId, jobPost.postId!!)
+                    .addOnSuccessListener { task ->
+                        task.storage.downloadUrl.addOnSuccessListener { uri ->
+                            images.removeAt(0)
+                            uploadedImages.add(uri.toString())
+                            addImageAndEmployerPostToFirebase(images, jobPost, uploadedImages)
                         }.addOnFailureListener {
                             _firebaseMessage.value = it.localizedMessage?.let { message ->
                                 _firebaseMessage.value = Resource.loading(false)
                                 Resource.error(message, false)
                             }
                         }
-                }
+                    }.addOnFailureListener {
+                        _firebaseMessage.value = it.localizedMessage?.let { message ->
+                            _firebaseMessage.value = Resource.loading(false)
+                            Resource.error(message, false)
+                        }
+                    }
+
             }
         } else {
-            if (jobPost.postId == null) {
-                jobPost.postId = UUID.randomUUID().toString()
-            }
-            jobPost.images = downloadUriList
-            jobPost.employerId = uId
-            addJobPostingToFirebase(jobPost)
+            jobPost.images = uploadedImages
+            jobPost.employerId = userId
+            addEmployerPostToFirebase(jobPost)
         }
     }
 
-    private fun addJobPostingToFirebase(jobPost: EmployerJobPost) = viewModelScope.launch {
+    private fun addEmployerPostToFirebase(jobPost: EmployerJobPost) = viewModelScope.launch {
         _firebaseMessage.value = Resource.loading(true)
-        firebaseRepo.addEmployerJobPostToFirestore(jobPost).addOnCompleteListener { task ->
+        firebaseRepo.addEmployerPostToFirestore(jobPost).addOnCompleteListener { task ->
             _firebaseMessage.value = Resource.loading(false)
             if (task.isSuccessful) {
                 _firebaseMessage.value = Resource.success(true)

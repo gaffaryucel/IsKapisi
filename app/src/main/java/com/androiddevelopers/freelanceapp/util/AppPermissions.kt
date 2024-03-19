@@ -1,5 +1,6 @@
 package com.androiddevelopers.freelanceapp.util
 
+import android.Manifest
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Build
@@ -7,7 +8,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
 fun checkPermissionImageGallery(activity: Activity, requestCode: Int): Boolean {
-    val currentPermission = chooseImagePermission()
+    val currentPermission = chooseImageMediaPermission()
     return if (ContextCompat.checkSelfPermission(
             activity,
             currentPermission
@@ -22,13 +23,29 @@ fun checkPermissionImageGallery(activity: Activity, requestCode: Int): Boolean {
         )
         false
     }
-
 }
 
-fun chooseImagePermission(): String {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        android.Manifest.permission.READ_MEDIA_IMAGES
+fun checkPermissionImageCamera(activity: Activity, requestCode: Int): Boolean {
+    return if (ContextCompat.checkSelfPermission(
+            activity,
+            Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED
+    ) {
+        true
     } else {
-        android.Manifest.permission.READ_EXTERNAL_STORAGE
+        ActivityCompat.requestPermissions(
+            activity,
+            arrayOf(Manifest.permission.CAMERA),
+            requestCode
+        )
+        false
+    }
+}
+
+private fun chooseImageMediaPermission(): String {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        Manifest.permission.READ_MEDIA_IMAGES
+    } else {
+        Manifest.permission.READ_EXTERNAL_STORAGE
     }
 }

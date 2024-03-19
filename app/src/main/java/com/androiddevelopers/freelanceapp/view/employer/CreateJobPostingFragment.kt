@@ -40,7 +40,6 @@ class CreateJobPostingFragment : Fragment() {
     private lateinit var viewModel: CreateJobPostingViewModel
     private lateinit var datePicker: MaterialDatePicker<Long>
     private val selectedImages = mutableListOf<Uri>()
-    private var selectedImagesSize = 0
 
     private lateinit var imageLauncher: ActivityResultLauncher<Intent>
     private var _binding: FragmentJobPostingsCreateBinding? = null
@@ -115,7 +114,7 @@ class CreateJobPostingFragment : Fragment() {
             //yeni iş ilanını veri tabanına göndermek için kaydet butonunu dinliyoruz
             createJobPostSaveButton.setOnClickListener {
                 with(viewModel) {
-                    addImageAndJobPostToFirebase( //resim ve işveren ilanı bilgilerini view modele gönderiyoruz
+                    addImageAndEmployerPostToFirebase( //resim ve işveren ilanı bilgilerini view modele gönderiyoruz
                         selectedImages, // yüklenecek resimlerin cihazdaki konumu
                         EmployerJobPost( // işveren ilanı için formda doldurulan yerler ile birlikte gönderi oluşturuyoruz
                             postId = employerJobPost?.postId,
@@ -174,16 +173,18 @@ class CreateJobPostingFragment : Fragment() {
             )
 
             fabLoadImage.setOnClickListener {
-                chooseImage()
+                if (checkPermissionImageGallery(requireActivity(), 800)) {
+                    openImagePicker()
+                }
             }
         }
 
         imageLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == Activity.RESULT_OK) {
-                    result.data?.data?.let {
-                        selectedImages.add(it)
-                        viewModel.setImageUriList(selectedImages)
+                    result.data?.data?.let { image ->
+                        selectedImages.add(image)
+                        viewModel.setImageUriList(selectedImages.toList())
                     }
                 }
             }
@@ -218,8 +219,8 @@ class CreateJobPostingFragment : Fragment() {
 
             imageUriList.observe(owner) { images ->
                 selectedImages.clear()
-                selectedImages.addAll(images)
-                viewPagerAdapter.refreshList(images)
+                selectedImages.addAll(images.toList())
+                viewPagerAdapter.refreshList(images.toList())
                 with(binding) {
                     //indicatoru viewpager yeni liste ile set ediyoruz
                     indicatorCreateJobPost.setViewPager(viewPagerCreateJobPost)
@@ -227,8 +228,6 @@ class CreateJobPostingFragment : Fragment() {
             }
 
             imageSize.observe(owner) {
-                selectedImagesSize = it
-
                 //seçilen resim olmadığında viewpager 'ı gizleyip boş bir resim gösteriyoruz
                 //resim seçildiğinde işlemi tersine alıyoruz
                 with(binding) {
@@ -254,7 +253,7 @@ class CreateJobPostingFragment : Fragment() {
             post.images?.let { images ->
                 if (images.isNotEmpty()) {
                     val uriList = images.map { s -> Uri.parse(s) }
-                    viewModel.setImageUriList(uriList as ArrayList<Uri>)
+                    viewModel.setImageUriList(uriList.toList())
                 }
             }
 
@@ -299,12 +298,6 @@ class CreateJobPostingFragment : Fragment() {
             binding.createJobPostProgressBar.visibility = View.VISIBLE
         } else {
             binding.createJobPostProgressBar.visibility = View.INVISIBLE
-        }
-    }
-
-    private fun chooseImage() {
-        if (checkPermissionImageGallery(requireActivity(), 800)) {
-            openImagePicker()
         }
     }
 

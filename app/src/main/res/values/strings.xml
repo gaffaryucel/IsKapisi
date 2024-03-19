@@ -79,13 +79,13 @@
     <string name="start_level">Level 1</string>
     <string name="next_level">Next Level</string>
     <string name="level_text">Level %1$d</string>
-    <!-- -
-    This is an ad unit ID for an interstitial test ad. Replace with your own interstitial ad unit id.
-    For more information, see https://support.google.com/admob/answer/3052638
-<!- -->
     <string name="interstitial_ad_unit_id">YOUR_INTERSTITIAL_AD_UNIT_ID</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="enter_budget_freelancer">Talep ettiğiniz ücret</string>
     <string name="enter_skills_freelancer">Verilecek diğer hizmetler</string>
+    <string name="image_source">Resim Kaynağı?</string>
+    <string name="open_camera">Kamerayı aç</string>
+    <string name="open_gallery">Galeriyi aç</string>
+    <string name="enter_tags">Etiketleri girin…</string>
+    <string name="enter_description_discover">Açıklama girin…</string>
 </resources>

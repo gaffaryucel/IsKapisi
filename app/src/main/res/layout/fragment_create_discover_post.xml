@@ -1,108 +1,224 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".view.discover.CreateDiscoverPostFragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
-        android:id="@+id/ivAddImage"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:src="@drawable/icon_add"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <data>
+
+        <import type="androidx.navigation.Navigation" />
+
+        <variable
+            name="rvTagAdapter"
+            type="com.androiddevelopers.freelanceapp.adapters.discover.TagAdapter" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        app:cardCornerRadius="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/black" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layoutCreatePost"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/ivPost"
-            android:layout_width="120dp"
-            android:layout_height="215dp"
-            android:layout_margin="15dp"
-            android:src="@drawable/image_placeholder"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="HardcodedText" />
-
-
-        <EditText
-            android:id="@+id/etDescription"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:gravity="top"
-            android:hint="Description"
-            app:layout_constraintBottom_toBottomOf="@+id/ivPost"
-            app:layout_constraintEnd_toStartOf="@+id/ivPost"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="HardcodedText" />
-
+        app:layout_constraintWidth_max="400dp"
+        tools:context=".view.discover.CreateDiscoverPostFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/etDescription">
+            android:layout_height="match_parent"
+            android:padding="10dp">
 
-            <EditText
-                android:id="@+id/etTags"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layoutTopIconsDiscoverCreate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:hint="Tags"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/ivAddTag"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="HardcodedText" />
+                app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/ivAddTag"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:src="@drawable/baseline_add_24"
-                app:layout_constraintBottom_toTopOf="@id/tvAllTags"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="ContentDescription"
-                tools:srcCompat="@android:drawable/ic_input_add" />
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/ivBackButton"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:onClick="@{() -> Navigation.findNavController(ivBackButton).popBackStack()}"
+                    android:src="@drawable/baseline_keyboard_arrow_left_24"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/tvAllTags"
-                android:layout_width="match_parent"
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/progressBarDiscoverCreate"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layoutTopIconsDiscoverCreate" />
+
+            <ScrollView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="@dimen/job_post_detail_top_margin"
+                android:fillViewport="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/etTags" />
+                app:layout_constraintTop_toBottomOf="@id/progressBarDiscoverCreate">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/imagePlaceHolderDiscoverCreate"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:src="@drawable/placeholder"
+                        app:layout_constraintBottom_toBottomOf="@id/layoutImageViewsDiscoverCreate"
+                        app:layout_constraintEnd_toEndOf="@id/layoutImageViewsDiscoverCreate"
+                        app:layout_constraintStart_toStartOf="@id/layoutImageViewsDiscoverCreate"
+                        app:layout_constraintTop_toTopOf="@id/layoutImageViewsDiscoverCreate" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/layoutImageViewsDiscoverCreate"
+                        android:layout_width="0dp"
+                        android:layout_height="300dp"
+                        android:layout_margin="10dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintWidth_max="@dimen/edittextMaxWidth">
+
+
+                        <androidx.viewpager2.widget.ViewPager2
+                            android:id="@+id/viewPagerDiscoverCreate"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:orientation="horizontal"
+                            app:layout_constraintBottom_toTopOf="@id/indicatorDiscoverCreate"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <me.relex.circleindicator.CircleIndicator3
+                            android:id="@+id/indicatorDiscoverCreate"
+                            style="@style/IndicatorStyle"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="@id/viewPagerDiscoverCreate"
+                            app:layout_constraintStart_toStartOf="@id/viewPagerDiscoverCreate"
+                            app:layout_constraintTop_toBottomOf="@id/viewPagerDiscoverCreate" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fabChooseImageSource"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="8dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:fabCustomSize="48dp"
+                        app:fabSize="auto"
+                        app:layout_constraintBottom_toBottomOf="@id/layoutImageViewsDiscoverCreate"
+                        app:layout_constraintEnd_toEndOf="@id/layoutImageViewsDiscoverCreate"
+                        app:srcCompat="@drawable/baseline_add_a_photo_24"
+                        tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/descriptionTextInputLayout"
+                        style="@style/StyleTextInputLayout"
+                        isEmptyCheck="@{descriptionTextInputEditText}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/createJobPostingMarginTop"
+                        app:endIconMode="clear_text"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/layoutImageViewsDiscoverCreate">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/descriptionTextInputEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/enter_description_discover"
+                            tools:ignore="TextContrastCheck" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/tagLayoutDiscoverCreate"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/createJobPostingMarginTop"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/descriptionTextInputLayout"
+                        app:layout_constraintWidth_max="@dimen/edittextMaxWidth">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/tagAddTextInputLayout"
+                            style="@style/StyleTextInputLayout"
+                            android:layout_marginTop="0dp"
+                            android:layout_weight="1"
+                            app:endIconDrawable="@drawable/baseline_add_24"
+                            app:endIconMode="custom"
+                            app:errorEnabled="true"
+                            app:layout_constraintBottom_toTopOf="@id/skillRowRecyclerView"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/tagAddEditText"
+                                style="@style/StyleTextInputEditText"
+                                android:hint="@string/enter_tags"
+                                tools:ignore="TextContrastCheck" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/skillRowRecyclerView"
+                            setHasFixedSize="@{true}"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:adapter="@{rvTagAdapter}"
+                            android:padding="4dp"
+                            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tagAddTextInputLayout"
+                            app:spanCount="2" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <Button
+                        android:id="@+id/deleteButtonDiscoverCreate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:backgroundTint="@color/delete_button"
+                        android:text="@string/delete"
+                        app:layout_constraintBottom_toBottomOf="@id/saveButtonDiscoverCreate"
+                        app:layout_constraintEnd_toStartOf="@id/saveButtonDiscoverCreate"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/saveButtonDiscoverCreate" />
+
+                    <Button
+                        android:id="@+id/saveButtonDiscoverCreate"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:text="@string/save"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/deleteButtonDiscoverCreate"
+                        app:layout_constraintTop_toBottomOf="@id/tagLayoutDiscoverCreate"
+                        app:layout_constraintWidth_max="@dimen/buttonMaxWidth" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </ScrollView>
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/shareButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginVertical="10dp"
-            android:text="Share"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:ignore="HardcodedText" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</layout>

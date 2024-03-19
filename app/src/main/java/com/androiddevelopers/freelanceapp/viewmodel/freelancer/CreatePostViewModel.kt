@@ -67,28 +67,28 @@ class CreatePostViewModel @Inject constructor(
                 addImageAndJobPostToFirebase(newUriList, post, downloadUriList)
             } else {
                 _firebaseMessage.value = Resource.loading(true)
-                uri.lastPathSegment?.let { file ->
-                    firebaseRepo.addImageToStorageForJobPosting(uri, uId, post.postId!!, file)
-                        .addOnSuccessListener { task ->
-                            task.storage.downloadUrl.addOnSuccessListener {
-                                newUriList.removeAt(0)
-                                downloadUriList.add(it.toString())
-                                addImageAndJobPostToFirebase(
-                                    newUriList, post, downloadUriList
-                                )
-                            }.addOnFailureListener {
-                                _firebaseMessage.value = it.localizedMessage?.let { message ->
-                                    _firebaseMessage.value = Resource.loading(false)
-                                    Resource.error(message, false)
-                                }
-                            }
+                //TODO:freelance için metod oluştur
+                firebaseRepo.addEmployerPostImage(uri, uId, post.postId.toString())
+                    .addOnSuccessListener { task ->
+                        task.storage.downloadUrl.addOnSuccessListener {
+                            newUriList.removeAt(0)
+                            downloadUriList.add(it.toString())
+                            addImageAndJobPostToFirebase(
+                                newUriList, post, downloadUriList
+                            )
                         }.addOnFailureListener {
                             _firebaseMessage.value = it.localizedMessage?.let { message ->
                                 _firebaseMessage.value = Resource.loading(false)
                                 Resource.error(message, false)
                             }
                         }
-                }
+                    }.addOnFailureListener {
+                        _firebaseMessage.value = it.localizedMessage?.let { message ->
+                            _firebaseMessage.value = Resource.loading(false)
+                            Resource.error(message, false)
+                        }
+                    }
+
             }
         } else {
             if (post.postId == null) {

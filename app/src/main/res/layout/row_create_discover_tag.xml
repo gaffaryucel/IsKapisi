@@ -8,27 +8,30 @@
     android:paddingVertical="6dp">
 
     <TextView
-        android:id="@+id/skillRowTextView"
-        android:layout_width="wrap_content"
+        android:id="@+id/tagRowTextView"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/deleteRowTextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="\u2713 Eklenen yeni yetenek" />
+        tools:text="\u2713 Eklenen yeni tag" />
 
     <TextView
         android:id="@+id/deleteRowTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:gravity="center_vertical"
         android:text="@string/is_delete"
-        android:textColor="@color/design_default_color_error"
+        android:textColor="@color/delete_button"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tagRowTextView"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

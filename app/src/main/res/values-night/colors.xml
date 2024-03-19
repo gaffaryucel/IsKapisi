@@ -12,4 +12,5 @@
     <color name="card_job_overview">@color/md_theme_dark_background</color>
     <color name="bookmark_filled">@color/md_theme_dark_primary</color>
     <color name="rating_star">#FFD700</color>
+    <color name="choose_source_image">@color/md_theme_dark_primary</color>
 </resources>
