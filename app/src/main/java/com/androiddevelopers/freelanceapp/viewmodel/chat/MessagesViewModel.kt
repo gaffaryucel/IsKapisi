@@ -17,25 +17,24 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MessagesViewModel @Inject constructor(
-    private val repo  : FirebaseRepoInterFace,
-    auth  : FirebaseAuth
-): BaseChatViewModel(repo,auth) {
+    private val repo: FirebaseRepoInterFace,
+    auth: FirebaseAuth
+) : BaseChatViewModel(repo, auth) {
 
 
     private var _messages = MutableLiveData<List<MessageModel>>()
-    val messages : LiveData<List<MessageModel>>
+    val messages: LiveData<List<MessageModel>>
         get() = _messages
 
 
     private var _messageStatus = MutableLiveData<Resource<Boolean>>()
-    val messageStatus : LiveData<Resource<Boolean>>
+    val messageStatus: LiveData<Resource<Boolean>>
         get() = _messageStatus
 
 
-
     fun sendMessage(
-        chatId : String,
-        messageData : String,
+        chatId: String,
+        messageData: String,
         messageReceiver: String,
     ) {
         val time = getCurrentTime()
@@ -48,16 +47,16 @@ class MessagesViewModel @Inject constructor(
         )
 
         _messageStatus.value = Resource.loading(null)
-        repo.sendMessageToRealtimeDatabase(currentUserId ?: "id yok",chatId,usersMessage)
+        repo.sendMessageToRealtimeDatabase(currentUserId, chatId, usersMessage)
             .addOnSuccessListener {
                 _messageStatus.value = Resource.success(null)
                 changeLastMessage(chatId,messageData,time,messageReceiver)
                 repo.changeReceiverSeenStatus(messageReceiver,chatId)
             }
             .addOnFailureListener { error ->
-                _messageStatus.value = error.localizedMessage?.let { Resource.error(it,null) }
+                _messageStatus.value = error.localizedMessage?.let { Resource.error(it, null) }
             }
-        repo.addMessageInChatMatesRoom(messageReceiver,chatId,usersMessage)
+        repo.addMessageInChatMatesRoom(messageReceiver, chatId, usersMessage)
     }
 
     private fun changeLastMessage(chatId : String,messageData: String, time: String,messageReceiver : String) = viewModelScope.launch{
@@ -81,10 +80,10 @@ class MessagesViewModel @Inject constructor(
         )
     }
 
-    fun getMessages(chatId : String) {
+    fun getMessages(chatId: String) {
         _messageStatus.value = Resource.loading(null)
-        repo.getAllMessagesFromRealtimeDatabase(currentUserId ?: "",chatId).addValueEventListener(
-            object : ValueEventListener{
+        repo.getAllMessagesFromRealtimeDatabase(currentUserId, chatId).addValueEventListener(
+            object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val messageList = mutableListOf<MessageModel>()
 
@@ -100,7 +99,8 @@ class MessagesViewModel @Inject constructor(
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    _messageStatus.value =  Resource.error(error.message,null) }
+                    _messageStatus.value = Resource.error(error.message, null)
+                }
             }
         )
     }

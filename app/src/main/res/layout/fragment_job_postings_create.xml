@@ -35,7 +35,7 @@
             app:layout_constraintBottom_toTopOf="@id/createJonPostScrollView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+            app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
         <ScrollView
             android:id="@+id/createJonPostScrollView"
@@ -44,7 +44,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/createJobPostProgressBar">
+            app:layout_constraintTop_toBottomOf="@id/createJobPostProgressBar">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -86,7 +86,7 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_margin="4dp"
-                    app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontal"
+                    app:layout_constraintBottom_toTopOf="@id/guidelineHorizontal"
                     app:layout_constraintEnd_toEndOf="@id/guidelineVerticalRight"
                     app:layout_constraintStart_toStartOf="@id/guidelineVerticalLeft"
                     app:layout_constraintTop_toTopOf="parent"
@@ -123,7 +123,7 @@
                     android:focusable="true"
                     app:fabCustomSize="48dp"
                     app:fabSize="auto"
-                    app:layout_constraintBottom_toBottomOf="@+id/layoutImageViewsCreateJobPost"
+                    app:layout_constraintBottom_toBottomOf="@id/layoutImageViewsCreateJobPost"
                     app:layout_constraintEnd_toEndOf="@id/layoutImageViewsCreateJobPost"
                     app:srcCompat="@drawable/baseline_add_a_photo_24"
                     tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
@@ -145,9 +145,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:endIconMode="clear_text"
-                    app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalRight"
-                    app:layout_constraintStart_toStartOf="@+id/guidelineVerticalLeft"
-                    app:layout_constraintTop_toBottomOf="@+id/switchUrgentCreateJobPost"
+                    app:layout_constraintEnd_toStartOf="@id/guidelineVerticalRight"
+                    app:layout_constraintStart_toStartOf="@id/guidelineVerticalLeft"
+                    app:layout_constraintTop_toBottomOf="@id/switchUrgentCreateJobPost"
                     app:prefixText="₺">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -167,9 +167,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/createJobPostingMarginTop"
                     app:endIconMode="clear_text"
-                    app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalRight"
-                    app:layout_constraintStart_toStartOf="@+id/guidelineVerticalLeft"
-                    app:layout_constraintTop_toBottomOf="@+id/budgetTextInputLayout">
+                    app:layout_constraintEnd_toStartOf="@id/guidelineVerticalRight"
+                    app:layout_constraintStart_toStartOf="@id/guidelineVerticalLeft"
+                    app:layout_constraintTop_toBottomOf="@id/budgetTextInputLayout">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/titleTextInputEditText"
@@ -186,9 +186,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/createJobPostingMarginTop"
                     app:endIconMode="clear_text"
-                    app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalRight"
-                    app:layout_constraintStart_toStartOf="@+id/guidelineVerticalLeft"
-                    app:layout_constraintTop_toBottomOf="@+id/titleTextInputLayout">
+                    app:layout_constraintEnd_toStartOf="@id/guidelineVerticalRight"
+                    app:layout_constraintStart_toStartOf="@id/guidelineVerticalLeft"
+                    app:layout_constraintTop_toBottomOf="@id/titleTextInputLayout">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/descriptionTextInputEditText"
@@ -206,9 +206,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/createJobPostingMarginTop"
                     app:endIconMode="clear_text"
-                    app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalRight"
-                    app:layout_constraintStart_toStartOf="@+id/guidelineVerticalLeft"
-                    app:layout_constraintTop_toBottomOf="@+id/descriptionTextInputLayout">
+                    app:layout_constraintEnd_toStartOf="@id/guidelineVerticalRight"
+                    app:layout_constraintStart_toStartOf="@id/guidelineVerticalLeft"
+                    app:layout_constraintTop_toBottomOf="@id/descriptionTextInputLayout">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/locationsTextInputEditText"
@@ -223,9 +223,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/createJobPostingMarginTop"
-                    app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalRight"
-                    app:layout_constraintStart_toStartOf="@+id/guidelineVerticalLeft"
-                    app:layout_constraintTop_toBottomOf="@+id/locationTextInputLayout">
+                    app:layout_constraintEnd_toStartOf="@id/guidelineVerticalRight"
+                    app:layout_constraintStart_toStartOf="@id/guidelineVerticalLeft"
+                    app:layout_constraintTop_toBottomOf="@id/locationTextInputLayout">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/deadlineTextInputEditText"
@@ -241,9 +241,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/createJobPostingMarginTop"
-                    app:layout_constraintEnd_toStartOf="@+id/guidelineVerticalRight"
-                    app:layout_constraintStart_toEndOf="@+id/guidelineVerticalLeft"
-                    app:layout_constraintTop_toBottomOf="@+id/deadlineTextInputLayout"
+                    app:layout_constraintEnd_toStartOf="@id/guidelineVerticalRight"
+                    app:layout_constraintStart_toEndOf="@id/guidelineVerticalLeft"
+                    app:layout_constraintTop_toBottomOf="@id/deadlineTextInputLayout"
                     app:layout_constraintWidth_max="@dimen/edittextMaxWidth">
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -286,24 +286,19 @@
                     android:id="@+id/createJobPostDeleteButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_margin="8dp"
                     android:backgroundTint="@color/delete_button"
                     android:text="@string/delete"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@id/createJobPostSaveButton"
                     app:layout_constraintEnd_toStartOf="@id/createJobPostSaveButton"
                     app:layout_constraintStart_toEndOf="@id/guidelineVerticalLeft"
-                    app:layout_constraintTop_toBottomOf="@id/skillsRequiredLayout" />
+                    app:layout_constraintTop_toTopOf="@id/createJobPostSaveButton" />
 
                 <Button
                     android:id="@+id/createJobPostSaveButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_margin="8dp"
                     android:text="@string/save"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/guidelineVerticalRight"

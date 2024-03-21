@@ -197,11 +197,11 @@ open class BaseJobPostingViewModel(
     ) {
         val usersMessage = creatMessageModelForCurrentUser(
             messageData,
-            currentUserId ?: "",
+            currentUserId,
             messageReceiver
         )
         firebaseRepo.sendMessageToPreChatRoom(
-            currentUserId ?: "id yok",
+            currentUserId,
             messageReceiver,
             chatId,
             usersMessage
