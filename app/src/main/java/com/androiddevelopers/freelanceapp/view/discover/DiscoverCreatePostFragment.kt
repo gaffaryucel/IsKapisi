@@ -23,7 +23,7 @@ import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.discover.TagAdapter
 import com.androiddevelopers.freelanceapp.adapters.discover.ViewPagerAdapterForCreateDiscover
 import com.androiddevelopers.freelanceapp.databinding.CustomDialogChooseImageSourceBinding
-import com.androiddevelopers.freelanceapp.databinding.FragmentCreateDiscoverPostBinding
+import com.androiddevelopers.freelanceapp.databinding.FragmentDiscoverCreatePostBinding
 import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.util.checkPermissionImageCamera
@@ -32,13 +32,13 @@ import com.androiddevelopers.freelanceapp.util.compressJpegInBackground
 import com.androiddevelopers.freelanceapp.util.convertUriToBitmap
 import com.androiddevelopers.freelanceapp.util.createImageUri
 import com.androiddevelopers.freelanceapp.util.toast
-import com.androiddevelopers.freelanceapp.viewmodel.discover.CreateDiscoverPostViewModel
+import com.androiddevelopers.freelanceapp.viewmodel.discover.DiscoverCreatePostViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class CreateDiscoverPostFragment : Fragment() {
+class DiscoverCreatePostFragment : Fragment() {
     private lateinit var dialogCooseImageSource: Dialog
     private lateinit var imageCameraLauncher: ActivityResultLauncher<Intent>
     private lateinit var imageGalleryLauncher: ActivityResultLauncher<Intent>
@@ -58,10 +58,10 @@ class CreateDiscoverPostFragment : Fragment() {
 
     private var resultByteArray = byteArrayOf()
 
-    private var _binding: FragmentCreateDiscoverPostBinding? = null
+    private var _binding: FragmentDiscoverCreatePostBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: CreateDiscoverPostViewModel by viewModels()
+    private val viewModel: DiscoverCreatePostViewModel by viewModels()
 
     private var _tagList = MutableLiveData<List<String>>()
     private var tags = mutableListOf<String>()
@@ -107,7 +107,7 @@ class CreateDiscoverPostFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentCreateDiscoverPostBinding.inflate(inflater, container, false)
+        _binding = FragmentDiscoverCreatePostBinding.inflate(inflater, container, false)
 
         //ilk açılışta create ekranı olduğu için delete butonunu gizliyoruz
         binding.deleteButtonDiscoverCreate.visibility = View.GONE

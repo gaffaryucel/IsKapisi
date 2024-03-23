@@ -21,7 +21,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_max="400dp"
-        tools:context=".view.discover.CreateDiscoverPostFragment">
+        tools:context=".view.discover.DiscoverCreatePostFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
