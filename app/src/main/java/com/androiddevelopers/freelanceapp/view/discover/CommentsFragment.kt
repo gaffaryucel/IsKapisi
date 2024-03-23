@@ -52,11 +52,12 @@ class CommentsFragment : Fragment() {
 
         binding.rvComments.layoutManager = LinearLayoutManager(requireContext())
         binding.rvComments.adapter = adapter
-
+/////////////////////////////////////////////////////////
+        //Resim için post verisi çekilmeli
         binding.btnSendComment.setOnClickListener{
             val comment = binding.etCommentInput.text.toString()
             val notification = viewModel.createNotificationData(
-                userToken = token ?: "",postId.toString()
+                userToken = token ?: "","",postId.toString()
             )
             viewModel.makeComment(postId ?: "",comment,notification)
             binding.etCommentInput.setText("")

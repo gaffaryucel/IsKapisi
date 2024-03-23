@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="notification"
+            type="com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel" />
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:padding="5dp"
+                android:id="@+id/ivUserPhoto"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_fill_favorite"
+                android:scaleType="centerCrop"
+                android:layout_marginEnd="16dp"
+                app:tint="@color/black" />
+
+            <!-- Bildirim detayları için dikey layout -->
+            <TextView
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:id="@+id/tvNotificationMEssage"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:text="@{notification.message}"
+                android:layout_marginBottom="4dp"/>
+            <ImageView
+                android:layout_gravity="end"
+                android:id="@+id/ivNNotification"
+                android:scaleType="centerCrop"
+                android:layout_width="48dp"
+                android:layout_height="48dp"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</layout>

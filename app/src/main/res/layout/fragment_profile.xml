@@ -63,7 +63,7 @@
                                 android:src="@drawable/baseline_keyboard_arrow_left_24"
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
-                                app:tint="@color/white" />
+                                app:tint="@color/normal_text_color" />
 
                             <TextView
                                 style="@style/BoldTextStyle"

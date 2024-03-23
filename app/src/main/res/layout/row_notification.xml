@@ -1,69 +1,174 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable
             name="notification"
             type="com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel" />
     </data>
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
-
+        android:layout_height="wrap_content">
         <LinearLayout
-            android:orientation="horizontal"
+            android:background="@color/receiver_message_bg"
+            android:id="@+id/layout_like_notification"
+            android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/ivUserPhoto"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+
+            <ImageView
+                android:padding="5dp"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/placeholder"
+                android:src="@drawable/ic_fill_favorite"
                 android:scaleType="centerCrop"
-                android:layout_marginEnd="16dp"/>
+                android:layout_marginEnd="16dp"
+                app:tint="@color/normal_text_color" />
 
-            <!-- Bildirim detayları için dikey layout -->
-            <LinearLayout
+            <TextView
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:id="@+id/tvLikeNotification"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:textSize="16sp"
+                android:maxLines="2"
+                android:text="@{notification.message}"
+                />
+            <ImageView
+                android:layout_gravity="end"
+                android:id="@+id/ivLikedPhoto"
+                android:scaleType="centerCrop"
+                android:layout_width="48dp"
+                android:layout_height="48dp"/>
 
-                <!-- Bildirim başlığı -->
-                <TextView
-                    android:id="@+id/tvNotificationtitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:text="@{notification.title}"
-                    android:layout_marginBottom="4dp"/>
-
-                <!-- Bildirim içeriği -->
-                <TextView
-                    android:id="@+id/tvNotificationMEssage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:text="@{notification.message}"
-                    android:layout_marginBottom="4dp"/>
-
-                <!-- Bildirim tarihi -->
-                <TextView
-                    android:id="@+id/textDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:text="@{notification.time}"
-                    android:textColor="@android:color/darker_gray"/>
-            </LinearLayout>
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/ivNNotification"
+        <LinearLayout
+            android:background="@color/receiver_message_bg"
+            android:id="@+id/layout_comment_notification"
+            android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="150dp"/>
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="horizontal">
 
-    </LinearLayout>
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:padding="5dp"
+                android:layout_gravity="center"
+                android:id="@+id/ivUserProfilePhoto"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:scaleType="centerCrop"
+                android:layout_marginEnd="16dp"
+                />
+
+            <!-- Bildirim detayları için dikey layout -->
+            <TextView
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:id="@+id/tvNotificationMessage"
+                android:layout_width="0dp"
+                android:gravity="center"
+                android:layout_height="match_parent"
+                android:textSize="16sp"
+                android:maxLines="2"
+                tools:text="@string/user_bio"
+                android:text="@{notification.message}"
+                />
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/layout_follow_notification"
+            android:background="@color/receiver_message_bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/ivNewFollowerPhoto"
+                android:padding="5dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:scaleType="centerCrop"
+                android:layout_marginEnd="16dp"
+                app:tint="@color/normal_text_color" />
+
+            <TextView
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:id="@+id/tvCommentNotification"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                tools:text="@string/user_bio"
+                android:maxLines="2"
+                android:text="@{notification.message}"
+                />
+            <androidx.appcompat.widget.AppCompatButton
+                android:background="@drawable/notification_contect_button_bg"
+                android:text="mesaj"
+                android:textColor="@color/white"
+                android:layout_gravity="center"
+                android:layout_width="80dp"
+                android:layout_height="30dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/layout_application_notification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="horizontal">
+
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:padding="5dp"
+                android:layout_gravity="center"
+                android:id="@+id/ivApplicantPhoto"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:scaleType="centerCrop"
+                android:layout_marginEnd="16dp"
+                />
+
+            <!-- Bildirim detayları için dikey layout -->
+            <TextView
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:id="@+id/tvApplicantMessage"
+                android:layout_width="0dp"
+                android:gravity="center"
+                android:layout_height="match_parent"
+                android:textSize="16sp"
+                android:maxLines="2"
+                tools:text="@string/user_bio"
+                android:text="@{notification.message}"
+                />
+
+            <ImageView
+                android:id="@+id/ivAppliedJobPhoto"
+                android:layout_gravity="center"
+                android:scaleType="centerCrop"
+                android:layout_width="48dp"
+                android:layout_height="48dp"/>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 </layout>

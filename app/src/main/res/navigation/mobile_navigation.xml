@@ -441,6 +441,18 @@
         android:name="com.androiddevelopers.freelanceapp.view.NotificationsFragment"
         android:label="fragment_notifications"
         tools:layout="@layout/fragment_notifications" />
+    <action
+        android:id="@+id/action_notification_to_user_profile"
+        app:destination="@id/userProfileFragment" />
+    <action
+        android:id="@+id/action_notification_to_discover_details"
+        app:destination="@id/profileDiscoverPostDetailsFragment" />
+    <action
+        android:id="@+id/action_notification_to_freelancer_job_post"
+        app:destination="@id/detailPostFragment" />
+    <action
+        android:id="@+id/action_notification_to_employer_job_post"
+        app:destination="@id/detailJobPostingsFragment" />
 
     <fragment
         android:id="@+id/navigation_create"

@@ -1,5 +1,6 @@
 package com.androiddevelopers.freelanceapp.viewmodel.freelancer
 
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -113,7 +114,11 @@ class DetailPostViewModel @Inject constructor(
                         type = "frl"
                     )
                 )
-                firebaseRepo.saveNotification(notification)
+                firebaseRepo.saveNotification(notification).addOnSuccessListener {
+                    println("SUCCES NOTİFİCATİON")
+                }.addOnFailureListener{
+                    println("FAIL NOTİFİCATİON")
+                }
                 sendFirstMessage(
                     preChatModel.postId.toString(), message, preChatModel.receiver.toString()
                 )

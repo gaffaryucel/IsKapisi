@@ -92,14 +92,15 @@ class DetailJobPostingsFragment : Fragment() {
                     try {
                         InAppNotificationModel(
                             userId = currentUser?.userId,
-                            notificationType = NotificationType.JOB_POST,
+                            notificationType = NotificationType.APPLICATION_EMPLOYER_JOB_POST,
                             notificationId = UUID.randomUUID().toString(),
                             title = "Yeni Hizmet Talebi!",
                             message = "${currentUser?.fullName} adlı kullanıcı, ilanınıza başvurdu",
                             userImage = currentUser?.profileImageUrl.toString(),
                             imageUrl = null,
                             userToken = user?.token,
-                            time = viewModel.getCurrentTime()
+                            time = viewModel.getCurrentTime(),
+                            idForAction = postId
                         ).also { notification->
                             viewModel.createPreChatModel(
                                 "emp",

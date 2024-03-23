@@ -74,20 +74,22 @@ class CommentsViewModel @Inject constructor(
                 type = NotificationTypeForActions.COMMENT,
                 comment = postId
             )
+            firebaseRepo.saveNotification(notification)
         }
     }
 
-    fun createNotificationData(userToken: String, image: String) =
+    fun createNotificationData(userToken: String, image: String,postId: String) =
         InAppNotificationModel(
             userId = currentUserId,
-            notificationType = NotificationType.POST,
+            notificationType = NotificationType.COMMENT,
             notificationId = UUID.randomUUID().toString(),
             title = "Gönderine Yorum yaptı",
             message = "${currentUserData.value?.fullName}: $message!",
             userImage = currentUserData.value?.profileImageUrl.toString(),
             imageUrl = image,
             userToken = userToken,
-            time = getCurrentTime()
+            time = getCurrentTime(),
+            idForAction = postId
         )
 
     fun makeComment(postId: String, comment: String, notification: InAppNotificationModel) {
