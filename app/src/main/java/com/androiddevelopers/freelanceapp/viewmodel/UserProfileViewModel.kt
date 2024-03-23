@@ -137,7 +137,8 @@ class UserProfileViewModel @Inject constructor(
                 message = "${followerModel.userName} seni takip etmeye başladı.",
                 userImage = followerModel.userImage,
                 imageUrl = null,
-                userToken = token
+                userToken = token,
+                idForAction = followerModel.userId
             )
             sendNotification(
                 notification = notification,

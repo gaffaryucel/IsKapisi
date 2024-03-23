@@ -8,11 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.androiddevelopers.freelanceapp.adapters.notification.FollowNotificationAdapter
-import com.androiddevelopers.freelanceapp.adapters.notification.JobPostNotificationAdapter
-import com.androiddevelopers.freelanceapp.adapters.notification.PostNotificationAdapter
+import com.androiddevelopers.freelanceapp.R
+import com.androiddevelopers.freelanceapp.adapters.notification.NotificationAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentNotificationsBinding
+import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.viewmodel.NotificationsViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,9 +24,9 @@ class NotificationsFragment : Fragment() {
     private var _binding: FragmentNotificationsBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var followNotificationAdapter: FollowNotificationAdapter
-    private lateinit var jobPostNotificationAdapter: JobPostNotificationAdapter
-    private lateinit var postNotificationAdapter: PostNotificationAdapter
+    private lateinit var todayNotificationAdapter: NotificationAdapter
+    private lateinit var lastWeekNotificationAdapter: NotificationAdapter
+    private lateinit var earlierNotificationAdapter: NotificationAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,48 +49,80 @@ class NotificationsFragment : Fragment() {
     }
     private fun setupRecyclerViews(){
         // RecyclerView için adapter oluştur
-        followNotificationAdapter = FollowNotificationAdapter()
-        jobPostNotificationAdapter = JobPostNotificationAdapter()
-        postNotificationAdapter = PostNotificationAdapter()
+        todayNotificationAdapter = NotificationAdapter()
+        lastWeekNotificationAdapter  = NotificationAdapter()
+        earlierNotificationAdapter = NotificationAdapter()
+
+        binding.rvTodayNotifications.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvThisWeekNotifications.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvEarlierNotifications.layoutManager = LinearLayoutManager(requireContext())
 
         // RecyclerView'a adapter'ı ve layout manager'ı ayarla
-        binding.rvFollowotifications.adapter = followNotificationAdapter
-        binding.rvJobPostNotifications.adapter = jobPostNotificationAdapter
-        binding.rvPostNotifications.adapter = postNotificationAdapter
+        binding.rvTodayNotifications.adapter = todayNotificationAdapter
+        binding.rvThisWeekNotifications.adapter = lastWeekNotificationAdapter
+        binding.rvEarlierNotifications.adapter = earlierNotificationAdapter
 
-        binding.rvFollowotifications.layoutManager = LinearLayoutManager(
-            requireContext(),
-            LinearLayoutManager.HORIZONTAL,
-            false
-        )
-        binding.rvJobPostNotifications.layoutManager = LinearLayoutManager(
-            requireContext(),
-            LinearLayoutManager.HORIZONTAL,
-            false
-        )
-        binding.rvPostNotifications.layoutManager = LinearLayoutManager(requireContext())
     }
     private fun observeLiveData(){
-        viewModel.followNotifications.observe(viewLifecycleOwner, Observer { notificationList ->
-            followNotificationAdapter.setNotificationList(notificationList)
-            if (notificationList.isEmpty()){
-                binding.tv1.visibility = View.GONE
-                binding.rvFollowotifications.visibility = View.GONE
+        viewModel.notificationOfToday.observe(viewLifecycleOwner, Observer { notifications ->
+            todayNotificationAdapter.setNotificationList(notifications)
+            todayNotificationAdapter.notifyDataSetChanged()
+            if (notifications.isNotEmpty()){
+                binding.layoutToday.visibility = View.VISIBLE
             }
         })
-        viewModel.jobPostNotifications.observe(viewLifecycleOwner, Observer { notificationList ->
-            jobPostNotificationAdapter.setNotificationList(notificationList)
-            if (notificationList.isEmpty()){
-                binding.tv2.visibility = View.GONE
-                binding.rvJobPostNotifications.visibility = View.GONE
+        viewModel.notificationOfLastWeek.observe(viewLifecycleOwner, Observer { notifications ->
+            lastWeekNotificationAdapter.setNotificationList(notifications)
+            lastWeekNotificationAdapter.notifyDataSetChanged()
+            if (notifications.isNotEmpty()){
+                binding.layoutThisWeek.visibility = View.VISIBLE
             }
         })
-        viewModel.postNotifications.observe(viewLifecycleOwner, Observer { notificationList ->
-            postNotificationAdapter.setNotificationList(notificationList)
-            if (notificationList.isEmpty()){
-                binding.tv3.visibility = View.GONE
-                binding.rvPostNotifications.visibility = View.GONE
+        viewModel.notificationOfEarlier.observe(viewLifecycleOwner, Observer { notifications ->
+            earlierNotificationAdapter.setNotificationList(notifications)
+            earlierNotificationAdapter.notifyDataSetChanged()
+            if (notifications.isNotEmpty()){
+                binding.layoutEarlier.visibility = View.VISIBLE
             }
         })
+        viewModel.message.observe(viewLifecycleOwner, Observer { message ->
+            when(message.status){
+                Status.SUCCESS->{
+                    binding.pbNotification.visibility = View.INVISIBLE
+                    binding.tvErrorNotification.visibility = View.INVISIBLE
+                }
+                Status.ERROR->{
+                    binding.tvErrorNotification.visibility = View.VISIBLE
+                    binding.pbNotification.visibility = View.INVISIBLE
+                }
+                Status.LOADING->{
+                    binding.tvErrorNotification.visibility = View.INVISIBLE
+                    binding.pbNotification.visibility = View.VISIBLE
+                }
+            }
+        })
+    }
+    override fun onResume() {
+        super.onResume()
+        hideBottomNavigation()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        showBottomNavigation()
+    }
+
+    private fun hideBottomNavigation() {
+        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
+        bottomNavigationView?.visibility = View.GONE
+    }
+
+    private fun showBottomNavigation() {
+        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
+        bottomNavigationView?.visibility = View.VISIBLE
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

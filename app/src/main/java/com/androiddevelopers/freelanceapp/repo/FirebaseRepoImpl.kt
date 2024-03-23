@@ -458,6 +458,7 @@ class FirebaseRepoImpl @Inject constructor(
     }
 
     //Notification
+//Set
     override suspend fun postNotification(notification: PushNotification): Response<ResponseBody> {
         return notificationAPI.postNotification(notification)
     }
@@ -467,23 +468,15 @@ class FirebaseRepoImpl @Inject constructor(
             .set(notification)
     }
 
-    override fun getFollowNotifications(userId: String, limit: Long): Task<QuerySnapshot> {
+ //Get
+    override fun getNotificationsByType(userId: String,type : NotificationType ,limit: Long): Task<QuerySnapshot> {
         return notificationCollection.whereEqualTo("userId", userId)
-            .whereEqualTo("notificationType", NotificationType.FOLLOW)
+            .whereEqualTo("notificationType", type)
             .limit(limit)
             .get()
     }
-
-    override fun getPostNotifications(userId: String, limit: Long): Task<QuerySnapshot> {
+    override fun getAllNotifications(userId: String, limit: Long): Task<QuerySnapshot> {
         return notificationCollection.whereEqualTo("userId", userId)
-            .whereEqualTo("notificationType", NotificationType.POST)
-            .limit(limit)
-            .get()
-    }
-
-    override fun getJobPostNotifications(userId: String, limit: Long): Task<QuerySnapshot> {
-        return notificationCollection.whereEqualTo("userId", userId)
-            .whereEqualTo("notificationType", NotificationType.JOB_POST)
             .limit(limit)
             .get()
     }

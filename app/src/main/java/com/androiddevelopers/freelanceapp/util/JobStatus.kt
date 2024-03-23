@@ -13,5 +13,9 @@ enum class NotificationType{
     MESSAGE,
     FOLLOW,
     JOB_POST,
-    POST
+    POST,
+    LIKE,
+    COMMENT,
+    APPLICATION_FREELANCER_JOB_POST,
+    APPLICATION_EMPLOYER_JOB_POST,
 }

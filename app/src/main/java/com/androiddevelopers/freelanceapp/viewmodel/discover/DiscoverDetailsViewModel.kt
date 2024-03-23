@@ -67,7 +67,7 @@ class DiscoverDetailsViewModel @Inject constructor(
             "likeCount" to mutableList.toList()
         )
         firebaseRepo.likePost(postId, likeData).addOnSuccessListener {
-            val myNotification = createNotification(imageUrl, postOwnersToken)
+            val myNotification = createNotification(imageUrl, postOwnersToken,postId)
             sendNotification(
                 notification = myNotification,
                 type = NotificationTypeForActions.LIKE,
@@ -90,16 +90,18 @@ class DiscoverDetailsViewModel @Inject constructor(
 
     private fun createNotification(
         imageUrl: String,
-        postOwnersToken: String
+        postOwnersToken: String,
+        postId : String
     ) = InAppNotificationModel(
         userId = currentUserId,
-        notificationType = NotificationType.POST,
+        notificationType = NotificationType.LIKE,
         notificationId = UUID.randomUUID().toString(),
         title = "Yeni Bir Beğeni",
         message = "${currentUserData.value?.fullName}, gönderinizi beğendi.",
         userImage = "${currentUserData.value?.profileImageUrl}",
         imageUrl = imageUrl,
         userToken = postOwnersToken,
-        time = getCurrentTime()
+        time = getCurrentTime(),
+        idForAction = postId
     )
 }

@@ -98,7 +98,6 @@ class MessagesFragment : Fragment() {
                     }
                     InAppNotificationModel(
                         userId = currentUserData?.userId,
-                        notificationType = NotificationType.MESSAGE,
                         notificationId = UUID.randomUUID().toString(),
                         title =  title,
                         message = "${currentUserData?.fullName}: $message!",

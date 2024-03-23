@@ -12,6 +12,7 @@ import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
 import com.androiddevelopers.freelanceapp.model.notification.PushNotification
+import com.androiddevelopers.freelanceapp.util.NotificationType
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.database.DatabaseReference
@@ -176,11 +177,13 @@ interface FirebaseRepoInterFace {
     suspend fun uploadPhotoToStorage(bitmap: Bitmap, uid: String, imagePath: String): String?
 
     //Notification
+    //Set
     suspend fun postNotification(notification: PushNotification): Response<ResponseBody>
     fun saveNotification(notification: InAppNotificationModel): Task<Void>
-    fun getFollowNotifications(userId: String, limit: Long): Task<QuerySnapshot>
-    fun getPostNotifications(userId: String, limit: Long): Task<QuerySnapshot>
-    fun getJobPostNotifications(userId: String, limit: Long): Task<QuerySnapshot>
+    //Get
+    fun getNotificationsByType(userId: String, type : NotificationType, limit: Long): Task<QuerySnapshot>
+
+    fun getAllNotifications(userId: String, limit: Long): Task<QuerySnapshot>
 
     fun changeOnlineStatus(userId: String, onlineData: Boolean): Task<Void>
 

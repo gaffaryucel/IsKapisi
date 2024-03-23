@@ -68,18 +68,19 @@ class DetailPostFragment : Fragment() {
             if (isExists) {
                 goToPreMessaging()
             } else {
-                if (messageData.isEmpty() || offer.isEmpty()){
+                if (messageData.isNotEmpty() || offer.isNotEmpty()){
                     try {
                         InAppNotificationModel(
                             userId = currentUser?.userId.toString(),
-                            notificationType = NotificationType.JOB_POST,
+                            notificationType = NotificationType.APPLICATION_FREELANCER_JOB_POST,
                             notificationId = UUID.randomUUID().toString(),
                             title = "Yeni Hizmet Talebi!",
                             message = "${currentUser?.fullName} adlı kullanıcı sizden hizmet talep etti!",
                             userImage = currentUser?.profileImageUrl.toString(),
                             imageUrl = post?.images?.get(0).toString(),
                             userToken = user?.token.toString(),
-                            time = viewModel.getCurrentTime()
+                            time = viewModel.getCurrentTime(),
+                            idForAction = post?.postId
                         ).also { notification->
                             viewModel.createPreChatModel(
                                 "frl",

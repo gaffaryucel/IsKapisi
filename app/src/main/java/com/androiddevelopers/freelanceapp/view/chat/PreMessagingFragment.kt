@@ -109,7 +109,6 @@ class PreMessagingFragment : Fragment() {
                 try {
                     InAppNotificationModel(
                         userId = currentUser?.userId,
-                        notificationType = NotificationType.MESSAGE,
                         notificationId = UUID.randomUUID().toString(),
                         title = title,
                         message = "${currentUser?.fullName}: $message",

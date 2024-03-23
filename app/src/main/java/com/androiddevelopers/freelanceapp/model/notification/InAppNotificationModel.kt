@@ -13,6 +13,7 @@ class InAppNotificationModel {
     var imageUrl : String? = null
     var userToken : String? = null
     var time : String? = null
+    var idForAction : String? = null
     constructor()
     constructor(
         userId : String? = null,
@@ -23,7 +24,8 @@ class InAppNotificationModel {
         userImage : String? = null,
         imageUrl : String? = null,
         userToken : String? = null,
-        time : String? = null
+        time : String? = null,
+        idForAction : String? = null
     ){
         this.userId = userId
         this.notificationType = notificationType
@@ -34,5 +36,6 @@ class InAppNotificationModel {
         this.imageUrl = imageUrl
         this.userToken = userToken
         this.time = time
+        this.idForAction = idForAction
     }
 }
