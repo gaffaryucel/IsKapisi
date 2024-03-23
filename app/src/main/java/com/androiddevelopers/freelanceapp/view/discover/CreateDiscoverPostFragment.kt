@@ -1,38 +1,56 @@
 package com.androiddevelopers.freelanceapp.view.discover
 
-import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
-import android.os.AsyncTask
-import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
+import androidx.navigation.Navigation
 import com.androiddevelopers.freelanceapp.R
+import com.androiddevelopers.freelanceapp.adapters.discover.TagAdapter
+import com.androiddevelopers.freelanceapp.adapters.discover.ViewPagerAdapterForCreateDiscover
+import com.androiddevelopers.freelanceapp.databinding.CustomDialogChooseImageSourceBinding
 import com.androiddevelopers.freelanceapp.databinding.FragmentCreateDiscoverPostBinding
 import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
-import com.androiddevelopers.freelanceapp.viewmodel.discover.CreateDiscoverPostViewModel
-import java.io.ByteArrayOutputStream
 import com.androiddevelopers.freelanceapp.util.Status
+import com.androiddevelopers.freelanceapp.util.checkPermissionImageCamera
+import com.androiddevelopers.freelanceapp.util.checkPermissionImageGallery
+import com.androiddevelopers.freelanceapp.util.compressJpegInBackground
+import com.androiddevelopers.freelanceapp.util.convertUriToBitmap
+import com.androiddevelopers.freelanceapp.util.createImageUri
+import com.androiddevelopers.freelanceapp.util.toast
+import com.androiddevelopers.freelanceapp.viewmodel.discover.CreateDiscoverPostViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
 class CreateDiscoverPostFragment : Fragment() {
-
+    private lateinit var dialogCooseImageSource: Dialog
+    private lateinit var imageCameraLauncher: ActivityResultLauncher<Intent>
+    private lateinit var imageGalleryLauncher: ActivityResultLauncher<Intent>
+    private lateinit var takePictureLauncher: ActivityResultLauncher<Void?>
+    private lateinit var cameraLauncher: ActivityResultLauncher<Uri>
+    private lateinit var imageLauncher: ActivityResultLauncher<Intent>
+    private val selectedImages = mutableListOf<Uri>()
+    private val selectedBitmapImages = mutableListOf<Bitmap>()
+    private val selectedByteArrayImages = mutableListOf<ByteArray>()
+    private lateinit var imageUri: Uri
+    private val viewPagerAdapter = ViewPagerAdapterForCreateDiscover()
+    private val tagAdapter = TagAdapter()
     private val REQUEST_IMAGE_CAPTURE = 101
     private val REQUEST_IMAGE_PICK = 102
     private val PERMISSION_REQUEST_CODE = 200
@@ -46,223 +64,238 @@ class CreateDiscoverPostFragment : Fragment() {
     private val viewModel: CreateDiscoverPostViewModel by viewModels()
 
     private var _tagList = MutableLiveData<List<String>>()
+    private var tags = mutableListOf<String>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        imageUri = createImageUri(requireContext())
+        setupLaunchers()
+
+//        imageCameraLauncher =
+//            registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+//                if (isGranted) {
+//                    takePictureLauncher.launch(null)
+////                    val imageBitmapByteArray = result.data?.extras?.getByteArray("data")
+////                    val imageBitmap = BitmapFactory.decodeByteArray(
+////                        imageBitmapByteArray,
+////                        0,
+////                        imageBitmapByteArray?.size ?: 0
+////                    )
+////                    binding.ivPost.setImageBitmap(imageBitmap)
+////                    compressedForCam(imageBitmap)
+////                    binding.ivAddImage.visibility = View.GONE
+////                    binding.layoutCreatePost.visibility = View.VISIBLE
+//                } else {
+//                    println("")
+//                }
+//            }
+
+//        takePictureLauncher =
+//            registerForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap ->
+//                if (bitmap != null) {
+//                    // Bitmap işleme kodları burada olacak.
+//                    binding.ivPost.setImageBitmap(bitmap)
+//                    compressedForCam(bitmap)
+//                    binding.ivAddImage.visibility = View.GONE
+//                    binding.layoutCreatePost.visibility = View.VISIBLE
+//                }
+//            }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentCreateDiscoverPostBinding.inflate(inflater,container,false)
+    ): View {
+        _binding = FragmentCreateDiscoverPostBinding.inflate(inflater, container, false)
+
+        //ilk açılışta create ekranı olduğu için delete butonunu gizliyoruz
+        binding.deleteButtonDiscoverCreate.visibility = View.GONE
+
+        dialogCooseImageSource = createDialogChooseImageSource()
+
+
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requestPermissionsIfNeeded()
+        //requestPermissionsIfNeeded()
         setupOnClicks()
-        observeLiveData()
+        observeLiveData(viewLifecycleOwner)
+
+        with(binding) {
+            rvTagAdapter = tagAdapter
+
+            viewPagerDiscoverCreate.adapter = viewPagerAdapter
+            indicatorDiscoverCreate.setViewPager(viewPagerDiscoverCreate)
+        }
+
+    }
+
+    private fun setupLaunchers() {
+        cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) {
+            //binding.ivPost.setImageURI(null)
+            //binding.ivPost.setImageURI(imageUri)
+            if (it) {
+                val bitmap = convertUriToBitmap(imageUri, requireActivity())
+                selectedBitmapImages.add(bitmap)
+                compressJpegInBackground(bitmap) { byteArrayImage ->
+                    selectedByteArrayImages.add(byteArrayImage)
+                }
+                viewModel.setBitmapImages(selectedBitmapImages.toList())
+            }
+        }
+
+        imageLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    result.data?.data?.let {
+                        val bitmap = convertUriToBitmap(it, requireActivity())
+                        selectedBitmapImages.add(bitmap)
+                        compressJpegInBackground(bitmap) { byteArrayImage ->
+                            selectedByteArrayImages.add(byteArrayImage)
+                        }
+                        viewModel.setBitmapImages(selectedBitmapImages.toList())
+
+//                        selectedImages.add(it)
+//                        viewModel.setImageUriList(selectedImages)
+                    }
+                }
+            }
     }
 
     private fun setupOnClicks() {
-        val tagList = ArrayList<String>()
-
-        binding.ivPost.setOnClickListener {
-            if (allPermissionsGranted) {
-                openCamera()
-            } else {
-                Toast.makeText(requireContext(), "Permission not granted", Toast.LENGTH_SHORT).show()
+        with(binding) {
+            fabChooseImageSource.setOnClickListener {
+                dialogCooseImageSource.show()
             }
-        }
-        binding.shareButton.setOnClickListener {
-            val postModel = getPostDataAndCreateDiscoverPostModel()
-            if (resultByteArray.isNotEmpty()) {
-                viewModel.uploadPostPicture(
-                    postModel,
-                    resultByteArray
+
+            tagAddTextInputLayout.setEndIconOnClickListener {
+                tags.add(tagAddEditText.text.toString())
+                viewModel.setTags(tags.toList())
+                tagAddEditText.text = null
+            }
+
+            tagAdapter.clickListener = { list ->
+                viewModel.setTags(list.toList())
+            }
+
+            viewPagerAdapter.listenerImages = { images ->
+                viewModel.setBitmapImages(images.toList())
+            }
+
+            saveButtonDiscoverCreate.setOnClickListener {
+                viewModel.addImageAndDiscoverPostToFirebase(
+                    selectedByteArrayImages,
+                    DiscoverPostModel(
+                        description = descriptionTextInputEditText.text.toString(),
+                        tags = tags
+                    )
                 )
             }
         }
-        var isClicked = false
-        binding.ivAddTag.setOnClickListener {
-            val tag = binding.etTags.text.toString()
-            tagList.add(tag)
-            _tagList.value = tagList
-            binding.etTags.setText("")
-            if (!isClicked){
-
-            }
-        }
-
-        binding.ivAddImage.setOnClickListener {
-            if (allPermissionsGranted) {
-                openCamera()
-            } else {
-                Toast.makeText(requireContext(), "Permission not granted", Toast.LENGTH_SHORT).show()
-            }
-        }
     }
 
-    private fun observeLiveData() {
-        viewModel.uploadPhotoMessage.observe(viewLifecycleOwner, Observer { message ->
-            when (message.status) {
-                Status.SUCCESS -> {
-                    Toast.makeText(requireContext(), "Upload Success", Toast.LENGTH_SHORT).show()
-                }
-                Status.ERROR -> {
-                    Toast.makeText(requireContext(), "Upload Faild", Toast.LENGTH_SHORT).show()
-                }
-                Status.LOADING -> {
-                    Toast.makeText(requireContext(), "Uploading", Toast.LENGTH_SHORT).show()
-                }
-            }
-        })
-        _tagList.observe(viewLifecycleOwner,Observer{
-            binding.tvAllTags.text = it.toString()
-        })
-    }
-
-
-    private fun getPostDataAndCreateDiscoverPostModel() : DiscoverPostModel{
-        val description = binding.etDescription.text.toString()
-        return viewModel.createDiscoverPostModel(
-            description,
-            _tagList.value as List<String>
-        )
-    }
-    @SuppressLint("QueryPermissionsNeeded")
-    private fun openCamera() {
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        if (intent.resolveActivity(requireActivity().packageManager) != null) {
-            startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
-        }
-    }
-
-    @SuppressLint("QueryPermissionsNeeded")
-    private fun openGallery() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        if (intent.resolveActivity(requireActivity().packageManager) != null) {
-            startActivityForResult(intent, REQUEST_IMAGE_PICK)
-        }
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                REQUEST_IMAGE_CAPTURE -> {
-                    val imageBitmap = data?.extras?.get("data") as Bitmap
-                    binding.ivPost.setImageBitmap(imageBitmap)
-                    compressedForCam(imageBitmap)
-                    binding.ivAddImage.visibility = View.GONE
-                    binding.layoutCreatePost.visibility = View.VISIBLE
-                }
-
-                REQUEST_IMAGE_PICK -> {
-                    val selectedImageUri = data?.data
-                    binding.ivPost.setImageURI(selectedImageUri)
-                    if (selectedImageUri != null) {
-                        compressedForGalery(selectedImageUri)
+    private fun observeLiveData(owner: LifecycleOwner) {
+        with(viewModel) {
+            firebaseMessage.observe(owner) {
+                when (it.status) {
+                    Status.SUCCESS -> {
+                        "Upload Success".toast(binding.root)
+                        Navigation.findNavController(binding.root)
+                            .navigate(R.id.action_global_navigation_discover)
                     }
-                    binding.ivAddImage.visibility = View.GONE
-                    binding.layoutCreatePost.visibility = View.VISIBLE
+
+                    Status.ERROR -> {
+                        "Upload Failed".toast(binding.root)
+                    }
+
+                    Status.LOADING -> {
+                        it.data?.let { data ->
+                            if (data) {
+                                "Uploading".toast(binding.root)
+                            }
+                        }
+                    }
                 }
             }
+
+            liveDateBitmapImages.observe(owner) { images ->
+                selectedBitmapImages.clear()
+                selectedBitmapImages.addAll(images.toList())
+                viewPagerAdapter.refreshList(images.toList())
+                with(binding) {
+                    //indicatoru viewpager yeni liste ile set ediyoruz
+                    indicatorDiscoverCreate.setViewPager(viewPagerDiscoverCreate)
+                }
+            }
+
+            imageSizeLiveData.observe(owner) {
+                //seçilen resim olmadığında viewpager 'ı gizleyip boş bir resim gösteriyoruz
+                //resim seçildiğinde işlemi tersine alıyoruz
+                with(binding) {
+                    if (it == 0 || it == null) {
+                        imagePlaceHolderDiscoverCreate.visibility = View.VISIBLE
+                        layoutImageViewsDiscoverCreate.visibility = View.INVISIBLE
+                    } else {
+                        imagePlaceHolderDiscoverCreate.visibility = View.INVISIBLE
+                        layoutImageViewsDiscoverCreate.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+            tagsLiveData.observe(owner) { list ->
+                tagAdapter.tagsRefresh(list.toList())
+
+                tags.clear()
+                tags.addAll(list.toList())
+            }
         }
     }
 
-    private fun requestPermissionsIfNeeded() {
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.CAMERA
-            ) != PackageManager.PERMISSION_GRANTED ||
-            ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
 
-            // İzinleri talep et
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-                ),
-                PERMISSION_REQUEST_CODE
+    private fun openImagePicker() {
+        val imageIntent =
+            Intent(
+                Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
             )
-        } else {
-            // İzinler zaten verilmişse burada yapılacak işlemler
-            allPermissionsGranted = true
-        }
+        imageLauncher.launch(imageIntent)
     }
 
-    //Kameradan gelen resmi compress etmek için kullanılan fonksiyon
-    private fun compressedForCam(photo: Bitmap) {
-        var compress = BackgroundImageCompress(photo)
-        var myUri: Uri? = null
-        compress.execute(myUri)
+    private fun openCamera() {
+        cameraLauncher.launch(imageUri)
     }
 
-    //Galeryden gelen resmi compress etmek için kullanılan fonksiyon
-    private fun compressedForGalery(photo: Uri) {
-        var compress = BackgroundImageCompress()
-        compress.execute(photo)
-    }
+    private fun createDialogChooseImageSource(): Dialog {
+        val view = CustomDialogChooseImageSourceBinding.inflate(layoutInflater)
 
-    //arkaplanda kompress işleminin yapılacağı sınıf
-    inner class BackgroundImageCompress : AsyncTask<Uri, Void, ByteArray> {
-        var myBitmap: Bitmap? = null
+        val dialog = Dialog(requireContext())
+        dialog.setContentView(view.root)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        //eğer kameradan görsel alınırsa burda bir bitmap değeri olur
-        //ve bu değer myBitmap'e eşitlenir
-        constructor(b: Bitmap?) {
-            if (b != null) {
-                myBitmap = b
+        view.cardCameraImageSource.setOnClickListener {
+            if (checkPermissionImageCamera(requireActivity(), 800)) {
+                openCamera()
+                dialog.dismiss()
             }
         }
 
-        //eğer galeryden bir değer geldiyse bu Uri olarak verilir
-        //ve bu constractor boş olarak kalır
-        constructor()
-
-        override fun onPreExecute() {
-            super.onPreExecute()
-        }
-
-        override fun doInBackground(vararg p0: Uri?): ByteArray {
-            //Galeryden resim geldi ise galerideki resnib pozisyonuna git ve bitmap değerini al
-            //anlamına geliyor
-            if (myBitmap == null) {
-                //Uri
-                myBitmap =
-                    MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, p0[0])
-            }
-            var imageByteArray: ByteArray? = null
-            for (i in 1..5) {
-                imageByteArray = converteBitmapTOByte(myBitmap, 100 / i)
-            }
-            return imageByteArray!!
-        }
-
-        override fun onProgressUpdate(vararg values: Void?) {
-            super.onProgressUpdate(*values)
-        }
-
-        //son olarak sonuçla ne yapılacağı burada belirlenir istediğiniz bir fonksiyona parametre olarak atanabilir
-        override fun onPostExecute(result: ByteArray?) {
-            super.onPostExecute(result)
-            if (result != null) {
-                resultByteArray = result
+        view.cardGalleryImageSource.setOnClickListener {
+            if (checkPermissionImageGallery(requireActivity(), 801)) {
+                openImagePicker()
+                dialog.dismiss()
             }
         }
+
+        view.imageCloseChooseImageSource.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        return dialog
     }
 
-    //bitmap'i byteArray'e çeviren fonksiyon
-    private fun converteBitmapTOByte(myBitmap: Bitmap?, i: Int): ByteArray {
-        var stream = ByteArrayOutputStream()
-        myBitmap?.compress(Bitmap.CompressFormat.JPEG, i, stream)
-        return stream.toByteArray()
-    }
     override fun onResume() {
         super.onResume()
         hideBottomNavigation()
@@ -282,6 +315,7 @@ class CreateDiscoverPostFragment : Fragment() {
         val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
         bottomNavigationView?.visibility = View.VISIBLE
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

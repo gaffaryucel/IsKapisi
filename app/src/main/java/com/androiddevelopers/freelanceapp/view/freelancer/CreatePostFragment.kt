@@ -18,7 +18,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.FragmentHomeCreatePostBinding
@@ -99,7 +98,7 @@ class CreatePostFragment : Fragment() {
     }
 
     private fun observeLiveData() {
-        viewModel.uploadPhotoMessage.observe(viewLifecycleOwner, Observer { message ->
+        viewModel.uploadPhotoMessage.observe(viewLifecycleOwner) { message ->
             when (message.status) {
                 Status.SUCCESS -> {
                     Toast.makeText(requireContext(), "Upload Success", Toast.LENGTH_SHORT).show()
@@ -113,10 +112,7 @@ class CreatePostFragment : Fragment() {
                     Toast.makeText(requireContext(), "Uploading", Toast.LENGTH_SHORT).show()
                 }
             }
-        })
-        _tagList.observe(viewLifecycleOwner, Observer {
-            binding.tvAllTags.text = it.toString()
-        })
+        }
     }
 
 
@@ -284,5 +280,10 @@ class CreatePostFragment : Fragment() {
     private fun showBottomNavigation() {
         val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
         bottomNavigationView?.visibility = View.VISIBLE
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -43,8 +43,8 @@ class ViewPagerAdapterForCreateJobPost(
 
     @SuppressLint("NotifyDataSetChanged")
     fun refreshList(newList: List<Uri>) {
-        images = arrayListOf()
-        images.addAll(newList)
+        images.clear()
+        images.addAll(newList.toList())
         notifyDataSetChanged()
     }
 }

@@ -115,9 +115,7 @@
     <color name="card_job_overview">@color/md_theme_light_background</color>
     <color name="bookmark_filled">@color/md_theme_light_primary</color>
     <color name="rating_star">#9B9A00</color>
-
-
-
+    <color name="choose_source_image">@color/md_theme_light_primary</color>
 
     <!-- Application Style Colors Light-->
     <color name="app_bg_color">#FFFFFF</color>

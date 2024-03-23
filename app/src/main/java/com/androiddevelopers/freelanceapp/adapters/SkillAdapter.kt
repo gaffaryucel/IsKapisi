@@ -4,19 +4,22 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.androiddevelopers.freelanceapp.databinding.RowCreateJobPostingSkillBinding
-import com.androiddevelopers.freelanceapp.viewmodel.employer.CreateJobPostingViewModel
+import com.androiddevelopers.freelanceapp.databinding.RowCreatePostSkillBinding
 
-class SkillAdapter(
-    private val viewModel: CreateJobPostingViewModel,
-    private var skills: ArrayList<String>
-) : RecyclerView.Adapter<SkillAdapter.SkillViewHolder>() {
-    inner class SkillViewHolder(val binding: RowCreateJobPostingSkillBinding) :
-        RecyclerView.ViewHolder(binding.root)
+class SkillAdapter : RecyclerView.Adapter<SkillAdapter.SkillViewHolder>() {
+    private val skills = mutableListOf<String>()
+    lateinit var clickListener: ((List<String>) -> Unit)
+
+    inner class SkillViewHolder(val binding: RowCreatePostSkillBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun onClickDelete(skills: List<String>) {
+            clickListener.invoke(skills)
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SkillViewHolder {
         val binding =
-            RowCreateJobPostingSkillBinding.inflate(
+            RowCreatePostSkillBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -29,19 +32,22 @@ class SkillAdapter(
     }
 
     override fun onBindViewHolder(holder: SkillViewHolder, position: Int) {
-        with(holder.binding) {
-            skill = skills[position]
+        with(holder) {
+            with(binding) {
+                "\u2713 ${skills[position]}".also { skillRowTextView.text = it }
 
-            deleteButton.setOnClickListener {
-                skills.removeAt(position)
-                viewModel.setSkills(skills)
+                deleteRowTextView.setOnClickListener {
+                    skills.removeAt(position)
+                    onClickDelete(skills)
+                }
             }
         }
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun skillsRefresh(newSkillList: ArrayList<String>) {
-        skills = newSkillList
+    fun skillsRefresh(newList: List<String>) {
+        skills.clear()
+        skills.addAll(newList)
         notifyDataSetChanged()
     }
 }
