@@ -121,6 +121,7 @@
     <color name="app_bg_color">#FFFFFF</color>
     <color name="secondary_bg_color">#f0f0f0</color>
     <color name="third_bg_color">#F2F2F2</color>
+    <color name="line_color">#777777</color>
 
     <!-- Light Tema İçin  Text Colors-->
     <color name="bold_text_color">#202020</color>

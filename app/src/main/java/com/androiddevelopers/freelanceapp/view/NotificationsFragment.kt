@@ -53,9 +53,16 @@ class NotificationsFragment : Fragment() {
         lastWeekNotificationAdapter  = NotificationAdapter()
         earlierNotificationAdapter = NotificationAdapter()
 
-        binding.rvTodayNotifications.layoutManager = LinearLayoutManager(requireContext())
-        binding.rvThisWeekNotifications.layoutManager = LinearLayoutManager(requireContext())
-        binding.rvEarlierNotifications.layoutManager = LinearLayoutManager(requireContext())
+        val manager1 =  LinearLayoutManager(requireContext())
+        val manager2 =  LinearLayoutManager(requireContext())
+        val manager3 =  LinearLayoutManager(requireContext())
+        manager1.reverseLayout = true
+        manager2.reverseLayout = true
+        manager3.reverseLayout = true
+
+        binding.rvTodayNotifications.layoutManager =manager1
+        binding.rvThisWeekNotifications.layoutManager = manager2
+        binding.rvEarlierNotifications.layoutManager = manager3
 
         // RecyclerView'a adapter'ı ve layout manager'ı ayarla
         binding.rvTodayNotifications.adapter = todayNotificationAdapter

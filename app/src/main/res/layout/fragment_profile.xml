@@ -34,21 +34,40 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
-
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:layout_marginStart="10dp"
-                            android:layout_marginTop="20dp"
-                            android:id="@+id/ivUserProfile"
-                            android:layout_width="150dp"
-                            android:layout_height="150dp"
-                            android:src="@drawable/placeholder"
-                            app:layout_constraintBottom_toBottomOf="parent"
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/layoutTopBar" />
+                            app:layout_constraintTop_toBottomOf="@+id/layoutTopBar">
+
+                            <TextView
+                                android:id="@+id/guide_line_tv"
+                                app:layout_constraintTop_toTopOf="@+id/ivBanner"
+                                app:layout_constraintBottom_toBottomOf="@+id/ivBanner"
+                                android:layout_width="match_parent"
+                                android:visibility="invisible"
+                                android:layout_height="1dp"/>
+
+                            <ImageView
+                                android:src="@drawable/banner"
+                                android:id="@+id/ivBanner"
+                                android:layout_width="match_parent"
+                                android:scaleType="centerCrop"
+                                android:layout_height="105dp"/>
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/guide_line_tv"
+                                android:layout_marginStart="10dp"
+                                android:id="@+id/ivUserProfile"
+                                android:layout_width="105dp"
+                                android:layout_height="105dp"
+                                android:src="@drawable/placeholder"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <androidx.constraintlayout.widget.ConstraintLayout
-                            style="@style/ApplicationSecondaryBackground"
-                            android:padding="10dp"
+                            android:background="@color/app_bg_color"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintEnd_toStartOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -67,15 +86,20 @@
 
                             <TextView
                                 style="@style/BoldTextStyle"
+                                android:id="@+id/tvProfile"
                                 android:textAlignment="center"
                                 android:text="Profile"
                                 app:layout_constraintTop_toTopOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
-                               />
-
-
+                                />
+                            <View
+                                android:layout_marginTop="8dp"
+                                android:background="@color/line_color"
+                                app:layout_constraintTop_toBottomOf="@+id/tvProfile"
+                                android:layout_width="match_parent"
+                                android:layout_height="2dp"/>
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -262,105 +286,105 @@
 
 
 
-                            <LinearLayout
-                                android:id="@+id/layoutPersonalInfo"
+                        <LinearLayout
+                            android:id="@+id/layoutPersonalInfo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <TextView
+                                style="@style/BoldTextStyle"
+                                android:text="Hakkında"/>
+
+                            <TextView
+                                style="@style/SecondaryTextStyle"
+                                android:layout_marginTop="8dp"
+                                android:text="@{userInfo.bio}" />
+
+                            <TextView
+                                style="@style/BoldTextStyle"
+                                android:text="Yetenekler"
+                                android:layout_marginTop="16dp" />
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/recyclerView"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:padding="16dp">
+                                android:padding="8dp"
+                                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                                app:spanCount="2"/>
 
-                                <TextView
-                                    style="@style/BoldTextStyle"
-                                    android:text="Hakkında"/>
+                            <TextView
+                                style="@style/BoldTextStyle"
+                                android:text="Eğitim"
+                                android:layout_marginTop="16dp" />
 
-                                <TextView
-                                    style="@style/SecondaryTextStyle"
-                                    android:layout_marginTop="8dp"
-                                    android:text="@{userInfo.bio}" />
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
 
-                                <TextView
-                                    style="@style/BoldTextStyle"
-                                    android:text="Yetenekler"
-                                    android:layout_marginTop="16dp" />
+                                <ImageView
+                                    android:id="@+id/ivGraduation"
+                                    style="@style/SchoolIconStyle"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent" />
 
-                                <androidx.recyclerview.widget.RecyclerView
-                                    android:id="@+id/recyclerView"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:padding="8dp"
-                                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                                    app:spanCount="2"/>
+                                <LinearLayout
+                                    android:layout_marginStart="5dp"
+                                    android:orientation="vertical"
+                                    app:layout_constraintStart_toEndOf="@+id/ivGraduation"
+                                    app:layout_constraintTop_toTopOf="@+id/ivGraduation"
+                                    app:layout_constraintBottom_toBottomOf="@+id/ivGraduation"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    android:layout_width="0dp"
+                                    android:layout_height="0dp">
 
-                                <TextView
-                                    style="@style/BoldTextStyle"
-                                    android:text="Eğitim"
-                                    android:layout_marginTop="16dp" />
+                                    <TextView
+                                        style="@style/SecondaryBigTextStyle"
+                                        android:id="@+id/tvScholl" />
 
-                                <androidx.constraintlayout.widget.ConstraintLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content">
+                                    <TextView
+                                        style="@style/SecondaryTextStyle"
+                                        android:id="@+id/tvInstitute" />
 
-                                    <ImageView
-                                        android:id="@+id/ivGraduation"
-                                        style="@style/SchoolIconStyle"
-                                        app:layout_constraintStart_toStartOf="parent"
-                                        app:layout_constraintTop_toTopOf="parent"
-                                        app:layout_constraintBottom_toBottomOf="parent" />
+                                    <TextView
+                                        style="@style/ThirdTextStyle"
+                                        android:id="@+id/tvYears"/>
 
-                                   <LinearLayout
-                                       android:layout_marginStart="5dp"
-                                       android:orientation="vertical"
-                                       app:layout_constraintStart_toEndOf="@+id/ivGraduation"
-                                       app:layout_constraintTop_toTopOf="@+id/ivGraduation"
-                                       app:layout_constraintBottom_toBottomOf="@+id/ivGraduation"
-                                       app:layout_constraintEnd_toEndOf="parent"
-                                       android:layout_width="0dp"
-                                       android:layout_height="0dp">
+                                </LinearLayout>
 
-                                       <TextView
-                                           style="@style/SecondaryBigTextStyle"
-                                           android:id="@+id/tvScholl" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
 
-                                       <TextView
-                                           style="@style/SecondaryTextStyle"
-                                           android:id="@+id/tvInstitute" />
 
-                                       <TextView
-                                           style="@style/ThirdTextStyle"
-                                           android:id="@+id/tvYears"/>
+                            <TextView
+                                style="@style/BoldTextStyle"
+                                android:text="Portföy"
+                                android:layout_marginTop="16dp" />
 
-                                   </LinearLayout>
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rvPortfolio"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="8dp"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                />
 
-                                </androidx.constraintlayout.widget.ConstraintLayout>
-                              
+                            <TextView
+                                style="@style/BoldTextStyle"
+                                android:text="Yorumlar"
+                                android:layout_marginTop="16dp"
+                                />
 
-                                <TextView
-                                    style="@style/BoldTextStyle"
-                                    android:text="Portföy"
-                                    android:layout_marginTop="16dp" />
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rvReviews"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="8dp"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-                                <androidx.recyclerview.widget.RecyclerView
-                                    android:id="@+id/rvPortfolio"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:padding="8dp"
-                                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                                    />
-
-                                <TextView
-                                    style="@style/BoldTextStyle"
-                                    android:text="Yorumlar"
-                                    android:layout_marginTop="16dp"
-                                   />
-
-                                <androidx.recyclerview.widget.RecyclerView
-                                    android:id="@+id/rvReviews"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:padding="8dp"
-                                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-                            </LinearLayout>
+                        </LinearLayout>
 
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -440,4 +464,5 @@
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

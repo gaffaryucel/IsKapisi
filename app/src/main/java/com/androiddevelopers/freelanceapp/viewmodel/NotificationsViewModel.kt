@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.androiddevelopers.freelanceapp.model.MessageModel
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
@@ -72,9 +73,9 @@ class NotificationsViewModel @Inject constructor(
                     }
                     _message.value = Resource.success(null)
                 }
-                _notificationOfToday.value = todayLst
-                _notificationOfLastWeek.value = lastWeekList
-                _notificationOfEarlier.value = earlierList
+                _notificationOfToday.value = sortListByDate(todayLst)
+                _notificationOfLastWeek.value = sortListByDate(lastWeekList)
+                _notificationOfEarlier.value = sortListByDate(earlierList)
             }.addOnFailureListener { exception ->
                 // Hata durzumunda işlemleri buraya ekleyebilirsiniz
                 _message.value = Resource.error("Belge alınamadı. Hata: $exception", null)
@@ -114,4 +115,8 @@ class NotificationsViewModel @Inject constructor(
 
         return tarih.toLocalDate() >= bugun.minusDays(7).toLocalDate()
     }
+    private fun sortListByDate(yourList: List<InAppNotificationModel>): List<InAppNotificationModel> {
+        return yourList.sortedBy { it.time }
+    }
 }
+
