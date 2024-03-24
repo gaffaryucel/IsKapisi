@@ -31,7 +31,6 @@ import retrofit2.Response
 import java.io.ByteArrayOutputStream
 import java.util.*
 import javax.inject.Inject
-import kotlin.collections.HashMap
 
 class FirebaseRepoImpl @Inject constructor(
     private val auth: FirebaseAuth,
@@ -153,10 +152,10 @@ class FirebaseRepoImpl @Inject constructor(
         postId: String,
     ): UploadTask {
         return imagesParentRef
-            .child("userId=$uId")
+            .child("userId_$uId")
             .child("images")
             .child("freelancerPost")
-            .child("postId=$postId")
+            .child("postId_$postId")
             .child("${UUID.randomUUID()}.jpg")
             .putFile(uri)
     }
@@ -167,10 +166,10 @@ class FirebaseRepoImpl @Inject constructor(
         postId: String,
     ): UploadTask {
         return imagesParentRef
-            .child("userId=$uId")
+            .child("userId_$uId")
             .child("images")
             .child("employerPost")
-            .child("postId=$postId")
+            .child("postId_$postId")
             .child("${UUID.randomUUID()}.jpg")
             .putFile(uri)
     }
@@ -181,10 +180,10 @@ class FirebaseRepoImpl @Inject constructor(
         postId: String
     ): UploadTask {
         return imagesParentRef
-            .child("userId=$uId")
+            .child("userId_$uId")
             .child("images")
             .child("discoverPost")
-            .child("postId=$postId")
+            .child("postId_$postId")
             .child("${UUID.randomUUID()}.jpg")
             .putBytes(image)
     }
@@ -261,14 +260,14 @@ class FirebaseRepoImpl @Inject constructor(
         val userChatReference = messagesReference.child(userId).child(chatId)
         return userChatReference.updateChildren(seen)
     }
-     override fun changeReceiverSeenStatus(receiver: String, chatId: String): Task<Void> {
+
+    override fun changeReceiverSeenStatus(receiverId: String, chatId: String): Task<Void> {
         val unSeen = hashMapOf<String, Any>(
             "seen" to false,
         )
-        val receiverChatReference = messagesReference.child(receiver).child(chatId)
+        val receiverChatReference = messagesReference.child(receiverId).child(chatId)
         return receiverChatReference.updateChildren(unSeen)
     }
-
 
 
     override fun getAllFollowingUsers(currentUserId: String): DatabaseReference {
@@ -289,7 +288,7 @@ class FirebaseRepoImpl @Inject constructor(
         return preChatReference.child(sender).child(chat.postId.toString()).setValue(chat)
     }
 
-//PreMessaging
+    //PreMessaging
     override fun getAllMessagesFromPreChatRoom(
         currentUserId: String,
         chatId: String
@@ -308,6 +307,7 @@ class FirebaseRepoImpl @Inject constructor(
         return preChatReference.child(userId).child(chatId).child("messages")
             .child(message.messageId.toString()).setValue(message)
     }
+
     override fun changeLastPreMessage(
         userId: String,
         receiver: String,
@@ -376,15 +376,18 @@ class FirebaseRepoImpl @Inject constructor(
     }
 
 
-    override fun getAllDiscoverPostsFromUser(userId: String,limit : Long): Task<QuerySnapshot> {
+    override fun getAllDiscoverPostsFromUser(userId: String, limit: Long): Task<QuerySnapshot> {
         return discoverPostCollection.whereEqualTo("postOwner", userId).limit(limit).get()
     }
 
-    override fun getAllEmployerJobPostsFromUser(userId: String,limit : Long): Task<QuerySnapshot> {
+    override fun getAllEmployerJobPostsFromUser(userId: String, limit: Long): Task<QuerySnapshot> {
         return employerPostCollection.whereEqualTo("employerId", userId).limit(limit).get()
     }
 
-    override fun getAllFreelancerJobPostsFromUser(userId: String,limit : Long): Task<QuerySnapshot> {
+    override fun getAllFreelancerJobPostsFromUser(
+        userId: String,
+        limit: Long
+    ): Task<QuerySnapshot> {
         return freelancerPostCollection.whereEqualTo("freelancerId", userId).limit(limit).get()
     }
 
@@ -468,13 +471,18 @@ class FirebaseRepoImpl @Inject constructor(
             .set(notification)
     }
 
- //Get
-    override fun getNotificationsByType(userId: String,type : NotificationType ,limit: Long): Task<QuerySnapshot> {
+    //Get
+    override fun getNotificationsByType(
+        userId: String,
+        type: NotificationType,
+        limit: Long
+    ): Task<QuerySnapshot> {
         return notificationCollection.whereEqualTo("userId", userId)
             .whereEqualTo("notificationType", type)
             .limit(limit)
             .get()
     }
+
     override fun getAllNotifications(userId: String, limit: Long): Task<QuerySnapshot> {
         return notificationCollection.whereEqualTo("userId", userId)
             .limit(limit)
