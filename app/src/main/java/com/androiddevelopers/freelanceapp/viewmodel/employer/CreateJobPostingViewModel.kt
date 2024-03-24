@@ -19,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateJobPostingViewModel
-@Inject constructor(
+@Inject
+constructor(
     private val firebaseRepo: FirebaseRepoInterFace,
     firebaseAuth: FirebaseAuth
 ) : ViewModel() {
@@ -55,38 +56,39 @@ class CreateJobPostingViewModel
             jobPost.postId = UUID.randomUUID().toString()
         }
 
-        if (images.size > 0) {
-            val uri = images[0]
-            if (uri.toString().contains("firebasestorage")) {
-                images.removeAt(0)
-                uploadedImages.add(uri.toString())
-                addImageAndEmployerPostToFirebase(images, jobPost, uploadedImages)
-            } else {
-                _firebaseMessage.value = Resource.loading(true)
-                firebaseRepo.addEmployerPostImage(uri, userId, jobPost.postId!!)
-                    .addOnSuccessListener { task ->
-                        task.storage.downloadUrl.addOnSuccessListener { uri ->
-                            images.removeAt(0)
-                            uploadedImages.add(uri.toString())
-                            addImageAndEmployerPostToFirebase(images, jobPost, uploadedImages)
+        jobPost.postId?.let { postId ->
+            if (images.size > 0) {
+                val uri = images[0]
+                if (uri.toString().contains("firebasestorage")) {
+                    images.removeAt(0)
+                    uploadedImages.add(uri.toString())
+                    addImageAndEmployerPostToFirebase(images, jobPost, uploadedImages)
+                } else {
+                    _firebaseMessage.value = Resource.loading(true)
+                    firebaseRepo.addEmployerPostImage(uri, userId, postId)
+                        .addOnSuccessListener { task ->
+                            task.storage.downloadUrl.addOnSuccessListener { uri ->
+                                images.removeAt(0)
+                                uploadedImages.add(uri.toString())
+                                addImageAndEmployerPostToFirebase(images, jobPost, uploadedImages)
+                            }.addOnFailureListener {
+                                _firebaseMessage.value = it.localizedMessage?.let { message ->
+                                    _firebaseMessage.value = Resource.loading(false)
+                                    Resource.error(message, false)
+                                }
+                            }
                         }.addOnFailureListener {
                             _firebaseMessage.value = it.localizedMessage?.let { message ->
                                 _firebaseMessage.value = Resource.loading(false)
                                 Resource.error(message, false)
                             }
                         }
-                    }.addOnFailureListener {
-                        _firebaseMessage.value = it.localizedMessage?.let { message ->
-                            _firebaseMessage.value = Resource.loading(false)
-                            Resource.error(message, false)
-                        }
-                    }
-
+                }
+            } else {
+                jobPost.images = uploadedImages
+                jobPost.employerId = userId
+                addEmployerPostToFirebase(jobPost)
             }
-        } else {
-            jobPost.images = uploadedImages
-            jobPost.employerId = userId
-            addEmployerPostToFirebase(jobPost)
         }
     }
 

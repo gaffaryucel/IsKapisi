@@ -146,9 +146,9 @@
     </fragment>
     <fragment
         android:id="@+id/createDiscoverPostFragment"
-        android:name="com.androiddevelopers.freelanceapp.view.discover.CreateDiscoverPostFragment"
+        android:name="com.androiddevelopers.freelanceapp.view.discover.DiscoverCreatePostFragment"
         android:label="fragment_create_discover_post"
-        tools:layout="@layout/fragment_create_discover_post" />
+        tools:layout="@layout/fragment_discover_create_post" />
     <fragment
         android:id="@+id/discoverDetailsFragment"
         android:name="com.androiddevelopers.freelanceapp.view.discover.DiscoverDetailsFragment"
