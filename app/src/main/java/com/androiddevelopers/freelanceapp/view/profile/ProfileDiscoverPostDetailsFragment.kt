@@ -33,7 +33,11 @@ class ProfileDiscoverPostDetailsFragment : Fragment() {
         _binding = FragmentProfileDiscoverPostDetailsBinding.inflate(inflater, container, false)
         val root: View = binding.root
         val p = arguments?.getString("p")
-        position = p?.toInt()
+        position = try {
+            p?.toInt()
+        }catch (e : Exception){
+            0
+        }
         return root
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

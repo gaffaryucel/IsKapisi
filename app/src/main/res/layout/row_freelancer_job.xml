@@ -11,15 +11,18 @@
     </data>
 
     <LinearLayout
+        android:padding="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <androidx.cardview.widget.CardView
+            android:layout_margin="8dp"
+            app:cardElevation="10dp"
+            android:shadowColor="@color/black"
             android:id="@+id/cardFreelancer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp"
             app:cardCornerRadius="10dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -44,6 +47,7 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <androidx.appcompat.widget.AppCompatImageView
+                            android:scaleType="centerCrop"
                             android:id="@+id/imagePlaceHolderHome"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"

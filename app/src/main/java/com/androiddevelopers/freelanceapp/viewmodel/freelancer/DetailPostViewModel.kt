@@ -107,7 +107,7 @@ class DetailPostViewModel @Inject constructor(
             if (it.isSuccessful) {
                 sendNotification(
                     notification = notification,
-                    type = NotificationTypeForActions.PRE_MESSAGE,
+                    type = NotificationTypeForActions.EMP_JOB_POST,
                     poreMessage = PreMessageObject(
                         userId = currentUserId,
                         postId = preChatModel.postId.toString(),
@@ -115,9 +115,9 @@ class DetailPostViewModel @Inject constructor(
                     )
                 )
                 firebaseRepo.saveNotification(notification).addOnSuccessListener {
-                    println("SUCCES NOTİFİCATİON")
+
                 }.addOnFailureListener{
-                    println("FAIL NOTİFİCATİON")
+
                 }
                 sendFirstMessage(
                     preChatModel.postId.toString(), message, preChatModel.receiver.toString()

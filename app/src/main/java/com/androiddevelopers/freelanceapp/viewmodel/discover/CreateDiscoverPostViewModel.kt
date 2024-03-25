@@ -18,9 +18,7 @@ import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class CreateDiscoverPostViewModel
-@Inject
-constructor(
+class CreateDiscoverPostViewModel @Inject constructor(
     private val firebaseRepo: FirebaseRepoInterFace,
     firebaseAuth: FirebaseAuth
 ) : ViewModel() {

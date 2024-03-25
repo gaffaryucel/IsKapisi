@@ -16,12 +16,14 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@color/app_bg_color"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         tools:context=".view.freelancer.HomeFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:background="@color/app_bg_color"
             android:id="@+id/layoutHomeTab"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
@@ -50,7 +52,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription"
+                app:tint="@color/normal_text_color" />
 
             <ImageView
                 android:id="@+id/ivNotifications"
@@ -61,7 +64,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/ivMessage"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription"
+                app:tint="@color/normal_text_color"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.appcompat.widget.SearchView
