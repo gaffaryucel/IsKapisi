@@ -33,7 +33,7 @@ import com.androiddevelopers.freelanceapp.util.createImageUri
 import com.androiddevelopers.freelanceapp.util.hideBottomNavigation
 import com.androiddevelopers.freelanceapp.util.showBottomNavigation
 import com.androiddevelopers.freelanceapp.util.toast
-import com.androiddevelopers.freelanceapp.viewmodel.discover.DiscoverCreatePostViewModel
+import com.androiddevelopers.freelanceapp.viewmodel.discover.CreateDiscoverPostViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -41,7 +41,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class DiscoverCreatePostFragment : Fragment() {
     private var _binding: FragmentDiscoverCreatePostBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: DiscoverCreatePostViewModel by viewModels()
+    private val viewModel: CreateDiscoverPostViewModel by viewModels()
     private lateinit var dialogChooseImageSource: Dialog
     private lateinit var cameraLauncher: ActivityResultLauncher<Uri>
     private lateinit var imageLauncher: ActivityResultLauncher<Intent>
