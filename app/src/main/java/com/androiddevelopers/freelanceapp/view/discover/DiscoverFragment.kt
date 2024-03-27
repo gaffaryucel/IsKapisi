@@ -10,7 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
-import com.androiddevelopers.freelanceapp.adapters.DiscoverAdapter
+import com.androiddevelopers.freelanceapp.adapters.discover.DiscoverAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentDiscoverBinding
 import com.androiddevelopers.freelanceapp.viewmodel.discover.DiscoverViewModel
 import dagger.hilt.android.AndroidEntryPoint

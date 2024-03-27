@@ -39,14 +39,14 @@ import java.util.*
 @AndroidEntryPoint
 class CreateJobPostingFragment : Fragment() {
     private val viewModel: CreateJobPostingViewModel by viewModels()
+    private var _binding: FragmentJobPostingsCreateBinding? = null
+    private val binding get() = _binding!!
+
     private val dateFormatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
     private lateinit var datePicker: MaterialDatePicker<Long>
+
     private val selectedImages = mutableListOf<Uri>()
-
     private lateinit var imageLauncher: ActivityResultLauncher<Intent>
-    private var _binding: FragmentJobPostingsCreateBinding? = null
-
-    private val binding get() = _binding!!
 
     private lateinit var errorDialog: AlertDialog
     private val skillAdapter = SkillAdapter()
