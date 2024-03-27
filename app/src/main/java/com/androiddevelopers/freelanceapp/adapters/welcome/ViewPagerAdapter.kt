@@ -1,4 +1,4 @@
-package com.androiddevelopers.freelanceapp.adapters
+package com.androiddevelopers.freelanceapp.adapters.welcome
 
 import android.content.Context
 import android.view.View
@@ -7,7 +7,8 @@ import android.widget.ImageView
 import androidx.viewpager.widget.PagerAdapter
 import java.sql.DriverManager
 
-class ViewPagerAdapter (private val images: IntArray, private val context: Context) : PagerAdapter() {
+class ViewPagerAdapter(private val images: IntArray, private val context: Context) :
+    PagerAdapter() {
 
     override fun isViewFromObject(view: View, obj: Any): Boolean {
         return view === obj
