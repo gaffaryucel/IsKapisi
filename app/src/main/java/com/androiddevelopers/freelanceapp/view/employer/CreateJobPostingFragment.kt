@@ -56,6 +56,11 @@ class CreateJobPostingFragment : Fragment() {
 
     private var employerJobPost: EmployerJobPost? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setupLaunchers()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -80,7 +85,7 @@ class CreateJobPostingFragment : Fragment() {
         errorDialog = AlertDialog.Builder(context).create()
         setupErrorDialog(errorDialog)
         binding.setProgressBar = false
-        //setProgressBar(false)
+
         observeLiveData(viewLifecycleOwner)
 
         val employerId = arguments?.getString("employer_id")
@@ -89,7 +94,9 @@ class CreateJobPostingFragment : Fragment() {
             viewModel.getEmployerJobPostWithDocumentByIdFromFirestore(id)
         }
 
-        viewModel.setImageUriList(selectedImages)
+        viewModel.setImageUriList(selectedImages.toList())
+
+        setupOnClicks()
 
         with(binding) {
             //ilk açılışta create ekranı olduğu için delete butonunu gizliyoruz
@@ -104,7 +111,11 @@ class CreateJobPostingFragment : Fragment() {
             //viewpager adapter ve indicatoru set ediyoruz
             viewPagerCreateJobPost.adapter = viewPagerAdapter
             indicatorCreateJobPost.setViewPager(viewPagerCreateJobPost)
+        }
+    }
 
+    private fun setupOnClicks() {
+        with(binding) {
             //skill text içindeki icon ile listeye yeni skill ekliyoruz
             // sonrasında yeni eklenen skill in recycler view de ve diğer yerlerde güncellenemsi iç viewmodel e gönderiyoruz
             skillAddTextInputLayout.setEndIconOnClickListener {
@@ -134,7 +145,8 @@ class CreateJobPostingFragment : Fragment() {
                             viewCount = employerJobPost?.viewCount,
                             isUrgent = switchUrgentCreateJobPost.isChecked,
                             worksToBeDone = employerJobPost?.worksToBeDone,
-                            aboutYou = employerJobPost?.aboutYou
+                            aboutYou = employerJobPost?.aboutYou,
+                            ownerToken = employerJobPost?.ownerToken
                         )
                     )
                 }
@@ -155,8 +167,6 @@ class CreateJobPostingFragment : Fragment() {
                     } else {
                         deadlineTextInputLayout.error = "Daha ileri bir tarih seçiniz"
                     }
-
-
                 }
             }
 
@@ -180,7 +190,9 @@ class CreateJobPostingFragment : Fragment() {
                 }
             }
         }
+    }
 
+    private fun setupLaunchers() {
         imageLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == Activity.RESULT_OK) {
@@ -191,7 +203,6 @@ class CreateJobPostingFragment : Fragment() {
                 }
             }
     }
-
 
     private fun observeLiveData(owner: LifecycleOwner) {
         with(viewModel) {
@@ -278,14 +289,6 @@ class CreateJobPostingFragment : Fragment() {
         }
     }
 
-//    private fun setProgressBar(isVisible: Boolean) {
-//        if (isVisible) {
-//            binding.createJobPostProgressBar.visibility = View.VISIBLE
-//        } else {
-//            binding.createJobPostProgressBar.visibility = View.INVISIBLE
-//        }
-//    }
-
     private fun openImagePicker() {
         val imageIntent =
             Intent(
@@ -294,33 +297,6 @@ class CreateJobPostingFragment : Fragment() {
             )
         imageLauncher.launch(imageIntent)
     }
-
-//    private fun checkPermission(): Boolean {
-//        val currentPermission = chooseImagePermission()
-//        return if (ContextCompat.checkSelfPermission(
-//                requireContext(),
-//                currentPermission
-//            ) == PackageManager.PERMISSION_GRANTED
-//        ) {
-//            true
-//        } else {
-//            ActivityCompat.requestPermissions(
-//                requireActivity(),
-//                arrayOf(currentPermission),
-//                800
-//            )
-//            false
-//        }
-//
-//    }
-//
-//    private fun chooseImagePermission(): String {
-//        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-//            android.Manifest.permission.READ_MEDIA_IMAGES
-//        } else {
-//            android.Manifest.permission.READ_EXTERNAL_STORAGE
-//        }
-//    }
 
     override fun onResume() {
         super.onResume()

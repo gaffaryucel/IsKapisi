@@ -1,5 +1,6 @@
 package com.androiddevelopers.freelanceapp.viewmodel.freelancer
 
+import android.graphics.Bitmap
 import android.net.Uri
 import android.view.View
 import androidx.lifecycle.LiveData
@@ -38,6 +39,10 @@ constructor(
     val imageUriList: LiveData<List<Uri>>
         get() = _imageUriList
 
+    private var _liveDateBitmapImages = MutableLiveData<List<Bitmap>>()
+    val liveDateBitmapImages: LiveData<List<Bitmap>>
+        get() = _liveDateBitmapImages
+
     private var _imageSize = MutableLiveData<Int>()
     val imageSize: LiveData<Int>
         get() = _imageSize
@@ -47,7 +52,7 @@ constructor(
         get() = _firebaseLiveData
 
     fun addImageAndFreelancerPostToFirebase(
-        images: MutableList<Uri>,
+        images: MutableList<ByteArray>,
         post: FreelancerJobPost,
         uploadedImages: MutableList<String> = mutableListOf()
     ) {
@@ -57,14 +62,14 @@ constructor(
 
         post.postId?.let { postId ->
             if (images.size > 0) {
-                val uri = images[0]
-                if (uri.toString().contains("firebasestorage")) {
+                val image = images[0]
+                if (image.toString().contains("firebasestorage")) {
                     images.removeAt(0)
-                    uploadedImages.add(uri.toString())
+                    uploadedImages.add(image.toString())
                     addImageAndFreelancerPostToFirebase(images, post, uploadedImages)
                 } else {
                     _firebaseMessage.value = Resource.loading(true)
-                    firebaseRepo.addFreelancerPostImage(uri, userId, postId)
+                    firebaseRepo.addFreelancerPostImage(image, userId, postId)
                         .addOnSuccessListener { task ->
                             task.storage.downloadUrl.addOnSuccessListener {
                                 images.removeAt(0)
@@ -133,6 +138,11 @@ constructor(
         _skills.value = newSkills
     }
 
+    fun setBitmapImages(newList: List<Bitmap>) = viewModelScope.launch {
+        _liveDateBitmapImages.value = newList.toList()
+        _imageSize.value = newList.size
+    }
+
     fun getFreelancerJobPostWithDocumentByIdFromFirestore(documentId: String) =
         viewModelScope.launch {
             _firebaseMessage.value = Resource.loading(true)
@@ -156,83 +166,5 @@ constructor(
                     }
                 }
         }
-
-//    fun uploadPostPicture(postModel: FreelancerJobPost, r: ByteArray) = viewModelScope.launch {
-//        _uploadPhotoMessage.value = Resource.loading("loading")
-//
-//        val photoFileName = "${UUID.randomUUID()}.jpg"
-//        val photoRef =
-//            storageReference.child("users/${currentUserId}/freelancer_post_photo/$photoFileName")
-//
-//        photoRef.putBytes(r)
-//            .addOnSuccessListener {
-//                photoRef.downloadUrl
-//                    .addOnSuccessListener { uri ->
-//                        val imageUrl = uri.toString()
-//                        postModel.images = listOf(imageUrl)
-//                        uploadJobPost(postModel)
-//                    }
-//                    .addOnFailureListener { exception ->
-//                        // URL alınamazsa burada hata işleme kodlarınızı yazabilirsiniz.
-//                        _uploadPhotoMessage.value =
-//                            Resource.error("cannot acces url", exception.localizedMessage)
-//                    }
-//            }.addOnFailureListener { exception ->
-//                // Yükleme başarısız olursa, burada hata işleme kodlarınızı yazabilirsiniz.
-//                _uploadPhotoMessage.value =
-//                    Resource.error("cannot upload photo", exception.localizedMessage)
-//            }
-//    }
-//
-//    private fun uploadJobPost(jobPost: FreelancerJobPost) = viewModelScope.launch {
-//        // Job post'un Firestore'a yüklenmesi
-//        _insertPostMessage.value = Resource.loading(null)
-//        if (checkIsPostValid(jobPost)) {
-//            repo.addFreelancerJobPostToFirestore(jobPost)
-//                .addOnSuccessListener {
-//                    _insertPostMessage.value = Resource.success(null)
-//                    updateUserData(jobPost)
-//                }.addOnFailureListener { e ->
-//                    _insertPostMessage.value =
-//                        Resource.error(e.localizedMessage ?: "error : try again later", null)
-//                }
-//        } else {
-//            _insertPostMessage.value = Resource.error("Lütfen tüm alanları doldurun", null)
-//        }
-//    }
-//
-//    private fun getCurrentTime(): String {
-//        val currentTime = System.currentTimeMillis()
-//        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-//        val date = Date(currentTime)
-//        return dateFormat.format(date)
-//    }
-
-//    private fun updateUserData(jobPost: FreelancerJobPost) {
-//        repo.uploadDataInUserNode(
-//            currentUserId.toString(),
-//            jobPost,
-//            "freelancer_job_post",
-//            jobPost.postId.toString()
-//        )
-//    }
-
-//    private fun checkIsPostValid(jobPost: FreelancerJobPost): Boolean {
-//        return jobPost.postId != null &&
-//                jobPost.freelancerId != null &&
-//                jobPost.title != null &&
-//                jobPost.description != null &&
-//                jobPost.images != null &&
-//                jobPost.skillsRequired != null &&
-//                jobPost.budget != null &&
-//                jobPost.deadline != null &&
-//                jobPost.location != null &&
-//                jobPost.datePosted != null &&
-//                jobPost.applicants != null &&
-//                jobPost.status != null &&
-//                jobPost.additionalDetails != null &&
-//                jobPost.viewCount != null &&
-//                jobPost.isUrgent != null
-//    }
 }
 
