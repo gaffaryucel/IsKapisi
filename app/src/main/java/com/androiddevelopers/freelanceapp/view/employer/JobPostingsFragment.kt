@@ -123,16 +123,16 @@ class JobPostingsFragment : Fragment() {
 
 
             firebaseUserListData.observe(owner) { users ->
-                employerAdapter.refreshUserList(users)
+                employerAdapter.refreshUserList(users.toList())
 
                 firebaseLiveData.observe(owner) { list ->
                     // firebase 'den gelen veriler ile adapter'i yeniliyoruz
-                    employerAdapter.employerList = list
+                    employerAdapter.employerList = list.toList()
 
                     listEmployerJobPost.clear()
                     // firebase 'den gelen son verilerin kopyasını saklıyoruz
                     // search iptal edildiğinde bu verileri tekrar adapter'e set edeceğiz
-                    listEmployerJobPost.addAll(list)
+                    listEmployerJobPost.addAll(list.toList())
                 }
             }
 

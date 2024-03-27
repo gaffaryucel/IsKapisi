@@ -12,21 +12,30 @@ import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.RowDiscoverDetailsBinding
 import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
+import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.view.discover.DiscoverDetailsFragmentDirections
 import com.androiddevelopers.freelanceapp.view.profile.ProfileDiscoverPostDetailsFragmentDirections
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 
-class DiscoverPostDetailsAdapter : RecyclerView.Adapter<DiscoverPostDetailsAdapter.DiscoverPostDetailsViewHolder>() {
+class DiscoverPostDetailsAdapter :
+    RecyclerView.Adapter<DiscoverPostDetailsAdapter.DiscoverPostDetailsViewHolder>() {
     private val userId = FirebaseAuth.getInstance().currentUser?.uid.toString()
+    private val users = mutableListOf<UserModel>()
 
     private val diffUtil = object : DiffUtil.ItemCallback<DiscoverPostModel>() {
-        override fun areItemsTheSame(oldItem: DiscoverPostModel, newItem: DiscoverPostModel): Boolean {
+        override fun areItemsTheSame(
+            oldItem: DiscoverPostModel,
+            newItem: DiscoverPostModel
+        ): Boolean {
             return oldItem == newItem
         }
 
         @SuppressLint("DiffUtilEquals")
-        override fun areContentsTheSame(oldItem: DiscoverPostModel, newItem: DiscoverPostModel): Boolean {
+        override fun areContentsTheSame(
+            oldItem: DiscoverPostModel,
+            newItem: DiscoverPostModel
+        ): Boolean {
             return oldItem == newItem
         }
     }
@@ -37,19 +46,30 @@ class DiscoverPostDetailsAdapter : RecyclerView.Adapter<DiscoverPostDetailsAdapt
         get() = recyclerListDiffer.currentList
         set(value) = recyclerListDiffer.submitList(value)
 
-    inner class DiscoverPostDetailsViewHolder(val binding: RowDiscoverDetailsBinding) : RecyclerView.ViewHolder(binding.root){
-        fun likePost(ownerToken : String,imageUrl : String,postId : String,likeCount : List<String>){
-            like?.invoke(ownerToken,imageUrl,postId,likeCount)
+    inner class DiscoverPostDetailsViewHolder(val binding: RowDiscoverDetailsBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun likePost(
+            ownerToken: String,
+            imageUrl: String,
+            postId: String,
+            likeCount: List<String>
+        ) {
+            like?.invoke(ownerToken, imageUrl, postId, likeCount)
             binding.ivLike.setImageResource(R.drawable.ic_fill_favorite)
         }
-        fun dislikePost(postId : String,likeCount : List<String>){
-            dislike?.invoke(postId,likeCount)
+
+        fun dislikePost(postId: String, likeCount: List<String>) {
+            dislike?.invoke(postId, likeCount)
             binding.ivLike.setImageResource(R.drawable.ic_favorite)
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiscoverPostDetailsViewHolder {
-        val binding = RowDiscoverDetailsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): DiscoverPostDetailsViewHolder {
+        val binding =
+            RowDiscoverDetailsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return DiscoverPostDetailsViewHolder(binding)
     }
 
@@ -60,70 +80,120 @@ class DiscoverPostDetailsAdapter : RecyclerView.Adapter<DiscoverPostDetailsAdapt
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: DiscoverPostDetailsViewHolder, position: Int) {
         val post = postList[position]
-        var liked : Boolean? = null
-        var postLikeCount : Int?
+        var liked: Boolean? = null
+        var postLikeCount: Int?
+        var userModel: UserModel? = null
 
-        if (post.likeCount != null){
+        users.forEach {
+            if (it.userId.equals(post.postOwner)) {
+                userModel = it
+            }
+        }
+
+        if (post.likeCount != null) {
             liked = post.likeCount?.contains(userId)
             postLikeCount = post.likeCount!!.size
-        }else{
+        } else {
             postLikeCount = 0
         }
         holder.binding.tvLike.text = "${postLikeCount.toString()} beğeni"
-        if (post.comments != null){
+        if (post.comments != null) {
             holder.binding.tvComment.text = "${post.comments?.size.toString()} yorum"
-        }else{
+        } else {
             holder.binding.tvComment.text = "Henüz Yorum Yok"
         }
-        Glide.with(holder.itemView.context).load(post.images?.get(0)).into(holder.binding.ivPost)
-        Glide.with(holder.itemView.context).load(post.ownerImage.toString()).into(holder.binding.ivUserProfile)
+        post.images?.let { images ->
+            if (images.isNotEmpty()) {
+                Glide.with(holder.itemView.context).load(post.images?.get(0))
+                    .into(holder.binding.ivPost)
+            }
+        }
+
+        userModel?.let {
+            holder.binding.user = it
+        }
+
+//        Glide.with(holder.itemView.context).load(post.ownerImage.toString())
+//            .into(holder.binding.ivUserProfile)
+
         holder.binding.apply {
             postItem = post
         }
-        if (liked == true){
+        if (liked == true) {
             holder.binding.ivLike.setImageResource(R.drawable.ic_fill_favorite)
-        }else{
+        } else {
             holder.binding.ivLike.setImageResource(R.drawable.ic_favorite)
         }
         holder.binding.ivLike.setOnClickListener {
-            if (liked == null){
+            if (liked == null) {
                 liked = false
             }
-            if (liked!!){
-                holder.dislikePost(post.postId.toString(),post.likeCount ?: emptyList())
+            if (liked!!) {
+                holder.dislikePost(post.postId.toString(), post.likeCount ?: emptyList())
                 postLikeCount -= 1
-                holder.binding.tvLike.text ="${postLikeCount.toString()} beğeni"
+                holder.binding.tvLike.text = "${postLikeCount.toString()} beğeni"
                 liked = false
-            }else{
+            } else {
                 try {
-                    holder.likePost(post.ownerToken.toString(),post.images?.get(0).toString(),post.postId.toString(),post.likeCount ?: emptyList())
-                }catch (e: Exception){
-                    Toast.makeText(holder.itemView.context, "Beğenilemedi", Toast.LENGTH_SHORT).show()
+                    userModel?.token?.let { token ->
+                        holder.likePost(
+                            token,
+                            post.images?.get(0).toString(),
+                            post.postId.toString(),
+                            post.likeCount ?: emptyList()
+                        )
+                    }
+
+                } catch (e: Exception) {
+                    Toast.makeText(holder.itemView.context, "Beğenilemedi", Toast.LENGTH_SHORT)
+                        .show()
                 }
                 postLikeCount += 1
-                holder.binding.tvLike.text ="$postLikeCount beğeni"
+                holder.binding.tvLike.text = "$postLikeCount beğeni"
                 liked = true
             }
         }
         holder.binding.ivComment.setOnClickListener {
-            if (inProfile){
-                val action = ProfileDiscoverPostDetailsFragmentDirections.actionProfileDiscoverPostDetailsFragmentToCommentsFragment(post.postId.toString(),post.ownerToken.toString())
-                Navigation.findNavController(it).navigate(action)
-            }else{
-                val action = DiscoverDetailsFragmentDirections.actionDiscoverDetailsFragmentToCommentsFragment(post.postId.toString(),post.ownerToken.toString())
-                Navigation.findNavController(it).navigate(action)
+            if (inProfile) {
+                userModel?.token?.let { token ->
+                    val action =
+                        ProfileDiscoverPostDetailsFragmentDirections.actionProfileDiscoverPostDetailsFragmentToCommentsFragment(
+                            post.postId.toString(),
+                            token
+                        )
+                    Navigation.findNavController(it).navigate(action)
+                }
+
+            } else {
+                userModel?.token?.let { token ->
+                    val action =
+                        DiscoverDetailsFragmentDirections.actionDiscoverDetailsFragmentToCommentsFragment(
+                            post.postId.toString(),
+                            token
+                        )
+                    Navigation.findNavController(it).navigate(action)
+                }
             }
         }
         holder.binding.userInfoBar.setOnClickListener {
-            if (inProfile){
+            if (inProfile) {
                 holder.itemView.findNavController().popBackStack()
-            }else{
-                val action = DiscoverDetailsFragmentDirections.actionDiscoverDetailsFragmentToUserProfileFragment(post.postOwner.toString())
+            } else {
+                val action =
+                    DiscoverDetailsFragmentDirections.actionDiscoverDetailsFragmentToUserProfileFragment(
+                        post.postOwner.toString()
+                    )
                 Navigation.findNavController(it).navigate(action)
             }
         }
     }
 
-    var like: ((String,String,String,List<String>) -> Unit)? = null
-    var dislike: ((String,List<String>) -> Unit)? = null
+    var like: ((String, String, String, List<String>) -> Unit)? = null
+    var dislike: ((String, List<String>) -> Unit)? = null
+
+
+    fun refreshUserList(newList: List<UserModel>) {
+        users.clear()
+        users.addAll(newList.toList())
+    }
 }

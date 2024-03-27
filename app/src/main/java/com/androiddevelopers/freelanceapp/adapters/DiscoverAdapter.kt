@@ -15,15 +15,13 @@ class DiscoverAdapter : RecyclerView.Adapter<DiscoverAdapter.DiscoverViewHolder>
 
     private val diffUtil = object : DiffUtil.ItemCallback<DiscoverPostModel>() {
         override fun areItemsTheSame(
-            oldItem: DiscoverPostModel,
-            newItem: DiscoverPostModel
+            oldItem: DiscoverPostModel, newItem: DiscoverPostModel
         ): Boolean {
             return oldItem.postId == newItem.postId
         }
 
         override fun areContentsTheSame(
-            oldItem: DiscoverPostModel,
-            newItem: DiscoverPostModel
+            oldItem: DiscoverPostModel, newItem: DiscoverPostModel
         ): Boolean {
             return oldItem == newItem
         }
@@ -48,8 +46,13 @@ class DiscoverAdapter : RecyclerView.Adapter<DiscoverAdapter.DiscoverViewHolder>
 
     override fun onBindViewHolder(holder: DiscoverViewHolder, position: Int) {
         val post = postList[position]
-        Glide.with(holder.itemView.context).load(post.images?.get(0))
-            .into(holder.binding.ivDiscoverVPost)
+        post.images?.let { images ->
+            if (images.isNotEmpty()) {
+                Glide.with(holder.itemView.context).load(post.images?.get(0))
+                    .into(holder.binding.ivDiscoverVPost)
+            }
+        }
+
         holder.itemView.setOnClickListener {
             val action =
                 DiscoverFragmentDirections.actionNavigationDiscoverToDiscoverDetailsFragment(

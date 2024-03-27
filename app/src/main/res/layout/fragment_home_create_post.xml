@@ -7,9 +7,15 @@
 
         <import type="androidx.navigation.Navigation" />
 
+        <import type="android.view.View" />
+
         <variable
             name="rvSkillAdapter"
             type="com.androiddevelopers.freelanceapp.adapters.SkillAdapter" />
+
+        <variable
+            name="setProgressBar"
+            type="Boolean" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -45,6 +51,18 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/title_create_freelancer_post"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@id/ivBackButton"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/ivBackButton"
+                    app:layout_constraintTop_toTopOf="@id/ivBackButton" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -52,7 +70,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:indeterminate="true"
-                android:visibility="gone"
+                android:visibility="@{setProgressBar == true ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/layoutTopIconsHomeCreate" />
@@ -140,7 +158,6 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/budgetTextInputEditText"
-
                             style="@style/StyleTextInputEditText"
                             android:hint="@string/enter_budget_freelancer"
                             android:inputType="number|numberDecimal|numberSigned"

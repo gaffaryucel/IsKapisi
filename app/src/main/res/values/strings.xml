@@ -88,4 +88,6 @@
     <string name="open_gallery">Galeriyi aç</string>
     <string name="enter_tags">Etiketleri girin…</string>
     <string name="enter_description_discover">Açıklama girin…</string>
+    <string name="title_create_discover_post">Yeni Gönderi Oluştur</string>
+    <string name="title_create_freelancer_post">Yeni Freelancer İlanı Oluştur</string>
 </resources>
