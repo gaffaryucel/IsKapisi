@@ -1,4 +1,4 @@
-package com.androiddevelopers.freelanceapp.adapters
+package com.androiddevelopers.freelanceapp.adapters.discover
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater

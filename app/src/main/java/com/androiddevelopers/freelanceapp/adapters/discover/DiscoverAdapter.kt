@@ -1,4 +1,4 @@
-package com.androiddevelopers.freelanceapp.adapters
+package com.androiddevelopers.freelanceapp.adapters.discover
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
