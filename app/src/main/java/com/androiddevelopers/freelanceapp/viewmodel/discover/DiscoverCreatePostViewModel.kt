@@ -91,9 +91,6 @@ constructor(
 
     private fun uploadDiscoverPostToFirestore(postModel: DiscoverPostModel) {
         _firebaseMessage.value = Resource.loading(true)
-        postModel.ownerImage = userData.value?.profileImageUrl
-        postModel.ownerName = userData.value?.fullName
-        postModel.ownerToken = userData.value?.token
         firebaseRepo.uploadDiscoverPostToFirestore(postModel).addOnCompleteListener { task ->
             _firebaseMessage.value = Resource.loading(false)
             if (task.isSuccessful) {

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.RowDiscoverDetailsBinding
 import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
+import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.view.discover.DiscoverDetailsFragmentDirections
 import com.androiddevelopers.freelanceapp.view.profile.ProfileDiscoverPostDetailsFragmentDirections
 import com.bumptech.glide.Glide
@@ -20,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth
 class DiscoverPostDetailsAdapter :
     RecyclerView.Adapter<DiscoverPostDetailsAdapter.DiscoverPostDetailsViewHolder>() {
     private val userId = FirebaseAuth.getInstance().currentUser?.uid.toString()
+    private val users = mutableListOf<UserModel>()
 
     private val diffUtil = object : DiffUtil.ItemCallback<DiscoverPostModel>() {
         override fun areItemsTheSame(
@@ -80,6 +82,13 @@ class DiscoverPostDetailsAdapter :
         val post = postList[position]
         var liked: Boolean? = null
         var postLikeCount: Int?
+        var userModel: UserModel? = null
+
+        users.forEach {
+            if (it.userId.equals(post.postOwner)) {
+                userModel = it
+            }
+        }
 
         if (post.likeCount != null) {
             liked = post.likeCount?.contains(userId)
@@ -100,8 +109,13 @@ class DiscoverPostDetailsAdapter :
             }
         }
 
-        Glide.with(holder.itemView.context).load(post.ownerImage.toString())
-            .into(holder.binding.ivUserProfile)
+        userModel?.let {
+            holder.binding.user = it
+        }
+
+//        Glide.with(holder.itemView.context).load(post.ownerImage.toString())
+//            .into(holder.binding.ivUserProfile)
+
         holder.binding.apply {
             postItem = post
         }
@@ -121,12 +135,15 @@ class DiscoverPostDetailsAdapter :
                 liked = false
             } else {
                 try {
-                    holder.likePost(
-                        post.ownerToken.toString(),
-                        post.images?.get(0).toString(),
-                        post.postId.toString(),
-                        post.likeCount ?: emptyList()
-                    )
+                    userModel?.token?.let { token ->
+                        holder.likePost(
+                            token,
+                            post.images?.get(0).toString(),
+                            post.postId.toString(),
+                            post.likeCount ?: emptyList()
+                        )
+                    }
+
                 } catch (e: Exception) {
                     Toast.makeText(holder.itemView.context, "Beğenilemedi", Toast.LENGTH_SHORT)
                         .show()
@@ -138,19 +155,24 @@ class DiscoverPostDetailsAdapter :
         }
         holder.binding.ivComment.setOnClickListener {
             if (inProfile) {
-                val action =
-                    ProfileDiscoverPostDetailsFragmentDirections.actionProfileDiscoverPostDetailsFragmentToCommentsFragment(
-                        post.postId.toString(),
-                        post.ownerToken.toString()
-                    )
-                Navigation.findNavController(it).navigate(action)
+                userModel?.token?.let { token ->
+                    val action =
+                        ProfileDiscoverPostDetailsFragmentDirections.actionProfileDiscoverPostDetailsFragmentToCommentsFragment(
+                            post.postId.toString(),
+                            token
+                        )
+                    Navigation.findNavController(it).navigate(action)
+                }
+
             } else {
-                val action =
-                    DiscoverDetailsFragmentDirections.actionDiscoverDetailsFragmentToCommentsFragment(
-                        post.postId.toString(),
-                        post.ownerToken.toString()
-                    )
-                Navigation.findNavController(it).navigate(action)
+                userModel?.token?.let { token ->
+                    val action =
+                        DiscoverDetailsFragmentDirections.actionDiscoverDetailsFragmentToCommentsFragment(
+                            post.postId.toString(),
+                            token
+                        )
+                    Navigation.findNavController(it).navigate(action)
+                }
             }
         }
         holder.binding.userInfoBar.setOnClickListener {
@@ -168,4 +190,10 @@ class DiscoverPostDetailsAdapter :
 
     var like: ((String, String, String, List<String>) -> Unit)? = null
     var dislike: ((String, List<String>) -> Unit)? = null
+
+
+    fun refreshUserList(newList: List<UserModel>) {
+        users.clear()
+        users.addAll(newList.toList())
+    }
 }

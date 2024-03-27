@@ -16,7 +16,7 @@ class EmployerAdapter(private val userId: String) :
     RecyclerView.Adapter<EmployerAdapter.EmployerViewHolder>() {
     lateinit var clickListener: ((EmployerJobPost, View) -> Unit)
     lateinit var savedListener: ((String, Boolean, List<String>) -> Unit)
-    val users = mutableListOf<UserModel>()
+    private val users = mutableListOf<UserModel>()
 
     private val diffUtil = object : DiffUtil.ItemCallback<EmployerJobPost>() {
         override fun areItemsTheSame(
@@ -66,6 +66,14 @@ class EmployerAdapter(private val userId: String) :
 
         val postId = employerJobPost.postId.toString()
 
+        var userModel: UserModel? = null
+
+        users.forEach {
+            if (it.userId.equals(employerJobPost.employerId)) {
+                userModel = it
+            }
+        }
+
         with(holder) {
             with(binding) {
                 employer = employerJobPost
@@ -95,10 +103,9 @@ class EmployerAdapter(private val userId: String) :
                         "İlan kaydedilenler listenizden çıkarıldı".snackbar(binding.root)
                     }
                 }
-                users.forEach {
-                    if (it.userId.equals(employerJobPost.employerId)) {
-                        user = it
-                    }
+
+                userModel?.let {
+                    user = it
                 }
             }
         }
@@ -116,6 +123,6 @@ class EmployerAdapter(private val userId: String) :
 
     fun refreshUserList(newList: List<UserModel>) {
         users.clear()
-        users.addAll(newList)
+        users.addAll(newList.toList())
     }
 }
