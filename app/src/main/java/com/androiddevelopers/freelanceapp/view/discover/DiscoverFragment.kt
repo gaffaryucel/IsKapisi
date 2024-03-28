@@ -1,13 +1,13 @@
 package com.androiddevelopers.freelanceapp.view.discover
 
 import android.annotation.SuppressLint
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import com.androiddevelopers.freelanceapp.adapters.DiscoverAdapter
@@ -37,7 +37,7 @@ class DiscoverFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.rvDiscover.layoutManager = GridLayoutManager(requireContext(),3)
+        binding.rvDiscover.layoutManager = GridLayoutManager(requireContext(), 3)
         binding.rvDiscover.adapter = adapter
         observeLiveData()
 
@@ -47,6 +47,7 @@ class DiscoverFragment : Fragment() {
         }
 
     }
+
     @SuppressLint("NotifyDataSetChanged")
     private fun observeLiveData() {
         viewModel.postData.observe(viewLifecycleOwner, Observer {
@@ -54,6 +55,7 @@ class DiscoverFragment : Fragment() {
             adapter.notifyDataSetChanged()
         })
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

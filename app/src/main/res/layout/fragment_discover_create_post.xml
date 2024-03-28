@@ -7,9 +7,15 @@
 
         <import type="androidx.navigation.Navigation" />
 
+        <import type="android.view.View" />
+
         <variable
             name="rvTagAdapter"
             type="com.androiddevelopers.freelanceapp.adapters.discover.TagAdapter" />
+
+        <variable
+            name="setProgressBar"
+            type="Boolean" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -21,7 +27,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_max="400dp"
-        tools:context=".view.discover.CreateDiscoverPostFragment">
+        tools:context=".view.discover.DiscoverCreatePostFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -42,8 +48,21 @@
                     android:layout_height="30dp"
                     android:onClick="@{() -> Navigation.findNavController(ivBackButton).popBackStack()}"
                     android:src="@drawable/baseline_keyboard_arrow_left_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/title_create_discover_post"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@id/ivBackButton"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/ivBackButton"
+                    app:layout_constraintTop_toTopOf="@id/ivBackButton" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -52,7 +71,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:indeterminate="true"
-                android:visibility="gone"
+                android:visibility="@{setProgressBar == true ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/layoutTopIconsDiscoverCreate" />

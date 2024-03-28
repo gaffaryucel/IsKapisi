@@ -2,6 +2,7 @@ package com.androiddevelopers.freelanceapp.viewmodel.discover
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.model.notification.InAppNotificationModel
@@ -10,6 +11,7 @@ import com.androiddevelopers.freelanceapp.util.NotificationType
 import com.androiddevelopers.freelanceapp.util.NotificationTypeForActions
 import com.androiddevelopers.freelanceapp.util.Resource
 import com.androiddevelopers.freelanceapp.util.toDiscoverPostModel
+import com.androiddevelopers.freelanceapp.util.toUserModel
 import com.androiddevelopers.freelanceapp.viewmodel.BaseNotificationViewModel
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,6 +36,14 @@ class DiscoverDetailsViewModel @Inject constructor(
     val discoverPosts: LiveData<List<DiscoverPostModel>>
         get() = _discoverPosts
 
+    private var _firebaseMessage = MutableLiveData<Resource<Boolean>>()
+    val firebaseMessage: LiveData<Resource<Boolean>>
+        get() = _firebaseMessage
+
+    private var _firebaseUserListData = MutableLiveData<List<UserModel>>()
+    val firebaseUserListData: LiveData<List<UserModel>>
+        get() = _firebaseUserListData
+
     init {
         getPosts()
     }
@@ -43,8 +53,18 @@ class DiscoverDetailsViewModel @Inject constructor(
         firebaseRepo.getAllDiscoverPostsFromFirestore()
             .addOnSuccessListener {
                 val postList = mutableListOf<DiscoverPostModel>()
+                val userIdList = mutableSetOf<String>()
                 for (document in it.documents) {
-                    document.toDiscoverPostModel()?.let { post -> postList.add(post) }
+                    document.toDiscoverPostModel()?.let { post ->
+                        postList.add(post)
+                        post.postOwner?.let { userId ->
+                            userIdList.add(userId)
+                        }
+                    }
+                }
+
+                if (userIdList.isNotEmpty()) {
+                    getUserDataByDocumentIdList(userIdList.toList())
                 }
                 _discoverPosts.value = postList
             }
@@ -67,7 +87,7 @@ class DiscoverDetailsViewModel @Inject constructor(
             "likeCount" to mutableList.toList()
         )
         firebaseRepo.likePost(postId, likeData).addOnSuccessListener {
-            val myNotification = createNotification(imageUrl, postOwnersToken,postId)
+            val myNotification = createNotification(imageUrl, postOwnersToken, postId)
             sendNotification(
                 notification = myNotification,
                 type = NotificationTypeForActions.LIKE,
@@ -91,7 +111,7 @@ class DiscoverDetailsViewModel @Inject constructor(
     private fun createNotification(
         imageUrl: String,
         postOwnersToken: String,
-        postId : String
+        postId: String
     ) = InAppNotificationModel(
         userId = currentUserId,
         notificationType = NotificationType.LIKE,
@@ -104,4 +124,25 @@ class DiscoverDetailsViewModel @Inject constructor(
         time = getCurrentTime(),
         idForAction = postId
     )
+
+    private fun getUserDataByDocumentIdList(list: List<String>) = viewModelScope.launch {
+        firebaseRepo.getUsersFromFirestore(list).addOnSuccessListener { querySnapshot ->
+            val users = mutableListOf<UserModel>()
+
+            for (document in querySnapshot) {
+                document.toUserModel()?.let { user ->
+                    users.add(user)
+                }
+            }
+
+            _firebaseUserListData.value = users
+            _firebaseMessage.value = Resource.success(true)
+        }.addOnFailureListener {
+            _firebaseMessage.value = Resource.loading(false)
+
+            it.localizedMessage?.let { message ->
+                Resource.error(message, false)
+            }
+        }
+    }
 }
