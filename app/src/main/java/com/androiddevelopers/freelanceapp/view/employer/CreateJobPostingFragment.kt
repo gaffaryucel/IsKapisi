@@ -15,8 +15,8 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.SkillAdapter
@@ -26,8 +26,10 @@ import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.util.JobStatus
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.util.checkPermissionImageGallery
+import com.androiddevelopers.freelanceapp.util.hideBottomNavigation
+import com.androiddevelopers.freelanceapp.util.setupErrorDialog
+import com.androiddevelopers.freelanceapp.util.showBottomNavigation
 import com.androiddevelopers.freelanceapp.viewmodel.employer.CreateJobPostingViewModel
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,8 +38,8 @@ import java.util.*
 
 @AndroidEntryPoint
 class CreateJobPostingFragment : Fragment() {
+    private val viewModel: CreateJobPostingViewModel by viewModels()
     private val dateFormatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
-    private lateinit var viewModel: CreateJobPostingViewModel
     private lateinit var datePicker: MaterialDatePicker<Long>
     private val selectedImages = mutableListOf<Uri>()
 
@@ -58,7 +60,6 @@ class CreateJobPostingFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel = ViewModelProvider(this)[CreateJobPostingViewModel::class.java]
         _binding = FragmentJobPostingsCreateBinding.inflate(inflater, container, false)
         val view = binding.root
 
@@ -77,9 +78,10 @@ class CreateJobPostingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         errorDialog = AlertDialog.Builder(context).create()
-        setupDialogs()
-        setProgressBar(false)
-        observeLiveData(viewLifecycleOwner, view)
+        setupErrorDialog(errorDialog)
+        binding.setProgressBar = false
+        //setProgressBar(false)
+        observeLiveData(viewLifecycleOwner)
 
         val employerId = arguments?.getString("employer_id")
 
@@ -190,18 +192,14 @@ class CreateJobPostingFragment : Fragment() {
             }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 
-    private fun observeLiveData(owner: LifecycleOwner, view: View) {
+    private fun observeLiveData(owner: LifecycleOwner) {
         with(viewModel) {
             firebaseMessage.observe(owner) {
                 when (it.status) {
-                    Status.LOADING -> it.data?.let { state -> setProgressBar(state) }
+                    Status.LOADING -> it.data?.let { state -> binding.setProgressBar = state }
                     Status.SUCCESS -> {
-                        Navigation.findNavController(view).popBackStack()
+                        Navigation.findNavController(binding.root).popBackStack()
                     }
 
                     Status.ERROR -> {
@@ -280,26 +278,13 @@ class CreateJobPostingFragment : Fragment() {
         }
     }
 
-    private fun setupDialogs() {
-        with(errorDialog) {
-            setTitle(context.getString(R.string.login_dialog_error))
-            setCancelable(false)
-            setButton(
-                AlertDialog.BUTTON_POSITIVE,
-                context.getString(R.string.ok)
-            ) { dialog, _ ->
-                dialog.cancel()
-            }
-        }
-    }
-
-    private fun setProgressBar(isVisible: Boolean) {
-        if (isVisible) {
-            binding.createJobPostProgressBar.visibility = View.VISIBLE
-        } else {
-            binding.createJobPostProgressBar.visibility = View.INVISIBLE
-        }
-    }
+//    private fun setProgressBar(isVisible: Boolean) {
+//        if (isVisible) {
+//            binding.createJobPostProgressBar.visibility = View.VISIBLE
+//        } else {
+//            binding.createJobPostProgressBar.visibility = View.INVISIBLE
+//        }
+//    }
 
     private fun openImagePicker() {
         val imageIntent =
@@ -337,23 +322,18 @@ class CreateJobPostingFragment : Fragment() {
 //        }
 //    }
 
-    private fun hideBottomNavigation() {
-        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
-        bottomNavigationView?.visibility = View.GONE
-    }
-
-    private fun showBottomNavigation() {
-        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
-        bottomNavigationView?.visibility = View.VISIBLE
-    }
-
     override fun onResume() {
         super.onResume()
-        hideBottomNavigation()
+        hideBottomNavigation(requireActivity())
     }
 
     override fun onPause() {
         super.onPause()
-        showBottomNavigation()
+        showBottomNavigation(requireActivity())
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -3,6 +3,7 @@ package com.androiddevelopers.freelanceapp.view.freelancer
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -13,16 +14,22 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import com.androiddevelopers.freelanceapp.R
+import com.androiddevelopers.freelanceapp.adapters.SkillAdapter
+import com.androiddevelopers.freelanceapp.adapters.ViewPagerAdapterForCreateJobPost
 import com.androiddevelopers.freelanceapp.databinding.FragmentHomeCreatePostBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.util.Status
+import com.androiddevelopers.freelanceapp.util.setupErrorDialog
+import com.androiddevelopers.freelanceapp.util.toast
 import com.androiddevelopers.freelanceapp.viewmodel.freelancer.CreatePostViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,9 +37,7 @@ import java.io.ByteArrayOutputStream
 
 @AndroidEntryPoint
 class CreatePostFragment : Fragment() {
-
-    private lateinit var viewModel: CreatePostViewModel
-
+    private val viewModel: CreatePostViewModel by viewModels()
     private var _binding: FragmentHomeCreatePostBinding? = null
     private val binding get() = _binding!!
 
@@ -43,20 +48,38 @@ class CreatePostFragment : Fragment() {
 
     private var resultByteArray = byteArrayOf()
     private var _tagList = MutableLiveData<List<String>>()
+
+    private val selectedImages = mutableListOf<Uri>()
+    private lateinit var imageLauncher: ActivityResultLauncher<Intent>
+    private lateinit var errorDialog: AlertDialog
+    private val skillAdapter = SkillAdapter()
+    private val skillList = mutableListOf<String>()
+    private lateinit var viewPagerAdapter: ViewPagerAdapterForCreateJobPost
+    private var freelancerJobPost: FreelancerJobPost? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel = ViewModelProvider(this)[CreatePostViewModel::class.java]
         _binding = FragmentHomeCreatePostBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-        return root
+        val view = binding.root
+
+        viewPagerAdapter = ViewPagerAdapterForCreateJobPost(listener = {
+            viewModel.setImageUriList(it)
+        })
+
+        return view
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        errorDialog = AlertDialog.Builder(context).create()
+        setupErrorDialog(errorDialog)
+        binding.setProgressBar = false
+
+        observeLiveData(viewLifecycleOwner)
 //        requestPermissionsIfNeeded()
 //        setupOnClicks()
 //        observeLiveData()
@@ -97,19 +120,21 @@ class CreatePostFragment : Fragment() {
 
     }
 
-    private fun observeLiveData() {
-        viewModel.uploadPhotoMessage.observe(viewLifecycleOwner) { message ->
-            when (message.status) {
+    private fun observeLiveData(owner: LifecycleOwner) {
+        viewModel.firebaseMessage.observe(owner) {
+            when (it.status) {
                 Status.SUCCESS -> {
-                    Toast.makeText(requireContext(), "Upload Success", Toast.LENGTH_SHORT).show()
+                    "Upload Success".toast(binding.root)
+                    Navigation.findNavController(binding.root)
+                        .navigate(R.id.action_global_navigation_discover)
                 }
 
                 Status.ERROR -> {
-                    Toast.makeText(requireContext(), "Upload Faild", Toast.LENGTH_SHORT).show()
+                    "Upload Failed".toast(binding.root)
                 }
 
                 Status.LOADING -> {
-                    Toast.makeText(requireContext(), "Uploading", Toast.LENGTH_SHORT).show()
+                    it.data?.let { data -> binding.setProgressBar = data }
                 }
             }
         }

@@ -17,13 +17,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.Navigation
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.discover.TagAdapter
 import com.androiddevelopers.freelanceapp.adapters.discover.ViewPagerAdapterForCreateDiscover
 import com.androiddevelopers.freelanceapp.databinding.CustomDialogChooseImageSourceBinding
-import com.androiddevelopers.freelanceapp.databinding.FragmentCreateDiscoverPostBinding
+import com.androiddevelopers.freelanceapp.databinding.FragmentDiscoverCreatePostBinding
 import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.util.checkPermissionImageCamera
@@ -31,75 +30,32 @@ import com.androiddevelopers.freelanceapp.util.checkPermissionImageGallery
 import com.androiddevelopers.freelanceapp.util.compressJpegInBackground
 import com.androiddevelopers.freelanceapp.util.convertUriToBitmap
 import com.androiddevelopers.freelanceapp.util.createImageUri
+import com.androiddevelopers.freelanceapp.util.hideBottomNavigation
+import com.androiddevelopers.freelanceapp.util.showBottomNavigation
 import com.androiddevelopers.freelanceapp.util.toast
-import com.androiddevelopers.freelanceapp.viewmodel.discover.CreateDiscoverPostViewModel
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.androiddevelopers.freelanceapp.viewmodel.discover.DiscoverCreatePostViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class CreateDiscoverPostFragment : Fragment() {
-    private lateinit var dialogCooseImageSource: Dialog
-    private lateinit var imageCameraLauncher: ActivityResultLauncher<Intent>
-    private lateinit var imageGalleryLauncher: ActivityResultLauncher<Intent>
-    private lateinit var takePictureLauncher: ActivityResultLauncher<Void?>
+class DiscoverCreatePostFragment : Fragment() {
+    private var _binding: FragmentDiscoverCreatePostBinding? = null
+    private val binding get() = _binding!!
+    private val viewModel: DiscoverCreatePostViewModel by viewModels()
+    private lateinit var dialogChooseImageSource: Dialog
     private lateinit var cameraLauncher: ActivityResultLauncher<Uri>
     private lateinit var imageLauncher: ActivityResultLauncher<Intent>
-    private val selectedImages = mutableListOf<Uri>()
     private val selectedBitmapImages = mutableListOf<Bitmap>()
     private val selectedByteArrayImages = mutableListOf<ByteArray>()
     private lateinit var imageUri: Uri
     private val viewPagerAdapter = ViewPagerAdapterForCreateDiscover()
     private val tagAdapter = TagAdapter()
-    private val REQUEST_IMAGE_CAPTURE = 101
-    private val REQUEST_IMAGE_PICK = 102
-    private val PERMISSION_REQUEST_CODE = 200
-    private var allPermissionsGranted = false
-
-    private var resultByteArray = byteArrayOf()
-
-    private var _binding: FragmentCreateDiscoverPostBinding? = null
-    private val binding get() = _binding!!
-
-    private val viewModel: CreateDiscoverPostViewModel by viewModels()
-
-    private var _tagList = MutableLiveData<List<String>>()
     private var tags = mutableListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         imageUri = createImageUri(requireContext())
         setupLaunchers()
-
-//        imageCameraLauncher =
-//            registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-//                if (isGranted) {
-//                    takePictureLauncher.launch(null)
-////                    val imageBitmapByteArray = result.data?.extras?.getByteArray("data")
-////                    val imageBitmap = BitmapFactory.decodeByteArray(
-////                        imageBitmapByteArray,
-////                        0,
-////                        imageBitmapByteArray?.size ?: 0
-////                    )
-////                    binding.ivPost.setImageBitmap(imageBitmap)
-////                    compressedForCam(imageBitmap)
-////                    binding.ivAddImage.visibility = View.GONE
-////                    binding.layoutCreatePost.visibility = View.VISIBLE
-//                } else {
-//                    println("")
-//                }
-//            }
-
-//        takePictureLauncher =
-//            registerForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap ->
-//                if (bitmap != null) {
-//                    // Bitmap işleme kodları burada olacak.
-//                    binding.ivPost.setImageBitmap(bitmap)
-//                    compressedForCam(bitmap)
-//                    binding.ivAddImage.visibility = View.GONE
-//                    binding.layoutCreatePost.visibility = View.VISIBLE
-//                }
-//            }
     }
 
     override fun onCreateView(
@@ -107,12 +63,12 @@ class CreateDiscoverPostFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentCreateDiscoverPostBinding.inflate(inflater, container, false)
+        _binding = FragmentDiscoverCreatePostBinding.inflate(inflater, container, false)
 
         //ilk açılışta create ekranı olduğu için delete butonunu gizliyoruz
         binding.deleteButtonDiscoverCreate.visibility = View.GONE
 
-        dialogCooseImageSource = createDialogChooseImageSource()
+        dialogChooseImageSource = createDialogChooseImageSource()
 
 
         return binding.root
@@ -120,7 +76,7 @@ class CreateDiscoverPostFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //requestPermissionsIfNeeded()
+        binding.setProgressBar = false
         setupOnClicks()
         observeLiveData(viewLifecycleOwner)
 
@@ -135,8 +91,6 @@ class CreateDiscoverPostFragment : Fragment() {
 
     private fun setupLaunchers() {
         cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) {
-            //binding.ivPost.setImageURI(null)
-            //binding.ivPost.setImageURI(imageUri)
             if (it) {
                 val bitmap = convertUriToBitmap(imageUri, requireActivity())
                 selectedBitmapImages.add(bitmap)
@@ -157,9 +111,6 @@ class CreateDiscoverPostFragment : Fragment() {
                             selectedByteArrayImages.add(byteArrayImage)
                         }
                         viewModel.setBitmapImages(selectedBitmapImages.toList())
-
-//                        selectedImages.add(it)
-//                        viewModel.setImageUriList(selectedImages)
                     }
                 }
             }
@@ -168,7 +119,7 @@ class CreateDiscoverPostFragment : Fragment() {
     private fun setupOnClicks() {
         with(binding) {
             fabChooseImageSource.setOnClickListener {
-                dialogCooseImageSource.show()
+                dialogChooseImageSource.show()
             }
 
             tagAddTextInputLayout.setEndIconOnClickListener {
@@ -212,11 +163,7 @@ class CreateDiscoverPostFragment : Fragment() {
                     }
 
                     Status.LOADING -> {
-                        it.data?.let { data ->
-                            if (data) {
-                                "Uploading".toast(binding.root)
-                            }
-                        }
+                        it.data?.let { data -> binding.setProgressBar = data }
                     }
                 }
             }
@@ -298,22 +245,12 @@ class CreateDiscoverPostFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        hideBottomNavigation()
+        hideBottomNavigation(requireActivity())
     }
 
     override fun onPause() {
         super.onPause()
-        showBottomNavigation()
-    }
-
-    private fun hideBottomNavigation() {
-        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
-        bottomNavigationView?.visibility = View.GONE
-    }
-
-    private fun showBottomNavigation() {
-        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
-        bottomNavigationView?.visibility = View.VISIBLE
+        showBottomNavigation(requireActivity())
     }
 
     override fun onDestroyView() {
