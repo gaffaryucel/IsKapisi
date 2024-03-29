@@ -92,7 +92,11 @@ constructor(
         }
     }
 
-    private fun addEmployerPostToFirebase(jobPost: EmployerJobPost) = viewModelScope.launch {
+    fun addEmployerPostToFirebase(jobPost: EmployerJobPost) = viewModelScope.launch {
+        if (jobPost.postId.isNullOrBlank()) {
+            jobPost.postId = UUID.randomUUID().toString()
+        }
+
         _firebaseMessage.value = Resource.loading(true)
         firebaseRepo.addEmployerPostToFirestore(jobPost).addOnCompleteListener { task ->
             _firebaseMessage.value = Resource.loading(false)

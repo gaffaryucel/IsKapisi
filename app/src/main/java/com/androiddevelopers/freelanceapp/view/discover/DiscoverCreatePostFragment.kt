@@ -59,9 +59,7 @@ class DiscoverCreatePostFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDiscoverCreatePostBinding.inflate(inflater, container, false)
 
@@ -137,13 +135,24 @@ class DiscoverCreatePostFragment : Fragment() {
             }
 
             saveButtonDiscoverCreate.setOnClickListener {
-                viewModel.addImageAndDiscoverPostToFirebase(
-                    selectedByteArrayImages,
-                    DiscoverPostModel(
-                        description = descriptionTextInputEditText.text.toString(),
-                        tags = tags
-                    )
-                )
+                if (selectedByteArrayImages.isNotEmpty()) {
+                    if (descriptionTextInputEditText.text.toString().isNotBlank()) {
+                        if (tags.isNotEmpty()) {
+                            viewModel.addImageAndDiscoverPostToFirebase(
+                                selectedByteArrayImages, DiscoverPostModel(
+                                    description = descriptionTextInputEditText.text.toString(),
+                                    tags = tags
+                                )
+                            )
+                        } else {
+                            "Lütfen etiket girin".toast(binding.root)
+                        }
+                    } else {
+                        "Lütfen açıklama girin".toast(binding.root)
+                    }
+                } else {
+                    "Lütfen resim ekleyin".toast(binding.root)
+                }
             }
         }
     }
@@ -203,11 +212,9 @@ class DiscoverCreatePostFragment : Fragment() {
 
 
     private fun openImagePicker() {
-        val imageIntent =
-            Intent(
-                Intent.ACTION_PICK,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-            )
+        val imageIntent = Intent(
+            Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        )
         imageLauncher.launch(imageIntent)
     }
 

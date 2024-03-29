@@ -13,7 +13,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.androiddevelopers.freelanceapp.R
-import com.androiddevelopers.freelanceapp.adapters.EmployerAdapter
+import com.androiddevelopers.freelanceapp.adapters.employer.EmployerAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentJobPostingsBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.util.Status

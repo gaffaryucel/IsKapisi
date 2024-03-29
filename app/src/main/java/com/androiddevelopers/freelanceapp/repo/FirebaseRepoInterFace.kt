@@ -96,26 +96,30 @@ interface FirebaseRepoInterFace {
     fun createChatRoomForOwner(currentUserId: String, chat: ChatModel): Task<Void>
     fun createChatRoomForChatMate(userId: String, chat: ChatModel): Task<Void>
     fun getAllChatRooms(currentUserId: String): DatabaseReference
-    fun     changeLastMessage(
+    fun changeLastMessage(
         userId: String,
         chatId: String,
         message: String,
-        time : String
+        time: String
     ): Task<Void>
+
     fun changeLastMessageInChatMatesRoom(
         chatMateId: String,
         chatId: String,
         message: String,
-        time : String
+        time: String
     ): Task<Void>
+
     fun seeMessage(
         userId: String,
         chatId: String
     ): Task<Void>
+
     fun changeReceiverSeenStatus(
         receiverId: String,
         chatId: String
     ): Task<Void>
+
     //PreChatRoom
     fun getAllPreChatRooms(currentUserId: String): DatabaseReference
     fun createPreChatRoom(receiver: String, sender: String, chat: PreChatModel): Task<Void>
@@ -129,6 +133,7 @@ interface FirebaseRepoInterFace {
         chatId: String,
         message: MessageModel
     ): Task<Void>
+
     fun changeLastPreMessage(
         userId: String,
         receiver: String,
@@ -141,6 +146,7 @@ interface FirebaseRepoInterFace {
         userId: String,
         chatId: String
     ): Task<Void>
+
     fun changeReceiverPreSeenStatus(
         receiverId: String,
         chatId: String
@@ -149,7 +155,7 @@ interface FirebaseRepoInterFace {
     // Firebase Storage işlemleri
 
     fun addFreelancerPostImage(
-        uri: Uri,
+        image: ByteArray,
         uId: String,
         postId: String,
     ): UploadTask
@@ -167,9 +173,9 @@ interface FirebaseRepoInterFace {
     ): UploadTask
 
     //User Profile Data İşlemleri
-    fun getAllDiscoverPostsFromUser(userId: String,limit : Long): Task<QuerySnapshot>
-    fun getAllEmployerJobPostsFromUser(userId: String,limit : Long): Task<QuerySnapshot>
-    fun getAllFreelancerJobPostsFromUser(userId: String,limit : Long): Task<QuerySnapshot>
+    fun getAllDiscoverPostsFromUser(userId: String, limit: Long): Task<QuerySnapshot>
+    fun getAllEmployerJobPostsFromUser(userId: String, limit: Long): Task<QuerySnapshot>
+    fun getAllFreelancerJobPostsFromUser(userId: String, limit: Long): Task<QuerySnapshot>
     fun follow(followerModel: FollowModel, followingModel: FollowModel): Task<Void>
     fun unFollow(currentUserId: String, followingId: String): Task<Void>
     fun updateUserData(userId: String, updateData: HashMap<String, Any?>): Task<Void>
@@ -180,8 +186,13 @@ interface FirebaseRepoInterFace {
     //Set
     suspend fun postNotification(notification: PushNotification): Response<ResponseBody>
     fun saveNotification(notification: InAppNotificationModel): Task<Void>
+
     //Get
-    fun getNotificationsByType(userId: String, type : NotificationType, limit: Long): Task<QuerySnapshot>
+    fun getNotificationsByType(
+        userId: String,
+        type: NotificationType,
+        limit: Long
+    ): Task<QuerySnapshot>
 
     fun getAllNotifications(userId: String, limit: Long): Task<QuerySnapshot>
 

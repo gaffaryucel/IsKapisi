@@ -147,7 +147,7 @@ class FirebaseRepoImpl @Inject constructor(
     }
 
     override fun addFreelancerPostImage(
-        uri: Uri,
+        image: ByteArray,
         uId: String,
         postId: String,
     ): UploadTask {
@@ -157,7 +157,7 @@ class FirebaseRepoImpl @Inject constructor(
             .child("freelancerPost")
             .child("postId_$postId")
             .child("${UUID.randomUUID()}.jpg")
-            .putFile(uri)
+            .putBytes(image)
     }
 
     override fun addEmployerPostImage(
