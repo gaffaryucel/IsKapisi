@@ -25,6 +25,8 @@ import com.androiddevelopers.freelanceapp.model.jobpost.FreelancerJobPost
 import com.androiddevelopers.freelanceapp.util.JobStatus
 import com.androiddevelopers.freelanceapp.util.Status
 import com.androiddevelopers.freelanceapp.util.checkPermissionImageGallery
+import com.androiddevelopers.freelanceapp.util.compressJpegInBackground
+import com.androiddevelopers.freelanceapp.util.convertUriToBitmap
 import com.androiddevelopers.freelanceapp.util.hideBottomNavigation
 import com.androiddevelopers.freelanceapp.util.setupErrorDialog
 import com.androiddevelopers.freelanceapp.util.showBottomNavigation
@@ -57,7 +59,7 @@ class CreatePostFragment : Fragment() {
     private lateinit var errorDialog: AlertDialog
     private val skillAdapter = SkillAdapter()
     private val skillList = mutableListOf<String>()
-    private lateinit var viewPagerAdapter: ViewPagerAdapterForCreateJobPost
+    private val viewPagerAdapter = ViewPagerAdapterForCreateJobPost()
     private var freelancerJobPost: FreelancerJobPost? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,13 +73,7 @@ class CreatePostFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeCreatePostBinding.inflate(inflater, container, false)
-        val view = binding.root
-
-        viewPagerAdapter = ViewPagerAdapterForCreateJobPost(listener = {
-            viewModel.setImageUriList(it)
-        })
-
-        return view
+        return binding.root
     }
 
 
@@ -95,7 +91,7 @@ class CreatePostFragment : Fragment() {
             viewModel.getFreelancerJobPostWithDocumentByIdFromFirestore(id)
         }
 
-        viewModel.setImageUriList(selectedImages.toList())
+        viewModel.setBitmapImages(selectedBitmapImages.toList())
 
         setupOnClicks()
 
@@ -125,9 +121,13 @@ class CreatePostFragment : Fragment() {
                 skillAddEditText.text = null
             }
 
+            viewPagerAdapter.listenerImages = { images ->
+                viewModel.setBitmapImages(images)
+            }
+
             createJobPostSaveButton.setOnClickListener {
                 viewModel.addImageAndFreelancerPostToFirebase( //resim ve işveren ilanı bilgilerini view modele gönderiyoruz
-                    selectedImages, // yüklenecek resimlerin cihazdaki konumu
+                    selectedByteArrayImages, // yüklenecek resimler
                     FreelancerJobPost( // freelancer ilanı için formda doldurulan yerler ile birlikte gönderi oluşturuyoruz
                         postId = freelancerJobPost?.postId,
                         title = titleTextInputEditText.text.toString(),
@@ -160,8 +160,12 @@ class CreatePostFragment : Fragment() {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == Activity.RESULT_OK) {
                     result.data?.data?.let { image ->
-                        selectedImages.add(image)
-                        viewModel.setImageUriList(selectedImages.toList())
+                        val bitmap = convertUriToBitmap(image, requireActivity())
+                        selectedBitmapImages.add(bitmap)
+                        compressJpegInBackground(bitmap) { byteArrayImage ->
+                            selectedByteArrayImages.add(byteArrayImage)
+                        }
+                        viewModel.setBitmapImages(selectedBitmapImages.toList())
                     }
                 }
             }
