@@ -1,19 +1,24 @@
 package com.androiddevelopers.freelanceapp.adapters
 
 import android.annotation.SuppressLint
-import android.net.Uri
+import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.androiddevelopers.freelanceapp.databinding.ColumnViewpagerForCreateJobPostBinding
 
-class ViewPagerAdapterForCreateJobPost(
-    private val listener: (ArrayList<Uri>) -> Unit,
-    private var images: ArrayList<Uri> = arrayListOf()
-) :
+class ViewPagerAdapterForCreateJobPost :
     RecyclerView.Adapter<ViewPagerAdapterForCreateJobPost.ViewPagerHolder>() {
+
+    lateinit var listenerImages: (ArrayList<Bitmap>) -> Unit
+    private var images: ArrayList<Bitmap> = arrayListOf()
+
     inner class ViewPagerHolder(val binding: ColumnViewpagerForCreateJobPostBinding) :
-        RecyclerView.ViewHolder(binding.root)
+        RecyclerView.ViewHolder(binding.root) {
+        fun setImages(images: ArrayList<Bitmap>) {
+            listenerImages.invoke(images)
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewPagerHolder {
         val binding =
@@ -30,19 +35,21 @@ class ViewPagerAdapterForCreateJobPost(
     }
 
     override fun onBindViewHolder(holder: ViewPagerHolder, position: Int) {
-        with(holder.binding) {
-            imageUrl = images[position].toString()
+        with(holder) {
+            with(binding) {
+                imageUrl = images[position].toString()
 
-            imageDeleteViewPagerCreateJobPost.setOnClickListener {
-                images.removeAt(position)
-                listener(images)
+                imageDeleteViewPagerCreateJobPost.setOnClickListener {
+                    images.removeAt(position)
+                    setImages(images)
+                }
             }
         }
 
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun refreshList(newList: List<Uri>) {
+    fun refreshList(newList: List<Bitmap>) {
         images.clear()
         images.addAll(newList.toList())
         notifyDataSetChanged()

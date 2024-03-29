@@ -1,18 +1,15 @@
 package com.androiddevelopers.freelanceapp.view.employer
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -20,12 +17,10 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.Navigation
 import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.SkillAdapter
-import com.androiddevelopers.freelanceapp.adapters.ViewPagerAdapterForCreateJobPost
 import com.androiddevelopers.freelanceapp.databinding.FragmentJobPostingsCreateBinding
 import com.androiddevelopers.freelanceapp.model.jobpost.EmployerJobPost
 import com.androiddevelopers.freelanceapp.util.JobStatus
 import com.androiddevelopers.freelanceapp.util.Status
-import com.androiddevelopers.freelanceapp.util.checkPermissionImageGallery
 import com.androiddevelopers.freelanceapp.util.hideBottomNavigation
 import com.androiddevelopers.freelanceapp.util.setupErrorDialog
 import com.androiddevelopers.freelanceapp.util.showBottomNavigation
@@ -39,22 +34,27 @@ import java.util.*
 @AndroidEntryPoint
 class CreateJobPostingFragment : Fragment() {
     private val viewModel: CreateJobPostingViewModel by viewModels()
+    private var _binding: FragmentJobPostingsCreateBinding? = null
+    private val binding get() = _binding!!
+
     private val dateFormatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
     private lateinit var datePicker: MaterialDatePicker<Long>
+
     private val selectedImages = mutableListOf<Uri>()
-
     private lateinit var imageLauncher: ActivityResultLauncher<Intent>
-    private var _binding: FragmentJobPostingsCreateBinding? = null
-
-    private val binding get() = _binding!!
 
     private lateinit var errorDialog: AlertDialog
     private val skillAdapter = SkillAdapter()
 
     private val skillList = mutableListOf<String>()
-    private lateinit var viewPagerAdapter: ViewPagerAdapterForCreateJobPost
+    //private lateinit var viewPagerAdapter: ViewPagerAdapterForCreateJobPost
 
     private var employerJobPost: EmployerJobPost? = null
+
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setupLaunchers()
+//    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,9 +68,9 @@ class CreateJobPostingFragment : Fragment() {
             .setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR)
             .build()
 
-        viewPagerAdapter = ViewPagerAdapterForCreateJobPost(listener = {
-            viewModel.setImageUriList(it)
-        })
+//        viewPagerAdapter = ViewPagerAdapterForCreateJobPost(listener = {
+//            viewModel.setImageUriList(it)
+//        })
 
         return view
     }
@@ -80,7 +80,7 @@ class CreateJobPostingFragment : Fragment() {
         errorDialog = AlertDialog.Builder(context).create()
         setupErrorDialog(errorDialog)
         binding.setProgressBar = false
-        //setProgressBar(false)
+
         observeLiveData(viewLifecycleOwner)
 
         val employerId = arguments?.getString("employer_id")
@@ -89,7 +89,9 @@ class CreateJobPostingFragment : Fragment() {
             viewModel.getEmployerJobPostWithDocumentByIdFromFirestore(id)
         }
 
-        viewModel.setImageUriList(selectedImages)
+        //viewModel.setImageUriList(selectedImages.toList())
+
+        setupOnClicks()
 
         with(binding) {
             //ilk açılışta create ekranı olduğu için delete butonunu gizliyoruz
@@ -102,9 +104,13 @@ class CreateJobPostingFragment : Fragment() {
             }
 
             //viewpager adapter ve indicatoru set ediyoruz
-            viewPagerCreateJobPost.adapter = viewPagerAdapter
-            indicatorCreateJobPost.setViewPager(viewPagerCreateJobPost)
+//            viewPagerCreateJobPost.adapter = viewPagerAdapter
+//            indicatorCreateJobPost.setViewPager(viewPagerCreateJobPost)
+        }
+    }
 
+    private fun setupOnClicks() {
+        with(binding) {
             //skill text içindeki icon ile listeye yeni skill ekliyoruz
             // sonrasında yeni eklenen skill in recycler view de ve diğer yerlerde güncellenemsi iç viewmodel e gönderiyoruz
             skillAddTextInputLayout.setEndIconOnClickListener {
@@ -115,29 +121,51 @@ class CreateJobPostingFragment : Fragment() {
 
             //yeni iş ilanını veri tabanına göndermek için kaydet butonunu dinliyoruz
             createJobPostSaveButton.setOnClickListener {
-                with(viewModel) {
-                    addImageAndEmployerPostToFirebase( //resim ve işveren ilanı bilgilerini view modele gönderiyoruz
-                        selectedImages, // yüklenecek resimlerin cihazdaki konumu
-                        EmployerJobPost( // işveren ilanı için formda doldurulan yerler ile birlikte gönderi oluşturuyoruz
-                            postId = employerJobPost?.postId,
-                            title = titleTextInputEditText.text.toString(),
-                            description = descriptionTextInputEditText.text.toString(),
-                            skillsRequired = skillList,
-                            budget = budgetTextInputEditText.text.toString().toDouble(),
-                            deadline = deadlineTextInputEditText.text.toString(),
-                            location = locationsTextInputEditText.text.toString(),
-                            datePosted = dateFormatter.format(Date(Date().time)),
-                            applicants = employerJobPost?.applicants,
-                            status = employerJobPost?.status ?: JobStatus.OPEN,
-                            additionalDetails = employerJobPost?.additionalDetails,
-                            savedUsers = employerJobPost?.savedUsers,
-                            viewCount = employerJobPost?.viewCount,
-                            isUrgent = switchUrgentCreateJobPost.isChecked,
-                            worksToBeDone = employerJobPost?.worksToBeDone,
-                            aboutYou = employerJobPost?.aboutYou
-                        )
+                viewModel.addEmployerPostToFirebase(
+                    EmployerJobPost( // işveren ilanı için formda doldurulan yerler ile birlikte gönderi oluşturuyoruz
+                        postId = employerJobPost?.postId,
+                        title = titleTextInputEditText.text.toString(),
+                        description = descriptionTextInputEditText.text.toString(),
+                        skillsRequired = skillList,
+                        budget = budgetTextInputEditText.text.toString().toDouble(),
+                        deadline = deadlineTextInputEditText.text.toString(),
+                        location = locationsTextInputEditText.text.toString(),
+                        datePosted = dateFormatter.format(Date(Date().time)),
+                        applicants = employerJobPost?.applicants,
+                        status = employerJobPost?.status ?: JobStatus.OPEN,
+                        additionalDetails = employerJobPost?.additionalDetails,
+                        savedUsers = employerJobPost?.savedUsers,
+                        viewCount = employerJobPost?.viewCount,
+                        isUrgent = switchUrgentCreateJobPost.isChecked,
+                        worksToBeDone = employerJobPost?.worksToBeDone,
+                        aboutYou = employerJobPost?.aboutYou,
+                        ownerToken = employerJobPost?.ownerToken
                     )
-                }
+                )
+
+//                viewModel.addImageAndEmployerPostToFirebase( //resim ve işveren ilanı bilgilerini view modele gönderiyoruz
+//                    selectedImages, // yüklenecek resimlerin cihazdaki konumu
+//                    EmployerJobPost( // işveren ilanı için formda doldurulan yerler ile birlikte gönderi oluşturuyoruz
+//                        postId = employerJobPost?.postId,
+//                        title = titleTextInputEditText.text.toString(),
+//                        description = descriptionTextInputEditText.text.toString(),
+//                        skillsRequired = skillList,
+//                        budget = budgetTextInputEditText.text.toString().toDouble(),
+//                        deadline = deadlineTextInputEditText.text.toString(),
+//                        location = locationsTextInputEditText.text.toString(),
+//                        datePosted = dateFormatter.format(Date(Date().time)),
+//                        applicants = employerJobPost?.applicants,
+//                        status = employerJobPost?.status ?: JobStatus.OPEN,
+//                        additionalDetails = employerJobPost?.additionalDetails,
+//                        savedUsers = employerJobPost?.savedUsers,
+//                        viewCount = employerJobPost?.viewCount,
+//                        isUrgent = switchUrgentCreateJobPost.isChecked,
+//                        worksToBeDone = employerJobPost?.worksToBeDone,
+//                        aboutYou = employerJobPost?.aboutYou,
+//                        ownerToken = employerJobPost?.ownerToken
+//                    )
+//                )
+
             }
 
             //ilan bitiş tarihi seçimi
@@ -155,8 +183,6 @@ class CreateJobPostingFragment : Fragment() {
                     } else {
                         deadlineTextInputLayout.error = "Daha ileri bir tarih seçiniz"
                     }
-
-
                 }
             }
 
@@ -174,24 +200,25 @@ class CreateJobPostingFragment : Fragment() {
                 )
             )
 
-            fabLoadImage.setOnClickListener {
-                if (checkPermissionImageGallery(requireActivity(), 800)) {
-                    openImagePicker()
-                }
-            }
+//            fabLoadImage.setOnClickListener {
+//                if (checkPermissionImageGallery(requireActivity(), 800)) {
+//                    openImagePicker()
+//                }
+//            }
         }
-
-        imageLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == Activity.RESULT_OK) {
-                    result.data?.data?.let { image ->
-                        selectedImages.add(image)
-                        viewModel.setImageUriList(selectedImages.toList())
-                    }
-                }
-            }
     }
 
+//    private fun setupLaunchers() {
+//        imageLauncher =
+//            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+//                if (result.resultCode == Activity.RESULT_OK) {
+//                    result.data?.data?.let { image ->
+//                        selectedImages.add(image)
+//                        viewModel.setImageUriList(selectedImages.toList())
+//                    }
+//                }
+//            }
+//    }
 
     private fun observeLiveData(owner: LifecycleOwner) {
         with(viewModel) {
@@ -215,29 +242,29 @@ class CreateJobPostingFragment : Fragment() {
                 skillAdapter.skillsRefresh(list)
             }
 
-            imageUriList.observe(owner) { images ->
-                selectedImages.clear()
-                selectedImages.addAll(images.toList())
-                viewPagerAdapter.refreshList(images.toList())
-                with(binding) {
-                    //indicatoru viewpager yeni liste ile set ediyoruz
-                    indicatorCreateJobPost.setViewPager(viewPagerCreateJobPost)
-                }
-            }
-
-            imageSize.observe(owner) {
-                //seçilen resim olmadığında viewpager 'ı gizleyip boş bir resim gösteriyoruz
-                //resim seçildiğinde işlemi tersine alıyoruz
-                with(binding) {
-                    if (it == 0 || it == null) {
-                        imagePlaceHolderCreateJobPost.visibility = View.VISIBLE
-                        layoutImageViewsCreateJobPost.visibility = View.INVISIBLE
-                    } else {
-                        imagePlaceHolderCreateJobPost.visibility = View.INVISIBLE
-                        layoutImageViewsCreateJobPost.visibility = View.VISIBLE
-                    }
-                }
-            }
+//            imageUriList.observe(owner) { images ->
+//                selectedImages.clear()
+//                selectedImages.addAll(images.toList())
+//                viewPagerAdapter.refreshList(images.toList())
+//                with(binding) {
+//                    //indicatoru viewpager yeni liste ile set ediyoruz
+//                    indicatorCreateJobPost.setViewPager(viewPagerCreateJobPost)
+//                }
+//            }
+//
+//            imageSize.observe(owner) {
+//                //seçilen resim olmadığında viewpager 'ı gizleyip boş bir resim gösteriyoruz
+//                //resim seçildiğinde işlemi tersine alıyoruz
+//                with(binding) {
+//                    if (it == 0 || it == null) {
+//                        imagePlaceHolderCreateJobPost.visibility = View.VISIBLE
+//                        layoutImageViewsCreateJobPost.visibility = View.INVISIBLE
+//                    } else {
+//                        imagePlaceHolderCreateJobPost.visibility = View.INVISIBLE
+//                        layoutImageViewsCreateJobPost.visibility = View.VISIBLE
+//                    }
+//                }
+//            }
 
             firebaseLiveData.observe(owner) {
                 employerJobPost = it
@@ -248,12 +275,12 @@ class CreateJobPostingFragment : Fragment() {
 
     private fun setView(post: EmployerJobPost) {
         with(binding) {
-            post.images?.let { images ->
-                if (images.isNotEmpty()) {
-                    val uriList = images.map { s -> Uri.parse(s) }
-                    viewModel.setImageUriList(uriList.toList())
-                }
-            }
+//            post.images?.let { images ->
+//                if (images.isNotEmpty()) {
+//                    val uriList = images.map { s -> Uri.parse(s) }
+//                    viewModel.setImageUriList(uriList.toList())
+//                }
+//            }
 
             budgetTextInputEditText.setText(post.budget.toString())
             titleTextInputEditText.setText(post.title)
@@ -278,48 +305,13 @@ class CreateJobPostingFragment : Fragment() {
         }
     }
 
-//    private fun setProgressBar(isVisible: Boolean) {
-//        if (isVisible) {
-//            binding.createJobPostProgressBar.visibility = View.VISIBLE
-//        } else {
-//            binding.createJobPostProgressBar.visibility = View.INVISIBLE
-//        }
-//    }
-
-    private fun openImagePicker() {
-        val imageIntent =
-            Intent(
-                Intent.ACTION_PICK,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-            )
-        imageLauncher.launch(imageIntent)
-    }
-
-//    private fun checkPermission(): Boolean {
-//        val currentPermission = chooseImagePermission()
-//        return if (ContextCompat.checkSelfPermission(
-//                requireContext(),
-//                currentPermission
-//            ) == PackageManager.PERMISSION_GRANTED
-//        ) {
-//            true
-//        } else {
-//            ActivityCompat.requestPermissions(
-//                requireActivity(),
-//                arrayOf(currentPermission),
-//                800
+//    private fun openImagePicker() {
+//        val imageIntent =
+//            Intent(
+//                Intent.ACTION_PICK,
+//                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
 //            )
-//            false
-//        }
-//
-//    }
-//
-//    private fun chooseImagePermission(): String {
-//        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-//            android.Manifest.permission.READ_MEDIA_IMAGES
-//        } else {
-//            android.Manifest.permission.READ_EXTERNAL_STORAGE
-//        }
+//        imageLauncher.launch(imageIntent)
 //    }
 
     override fun onResume() {

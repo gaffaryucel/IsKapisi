@@ -1,15 +1,15 @@
 package com.androiddevelopers.freelanceapp.view.profile
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.androiddevelopers.freelanceapp.R
-import com.androiddevelopers.freelanceapp.adapters.DiscoverPostDetailsAdapter
+import com.androiddevelopers.freelanceapp.adapters.discover.DiscoverPostDetailsAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentProfileDiscoverPostDetailsBinding
 import com.androiddevelopers.freelanceapp.viewmodel.profile.ProfileDiscoverPostDetailsViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -23,7 +23,7 @@ class ProfileDiscoverPostDetailsFragment : Fragment() {
     private var _binding: FragmentProfileDiscoverPostDetailsBinding? = null
     private val binding get() = _binding!!
     private var adapter = DiscoverPostDetailsAdapter()
-    private var position : Int? = 0
+    private var position: Int? = 0
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -35,11 +35,12 @@ class ProfileDiscoverPostDetailsFragment : Fragment() {
         val p = arguments?.getString("p")
         position = try {
             p?.toInt()
-        }catch (e : Exception){
+        } catch (e: Exception) {
             0
         }
         return root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.rvDiscoverPostDetails.layoutManager = LinearLayoutManager(requireContext())
@@ -47,7 +48,8 @@ class ProfileDiscoverPostDetailsFragment : Fragment() {
         adapter.inProfile = true
         observeLiveData()
     }
-    private fun observeLiveData(){
+
+    private fun observeLiveData() {
         viewModel.discoverPosts.observe(viewLifecycleOwner, Observer {
             adapter.postList = it
             adapter.notifyDataSetChanged()
@@ -75,6 +77,7 @@ class ProfileDiscoverPostDetailsFragment : Fragment() {
         val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
         bottomNavigationView?.visibility = View.VISIBLE
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

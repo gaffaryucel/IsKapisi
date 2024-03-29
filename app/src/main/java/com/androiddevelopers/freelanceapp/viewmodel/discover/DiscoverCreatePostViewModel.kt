@@ -9,7 +9,6 @@ import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
 import com.androiddevelopers.freelanceapp.model.UserModel
 import com.androiddevelopers.freelanceapp.repo.FirebaseRepoInterFace
 import com.androiddevelopers.freelanceapp.util.Resource
-import com.androiddevelopers.freelanceapp.util.toUserModel
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -44,10 +43,6 @@ constructor(
     private var _tags = MutableLiveData<List<String>>()
     val tagsLiveData: LiveData<List<String>>
         get() = _tags
-
-    init {
-        getUserDataFromFirebase()
-    }
 
     fun addImageAndDiscoverPostToFirebase(
         images: MutableList<ByteArray>,
@@ -110,19 +105,8 @@ constructor(
         return dateFormat.format(date)
     }
 
-    private fun getUserDataFromFirebase() {
-        firebaseRepo.getUserDataByDocumentId(userId)
-            .addOnSuccessListener { documentSnapshot ->
-                if (documentSnapshot.exists()) {
-                    documentSnapshot.toUserModel()?.let { userModel ->
-                        _userData.value = userModel
-                    }
-                }
-            }
-    }
-
     fun setBitmapImages(newList: List<Bitmap>) = viewModelScope.launch {
-        _liveDateBitmapImages.value = newList
+        _liveDateBitmapImages.value = newList.toList()
         _imageSize.value = newList.size
     }
 

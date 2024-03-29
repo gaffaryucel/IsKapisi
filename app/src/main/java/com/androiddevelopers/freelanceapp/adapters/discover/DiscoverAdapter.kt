@@ -1,15 +1,17 @@
-package com.androiddevelopers.freelanceapp.adapters
+package com.androiddevelopers.freelanceapp.adapters.discover
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.RowDiscoverBinding
 import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
+import com.androiddevelopers.freelanceapp.util.downloadImage
 import com.androiddevelopers.freelanceapp.view.discover.DiscoverFragmentDirections
-import com.bumptech.glide.Glide
 
 class DiscoverAdapter : RecyclerView.Adapter<DiscoverAdapter.DiscoverViewHolder>() {
 
@@ -48,9 +50,12 @@ class DiscoverAdapter : RecyclerView.Adapter<DiscoverAdapter.DiscoverViewHolder>
         val post = postList[position]
         post.images?.let { images ->
             if (images.isNotEmpty()) {
-                Glide.with(holder.itemView.context).load(post.images?.get(0))
-                    .into(holder.binding.ivDiscoverVPost)
+                downloadImage(holder.binding.ivDiscoverVPost, images[0])
+            } else {
+                setPlaceholderImage(holder.binding.ivDiscoverVPost)
             }
+        } ?: run {
+            setPlaceholderImage(holder.binding.ivDiscoverVPost)
         }
 
         holder.itemView.setOnClickListener {
@@ -60,5 +65,9 @@ class DiscoverAdapter : RecyclerView.Adapter<DiscoverAdapter.DiscoverViewHolder>
                 )
             Navigation.findNavController(it).navigate(action)
         }
+    }
+
+    private fun setPlaceholderImage(imageView: ImageView) {
+        imageView.setImageResource(R.drawable.placeholder)
     }
 }
