@@ -3,6 +3,7 @@ package com.androiddevelopers.freelanceapp.adapters.discover
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
@@ -13,9 +14,9 @@ import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.databinding.RowDiscoverDetailsBinding
 import com.androiddevelopers.freelanceapp.model.DiscoverPostModel
 import com.androiddevelopers.freelanceapp.model.UserModel
+import com.androiddevelopers.freelanceapp.util.downloadImage
 import com.androiddevelopers.freelanceapp.view.discover.DiscoverDetailsFragmentDirections
 import com.androiddevelopers.freelanceapp.view.profile.ProfileDiscoverPostDetailsFragmentDirections
-import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 
 class DiscoverPostDetailsAdapter :
@@ -104,9 +105,12 @@ class DiscoverPostDetailsAdapter :
         }
         post.images?.let { images ->
             if (images.isNotEmpty()) {
-                Glide.with(holder.itemView.context).load(post.images?.get(0))
-                    .into(holder.binding.ivPost)
+                downloadImage(holder.binding.ivPost, images[0])
+            } else {
+                setPlaceholderImage(holder.binding.ivPost)
             }
+        } ?: run {
+            setPlaceholderImage(holder.binding.ivPost)
         }
 
         userModel?.let {
@@ -195,5 +199,9 @@ class DiscoverPostDetailsAdapter :
     fun refreshUserList(newList: List<UserModel>) {
         users.clear()
         users.addAll(newList.toList())
+    }
+
+    private fun setPlaceholderImage(imageView: ImageView) {
+        imageView.setImageResource(R.drawable.placeholder)
     }
 }

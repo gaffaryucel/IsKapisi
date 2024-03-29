@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.androiddevelopers.freelanceapp.R
 import com.androiddevelopers.freelanceapp.adapters.discover.DiscoverPostDetailsAdapter
 import com.androiddevelopers.freelanceapp.databinding.FragmentDiscoverDetailsBinding
+import com.androiddevelopers.freelanceapp.util.hideBottomNavigation
+import com.androiddevelopers.freelanceapp.util.showBottomNavigation
 import com.androiddevelopers.freelanceapp.viewmodel.discover.DiscoverDetailsViewModel
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -64,25 +64,14 @@ class DiscoverDetailsFragment : Fragment() {
         }
     }
 
-
     override fun onResume() {
         super.onResume()
-        hideBottomNavigation()
+        hideBottomNavigation(requireActivity())
     }
 
     override fun onPause() {
         super.onPause()
-        showBottomNavigation()
-    }
-
-    private fun hideBottomNavigation() {
-        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
-        bottomNavigationView?.visibility = View.GONE
-    }
-
-    private fun showBottomNavigation() {
-        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.nav_view)
-        bottomNavigationView?.visibility = View.VISIBLE
+        showBottomNavigation(requireActivity())
     }
 
     override fun onDestroyView() {
