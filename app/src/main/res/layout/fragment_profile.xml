@@ -49,24 +49,38 @@
                                 android:layout_height="1dp"/>
 
                             <ImageView
+                                android:id="@+id/ivBanner"                                 android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
                                 android:src="@drawable/banner"
-                                android:id="@+id/ivBanner"
-                                android:layout_width="match_parent"
-                                android:scaleType="centerCrop"
-                                android:layout_height="105dp"/>
+                                android:scaleType="fitXY"
+                                android:adjustViewBounds="true"
+                                android:layout_centerVertical="true" />
+
+                            <ImageView
+                                android:id="@+id/btnEditProfile"
+                                android:layout_width="40dp"
+                                android:padding="10dp"
+                                android:layout_height="40dp"
+                                android:src="@drawable/edit_white"
+                                app:layout_constraintTop_toBottomOf="@+id/ivBanner"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:tint="@color/normal_text_color" />
+
+
 
                             <de.hdodenhof.circleimageview.CircleImageView
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@+id/guide_line_tv"
                                 android:layout_marginStart="10dp"
                                 android:id="@+id/ivUserProfile"
-                                android:layout_width="105dp"
-                                android:layout_height="105dp"
+                                android:layout_width="120dp"
+                                android:layout_height="120dp"
                                 android:src="@drawable/placeholder"/>
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <androidx.constraintlayout.widget.ConstraintLayout
+                            android:paddingBottom="10dp"
                             android:background="@color/app_bg_color"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintEnd_toStartOf="parent"
@@ -76,12 +90,13 @@
                             android:layout_height="wrap_content">
 
                             <ImageView
+                                android:layout_marginStart="8dp"
                                 app:layout_constraintTop_toTopOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 android:src="@drawable/baseline_keyboard_arrow_left_24"
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
                                 app:tint="@color/normal_text_color" />
 
                             <TextView
@@ -94,12 +109,7 @@
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 />
-                            <View
-                                android:layout_marginTop="8dp"
-                                android:background="@color/line_color"
-                                app:layout_constraintTop_toBottomOf="@+id/tvProfile"
-                                android:layout_width="match_parent"
-                                android:layout_height="2dp"/>
+
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -244,10 +254,10 @@
                         android:orientation="horizontal">
 
                         <androidx.appcompat.widget.AppCompatButton
+                            android:visibility="gone"
                             style="@style/ButtonStyle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:id="@+id/btnEditProfile"
                             android:layout_margin="6dp"
                             android:layout_weight="1"
                             android:text="Profili düzenle"
